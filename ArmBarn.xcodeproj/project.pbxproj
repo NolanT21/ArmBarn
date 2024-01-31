@@ -7,18 +7,40 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D50E3E902B0926A8006699FB /* global_variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50E3E8F2B0926A8006699FB /* global_variables.swift */; };
+		D50E3E942B0A3D04006699FB /* HitDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50E3E932B0A3D04006699FB /* HitDetailView.swift */; };
+		D50E3E962B0A3DE7006699FB /* OutDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50E3E952B0A3DE7006699FB /* OutDetailView.swift */; };
+		D554293C2B5580CC00BD5E92 /* MainContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D554293B2B5580CC00BD5E92 /* MainContainerView.swift */; };
+		D56AF5FE2B606DC000610214 /* SelectPitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56AF5FD2B606DC000610214 /* SelectPitcherView.swift */; };
+		D5A335872AFB0DD0005480DE /* PitchResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A335862AFB0DD0005480DE /* PitchResultView.swift */; };
 		D5DD111F2AF52FE70064F1A5 /* ArmBarnApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */; };
-		D5DD11212AF52FE70064F1A5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DD11202AF52FE70064F1A5 /* ContentView.swift */; };
+		D5DD11212AF52FE70064F1A5 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DD11202AF52FE70064F1A5 /* MainView.swift */; };
 		D5DD11232AF52FE80064F1A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5DD11222AF52FE80064F1A5 /* Assets.xcassets */; };
 		D5DD11262AF52FE80064F1A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5DD11252AF52FE80064F1A5 /* Preview Assets.xcassets */; };
+		D5E103BF2B2F6D4A00752E7F /* PitchLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E103BE2B2F6D4A00752E7F /* PitchLocationView.swift */; };
+		D5E103C12B3D122100752E7F /* ScoreboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E103C02B3D122100752E7F /* ScoreboardView.swift */; };
+		D5E5B3A62B4B0AF300BF14B6 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E5B3A52B4B0AF300BF14B6 /* TestView.swift */; };
+		D5F758F62B5CC83100632005 /* EndGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F758F52B5CC83100632005 /* EndGameView.swift */; };
+		D5FAD81A2B28BADC00E9EB91 /* AddPitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FAD8192B28BADC00E9EB91 /* AddPitcherView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D50E3E8F2B0926A8006699FB /* global_variables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = global_variables.swift; sourceTree = "<group>"; };
+		D50E3E932B0A3D04006699FB /* HitDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitDetailView.swift; sourceTree = "<group>"; };
+		D50E3E952B0A3DE7006699FB /* OutDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutDetailView.swift; sourceTree = "<group>"; };
+		D554293B2B5580CC00BD5E92 /* MainContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainContainerView.swift; sourceTree = "<group>"; };
+		D56AF5FD2B606DC000610214 /* SelectPitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPitcherView.swift; sourceTree = "<group>"; };
+		D5A335862AFB0DD0005480DE /* PitchResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchResultView.swift; sourceTree = "<group>"; };
 		D5DD111B2AF52FE60064F1A5 /* ArmBarn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArmBarn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArmBarnApp.swift; sourceTree = "<group>"; };
-		D5DD11202AF52FE70064F1A5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D5DD11202AF52FE70064F1A5 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		D5DD11222AF52FE80064F1A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D5DD11252AF52FE80064F1A5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		D5E103BE2B2F6D4A00752E7F /* PitchLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchLocationView.swift; sourceTree = "<group>"; };
+		D5E103C02B3D122100752E7F /* ScoreboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreboardView.swift; sourceTree = "<group>"; };
+		D5E5B3A52B4B0AF300BF14B6 /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
+		D5F758F52B5CC83100632005 /* EndGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndGameView.swift; sourceTree = "<group>"; };
+		D5FAD8192B28BADC00E9EB91 /* AddPitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPitcherView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +57,9 @@
 		D5DD11122AF52FE60064F1A5 = {
 			isa = PBXGroup;
 			children = (
+				D56AF5FD2B606DC000610214 /* SelectPitcherView.swift */,
+				D554293B2B5580CC00BD5E92 /* MainContainerView.swift */,
+				D5E5B3A52B4B0AF300BF14B6 /* TestView.swift */,
 				D5DD111D2AF52FE70064F1A5 /* ArmBarn */,
 				D5DD111C2AF52FE60064F1A5 /* Products */,
 			);
@@ -52,7 +77,15 @@
 			isa = PBXGroup;
 			children = (
 				D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */,
-				D5DD11202AF52FE70064F1A5 /* ContentView.swift */,
+				D50E3E8F2B0926A8006699FB /* global_variables.swift */,
+				D5E103C02B3D122100752E7F /* ScoreboardView.swift */,
+				D5DD11202AF52FE70064F1A5 /* MainView.swift */,
+				D5E103BE2B2F6D4A00752E7F /* PitchLocationView.swift */,
+				D5F758F52B5CC83100632005 /* EndGameView.swift */,
+				D5A335862AFB0DD0005480DE /* PitchResultView.swift */,
+				D50E3E952B0A3DE7006699FB /* OutDetailView.swift */,
+				D50E3E932B0A3D04006699FB /* HitDetailView.swift */,
+				D5FAD8192B28BADC00E9EB91 /* AddPitcherView.swift */,
 				D5DD11222AF52FE80064F1A5 /* Assets.xcassets */,
 				D5DD11242AF52FE80064F1A5 /* Preview Content */,
 			);
@@ -137,8 +170,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D5DD11212AF52FE70064F1A5 /* ContentView.swift in Sources */,
+				D5E5B3A62B4B0AF300BF14B6 /* TestView.swift in Sources */,
+				D5A335872AFB0DD0005480DE /* PitchResultView.swift in Sources */,
+				D5FAD81A2B28BADC00E9EB91 /* AddPitcherView.swift in Sources */,
+				D5DD11212AF52FE70064F1A5 /* MainView.swift in Sources */,
+				D5F758F62B5CC83100632005 /* EndGameView.swift in Sources */,
+				D5E103BF2B2F6D4A00752E7F /* PitchLocationView.swift in Sources */,
 				D5DD111F2AF52FE70064F1A5 /* ArmBarnApp.swift in Sources */,
+				D50E3E902B0926A8006699FB /* global_variables.swift in Sources */,
+				D50E3E942B0A3D04006699FB /* HitDetailView.swift in Sources */,
+				D56AF5FE2B606DC000610214 /* SelectPitcherView.swift in Sources */,
+				D5E103C12B3D122100752E7F /* ScoreboardView.swift in Sources */,
+				D554293C2B5580CC00BD5E92 /* MainContainerView.swift in Sources */,
+				D50E3E962B0A3DE7006699FB /* OutDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -277,8 +321,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -305,8 +349,8 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

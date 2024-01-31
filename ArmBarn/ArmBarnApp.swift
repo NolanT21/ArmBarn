@@ -6,12 +6,19 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct ArmBarnApp: App {
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainView()
+                .environment(Scoreboard())
+                .environment(Event_String())
+                .environment(currentPitcher())
+                .environment(PitchTypeConfig())
         }
+        .modelContainer(for: [Pitcher.self, Event.self])
     }
 }
