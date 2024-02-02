@@ -45,7 +45,6 @@ struct PitchLocationView: View {
                 //print("\(click)")
              }
     }
-
        
     var body: some View {
         
@@ -148,7 +147,7 @@ struct PitchLocationView: View {
                             context.delete(events[events.count - 1])
                         }
                     }) {
-                        Image(systemName: "gobackward")
+                        Image(systemName: "arrow.counterclockwise")
                             .frame(width: sbl_width, height: sbl_height)
                             .foregroundColor(.white)
                         Text("UNDO")
@@ -157,9 +156,11 @@ struct PitchLocationView: View {
                             //.font(weight: .semibold)
                     }
                     
+                    Spacer()
+                    
                     HStack{
                         
-                        Spacer()
+                        
 
                         
                         HStack{
@@ -188,12 +189,7 @@ struct PitchLocationView: View {
                 
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     HStack{
-                        Image(systemName: "square.and.arrow.up")
-                            .frame(width: sbl_width, height: sbl_height)
-                            .foregroundColor(Color.white)
-                        
-                        Spacer()
-                        
+                
                         Button(action: {
                             showEndGame = true
                         }) {
@@ -207,17 +203,33 @@ struct PitchLocationView: View {
                         
                         Spacer()
                         
-                        Image(systemName: "gearshape.fill")
-                            .frame(width: sbl_width, height: sbl_height)
-                            .foregroundColor(Color.white)
+                        Button(action: {
+                            //showGameReport = true
+                        }) {
+                            Image(systemName: "chart.bar.xaxis")
+                                .frame(width: sbl_width, height: sbl_height)
+                                .foregroundColor(Color.white)
+                        }
+//                        .popover(isPresented: $showGameReport) {
+//                            GameReportView()
+//                        }
                         
+                        Spacer()
+                        
+                        Button(action: {
+                            //showEndGame = true
+                        }) {
+                            Image(systemName: "gearshape.fill")
+                                .frame(width: sbl_width, height: sbl_height)
+                                .foregroundColor(Color.white)
+                        }
+//                        .popover(isPresented: $showEndGame) {
+//                            EndGameView()
+//                        }
                     }
                 }
-            
             }
-
         }
-        
     }
     
     func load_previous_event() {
@@ -263,7 +275,7 @@ struct PitchLocationView: View {
             }
         }
         
-        if previous_event.result_detail != "R" {
+        if previous_event.result_detail != "R"  && scoreboard.pitches > 0 {
             scoreboard.pitches -= 1
         }
         
