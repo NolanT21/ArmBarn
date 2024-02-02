@@ -14,6 +14,7 @@ struct EndGameView: View {
     
     @Environment(Scoreboard.self) var scoreboard
     @Environment(PitchTypeConfig.self) var ptconfig
+    @Environment(Event_String.self) var event
     
     @Environment(\.modelContext) var context
     @Environment(\.dismiss) var dismiss

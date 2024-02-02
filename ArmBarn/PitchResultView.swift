@@ -275,6 +275,8 @@ struct PitchResultView: View {
         ptconfig.pitch_cur_ab -= 1
         ptconfig.ptcolor = .clear
         
+        //print(event.balls)
+        
         scoreboard.balls = event.balls
         scoreboard.strikes = event.strikes
         scoreboard.outs = event.outs
