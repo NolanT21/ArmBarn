@@ -23,7 +23,7 @@ struct SelectPitcherView: View {
     
     var filteredPitchers: [Pitcher] {
         guard !searchText.isEmpty else {return pitchers}
-        return pitchers.filter { $0.lastName.localizedCaseInsensitiveContains(searchText)}
+        return pitchers.filter {$0.lastName.localizedCaseInsensitiveContains(searchText)}
     }
 
     var body: some View {

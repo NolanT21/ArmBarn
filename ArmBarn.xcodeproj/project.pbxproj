@@ -57,8 +57,6 @@
 		D5DD11122AF52FE60064F1A5 = {
 			isa = PBXGroup;
 			children = (
-				D56AF5FD2B606DC000610214 /* SelectPitcherView.swift */,
-				D554293B2B5580CC00BD5E92 /* MainContainerView.swift */,
 				D5E5B3A52B4B0AF300BF14B6 /* TestView.swift */,
 				D5DD111D2AF52FE70064F1A5 /* ArmBarn */,
 				D5DD111C2AF52FE60064F1A5 /* Products */,
@@ -78,13 +76,15 @@
 			children = (
 				D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */,
 				D50E3E8F2B0926A8006699FB /* global_variables.swift */,
-				D5E103C02B3D122100752E7F /* ScoreboardView.swift */,
 				D5DD11202AF52FE70064F1A5 /* MainView.swift */,
+				D554293B2B5580CC00BD5E92 /* MainContainerView.swift */,
+				D5E103C02B3D122100752E7F /* ScoreboardView.swift */,
 				D5E103BE2B2F6D4A00752E7F /* PitchLocationView.swift */,
-				D5F758F52B5CC83100632005 /* EndGameView.swift */,
 				D5A335862AFB0DD0005480DE /* PitchResultView.swift */,
 				D50E3E952B0A3DE7006699FB /* OutDetailView.swift */,
 				D50E3E932B0A3D04006699FB /* HitDetailView.swift */,
+				D5F758F52B5CC83100632005 /* EndGameView.swift */,
+				D56AF5FD2B606DC000610214 /* SelectPitcherView.swift */,
 				D5FAD8192B28BADC00E9EB91 /* AddPitcherView.swift */,
 				D5DD11222AF52FE80064F1A5 /* Assets.xcassets */,
 				D5DD11242AF52FE80064F1A5 /* Preview Content */,
@@ -318,9 +318,11 @@
 				DEVELOPMENT_ASSET_PATHS = "\"ArmBarn/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -346,9 +348,11 @@
 				DEVELOPMENT_ASSET_PATHS = "\"ArmBarn/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
