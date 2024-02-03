@@ -58,6 +58,7 @@ struct PitchLocationView: View {
                         SaveEventView().task{
                             add_prev_event_string()
                             event.recordEvent = true
+                            scoreboard.update_scoreboard = true
                         }
                         
                         Image("PLI_Background")
@@ -95,7 +96,27 @@ struct PitchLocationView: View {
                         
                         
                     ZStack{
-                        PitchLocationInput()
+                        if current_pitcher.pitch_num <= 0 {
+                            VStack{
+                                Spacer()
+                                
+                                HStack {
+                                    Spacer()
+                                    
+                                    Text("Select Pitcher")
+                                        
+                                    
+                                    Spacer()
+                                }
+                                
+                                Spacer()
+                            }
+                            .background(Color.black.opacity(0.8))
+                            .foregroundColor(.white)
+                        }
+                        else {
+                            PitchLocationInput()
+                        }
                         
                         if scoreboard.baserunners > 0 {
                             VStack {
@@ -150,7 +171,9 @@ struct PitchLocationView: View {
                         Image(systemName: "arrow.counterclockwise")
                             .frame(width: sbl_width, height: sbl_height)
                             .foregroundColor(.white)
-                        Text("UNDO")
+                            .bold()
+                        Text("Undo")
+                            .bold()
                             .imageScale(.large)
                             .foregroundColor(.white)
                             //.font(weight: .semibold)
@@ -160,11 +183,7 @@ struct PitchLocationView: View {
                     
                     HStack{
                         
-                        
-
-                        
                         HStack{
-                            
                             
                             Button(action: {
                                 showPitcherSelect = true
@@ -209,6 +228,7 @@ struct PitchLocationView: View {
                             Image(systemName: "chart.bar.xaxis")
                                 .frame(width: sbl_width, height: sbl_height)
                                 .foregroundColor(Color.white)
+                                .bold()
                         }
 //                        .popover(isPresented: $showGameReport) {
 //                            GameReportView()
@@ -375,7 +395,7 @@ struct PitchLocationInput : View {
              }
     }
     var body: some View {
-        if !ptconfig.hidePitchOverlay {
+        if !ptconfig.hidePitchOverlay{
             
             PitchOverlayPrevPitches()
                 .transition(.opacity)
