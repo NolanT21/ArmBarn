@@ -28,6 +28,8 @@ import Observation
     
     var o1light: Color = .black
     var o2light: Color = .black
+    
+    var update_scoreboard: Bool = true
 }
 
 @Observable class Event_String{
@@ -52,7 +54,7 @@ import Observation
     var pitch3: String = "None"
     var pitch4: String = "None"
     var arsenal: [String] = ["None", "None", "None", "None"]
-    var pitch_num: Int = 4
+    var pitch_num: Int = 0
 }
 
 @Observable class PitchTypeConfig{
