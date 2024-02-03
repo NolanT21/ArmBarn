@@ -105,9 +105,11 @@ struct OutDetailView: View {
                                 Image(systemName: "chevron.left")
                                     .frame(width: sbl_width, height: sbl_height)
                                     .foregroundColor(.white)
+                                    .bold()
                                 Text("Back")
                                     .imageScale(.large)
                                     .foregroundColor(.white)
+                                    .bold()
                                     //.font(weight: .semibold)
                             }
                                 //.font(weight: .semibold)
@@ -207,27 +209,29 @@ struct OutDetailView: View {
         event.inning = scoreboard.inning
         event.atbats = scoreboard.atbats
         
-        scoreboard.pitches += 1
-        scoreboard.outs += 1
-        scoreboard.atbats += 1
-        
-        if scoreboard.outs == 1 {
-            scoreboard.o1light = .red
+        if scoreboard.update_scoreboard {
+            scoreboard.pitches += 1
+            scoreboard.outs += 1
+            scoreboard.atbats += 1
+            
+            if scoreboard.outs == 1 {
+                scoreboard.o1light = .red
+            }
+            if scoreboard.outs == 2 {
+                scoreboard.o2light = .red
+            }
+            
+            if scoreboard.outs == 3 {
+                scoreboard.outs = 0
+                scoreboard.inning += 1
+                scoreboard.baserunners = 0
+                scoreboard.o1light = .black
+                scoreboard.o2light = .black
+            }
+            
+            reset_Count()
+            //print_Scoreboard()
         }
-        if scoreboard.outs == 2 {
-            scoreboard.o2light = .red
-        }
-        
-        if scoreboard.outs == 3 {
-            scoreboard.outs = 0
-            scoreboard.inning += 1
-            scoreboard.baserunners = 0
-            scoreboard.o1light = .black
-            scoreboard.o2light = .black
-        }
-        
-        reset_Count()
-        //print_Scoreboard()
     }
     
     func reset_Count() {

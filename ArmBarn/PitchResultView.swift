@@ -134,7 +134,7 @@ struct PitchResultView: View {
                 if scoreboard.baserunners > 0 {
                     VStack {
                         Spacer()
-                            .frame(height: 50)
+                            .frame(height: 6)
                         HStack {
                             
                             Spacer()
@@ -174,9 +174,11 @@ struct PitchResultView: View {
                             Image(systemName: "chevron.left")
                                 .frame(width: sbl_width, height: sbl_height)
                                 .foregroundColor(.white)
+                                .bold()
                             Text("Back")
                                 .imageScale(.large)
                                 .foregroundColor(.white)
+                                .bold()
                                 //.font(weight: .semibold)
                         }
                         
@@ -268,6 +270,7 @@ struct PitchResultView: View {
         
         //context.delete(events[events.count - 1])
         event.recordEvent = false
+        scoreboard.update_scoreboard = false
         
         ptconfig.pitch_x_loc.removeLast()
         ptconfig.pitch_y_loc.removeLast()
@@ -280,8 +283,9 @@ struct PitchResultView: View {
         scoreboard.balls = event.balls
         scoreboard.strikes = event.strikes
         scoreboard.outs = event.outs
-        scoreboard.atbats = event.atbats
         scoreboard.inning = event.inning
+        //scoreboard.atbats = event.atbats
+        
         if scoreboard.pitches > 0 {
             scoreboard.pitches -= 1
         }
@@ -303,7 +307,6 @@ struct PitchResultView: View {
             scoreboard.s2light = .yellow
         }
         
-        
     }
     
     func add_Ball() {
@@ -315,27 +318,29 @@ struct PitchResultView: View {
         event.inning = scoreboard.inning
         event.atbats = scoreboard.atbats
         
-        scoreboard.pitches += 1
-        scoreboard.balls += 1
-        if scoreboard.balls == 1 {
-            scoreboard.b1light = .blue
-        }
-        if scoreboard.balls == 2 {
-            scoreboard.b2light = .blue
-        }
-        if scoreboard.balls == 3 {
-            scoreboard.b3light = .blue
-        }
+        if scoreboard.update_scoreboard {
+            scoreboard.pitches += 1
+            scoreboard.balls += 1
+            if scoreboard.balls == 1 {
+                scoreboard.b1light = .blue
+            }
+            if scoreboard.balls == 2 {
+                scoreboard.b2light = .blue
+            }
+            if scoreboard.balls == 3 {
+                scoreboard.b3light = .blue
+            }
+            
+            if scoreboard.balls == 4 {
+                event.result_detail = "W"
+                scoreboard.balls = 0
+                scoreboard.atbats += 1
+                scoreboard.baserunners += 1
+                reset_Count()
+            }
         
-        if scoreboard.balls == 4 {
-            event.result_detail = "W"
-            scoreboard.balls = 0
-            scoreboard.atbats += 1
-            scoreboard.baserunners += 1
-            reset_Count()
+            //print_Scoreboard()
         }
-    
-        //print_Scoreboard()
         
     }
     
@@ -346,43 +351,46 @@ struct PitchResultView: View {
         event.inning = scoreboard.inning
         event.atbats = scoreboard.atbats
         
-        scoreboard.pitches += 1
-        scoreboard.strikes += 1
         
-        if scoreboard.strikes == 3 {
-            if event.result_detail == "C"{
-                scoreboard.atbats += 1
-                reset_Count()
-            }
-            else if event.pitch_result == "T"{
-                scoreboard.strikes = 2
-            }
-            else{
-                scoreboard.outs += 1
-                scoreboard.atbats += 1
-                reset_Count()
+        if scoreboard.update_scoreboard {
+            scoreboard.pitches += 1
+            scoreboard.strikes += 1
+            
+            if scoreboard.strikes == 3 {
+                if event.result_detail == "C"{
+                    scoreboard.atbats += 1
+                    reset_Count()
+                }
+                else if event.pitch_result == "T"{
+                    scoreboard.strikes = 2
+                }
+                else{
+                    scoreboard.outs += 1
+                    scoreboard.atbats += 1
+                    reset_Count()
+                }
+                
+                if scoreboard.outs >= 3{
+                    scoreboard.outs = 0
+                    scoreboard.inning += 1
+                    scoreboard.baserunners = 0
+                    scoreboard.o1light = .black
+                    scoreboard.o2light = .black
+                }
+                if scoreboard.outs == 1 {
+                    scoreboard.o1light = .red
+                }
+                if scoreboard.outs == 2 {
+                    scoreboard.o2light = .red
+                }
             }
             
-            if scoreboard.outs >= 3{
-                scoreboard.outs = 0
-                scoreboard.inning += 1
-                scoreboard.baserunners = 0
-                scoreboard.o1light = .black
-                scoreboard.o2light = .black
+            if scoreboard.strikes == 1 {
+                scoreboard.s1light = .yellow
             }
-            if scoreboard.outs == 1 {
-                scoreboard.o1light = .red
+            if scoreboard.strikes == 2 {
+                scoreboard.s2light = .yellow
             }
-            if scoreboard.outs == 2 {
-                scoreboard.o2light = .red
-            }
-        }
-        
-        if scoreboard.strikes == 1 {
-            scoreboard.s1light = .yellow
-        }
-        if scoreboard.strikes == 2 {
-            scoreboard.s2light = .yellow
         }
         
     }
@@ -390,30 +398,32 @@ struct PitchResultView: View {
     func record_baserunner_out() {
         event.pitch_result = "O"
         event.result_detail = "R"
+        event.pitch_type = "NP"
         event.balls = scoreboard.balls
         event.strikes = scoreboard.strikes
         event.outs = scoreboard.outs
         event.inning = scoreboard.inning
         event.atbats = scoreboard.atbats
         
-        scoreboard.outs += 1
-        
-        scoreboard.baserunners -= 1
-        
-        if scoreboard.outs == 1 {
-            scoreboard.o1light = .red
-        }
-        if scoreboard.outs == 2 {
-            scoreboard.o2light = .red
-        }
-        
-        if scoreboard.outs == 3 {
-            scoreboard.outs = 0
-            scoreboard.inning += 1
-            scoreboard.baserunners = 0
-            scoreboard.o1light = .black
-            scoreboard.o2light = .black
-            reset_Count()
+        if scoreboard.update_scoreboard {
+            scoreboard.outs += 1
+            scoreboard.baserunners -= 1
+            
+            if scoreboard.outs == 1 {
+                scoreboard.o1light = .red
+            }
+            if scoreboard.outs == 2 {
+                scoreboard.o2light = .red
+            }
+            
+            if scoreboard.outs == 3 {
+                scoreboard.outs = 0
+                scoreboard.inning += 1
+                scoreboard.baserunners = 0
+                scoreboard.o1light = .black
+                scoreboard.o2light = .black
+                reset_Count()
+            }
         }
         
     }

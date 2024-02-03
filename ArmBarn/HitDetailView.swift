@@ -117,9 +117,11 @@ struct HitDetailView: View {
                                 Image(systemName: "chevron.left")
                                     .frame(width: sbl_width, height: sbl_height)
                                     .foregroundColor(.white)
+                                    .bold()
                                 Text("Back")
                                     .imageScale(.large)
                                     .foregroundColor(.white)
+                                    .bold()
                                     //.font(weight: .semibold)
                             }
                                 //.font(weight: .semibold)
@@ -219,11 +221,16 @@ struct HitDetailView: View {
         event.inning = scoreboard.inning
         event.atbats = scoreboard.atbats
         
-        scoreboard.baserunners += 1
-        
-        scoreboard.pitches += 1
-        scoreboard.atbats += 1
-        reset_Count()
+        if scoreboard.update_scoreboard {
+            scoreboard.pitches += 1
+            scoreboard.atbats += 1
+            
+            if event.result_detail != "H" {
+                scoreboard.baserunners += 1
+            }
+            
+            reset_Count()
+        }
         
         //print_Scoreboard()
     }
