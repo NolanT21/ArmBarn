@@ -47,7 +47,6 @@ struct EndGameView: View {
             }
             new_game_func()
             dismiss()
-            
         }) {
             Text("New Game")
                 .imageScale(.large)
@@ -63,6 +62,7 @@ struct EndGameView: View {
         scoreboard.pitches = 0
         scoreboard.atbats = 1
         scoreboard.inning = 1
+        scoreboard.baserunners = 0
         
         ptconfig.pitch_x_loc.removeAll()
         ptconfig.pitch_y_loc.removeAll()
