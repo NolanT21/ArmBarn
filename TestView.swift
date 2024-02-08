@@ -7,6 +7,13 @@
 
 import SwiftUI
 import SwiftData
+import Charts
+
+//struct PieChartDT: Identifiable {
+//    let id = UUID()
+//    let label: String
+//    let value: Double
+//}
 
 struct TestView: View {
     
@@ -18,68 +25,80 @@ struct TestView: View {
     
     @Environment(\.dismiss) var dismiss
     
+    @State private var firstpitstrike_data: [PieChartDT] = [
+        .init(label: "First Pitch Strikes", value: 13),
+        .init(label: "First Pitch Balls", value: 9)
+    ]
+    
+    @State private var strikepercent_data: [PieChartDT] = [
+        .init(label: "Total Strikes", value: 45),
+        .init(label: "Total Balls", value: 23)
+    ]
+    
     @State var sbl_width: Double = 17.0
     @State var sbl_height: Double = 13.0
     
     var body: some View {
-        NavigationStack{
-            VStack {
-                List {
-                    Menu(content: {
-                        ForEach(pitchers) { value in
-                            Text(value.lastName)
-    //                        Button(value.lastName) {
-    //                            current_pitcher.pitch_num = 0
-    //                            current_pitcher.firstName = value.firstName
-    //                            current_pitcher.lastName = value.lastName
-    //                            current_pitcher.pitch1 = value.pitch1
-    //                            if current_pitcher.pitch1 != "None" {
-    //                                current_pitcher.pitch_num += 1
-    //                                current_pitcher.arsenal[0] = value.pitch1
-    //                            }
-    //
-    //                            current_pitcher.pitch2 = value.pitch2
-    //                            if current_pitcher.pitch2 != "None" {
-    //                                current_pitcher.pitch_num += 1
-    //                                current_pitcher.arsenal[1] = value.pitch2
-    //                            }
-    //
-    //                            current_pitcher.pitch3 = value.pitch3
-    //                            if current_pitcher.pitch3 != "None" {
-    //                                current_pitcher.pitch_num += 1
-    //                                current_pitcher.arsenal[2] = value.pitch3
-    //                            }
-    //
-    //                            current_pitcher.pitch4 = value.pitch4
-    //                            if current_pitcher.pitch4 != "None" {
-    //                                current_pitcher.pitch_num += 1
-    //                                current_pitcher.arsenal[3] = value.pitch4
-    //                            }
-    //                        }
-                            .swipeActions(edge: .trailing) {
-                                Button(role: .destructive) {
-                                    
-                                } label : {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                            }
-                        }
-                        
-                    }, label: {
-                        if pitchers.count <= 0 {
-                            Text("Add Pitcher")
-                        }
-                        else {
-                            Text(current_pitcher.lastName)
-                        }
-                        
-                    })
-                    .foregroundColor(Color.black)
-                    .bold()
+        
+        HStack {
+            Chart(firstpitstrike_data) { fps in
+                SectorMark(
+                    angle: .value(
+                        Text(verbatim: fps.label),
+                        fps.value
+                    ),
+                    innerRadius: .ratio(0.7)
+                )
+                .foregroundStyle(
+                    by: .value(
+                        Text(verbatim: fps.label),
+                        fps.label
+                    )
+                )
+            }
+            .padding(10)
+            .frame(width: 175)
+            .chartLegend(.hidden)
+            .chartBackground { proxy in
+                VStack{
+                    Text("59%")
+                        .font(.system(size: 40))
+                        .bold()
+                    Text("13/22")
                 }
-                
+                .padding(.top, 20)
+            }
+            
+            Chart(strikepercent_data) { sp in
+                SectorMark(
+                    angle: .value(
+                        Text(verbatim: sp.label),
+                        sp.value
+                    ),
+                    innerRadius: .ratio(0.7)
+                )
+                .foregroundStyle(
+                    by: .value(
+                        Text(verbatim: sp.label),
+                        sp.label
+                    )
+                )
+            }
+            .padding(10)
+            .frame(width: 175)
+            .chartLegend(.hidden)
+            .chartBackground { proxy in
+                VStack{
+                    Text("67%")
+                        .font(.system(size: 40))
+                        .bold()
+                    Text("45/68")
+                }
+                .padding(.top, 20)
             }
         }
+        
+        
     }
 }
         
