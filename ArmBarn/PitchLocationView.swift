@@ -25,6 +25,7 @@ struct PitchLocationView: View {
 
     @State private var hidePitchOverlay = false
     @State private var showEndGame = false
+    @State private var showGameReport = false
     @State private var showPitcherSelect = false
     
     @State var location: CGPoint = .zero
@@ -223,16 +224,16 @@ struct PitchLocationView: View {
                         Spacer()
                         
                         Button(action: {
-                            //showGameReport = true
+                            showGameReport = true
                         }) {
                             Image(systemName: "chart.bar.xaxis")
                                 .frame(width: sbl_width, height: sbl_height)
                                 .foregroundColor(Color.white)
                                 .bold()
                         }
-//                        .popover(isPresented: $showGameReport) {
-//                            GameReportView()
-//                        }
+                        .popover(isPresented: $showGameReport) {
+                            GameReportView()
+                        }
                         
                         Spacer()
                         
