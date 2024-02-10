@@ -9,11 +9,12 @@ import SwiftUI
 import SwiftData
 import Charts
 
-//struct PieChartDT: Identifiable {
-//    let id = UUID()
-//    let label: String
-//    let value: Double
-//}
+struct LineChartDT: Identifiable {
+    let id = UUID()
+    let label: String
+    let x_value: Int
+    let y_value: Double
+}
 
 struct TestView: View {
     
@@ -35,69 +36,35 @@ struct TestView: View {
         .init(label: "Total Balls", value: 23)
     ]
     
+    @State private var pit1byinning_data: [LineChartDT] = [
+        .init(label: "Inn1", x_value: 1, y_value: 20),
+        .init(label: "Inn2", x_value: 2, y_value: 10),
+        .init(label: "Inn3", x_value: 3, y_value: 12),
+        .init(label: "Inn4", x_value: 4, y_value: 16),
+        .init(label: "Inn5", x_value: 5, y_value: 13),
+        .init(label: "Inn6", x_value: 6, y_value: 9),
+        .init(label: "Inn7", x_value: 7, y_value: 26),
+        .init(label: "Inn8", x_value: 8, y_value: 7),
+        .init(label: "Inn9", x_value: 9, y_value: 22),
+    ]
+    
     @State var sbl_width: Double = 17.0
     @State var sbl_height: Double = 13.0
     
     var body: some View {
         
-        HStack {
-            Chart(firstpitstrike_data) { fps in
-                SectorMark(
-                    angle: .value(
-                        Text(verbatim: fps.label),
-                        fps.value
-                    ),
-                    innerRadius: .ratio(0.7)
-                )
-                .foregroundStyle(
-                    by: .value(
-                        Text(verbatim: fps.label),
-                        fps.label
-                    )
-                )
-            }
-            .padding(10)
-            .frame(width: 175)
-            .chartLegend(.hidden)
-            .chartBackground { proxy in
-                VStack{
-                    Text("59%")
-                        .font(.system(size: 40))
-                        .bold()
-                    Text("13/22")
-                }
-                .padding(.top, 20)
+        Chart{
+            ForEach(pit1byinning_data) { fps in
+                LineMark(x: .value("Inning", fps.x_value),
+                        y: .value("# of Pit", fps.y_value))
             }
             
-            Chart(strikepercent_data) { sp in
-                SectorMark(
-                    angle: .value(
-                        Text(verbatim: sp.label),
-                        sp.value
-                    ),
-                    innerRadius: .ratio(0.7)
-                )
-                .foregroundStyle(
-                    by: .value(
-                        Text(verbatim: sp.label),
-                        sp.label
-                    )
-                )
-            }
-            .padding(10)
-            .frame(width: 175)
-            .chartLegend(.hidden)
-            .chartBackground { proxy in
-                VStack{
-                    Text("67%")
-                        .font(.system(size: 40))
-                        .bold()
-                    Text("45/68")
-                }
-                .padding(.top, 20)
-            }
         }
-        
+        .frame(height: 200)
+        .padding(10)
+        .chartXAxis {
+            AxisMarks(values: .automatic(desiredCount: 10))
+        }
         
     }
 }
