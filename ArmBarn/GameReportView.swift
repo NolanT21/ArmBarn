@@ -16,6 +16,8 @@ struct PieChartDT: Identifiable {
 
 struct GameReportView: View {
     
+    @Environment(ApplicationData.self) private var appData
+    
     @State private var firstpitstrike_data: [PieChartDT] = [
         .init(label: "First Pitch Strikes", value: 13),
         .init(label: "First Pitch Balls", value: 9)
@@ -25,6 +27,7 @@ struct GameReportView: View {
         .init(label: "Total Strikes", value: 45),
         .init(label: "Total Balls", value: 23)
     ]
+    
     
     var view_padding: CGFloat = 10
     var view_crnr_radius: CGFloat = 12
@@ -257,9 +260,27 @@ struct GameReportView: View {
                             Spacer()
                         }
                         
-                        
-                        
-                        Text("")
+                        VStack{
+                            Chart{
+                                ForEach(appData.sales) { product in
+                                    ForEach(product.sales) { sale in
+                                        LineMark(x: .value("Date", sale.date, unit: .day),
+                                                 y: .value("Sales", sale.amount))
+                                    }.foregroundStyle(by: .value("Products", product.name))
+                                }
+                            }
+                           .frame(height: 200)
+                           .padding(10)
+                           .chartLegend(.hidden)
+                //            .chartXScale(domain: [0, 10])
+                //            .chartXAxis {
+                //                AxisMarks(values: .automatic(desiredCount: 9))
+                //            }
+                //            .chartYAxis {
+                //                AxisMarks(position: .leading)
+                //            }
+                            Spacer()
+                        }
                         
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
