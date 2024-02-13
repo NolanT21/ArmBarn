@@ -109,3 +109,56 @@ import Observation
         self.atbats = atbats
     }
 }
+
+struct LineChartDT: Identifiable {
+    let id = UUID()
+    let label: String
+    let x_value: Int
+    let y_value: Double
+}
+
+struct Sales: Identifiable {
+    let id = UUID()
+    let date: Date
+    let amount: Int
+}
+
+struct Products: Identifiable {
+    let id = UUID()
+    let name: String
+    let sales: [Sales]
+}
+
+@Observable class ApplicationData {
+    var sales: [Products]
+    
+    init() {
+        let salesBagels = [
+            Sales(date: Date(timeInterval: -86400 * 7, since: Date()), amount: 10),
+            Sales(date: Date(timeInterval: -86400 * 6, since: Date()), amount: 12),
+            Sales(date: Date(timeInterval: -86400 * 5, since: Date()), amount: 8),
+            Sales(date: Date(timeInterval: -86400 * 4, since: Date()), amount: 13),
+            Sales(date: Date(timeInterval: -86400 * 3, since: Date()), amount: 9),
+            Sales(date: Date(timeInterval: -86400 * 2, since: Date()), amount: 7),
+            Sales(date: Date(timeInterval: -86400 * 1, since: Date()), amount: 8)
+        ]
+        
+        let salesBrownies = [
+            Sales(date: Date(timeInterval: -86400 * 7, since: Date()), amount: 3),
+            Sales(date: Date(timeInterval: -86400 * 6, since: Date()), amount: 5),
+            Sales(date: Date(timeInterval: -86400 * 5, since: Date()), amount: 2),
+            Sales(date: Date(timeInterval: -86400 * 4, since: Date()), amount: 8),
+            Sales(date: Date(timeInterval: -86400 * 3, since: Date()), amount: 6),
+            Sales(date: Date(timeInterval: -86400 * 2, since: Date()), amount: 5),
+            Sales(date: Date(timeInterval: -86400 * 1, since: Date()), amount: 9)
+        ]
+        
+        sales = [
+            Products(name: "Bagels", sales: salesBagels),
+            Products(name: "Brownies", sales: salesBrownies)
+        ]
+
+        
+    }
+    
+}
