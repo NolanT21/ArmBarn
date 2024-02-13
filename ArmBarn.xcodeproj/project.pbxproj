@@ -59,7 +59,6 @@
 		D5DD11122AF52FE60064F1A5 = {
 			isa = PBXGroup;
 			children = (
-				D5E5B3A52B4B0AF300BF14B6 /* TestView.swift */,
 				D5DD111D2AF52FE70064F1A5 /* ArmBarn */,
 				D5DD111C2AF52FE60064F1A5 /* Products */,
 			);
@@ -89,6 +88,7 @@
 				D5AA934B2B70658600B5BA80 /* GameReportView.swift */,
 				D56AF5FD2B606DC000610214 /* SelectPitcherView.swift */,
 				D5FAD8192B28BADC00E9EB91 /* AddPitcherView.swift */,
+				D5E5B3A52B4B0AF300BF14B6 /* TestView.swift */,
 				D5DD11222AF52FE80064F1A5 /* Assets.xcassets */,
 				D5DD11242AF52FE80064F1A5 /* Preview Content */,
 			);
