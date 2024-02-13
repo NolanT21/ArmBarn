@@ -27,6 +27,9 @@ struct PitchLocationView: View {
     @State private var showEndGame = false
     @State private var showGameReport = false
     @State private var showPitcherSelect = false
+    @State private var showTestView = false
+    
+    
     
     @State var location: CGPoint = .zero
     @State var cur_pitch_color = Color.clear
@@ -238,15 +241,15 @@ struct PitchLocationView: View {
                         Spacer()
                         
                         Button(action: {
-                            //showEndGame = true
+                            showTestView = true
                         }) {
                             Image(systemName: "gearshape.fill")
                                 .frame(width: sbl_width, height: sbl_height)
                                 .foregroundColor(Color.white)
                         }
-//                        .popover(isPresented: $showEndGame) {
-//                            EndGameView()
-//                        }
+                        .popover(isPresented: $showTestView) {
+                            TestView()
+                        }
                     }
                 }
             }
