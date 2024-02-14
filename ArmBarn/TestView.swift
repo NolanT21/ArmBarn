@@ -27,16 +27,16 @@ struct TestView: View {
     
     var body: some View {
         VStack{
-            Chart{
-                ForEach(appData.sales) { product in
-                    ForEach(product.sales) { sale in
-                        LineMark(x: .value("Date", sale.date, unit: .day),
-                                 y: .value("Sales", sale.amount))
-                    }.foregroundStyle(by: .value("Products", product.name))
-                }
-            }
-           .frame(height: 200)
-            .padding(10)
+//            Chart{
+//                ForEach(appData.sales) { product in
+//                    ForEach(product.sales) { sale in
+//                        LineMark(x: .value("Date", sale.date, unit: .day),
+//                                 y: .value("Sales", sale.amount))
+//                    }.foregroundStyle(by: .value("Products", product.name))
+//                }
+//            }
+//           .frame(height: 200)
+//            .padding(10)
 //            .chartXScale(domain: [0, 10])
 //            .chartXAxis {
 //                AxisMarks(values: .automatic(desiredCount: 9))
@@ -44,8 +44,8 @@ struct TestView: View {
 //            .chartYAxis {
 //                AxisMarks(position: .leading)
 //            }
-            Spacer()
-        }
+//            Spacer()
+       }
     }
 }
         
