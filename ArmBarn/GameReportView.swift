@@ -8,12 +8,6 @@
 import SwiftUI
 import Charts
 
-struct PieChartDT: Identifiable {
-    let id = UUID()
-    let label: String
-    let value: Double
-}
-
 struct GameReportView: View {
     
     @Environment(ApplicationData.self) private var appData
@@ -262,23 +256,23 @@ struct GameReportView: View {
                         
                         VStack{
                             Chart{
-                                ForEach(appData.sales) { product in
-                                    ForEach(product.sales) { sale in
-                                        LineMark(x: .value("Date", sale.date, unit: .day),
-                                                 y: .value("Sales", sale.amount))
-                                    }.foregroundStyle(by: .value("Products", product.name))
+                                ForEach(appData.pitchtypes_inn_data) { ars_data in
+                                    ForEach(ars_data.pitchtype_data) { data in
+                                        LineMark(x: .value("Inning", data.inn_number),
+                                                 y: .value("# of Pitches", data.amount))
+                                    }.foregroundStyle(by: .value("Products", ars_data.name))
                                 }
                             }
                            .frame(height: 200)
                            .padding(10)
-                           .chartLegend(.hidden)
-                //            .chartXScale(domain: [0, 10])
-                //            .chartXAxis {
-                //                AxisMarks(values: .automatic(desiredCount: 9))
-                //            }
-                //            .chartYAxis {
-                //                AxisMarks(position: .leading)
-                //            }
+                           .chartLegend(position: .bottom, alignment: .center, spacing: 10)
+                           .chartXScale(domain: [0, 8])
+                            .chartXAxis {
+                                AxisMarks(values: .automatic(desiredCount: 7))
+                            }
+                            .chartYAxis {
+                                AxisMarks(position: .leading)
+                            }
                             Spacer()
                         }
                         
