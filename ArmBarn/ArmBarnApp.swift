@@ -18,7 +18,8 @@ struct ArmBarnApp: App {
                 .environment(Event_String())
                 .environment(currentPitcher())
                 .environment(PitchTypeConfig())
-                .environment(ApplicationData())
+                .environment(PitchUsageLineData())
+                .environment(GameReport())
         }
         .modelContainer(for: [Pitcher.self, Event.self])
     }
