@@ -9,6 +9,23 @@ import SwiftUI
 import SwiftData
 import Observation
 
+
+@Observable class GameReport{
+    var inn_pitched: Double = 0
+    var pitches: Int = 0
+    var batters_faced: Int = 0
+    var hits: Int = 0
+    var strikeouts: Int = 0
+    var walks: Int = 0
+    
+    var first_pitch_strike: Int = 0
+
+    var strikes: Int = 0
+    
+    var game_score: Int = 40
+    var game_score_array: [Int] = []
+}
+
 //Pie Chart Data Type
 struct PieChartDT: Identifiable {
     let id = UUID()
@@ -30,7 +47,7 @@ struct PitchType: Identifiable {
     let pitchtype_data: [Inning]
 }
 
-@Observable class ApplicationData {
+@Observable class PitchUsageLineData {
     var pitchtypes_inn_data: [PitchType]
     
     init() {
