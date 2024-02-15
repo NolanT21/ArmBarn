@@ -15,6 +15,7 @@ struct PitchLocationView: View {
     @Environment(currentPitcher.self) var current_pitcher
     @Query(sort: \Pitcher.lastName) var pitchers: [Pitcher]
     @Environment(Event_String.self) var event
+    @Environment(GameReport.self) var game_report
     
     @Query var events: [Event]
     
@@ -235,7 +236,9 @@ struct PitchLocationView: View {
                                 .bold()
                         }
                         .popover(isPresented: $showGameReport) {
-                            GameReportView()
+                            GameReportView().task{
+                                generate_game_report()
+                            }
                         }
                         
                         Spacer()
@@ -254,6 +257,27 @@ struct PitchLocationView: View {
                 }
             }
         }
+    }
+    
+    func generate_game_report(){
+        
+        game_report.inn_pitched = (Double(scoreboard.inning) + (Double(scoreboard.outs) * 0.1)) - 1
+        game_report.pitches = scoreboard.pitches
+        game_report.batters_faced = scoreboard.atbats
+        
+        
+        for evnt in events{
+            if evnt.pitch_result == "H" {
+                game_report.hits += 1
+            }
+            else if evnt.result_detail == "K" || evnt.result_detail == "C" {
+                game_report.strikeouts += 1
+            }
+            else if evnt.result_detail == "W" {
+                game_report.walks += 1
+            }
+        }
+        
     }
     
     func load_previous_event() {
