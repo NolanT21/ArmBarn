@@ -15,6 +15,7 @@ struct EndGameView: View {
     @Environment(Scoreboard.self) var scoreboard
     @Environment(PitchTypeConfig.self) var ptconfig
     @Environment(Event_String.self) var event
+    @Environment(GameReport.self) var game_report
     
     @Environment(\.modelContext) var context
     @Environment(\.dismiss) var dismiss
@@ -68,6 +69,7 @@ struct EndGameView: View {
         ptconfig.pitch_y_loc.removeAll()
         ptconfig.ab_pitch_color.removeAll()
         ptconfig.pitch_cur_ab = 0
+
         
         scoreboard.b1light = .black
         scoreboard.b2light = .black
@@ -78,6 +80,14 @@ struct EndGameView: View {
         
         scoreboard.o1light = .black
         scoreboard.o2light = .black
+        
+        game_report.inn_pitched = 0
+        game_report.pitches = 0
+        game_report.batters_faced = 0
+        game_report.hits = 0
+        game_report.strikeouts = 0
+        game_report.walks = 0
+        
     }
 }
 
