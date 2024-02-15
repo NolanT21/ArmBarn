@@ -10,7 +10,8 @@ import Charts
 
 struct GameReportView: View {
     
-    @Environment(ApplicationData.self) private var appData
+    @Environment(GameReport.self) var game_report
+    @Environment(PitchUsageLineData.self) private var pulData
     
     @State private var firstpitstrike_data: [PieChartDT] = [
         .init(label: "First Pitch Strikes", value: 13),
@@ -48,12 +49,12 @@ struct GameReportView: View {
                         
                         Grid(){
                             GridRow{
-                            Text("IP")
-                            Text("Pit")
-                            Text("BF")
-                            Text("H")
-                            Text("SO")
-                            Text("BB")
+                                Text("IP")
+                                Text("Pit")
+                                Text("BF")
+                                Text("H")
+                                Text("SO")
+                                Text("BB")
                             }
                             .padding(.vertical, -5)
                             .bold()
@@ -61,12 +62,12 @@ struct GameReportView: View {
                             Divider()
                             
                             GridRow{
-                            Text("9.0")
-                            Text("72")
-                            Text("20")
-                            Text("4")
-                            Text("7")
-                            Text("2")
+                                Text("\(game_report.inn_pitched, specifier: "%.1f")")
+                                Text("\(game_report.pitches)")
+                                Text("\(game_report.batters_faced)")
+                                Text("\(game_report.hits)")
+                                Text("\(game_report.strikeouts)")
+                                Text("\(game_report.walks)")
                             }
                             
                         }
@@ -256,7 +257,7 @@ struct GameReportView: View {
                         
                         VStack{
                             Chart{
-                                ForEach(appData.pitchtypes_inn_data) { ars_data in
+                                ForEach(pulData.pitchtypes_inn_data) { ars_data in
                                     ForEach(ars_data.pitchtype_data) { data in
                                         LineMark(x: .value("Inning", data.inn_number),
                                                  y: .value("# of Pitches", data.amount))
