@@ -18,7 +18,7 @@ struct TestView: View {
     @Query(sort: \Pitcher.lastName) var pitchers: [Pitcher]
     @Environment(Event_String.self) var event
     
-    @Environment(ApplicationData.self) private var appData
+    @Environment(PitchUsageLineData.self) private var appData
     @Environment(\.dismiss) var dismiss
     
     
@@ -56,5 +56,4 @@ struct TestView: View {
         .environment(Event_String())
         .environment(currentPitcher())
         .environment(PitchTypeConfig())
-        .environment(ApplicationData())
 }
