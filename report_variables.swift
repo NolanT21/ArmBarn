@@ -19,11 +19,13 @@ import Observation
     var walks: Int = 0
     
     var first_pitch_strike: Int = 0
+    var first_pit_strike_per: Int = 0
 
     var strikes: Int = 0
+    var strikes_per: Int = 0
     
     var game_score: Int = 40
-    var game_score_array: [Int] = []
+    var game_score_inn_data: [Int] = []
 }
 
 //Pie Chart Data Type
