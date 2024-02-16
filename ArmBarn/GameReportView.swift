@@ -114,10 +114,10 @@ struct GameReportView: View {
                             .chartLegend(.hidden)
                             .chartBackground { proxy in
                                 VStack{
-                                    Text("59%")
+                                    Text("\(game_report.first_pit_strike_per)%")
                                         .font(.system(size: 33))
                                         .bold()
-                                    Text("13/22")
+                                    Text("\(game_report.first_pitch_strike)/\(game_report.batters_faced)")
                                         .font(.system(size: 13))
                                 }
                                 .padding(.top, view_padding)
@@ -165,10 +165,10 @@ struct GameReportView: View {
                             .chartLegend(.hidden)
                             .chartBackground { proxy in
                                 VStack{
-                                    Text("67%")
+                                    Text("\(game_report.strikes_per)%")
                                         .font(.system(size: 33))
                                         .bold()
-                                    Text("45/68")
+                                    Text("\(game_report.strikes)/\(game_report.pitches)")
                                         .font(.system(size: 13 ))
                                 }
                                 .padding(.top, view_padding)
