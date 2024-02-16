@@ -88,13 +88,15 @@ struct PitchResultView: View {
                     }
                     .alert ("Out Recorded?", isPresented: $showOutRecorded) {
                         NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                                event.pitch_result = "K"
+                                event.pitch_result = "Z"
+                                event.result_detail = "K"
                                 add_Strike()
                             }){
                                 Text("Yes")
                             }
                         NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                                event.pitch_result = "C"
+                                event.pitch_result = "Z"
+                                event.result_detail = "C"
                                 reset_Count()
                             }){
                                 Text("No")
