@@ -261,23 +261,46 @@ struct PitchLocationView: View {
     
     func generate_game_report(){
         
+        game_report.strikes = 0
+        game_report.first_pitch_strike = 0
+        game_report.hits = 0
+        game_report.strikeouts = 0
+        game_report.walks = 0
+        
+        
         game_report.inn_pitched = (Double(scoreboard.inning) + (Double(scoreboard.outs) * 0.1)) - 1
         game_report.pitches = scoreboard.pitches
-        game_report.batters_faced = scoreboard.atbats
-        
         
         for evnt in events{
-            if evnt.pitch_result == "H" {
-                game_report.hits += 1
-            }
-            else if evnt.result_detail == "K" || evnt.result_detail == "C" {
-                game_report.strikeouts += 1
+            if evnt.pitch_result != "A" {
+                game_report.strikes += 1
+                if evnt.balls == 0 && evnt.strikes == 0 {
+                    game_report.first_pitch_strike += 1
+                }
+                
+                if evnt.pitch_result == "H" {
+                    game_report.hits += 1
+                }
+                else if evnt.result_detail == "K" || evnt.result_detail == "C" {
+                    game_report.strikeouts += 1
+                }
             }
             else if evnt.result_detail == "W" {
                 game_report.walks += 1
             }
+            
+            game_report.batters_faced = evnt.atbats
+            
         }
         
+        if game_report.first_pitch_strike > 0 {
+            game_report.first_pit_strike_per = (game_report.first_pitch_strike * 100) / game_report.batters_faced
+        }
+        
+        if game_report.strikes > 0 {
+            game_report.strikes_per = (game_report.strikes * 100) / game_report.pitches
+        }
+
     }
     
     func load_previous_event() {
