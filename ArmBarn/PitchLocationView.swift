@@ -261,18 +261,23 @@ struct PitchLocationView: View {
     
     func generate_game_report(){
         
+        game_report.batters_faced = 0
         game_report.strikes = 0
-        game_report.first_pitch_strike = 0
         game_report.hits = 0
         game_report.strikeouts = 0
         game_report.walks = 0
         
+        game_report.first_pitch_strike = 0
+        game_report.first_pit_strike_per = 0
+        game_report.strikes_per = 0
         
-        game_report.inn_pitched = (Double(scoreboard.inning) + (Double(scoreboard.outs) * 0.1)) - 1
+        game_report.game_score = 40
         game_report.pitches = scoreboard.pitches
         
+        game_report.inn_pitched = (Double(scoreboard.inning) + (Double(scoreboard.outs) * 0.1)) - 1
+        
         for evnt in events{
-            if evnt.pitch_result != "A" {
+            if evnt.pitch_result != "A" && evnt.result_detail != "R" {
                 game_report.strikes += 1
                 if evnt.balls == 0 && evnt.strikes == 0 {
                     game_report.first_pitch_strike += 1
@@ -280,13 +285,33 @@ struct PitchLocationView: View {
                 
                 if evnt.pitch_result == "H" {
                     game_report.hits += 1
+                    if evnt.result_detail == "S" {
+                        game_report.game_score -= 2
+                    }
+                    else if evnt.result_detail == "D" {
+                        game_report.game_score -= 3
+                        
+                    }
+                    else if evnt.result_detail == "T" {
+                        game_report.game_score -= 4
+                        
+                    }
+                    else if evnt.result_detail == "H" {
+                        game_report.game_score -= 6
+                        
+                    }
+                }
+                else if evnt.pitch_result == "O" {
+                    game_report.game_score += 2
                 }
                 else if evnt.result_detail == "K" || evnt.result_detail == "C" {
                     game_report.strikeouts += 1
+                    game_report.game_score += 3
                 }
             }
             else if evnt.result_detail == "W" {
                 game_report.walks += 1
+                game_report.game_score -= 2
             }
             
             game_report.batters_faced = evnt.atbats
@@ -300,6 +325,9 @@ struct PitchLocationView: View {
         if game_report.strikes > 0 {
             game_report.strikes_per = (game_report.strikes * 100) / game_report.pitches
         }
+        
+        game_report.game_score_min = game_report.game_score_inn_data.min() ?? 0
+        game_report.game_score_max = game_report.game_score_inn_data.max() ?? 10
 
     }
     
