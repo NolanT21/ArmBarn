@@ -25,7 +25,9 @@ import Observation
     var strikes_per: Int = 0
     
     var game_score: Int = 40
-    var game_score_inn_data: [Int] = []
+    var game_score_min: Int = 0
+    var game_score_max: Int = 0
+    var game_score_inn_data: [Int] = [47, 39, 42, 45, 49, 52, 50]
 }
 
 //Pie Chart Data Type
