@@ -169,7 +169,7 @@ struct GameReportView: View {
                                         .font(.system(size: 33))
                                         .bold()
                                     Text("\(game_report.strikes)/\(game_report.pitches)")
-                                        .font(.system(size: 13 ))
+                                        .font(.system(size: 13))
                                 }
                                 .padding(.top, view_padding)
                             }
@@ -186,7 +186,6 @@ struct GameReportView: View {
                     .padding(.leading, view_padding/2)
                     .padding(.trailing, view_padding)
                     
-                    
                 }
                 
                 HStack{
@@ -201,7 +200,41 @@ struct GameReportView: View {
                             
                         }
                         
-                        Text("")
+                        HStack{
+                            VStack{
+                                Text("\(game_report.game_score)")
+                                    .font(.system(size: 40))
+                                    .padding(.horizontal, view_padding)
+                                    //.padding(.bottom, view_padding)
+                                    .bold()
+                            }
+                            
+                            Spacer()
+                            
+                            VStack {
+                                
+                                Chart{
+                                    ForEach(Array(game_report.game_score_inn_data.enumerated()), id: \.offset) { index, value in
+                                        PointMark(x: .value("Inning", index),
+                                                  y: .value("Game Score", value))
+                                        
+                                        LineMark(x: .value("Inning", index),
+                                                 y: .value("Game Score", value))
+                                    }
+                                }
+                                .padding(.trailing, view_padding * 2)
+                                //.padding(.bottom, view_padding)
+                                .frame(width: 225, height: 35)
+                                .chartXAxis(.hidden)
+                                .chartYAxis(.hidden)
+                                .chartYScale(domain: [game_report.game_score_min, game_report.game_score_max])
+                                
+                                Spacer()
+                                
+                            }
+                            
+                        }
+                        
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(.white)
