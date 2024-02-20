@@ -19,15 +19,32 @@ import Observation
     var walks: Int = 0
     
     var first_pitch_strike: Int = 0
+    var first_pitch_ball: Int = 0
     var first_pit_strike_per: Int = 0
+    var fpb_to_fps: [Int] = [0, 0]
 
     var strikes: Int = 0
+    var balls: Int = 0
     var strikes_per: Int = 0
+    var balls_to_strikes: [Int] = [0, 0]
     
     var game_score: Int = 40
     var game_score_min: Int = 0
     var game_score_max: Int = 0
     var game_score_inn_data: [Int] = [47, 39, 42, 45, 49, 52, 50]
+    
+    var p1_by_inn: [Int] = []
+    var p2_by_inn: [Int] = []
+    var p3_by_inn: [Int] = []
+    var p4_by_inn: [Int] = []
+    var pitches_by_inn: [PitchTypeDataset] = []
+    
+}
+
+struct PitchTypeDataset: Identifiable {
+    let id = UUID()
+    let name: String
+    let dataset: [Int]
 }
 
 //Pie Chart Data Type
@@ -36,7 +53,6 @@ struct PieChartDT: Identifiable {
     let label: String
     let value: Double
 }
-
 
 //Pitch Type Amount by Inning Line Chart Data Structure
 struct Inning: Identifiable {
