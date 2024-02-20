@@ -114,89 +114,41 @@ struct OutDetailView: View {
                             }
                                 //.font(weight: .semibold)
                             
-                            Spacer()
-                            Spacer()
-                            Spacer()
-                            Spacer()
-                            Spacer()
-                            Spacer()
-                            Spacer()
-                            
-                            HStack{
-                                Text("P")
-                                    .bold()
-                                    .foregroundColor(Color.white)
-                                
-                                Spacer()
-                                
-                                Menu(content: {
-                                    ForEach(pitchers) { value in
-                                        Button(value.lastName) {
-                                            current_pitcher.pitch_num = 0
-                                            current_pitcher.firstName = value.firstName
-                                            current_pitcher.lastName = value.lastName
-                                            current_pitcher.pitch1 = value.pitch1
-                                            if current_pitcher.pitch1 != "None" {
-                                                current_pitcher.pitch_num += 1
-                                                current_pitcher.arsenal[0] = value.pitch1
-                                            }
-                                            
-                                            current_pitcher.pitch2 = value.pitch2
-                                            if current_pitcher.pitch2 != "None" {
-                                                current_pitcher.pitch_num += 1
-                                                current_pitcher.arsenal[1] = value.pitch2
-                                            }
-                                            
-                                            current_pitcher.pitch3 = value.pitch3
-                                            if current_pitcher.pitch3 != "None" {
-                                                current_pitcher.pitch_num += 1
-                                                current_pitcher.arsenal[2] = value.pitch3
-                                            }
-                                            
-                                            current_pitcher.pitch4 = value.pitch4
-                                            if current_pitcher.pitch4 != "None" {
-                                                current_pitcher.pitch_num += 1
-                                                current_pitcher.arsenal[3] = value.pitch4
-                                            }
-                                        }
-                                        
-                                    }
-                                    
-                                }, label: {
-                                    if pitchers.count <= 0 {
-                                        Text("Add Pitcher")
-                                    }
-                                    else {
-                                        Text(current_pitcher.lastName)
-                                    }
-                                    
-                                })
-                                .foregroundColor(Color.white)
-                                .bold()
-                            }
                         }
                     }
                     
-                    ToolbarItemGroup(placement: .topBarTrailing) {
-                        HStack{
-                            Image(systemName: "square.and.arrow.up")
-                                .frame(width: sbl_width, height: sbl_height)
+                    ToolbarItemGroup(placement: .principal) {
+                        HStack(alignment: .center){
+                            Text("P")
+                                .bold()
                                 .foregroundColor(Color.white)
                             
-                            Spacer()
-                            
-                            Image(systemName: "flag.checkered")
-                                .frame(width: sbl_width, height: sbl_height)
+                            Text("\(current_pitcher.lastName)")
+                                .bold()
                                 .foregroundColor(Color.white)
-                            
-                            Spacer()
-                            
-                            Image(systemName: "gearshape.fill")
-                                .frame(width: sbl_width, height: sbl_height)
-                                .foregroundColor(Color.white)
-                            
                         }
                     }
+                    
+//                    ToolbarItemGroup(placement: .topBarTrailing) {
+//                        HStack{
+//                            Image(systemName: "square.and.arrow.up")
+//                                .frame(width: sbl_width, height: sbl_height)
+//                                .foregroundColor(Color.white)
+//                            
+//                            Spacer()
+//                            
+//                            Image(systemName: "flag.checkered")
+//                                .frame(width: sbl_width, height: sbl_height)
+//                                .foregroundColor(Color.white)
+//                            
+//                            Spacer()
+//                            
+//                            Image(systemName: "gearshape.fill")
+//                                .frame(width: sbl_width, height: sbl_height)
+//                                .foregroundColor(Color.white)
+//                            
+//                        }
+//                    }
                 
                 }
             }
