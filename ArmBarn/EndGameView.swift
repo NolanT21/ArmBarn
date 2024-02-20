@@ -81,13 +81,6 @@ struct EndGameView: View {
         scoreboard.o1light = .black
         scoreboard.o2light = .black
         
-        game_report.inn_pitched = 0
-        game_report.pitches = 0
-        game_report.batters_faced = 0
-        game_report.hits = 0
-        game_report.strikeouts = 0
-        game_report.walks = 0
-        
     }
 }
 
