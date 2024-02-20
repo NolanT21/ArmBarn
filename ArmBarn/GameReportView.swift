@@ -8,6 +8,8 @@
 import SwiftUI
 import Charts
 
+
+
 struct GameReportView: View {
     
     @Environment(GameReport.self) var game_report
@@ -23,6 +25,10 @@ struct GameReportView: View {
         .init(label: "Total Balls", value: 23)
     ]
     
+    @State var fps_chart_colors: [Color] = [.gray, .yellow]
+    @State var sp_chart_colors: [Color] = [.gray, .orange]
+    
+    var gradient = Gradient(colors: [.yellow, .orange, .red])
     
     var view_padding: CGFloat = 10
     var view_crnr_radius: CGFloat = 12
@@ -85,6 +91,7 @@ struct GameReportView: View {
                 HStack{
                     
                     VStack{
+                        
                         HStack{
                             Text("1st Pitch Strike %")
                                 .font(.subheadline)
@@ -93,38 +100,35 @@ struct GameReportView: View {
                             Spacer()
                         }
                         .padding(.leading, view_padding)
+                        .padding(.bottom, view_padding)
                         
-                        VStack(alignment: .trailing){
-                            Chart(firstpitstrike_data) { fps in
-                                SectorMark(
-                                    angle: .value(
-                                        Text(verbatim: fps.label),
-                                        fps.value
-                                    ),
-                                    innerRadius: .ratio(0.7)
-                                )
-                                .foregroundStyle(
-                                    by: .value(
-                                        Text(verbatim: fps.label),
-                                        fps.label
-                                    )
-                                )
-                            }
-                            .frame(width: 160, height: 140)
-                            .chartLegend(.hidden)
-                            .chartBackground { proxy in
+                        //Spacer()
+                        
+                        VStack{
+                            //Spacer()
+                            ZStack{
+                                Gauge(value: Double(game_report.first_pit_strike_per) * 0.01) {}
+                                .scaleEffect(2.5)
+                                .gaugeStyle(.accessoryCircularCapacity)
+                                .tint(.yellow)
+                                .padding(view_padding)
                                 VStack{
                                     Text("\(game_report.first_pit_strike_per)%")
-                                        .font(.system(size: 33))
+                                        .font(.system(size: 40))
                                         .bold()
                                     Text("\(game_report.first_pitch_strike)/\(game_report.batters_faced)")
-                                        .font(.system(size: 13))
+                                        .font(.subheadline)
                                 }
                                 .padding(.top, view_padding)
                             }
+                            .padding(view_padding)
+                            
+                            Spacer()
                             
                         }
-                        .padding(.bottom, view_padding)
+                        .padding(view_padding)
+                        
+                        Spacer()
                         
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -143,41 +147,34 @@ struct GameReportView: View {
                             Spacer()
                         }
                         .padding(.leading, view_padding)
+                        .padding(.bottom, view_padding)
                        
-                        VStack(alignment: .trailing){
-                            
-                            Chart(strikepercent_data) { sp in
-                                SectorMark(
-                                    angle: .value(
-                                        Text(verbatim: sp.label),
-                                        sp.value
-                                    ),
-                                    innerRadius: .ratio(0.7)
-                                )
-                                .foregroundStyle(
-                                    by: .value(
-                                        Text(verbatim: sp.label),
-                                        sp.label
-                                    )
-                                )
-                            }
-                            .frame(width: 160, height: 140)
-                            .chartLegend(.hidden)
-                            .chartBackground { proxy in
+                        VStack{
+                            //Spacer()
+                            ZStack{
+                                Gauge(value: Double(game_report.strikes_per) * 0.01) {}
+                                .scaleEffect(2.5)
+                                .gaugeStyle(.accessoryCircularCapacity)
+                                .tint(.orange)
+                                .padding(view_padding)
                                 VStack{
                                     Text("\(game_report.strikes_per)%")
-                                        .font(.system(size: 33))
+                                        .font(.system(size: 40))
                                         .bold()
                                     Text("\(game_report.strikes)/\(game_report.pitches)")
-                                        .font(.system(size: 13))
+                                        .font(.subheadline)
                                 }
                                 .padding(.top, view_padding)
                             }
+                            .padding(view_padding)
+                            
+                            Spacer()
                             
                         }
-                        .padding(.bottom, view_padding)
-
-                       
+                        .padding(view_padding)
+                        
+                        Spacer()
+                        
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(.white)
@@ -200,41 +197,30 @@ struct GameReportView: View {
                             
                         }
                         
-                        HStack{
-                            VStack{
+                        VStack{
+                            HStack{
                                 Text("\(game_report.game_score)")
                                     .font(.system(size: 40))
                                     .padding(.horizontal, view_padding)
-                                    //.padding(.bottom, view_padding)
+                                    .padding(.bottom, -20)
                                     .bold()
-                            }
-                            
-                            Spacer()
-                            
-                            VStack {
-                                
-                                Chart{
-                                    ForEach(Array(game_report.game_score_inn_data.enumerated()), id: \.offset) { index, value in
-                                        PointMark(x: .value("Inning", index),
-                                                  y: .value("Game Score", value))
-                                        
-                                        LineMark(x: .value("Inning", index),
-                                                 y: .value("Game Score", value))
-                                    }
-                                }
-                                .padding(.trailing, view_padding * 2)
-                                //.padding(.bottom, view_padding)
-                                .frame(width: 225, height: 35)
-                                .chartXAxis(.hidden)
-                                .chartYAxis(.hidden)
-                                .chartYScale(domain: [game_report.game_score_min, game_report.game_score_max])
                                 
                                 Spacer()
-                                
                             }
                             
+                            //Spacer()
+                            
+                            VStack{
+                                Gauge(value: Double(game_report.game_score) * 0.01) {
+                                    Text("Game Score")
+                                }
+                                .gaugeStyle(.accessoryLinear)
+                                .tint(gradient)
+                                .frame(height: 10)
+                            }
+                            .padding(view_padding)
                         }
-                        
+
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(.white)
