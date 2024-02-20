@@ -132,28 +132,6 @@ struct PitchResultView: View {
                     .foregroundColor(Color.white)
                     .cornerRadius(8.0)
                 }
-
-                if scoreboard.baserunners > 0 {
-                    VStack {
-                        Spacer()
-                            .frame(height: 6)
-                        HStack {
-                            
-                            Spacer()
-                            
-                            NavigationLink(destination: PitchLocationView().navigationBarBackButtonHidden(true).onAppear{
-                                record_baserunner_out()
-                            }){
-                                Text("Baserunner Out")
-                            }
-                            .padding(12.0)
-                            .foregroundColor(Color.white)
-                            .background(Color.orange)
-                            .cornerRadius(8.0)
-                        }
-                        Spacer()
-                    }
-                }
                 
             }
             .navigationTitle("")
@@ -183,90 +161,26 @@ struct PitchResultView: View {
                                 .bold()
                                 //.font(weight: .semibold)
                         }
-                        
-                        Spacer()
-
-                        HStack{
-                            Text("P")
-                                .bold()
-                                .foregroundColor(Color.white)
-                            
-                            Spacer()
-                            
-                            Menu(content: {
-                                ForEach(pitchers) { value in
-                                    Button(value.lastName) {
-                                        current_pitcher.pitch_num = 0
-                                        current_pitcher.firstName = value.firstName
-                                        current_pitcher.lastName = value.lastName
-                                        current_pitcher.pitch1 = value.pitch1
-                                        if current_pitcher.pitch1 != "None" {
-                                            current_pitcher.pitch_num += 1
-                                            current_pitcher.arsenal[0] = value.pitch1
-                                        }
-                                        
-                                        current_pitcher.pitch2 = value.pitch2
-                                        if current_pitcher.pitch2 != "None" {
-                                            current_pitcher.pitch_num += 1
-                                            current_pitcher.arsenal[1] = value.pitch2
-                                        }
-                                        
-                                        current_pitcher.pitch3 = value.pitch3
-                                        if current_pitcher.pitch3 != "None" {
-                                            current_pitcher.pitch_num += 1
-                                            current_pitcher.arsenal[2] = value.pitch3
-                                        }
-                                        
-                                        current_pitcher.pitch4 = value.pitch4
-                                        if current_pitcher.pitch4 != "None" {
-                                            current_pitcher.pitch_num += 1
-                                            current_pitcher.arsenal[3] = value.pitch4
-                                        }
-                                    }
-                                    
-                                }
-                                
-                            }, label: {
-                                if pitchers.count <= 0 {
-                                    Text("Add Pitcher")
-                                }
-                                else {
-                                    Text(current_pitcher.lastName)
-                                }
-                                
-                            })
-                            .foregroundColor(Color.white)
-                            .bold()
-                        }
                     }
                 }
                 
-                ToolbarItemGroup(placement: .topBarTrailing) {
-                    HStack{
-                        Image(systemName: "square.and.arrow.up")
-                            .frame(width: sbl_width, height: sbl_height)
+                ToolbarItemGroup(placement: .principal) {
+                    HStack(alignment: .center){
+                        Text("P")
+                            .bold()
                             .foregroundColor(Color.white)
                         
-                        Spacer()
-                        
-                        Image(systemName: "flag.checkered")
-                            .frame(width: sbl_width, height: sbl_height)
+                        Text("\(current_pitcher.lastName)")
+                            .bold()
                             .foregroundColor(Color.white)
-                        
-                        Spacer()
-                        
-                        Image(systemName: "gearshape.fill")
-                            .frame(width: sbl_width, height: sbl_height)
-                            .foregroundColor(Color.white)
-                        
                     }
                 }
-            
-            }
             
             }
             
         }
+        
+    }
     
     func back_func() {
         
@@ -282,15 +196,15 @@ struct PitchResultView: View {
         
         //print(event.balls)
         
-        scoreboard.balls = event.balls
-        scoreboard.strikes = event.strikes
-        scoreboard.outs = event.outs
-        scoreboard.inning = event.inning
+//        scoreboard.balls = event.balls
+//        scoreboard.strikes = event.strikes
+//        scoreboard.outs = event.outs
+//        scoreboard.inning = event.inning
         //scoreboard.atbats = event.atbats
         
-        if scoreboard.pitches > 0 {
-            scoreboard.pitches -= 1
-        }
+//        if scoreboard.pitches > 0 {
+//            scoreboard.pitches -= 1
+//        }
         
         if scoreboard.balls == 1 {
             scoreboard.b1light = .blue
@@ -312,6 +226,7 @@ struct PitchResultView: View {
     }
     
     func add_Ball() {
+        
         event.pitch_result = "A"
         event.result_detail = "N"
         event.balls = scoreboard.balls
@@ -361,6 +276,7 @@ struct PitchResultView: View {
             if scoreboard.strikes == 3 {
                 if event.result_detail == "C"{
                     scoreboard.atbats += 1
+                    scoreboard.baserunners += 1
                     reset_Count()
                 }
                 else if event.pitch_result == "T"{
@@ -392,39 +308,6 @@ struct PitchResultView: View {
             }
             if scoreboard.strikes == 2 {
                 scoreboard.s2light = .yellow
-            }
-        }
-        
-    }
-    
-    func record_baserunner_out() {
-        event.pitch_result = "O"
-        event.result_detail = "R"
-        event.pitch_type = "NP"
-        event.balls = scoreboard.balls
-        event.strikes = scoreboard.strikes
-        event.outs = scoreboard.outs
-        event.inning = scoreboard.inning
-        event.atbats = scoreboard.atbats
-        
-        if scoreboard.update_scoreboard {
-            scoreboard.outs += 1
-            scoreboard.baserunners -= 1
-            
-            if scoreboard.outs == 1 {
-                scoreboard.o1light = .red
-            }
-            if scoreboard.outs == 2 {
-                scoreboard.o2light = .red
-            }
-            
-            if scoreboard.outs == 3 {
-                scoreboard.outs = 0
-                scoreboard.inning += 1
-                scoreboard.baserunners = 0
-                scoreboard.o1light = .black
-                scoreboard.o2light = .black
-                reset_Count()
             }
         }
         
