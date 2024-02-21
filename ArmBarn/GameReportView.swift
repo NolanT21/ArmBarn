@@ -13,6 +13,7 @@ import Charts
 struct GameReportView: View {
     
     @Environment(GameReport.self) var game_report
+    @Environment(currentPitcher.self) var current_pitcher
     @Environment(PitchUsageLineData.self) private var pulData
     
     @State private var firstpitstrike_data: [PieChartDT] = [
@@ -276,19 +277,25 @@ struct GameReportView: View {
                         
                         VStack{
                             Chart{
-                                ForEach(pulData.pitchtypes_inn_data) { ars_data in
-                                    ForEach(ars_data.pitchtype_data) { data in
-                                        LineMark(x: .value("Inning", data.inn_number),
-                                                 y: .value("# of Pitches", data.amount))
-                                    }.foregroundStyle(by: .value("Products", ars_data.name))
+                                ForEach(game_report.pitches_by_inn) { pit_dataset in
+                                    ForEach(Array(pit_dataset.dataset.enumerated()), id: \.offset){ index, value in
+                                        LineMark(x: .value("Inning", index + 1),
+                                                 y: .value("# of Pitches", value))
+                                        PointMark(x: .value("Inning", index + 1),
+                                                 y: .value("# of Pitches", value))
+                                    }
+                                    .foregroundStyle(by: .value("Pitch Type", pit_dataset.name))
                                 }
                             }
+                            .chartForegroundStyleScale([
+                                current_pitcher.pitch1: .yellow, current_pitcher.pitch2: .orange, current_pitcher.pitch3: .red, current_pitcher.pitch4: .gray
+                            ])
                            .frame(height: 200)
                            .padding(10)
                            .chartLegend(position: .bottom, alignment: .center, spacing: 10)
-                           .chartXScale(domain: [0, 8])
+                           .chartXScale(domain: [0, game_report.p1_by_inn.count + 1])
                             .chartXAxis {
-                                AxisMarks(values: .automatic(desiredCount: 7))
+                                AxisMarks(values: .automatic(desiredCount: game_report.p1_by_inn.count))
                             }
                             .chartYAxis {
                                 AxisMarks(position: .leading)
