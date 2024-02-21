@@ -280,6 +280,10 @@ struct PitchLocationView: View {
         
         game_report.inn_pitched = (Double(scoreboard.inning) + (Double(scoreboard.outs) * 0.1)) - 1
         
+        var arsenal: [String] = [current_pitcher.pitch1, current_pitcher.pitch2, current_pitcher.pitch3, current_pitcher.pitch4]
+        
+        var chart_colors: [String] = ["Yellow", "Orange", "Red", "Gray"]
+        
         var inn_cntr = 1
         var p1_cntr = 0
         var p2_cntr = 0
@@ -373,13 +377,24 @@ struct PitchLocationView: View {
         if game_report.strikes > 0 {
             game_report.strikes_per = (game_report.strikes * 100) / game_report.pitches
         }
-
-        game_report.pitches_by_inn = [
-            PitchTypeDataset(name: current_pitcher.pitch1, dataset: game_report.p1_by_inn),
-            PitchTypeDataset(name: current_pitcher.pitch2, dataset: game_report.p2_by_inn),
-            PitchTypeDataset(name: current_pitcher.pitch3, dataset: game_report.p3_by_inn),
-            PitchTypeDataset(name: current_pitcher.pitch4, dataset: game_report.p4_by_inn)
-        ]
+        
+        var temp_inn_pitches = [game_report.p1_by_inn, game_report.p2_by_inn, game_report.p3_by_inn, game_report.p4_by_inn]
+        
+        for index in 0..<temp_inn_pitches.count {
+            if temp_inn_pitches[index].reduce(0, +) > 0 {
+                game_report.pitches_by_inn.append(
+                    PitchTypeDataset(name: arsenal[index], color: chart_colors[index], dataset: temp_inn_pitches[index])
+                )
+            }
+                
+        }
+        
+//        game_report.pitches_by_inn = [
+//            PitchTypeDataset(name: current_pitcher.pitch1, color: "Yellow", dataset: game_report.p1_by_inn),
+//            PitchTypeDataset(name: current_pitcher.pitch2, color: "Orange", dataset: game_report.p2_by_inn),
+//            PitchTypeDataset(name: current_pitcher.pitch3, color: "Red", dataset: game_report.p3_by_inn),
+//            PitchTypeDataset(name: current_pitcher.pitch4, color: "Gray", dataset: game_report.p4_by_inn)
+//        ]
         
     }
     
