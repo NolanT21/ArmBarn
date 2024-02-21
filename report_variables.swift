@@ -44,6 +44,7 @@ import Observation
 struct PitchTypeDataset: Identifiable {
     let id = UUID()
     let name: String
+    let color: String
     let dataset: [Int]
 }
 
