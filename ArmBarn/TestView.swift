@@ -38,9 +38,13 @@ struct TestView: View {
                                  y: .value("# of Pitches", value))
                         PointMark(x: .value("Inning", index + 1),
                                  y: .value("# of Pitches", value))
-                    }.foregroundStyle(by: .value("Pitch Type", pit_dataset.name))
+                    }
+                    .foregroundStyle(by: .value("Pitch Type", pit_dataset.name))
                 }
             }
+            .chartForegroundStyleScale([
+                current_pitcher.pitch1: .yellow, current_pitcher.pitch2: .orange, current_pitcher.pitch3: .red, current_pitcher.pitch4: .gray
+            ])
            .frame(height: 200)
            .padding(10)
            .chartLegend(position: .bottom, alignment: .center, spacing: 10)
