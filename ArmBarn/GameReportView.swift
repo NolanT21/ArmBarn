@@ -82,7 +82,7 @@ struct GameReportView: View {
                     }
                     .padding(view_padding)
                     .frame(maxWidth: .infinity)
-                    .background(.white)
+                    .background(Color(UIColor.systemBackground))
                     .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
                     
                 }
@@ -133,7 +133,7 @@ struct GameReportView: View {
                         
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(.white)
+                    .background(Color(UIColor.systemBackground))
                     .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
                     .padding(.bottom, view_padding)
                     .padding(.leading, view_padding)
@@ -178,7 +178,7 @@ struct GameReportView: View {
                         
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(.white)
+                    .background(Color(UIColor.systemBackground))
                     .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
                     .padding(.bottom, view_padding)
                     .padding(.leading, view_padding/2)
@@ -224,7 +224,7 @@ struct GameReportView: View {
 
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(.white)
+                    .background(Color(UIColor.systemBackground))
                     .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
                     .padding(.bottom, view_padding)
                     .padding(.leading, view_padding)
@@ -255,7 +255,7 @@ struct GameReportView: View {
                         
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(.white)
+                    .background(Color(UIColor.systemBackground))
                     .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
                     .padding(.bottom, view_padding)
                     .padding(.leading, view_padding)
@@ -305,7 +305,7 @@ struct GameReportView: View {
                         
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(.white)
+                    .background(Color(UIColor.systemBackground))
                     .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
                     .padding(.bottom, view_padding)
                     .padding(.leading, view_padding)
@@ -317,7 +317,7 @@ struct GameReportView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .background(.gray)
+        .background(Color(UIColor.secondarySystemBackground))
         .navigationTitle("Game Summary")
     }
 }
