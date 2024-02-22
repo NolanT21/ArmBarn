@@ -60,7 +60,7 @@ struct SelectPitcherView: View {
                         }
                         dismiss()
                     }
-                    .foregroundStyle(.black)
+                    .foregroundColor(Color(UIColor.label))
                     .swipeActions(edge: .leading) {
                         Button(action: {
                             showEditPitcher = true

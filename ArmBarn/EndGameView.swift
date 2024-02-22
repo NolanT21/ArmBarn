@@ -51,7 +51,7 @@ struct EndGameView: View {
         }) {
             Text("New Game")
                 .imageScale(.large)
-                .foregroundColor(.black)
+                .foregroundColor(Color(UIColor.label))
                 //.font(weight: .semibold)
         }
         

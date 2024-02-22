@@ -57,7 +57,7 @@ struct AddPitcherView: View {
                     dismiss()
                 }
             }
-            .foregroundColor(.black)
+            .foregroundColor(Color(UIColor.label))
             .background(.green)
             .tint(.gray)
         }
