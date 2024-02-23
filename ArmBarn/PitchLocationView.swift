@@ -30,8 +30,6 @@ struct PitchLocationView: View {
     @State private var showPitcherSelect = false
     @State private var showTestView = false
     
-    
-    
     @State var location: CGPoint = .zero
     @State var cur_pitch_color = Color.clear
     @State var cur_pitch_outline = Color.clear
@@ -168,6 +166,8 @@ struct PitchLocationView: View {
                                     scoreboard.pitches -= 1
                                 }
                                 reset_Count()
+                                scoreboard.atbats = 1
+                                scoreboard.baserunners = 0
                             }
                             context.delete(events[events.count - 1])
                         }
