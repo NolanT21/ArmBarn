@@ -63,7 +63,7 @@ import Observation
     var pitch_x_loc: [CGFloat] = []
     var pitch_y_loc: [CGFloat] = []
     var pitch_cur_ab: Int = 0
-    var arsenal_colors: [Color] = [Color("Cream"), Color("Gold"), Color("Tangerine"), Color("RoseRed")]
+    var arsenal_colors: [Color] = [Color("PowderBlue"), Color("Gold"), Color("Tangerine"), Color("Grey")]
     var hidePitchOverlay: Bool = false
 }
 
