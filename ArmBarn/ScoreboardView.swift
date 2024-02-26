@@ -91,7 +91,7 @@ struct ScoreboardView: View {
                 Spacer()
             }
         }
-        .background(Color.green)
+        .background(Color("ScoreboardGreen"))
         .foregroundColor(.white)
     }
 }

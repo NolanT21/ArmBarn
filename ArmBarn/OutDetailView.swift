@@ -87,7 +87,7 @@ struct OutDetailView: View {
                 }
                 .navigationTitle("")
                 .toolbarBackground(.visible, for: .navigationBar)
-                .toolbarBackground(.green)
+                .toolbarBackground(Color("ScoreboardGreen"))
                 .toolbar {
                     ToolbarItemGroup(placement: .topBarLeading) {
                         
