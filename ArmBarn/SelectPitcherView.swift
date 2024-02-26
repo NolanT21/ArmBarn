@@ -87,6 +87,7 @@ struct SelectPitcherView: View {
                     AddPitcherView()
                 }
             }
+            .background(LinearGradient(gradient: Gradient(colors: [Color("ScoreboardGreen"), .black]), startPoint: .top, endPoint: .bottom))
         }
         
     }
