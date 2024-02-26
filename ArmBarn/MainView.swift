@@ -16,11 +16,13 @@ struct MainView: View {
         
         VStack{
             
+            Spacer()
+                .frame(height: 10)
             ScoreboardView()
             MainContainerView()
             
         }
-        .background(Color.green)
+        .background(Color("ScoreboardGreen"))
     }
 }
 
