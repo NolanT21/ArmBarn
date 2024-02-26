@@ -29,7 +29,7 @@ struct GameReportView: View {
     @State var fps_chart_colors: [Color] = [.gray, .yellow]
     @State var sp_chart_colors: [Color] = [.gray, .orange]
     
-    var gradient = Gradient(colors: [.yellow, .orange, .red])
+    var gradient = Gradient(colors: [Color("PowderBlue"), Color("Gold"), Color("Tangerine")])
     
     var view_padding: CGFloat = 10
     var view_crnr_radius: CGFloat = 12
@@ -111,7 +111,7 @@ struct GameReportView: View {
                                 Gauge(value: Double(game_report.first_pit_strike_per) * 0.01) {}
                                 .scaleEffect(2.5)
                                 .gaugeStyle(.accessoryCircularCapacity)
-                                .tint(.yellow)
+                                .tint(Color("PowderBlue"))
                                 .padding(view_padding)
                                 VStack{
                                     Text("\(game_report.first_pit_strike_per)%")
@@ -156,7 +156,7 @@ struct GameReportView: View {
                                 Gauge(value: Double(game_report.strikes_per) * 0.01) {}
                                 .scaleEffect(2.5)
                                 .gaugeStyle(.accessoryCircularCapacity)
-                                .tint(.orange)
+                                .tint(Color("Gold"))
                                 .padding(view_padding)
                                 VStack{
                                     Text("\(game_report.strikes_per)%")
@@ -288,7 +288,7 @@ struct GameReportView: View {
                                 }
                             }
                             .chartForegroundStyleScale([
-                                current_pitcher.pitch1: .yellow, current_pitcher.pitch2: .orange, current_pitcher.pitch3: .red, current_pitcher.pitch4: .gray
+                                current_pitcher.pitch1: Color("PowderBlue"), current_pitcher.pitch2: Color("Gold"), current_pitcher.pitch3: Color("Tangerine"), current_pitcher.pitch4: Color("Grey")
                             ])
                            .frame(height: 200)
                            .padding(10)
