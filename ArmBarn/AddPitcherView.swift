@@ -52,7 +52,7 @@ struct AddPitcherView: View {
                     }
                 }
                 Button("Save") {
-                    let pitcher = Pitcher(firstName: firstName, lastName: lastName, pitch1: pitch1, pitch2: pitch2, pitch3: pitch3, pitch4: pitch4)
+                    let pitcher = Pitcher(id: UUID(), firstName: firstName, lastName: lastName, pitch1: pitch1, pitch2: pitch2, pitch3: pitch3, pitch4: pitch4)
                     context.insert(pitcher)
                     dismiss()
                 }

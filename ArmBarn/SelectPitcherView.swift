@@ -36,6 +36,7 @@ struct SelectPitcherView: View {
                         current_pitcher.firstName = p_er.firstName
                         current_pitcher.lastName = p_er.lastName
                         current_pitcher.pitch1 = p_er.pitch1
+                        current_pitcher.idcode = p_er.id
                         if current_pitcher.pitch1 != "None" {
                             current_pitcher.pitch_num += 1
                             current_pitcher.arsenal[0] = p_er.pitch1

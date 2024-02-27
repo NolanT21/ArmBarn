@@ -81,6 +81,10 @@ struct PitchLocationView: View {
                                 ptconfig.pitch_cur_ab += 1
                                 cur_pitch_color = .clear
                                 cur_pitch_outline = .clear
+                                
+//                                event.x_cor = location.x
+//                                event.y_cor = location.y
+                                
                                 ptconfig.hidePitchOverlay = false
 //                                let loc = location
 //                                print("Location", loc)
@@ -451,7 +455,7 @@ struct PitchLocationView: View {
     
     func add_prev_event_string() {
         if event.recordEvent{
-            let new_event = Event(pitch_result: event.pitch_result, pitch_type: event.pitch_type, result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, atbats: event.atbats)
+            let new_event = Event(pitcher_id: current_pitcher.idcode, pitch_result: event.pitch_result, pitch_type: event.pitch_type, result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, atbats: event.atbats)
             context.insert(new_event)
             print_Event_String()
         }
@@ -459,7 +463,7 @@ struct PitchLocationView: View {
     }
     
     func print_Event_String() {
-        print(event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats)
+        print(current_pitcher.idcode, event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats)
     }
     func record_baserunner_out() {
         event.pitch_result = "O"
