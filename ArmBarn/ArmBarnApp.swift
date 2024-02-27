@@ -21,6 +21,6 @@ struct ArmBarnApp: App {
                 .environment(PitchUsageLineData())
                 .environment(GameReport())
         }
-        .modelContainer(for: [Pitcher.self, Event.self])
+        .modelContainer(for: [Event.self, Pitcher.self])
     }
 }
