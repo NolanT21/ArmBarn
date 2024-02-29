@@ -12,6 +12,8 @@ import Observation
 
 struct MainView: View {
     
+    @Environment(\.modelContext) var context
+    
     var body: some View {
         
         VStack{
@@ -19,7 +21,13 @@ struct MainView: View {
             Spacer()
                 .frame(height: 10)
             ScoreboardView()
-            MainContainerView()
+            MainContainerView().task {
+                do {
+                    try context.delete(model: Event.self)
+                } catch {
+                    print("Failed to delete all events.")
+                }
+            }
             
         }
         .background(Color("ScoreboardGreen"))
