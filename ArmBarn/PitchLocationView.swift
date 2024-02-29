@@ -277,10 +277,10 @@ struct PitchLocationView: View {
         game_report.game_score = 40
         game_report.pitches = scoreboard.pitches
         
-        game_report.p1_by_inn = []
-        game_report.p2_by_inn = []
-        game_report.p3_by_inn = []
-        game_report.p4_by_inn = []
+        game_report.p1_by_inn = [0]
+        game_report.p2_by_inn = [0]
+        game_report.p3_by_inn = [0]
+        game_report.p4_by_inn = [0]
         
         game_report.inn_pitched = (Double(scoreboard.inning) + (Double(scoreboard.outs) * 0.1)) - 1
         
@@ -296,10 +296,10 @@ struct PitchLocationView: View {
         for evnt in events{
             
             if evnt.inning > inn_cntr{
-                game_report.p1_by_inn.append(p1_cntr)
-                game_report.p2_by_inn.append(p2_cntr)
-                game_report.p3_by_inn.append(p3_cntr)
-                game_report.p4_by_inn.append(p4_cntr)
+                game_report.p1_by_inn.append(0)
+                game_report.p2_by_inn.append(0)
+                game_report.p3_by_inn.append(0)
+                game_report.p4_by_inn.append(0)
                 p1_cntr = 0
                 p2_cntr = 0
                 p3_cntr = 0
@@ -319,6 +319,12 @@ struct PitchLocationView: View {
             else if evnt.pitch_type == "P4" {
                 p4_cntr += 1
             }
+            
+            game_report.p1_by_inn[inn_cntr - 1] = p1_cntr
+            game_report.p2_by_inn[inn_cntr - 1] = p2_cntr
+            game_report.p3_by_inn[inn_cntr - 1] = p3_cntr
+            game_report.p4_by_inn[inn_cntr - 1] = p4_cntr
+            game_report.pitches_by_inn = []
             
             if evnt.pitch_result != "A" && evnt.result_detail != "R" {
                 game_report.strikes += 1
@@ -381,6 +387,7 @@ struct PitchLocationView: View {
         }
         
         let temp_inn_pitches = [game_report.p1_by_inn, game_report.p2_by_inn, game_report.p3_by_inn, game_report.p4_by_inn]
+        print(temp_inn_pitches)
         
         for index in 0..<temp_inn_pitches.count {
             if temp_inn_pitches[index].reduce(0, +) > 0 {
@@ -459,7 +466,6 @@ struct PitchLocationView: View {
             context.insert(new_event)
             print_Event_String()
         }
-            
     }
     
     func print_Event_String() {
