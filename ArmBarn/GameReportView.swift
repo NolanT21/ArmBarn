@@ -16,20 +16,8 @@ struct GameReportView: View {
     @Environment(currentPitcher.self) var current_pitcher
     @Environment(PitchUsageLineData.self) private var pulData
     
-    @State private var firstpitstrike_data: [PieChartDT] = [
-        .init(label: "First Pitch Strikes", value: 13),
-        .init(label: "First Pitch Balls", value: 9)
-    ]
-    
-    @State private var strikepercent_data: [PieChartDT] = [
-        .init(label: "Total Strikes", value: 45),
-        .init(label: "Total Balls", value: 23)
-    ]
-    
-    @State var fps_chart_colors: [Color] = [.gray, .yellow]
-    @State var sp_chart_colors: [Color] = [.gray, .orange]
-    
     var gradient = Gradient(colors: [Color("PowderBlue"), Color("Gold"), Color("Tangerine")])
+    var colorset = [Color("PowderBlue"), Color("Gold"), Color("Tangerine"), Color("Grey")]
     
     var view_padding: CGFloat = 10
     var view_crnr_radius: CGFloat = 12
@@ -288,6 +276,11 @@ struct GameReportView: View {
                                 }
                             }
                             .chartForegroundStyleScale([
+//                                ForEach(Array(current_pitcher.arsenal.enumerated()), id: \.offset) { index in
+//                                    if current_pitcher.arsenal[index] != "None" {
+//                                        current_pitcher.arsenal[index]: colorset[index]
+//                                    }
+//                                }
                                 current_pitcher.pitch1: Color("PowderBlue"), current_pitcher.pitch2: Color("Gold"), current_pitcher.pitch3: Color("Tangerine"), current_pitcher.pitch4: Color("Grey")
                             ])
                            .frame(height: 200)
@@ -295,7 +288,7 @@ struct GameReportView: View {
                            .chartLegend(position: .bottom, alignment: .center, spacing: 10)
                            .chartXScale(domain: [0, game_report.p1_by_inn.count + 1])
                             .chartXAxis {
-                                AxisMarks(values: .automatic(desiredCount: game_report.p1_by_inn.count))
+                                AxisMarks(values: .automatic(desiredCount: game_report.p1_by_inn.count + 1))
                             }
                             .chartYAxis {
                                 AxisMarks(position: .leading)
