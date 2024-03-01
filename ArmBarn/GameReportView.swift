@@ -25,12 +25,21 @@ struct GameReportView: View {
     var body: some View {
         ScrollView{
             VStack{
-                Text("Game Summary")
-                    .font(.title)
-                    .bold()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal, view_padding)
-                    .padding(.top, view_padding)
+                HStack{
+                    Text("Game Summary")
+                        .font(.title)
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Button(action: {
+                        //Logic for send/saving GameReport view
+                    }, label: {
+                        Image(systemName: "square.and.arrow.up")
+                            .foregroundStyle(Color(UIColor.label))
+                    })
+                }
+                .padding(.horizontal, view_padding)
+                .padding(.top, view_padding)
+                
                 
                 HStack{
                     
@@ -311,7 +320,8 @@ struct GameReportView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .background(Color(UIColor.secondarySystemBackground))
-        .navigationTitle("Game Summary")
+//        .navigationTitle("Game Summary")
+        
     }
 }
 
