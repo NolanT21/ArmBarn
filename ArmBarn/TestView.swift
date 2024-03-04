@@ -20,7 +20,6 @@ struct TestView: View {
     
     @Environment(GameReport.self) var game_report
     
-    @Environment(PitchUsageLineData.self) private var pulData
     @Environment(\.dismiss) var dismiss
     
     @State var sbl_width: Double = 17.0
@@ -28,37 +27,55 @@ struct TestView: View {
     
     let gradient = Gradient(colors: [.yellow, .orange, .red])
     
+    var view_padding: CGFloat = 10
+    var view_crnr_radius: CGFloat = 12
+    
     var body: some View {
-        VStack{
-            
-            Chart{
-                ForEach(game_report.pitches_by_inn) { pit_dataset in
-                    ForEach(Array(pit_dataset.dataset.enumerated()), id: \.offset){ index, value in
-                        LineMark(x: .value("Inning", index + 1),
-                                 y: .value("# of Pitches", value))
-                        PointMark(x: .value("Inning", index + 1),
-                                 y: .value("# of Pitches", value))
+        
+        ScrollView{
+            HStack{
+                VStack{
+                    HStack{
+                        Text("Pitch Location")
+                            .font(.subheadline)
+                            .padding(.leading, view_padding)
+                            .padding(.top, view_padding)
+                        Spacer()
                     }
-                    .foregroundStyle(by: .value("Pitch Type", pit_dataset.name))
-                }
-            }
-            .chartForegroundStyleScale([
-                current_pitcher.pitch1: .yellow, current_pitcher.pitch2: .orange, current_pitcher.pitch3: .red, current_pitcher.pitch4: .gray
-            ])
-           .frame(height: 200)
-           .padding(10)
-           .chartLegend(position: .bottom, alignment: .center, spacing: 10)
-           .chartXScale(domain: [0, game_report.p1_by_inn.count + 1])
-            .chartXAxis {
-                AxisMarks(values: .automatic(desiredCount: game_report.p1_by_inn.count))
-            }
-            .chartYAxis {
-                AxisMarks(position: .leading)
-            }
-            Spacer()
 
+                    ZStack{
+                        
+                        Image("PLO_Background")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .clipShape(RoundedRectangle(cornerRadius: 6))
+                            .padding(.horizontal, 6)
+                            .padding(.bottom, 6)
+                        
+                        ForEach(game_report.x_coordinate_list.indices, id: \.self){ index in
+                            let xloc = game_report.x_coordinate_list[index] * 0.5 + 90
+                            let yloc = game_report.y_coordinate_list[index] * 0.5 + 40
+                            let point = CGPoint(x: xloc, y: yloc)
+                            let pitch_color = game_report.pl_color_list[index]
+                            Circle()
+                                .fill(pitch_color)
+                                .frame(width: 20, height: 20, alignment: .center)
+                                .position(point)
+                        }
+                        
+                    }
+
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color(UIColor.systemBackground))
+                .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
+                .padding(.bottom, view_padding)
+                .padding(.leading, view_padding)
+                .padding(.trailing, view_padding)
+            }
         }
-        .padding(10)
+        
+        
     }
 }
         
