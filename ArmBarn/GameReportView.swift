@@ -14,7 +14,6 @@ struct GameReportView: View {
     
     @Environment(GameReport.self) var game_report
     @Environment(currentPitcher.self) var current_pitcher
-    @Environment(PitchUsageLineData.self) private var pulData
     
     var gradient = Gradient(colors: [Color("PowderBlue"), Color("Gold"), Color("Tangerine")])
     var colorset = [Color("PowderBlue"), Color("Gold"), Color("Tangerine"), Color("Grey")]
@@ -23,19 +22,61 @@ struct GameReportView: View {
     var view_crnr_radius: CGFloat = 12
     
     var body: some View {
-        ScrollView{
+        
+        GeometryReader { proxy in
+            
+            let viewsize = proxy.size
+            
+            ZStack{
+                
+                ScrollView{
+                    reportView
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+                .background(Color(UIColor.secondarySystemBackground))
+                
+                HStack{
+                    Spacer()
+                    
+                    VStack{
+                        Button(action: {
+                            
+                            guard let image = ImageRenderer(content: reportView.frame(width: viewsize.width, height: viewsize.height, alignment: .center)).uiImage else {
+                                print("Failed to render view as an image")
+                                return
+                            }
+                            
+                            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                            
+                        }, label: {
+                            Image(systemName: "square.and.arrow.up")
+                                .foregroundStyle(Color(UIColor.label))
+                        })
+                        
+                        Spacer()
+                    }
+                }
+                .padding(.top, view_padding)
+                .padding(.trailing, view_padding)
+            }
+        }
+    }
+    
+    var reportView: some View {
             VStack{
                 HStack{
-                    Text("Game Summary")
-                        .font(.title)
-                        .bold()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    Button(action: {
-                        //Logic for send/saving GameReport view
-                    }, label: {
-                        Image(systemName: "square.and.arrow.up")
-                            .foregroundStyle(Color(UIColor.label))
-                    })
+                    VStack (alignment: .leading){
+                        Text("Game Summary")
+                            .font(.title)
+                            .bold()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        HStack{
+                            Text(" " + current_pitcher.firstName + " " + current_pitcher.lastName + ",")
+                                .font(.subheadline)
+                            Text(Date().formatted(.dateTime.day().month().year()))
+                                .font(.subheadline)
+                        }
+                    }
                 }
                 .padding(.horizontal, view_padding)
                 .padding(.top, view_padding)
@@ -230,7 +271,7 @@ struct GameReportView: View {
                 }
                 
                 Spacer()
-                
+
                 HStack{
                     VStack{
                         HStack{
@@ -240,16 +281,29 @@ struct GameReportView: View {
                                 .padding(.top, view_padding)
                             Spacer()
                         }
-                        
-                        Image("PLO_Background")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .clipShape(RoundedRectangle(cornerRadius: 6))
-                            .padding(.horizontal, 6)
-                            .padding(.bottom, 6)
-                            //.gesture(tap)
+
+                        ZStack{
                             
-                        
+                            Image("PLO_Background")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .clipShape(RoundedRectangle(cornerRadius: 6))
+                                .padding(.horizontal, 6)
+                                .padding(.bottom, 6)
+                            
+                            ForEach(game_report.x_coordinate_list.indices, id: \.self){ index in
+                                let xloc = game_report.x_coordinate_list[index] * 0.5 + 90
+                                let yloc = game_report.y_coordinate_list[index] * 0.5 + 40
+                                let point = CGPoint(x: xloc, y: yloc)
+                                let pitch_color = game_report.pl_color_list[index]
+                                Circle()
+                                    .fill(pitch_color)
+                                    .frame(width: 20, height: 20, alignment: .center)
+                                    .position(point)
+                            }
+                            
+                        }
+
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color(UIColor.systemBackground))
@@ -318,10 +372,6 @@ struct GameReportView: View {
                 
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-        .background(Color(UIColor.secondarySystemBackground))
-//        .navigationTitle("Game Summary")
-        
     }
 }
 
