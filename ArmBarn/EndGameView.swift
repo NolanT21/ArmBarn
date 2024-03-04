@@ -25,8 +25,10 @@ struct EndGameView: View {
         List {
             ForEach(events) {evnt in
                 VStack{
+                    
+                    Text("\(evnt.pitcher_id)")
+                    
                     HStack{
-                        Text("\(evnt.pitcher_id)")
                         Text(evnt.pitch_result)
                         Text(evnt.pitch_type)
                         Text(evnt.result_detail)
@@ -35,7 +37,9 @@ struct EndGameView: View {
                         Text("\(evnt.outs)")
                         Text("\(evnt.inning)")
                         Text("\(evnt.atbats)")
-//                        Text("\(evnt.x_cor)")
+                        Text("\(evnt.pitch_x_location)")
+                        Text("\(evnt.pitch_y_location)")
+//                        Text("\(evnt.y_location)")
 //                        Text("\(evnt.y_cor)")
                     }
                 }
