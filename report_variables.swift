@@ -31,7 +31,11 @@ import Observation
     var game_score: Int = 40
     var game_score_min: Int = 0
     var game_score_max: Int = 0
-    var game_score_inn_data: [Int] = [47, 39, 42, 45, 49, 52, 50]
+    
+    var x_coordinate_list: [Double] = []
+    var y_coordinate_list: [Double] = []
+    var pl_color: Color = .clear
+    var pl_color_list: [Color] = []
     
     var p1_by_inn: [Int] = []
     var p2_by_inn: [Int] = []
@@ -48,12 +52,6 @@ struct PitchTypeDataset: Identifiable {
     let dataset: [Int]
 }
 
-//Pie Chart Data Type
-struct PieChartDT: Identifiable {
-    let id = UUID()
-    let label: String
-    let value: Double
-}
 
 //Pitch Type Amount by Inning Line Chart Data Structure
 struct Inning: Identifiable {
@@ -68,47 +66,3 @@ struct PitchType: Identifiable {
     let pitchtype_data: [Inning]
 }
 
-@Observable class PitchUsageLineData {
-    var pitchtypes_inn_data: [PitchType]
-    
-    init() {
-        let pitch1_inning_data = [
-            Inning(inn_number: 1, amount: 10),
-            Inning(inn_number: 2, amount: 12),
-            Inning(inn_number: 3, amount: 8),
-            Inning(inn_number: 4, amount: 13),
-            Inning(inn_number: 5, amount: 9),
-            Inning(inn_number: 6, amount: 7),
-            Inning(inn_number: 7, amount: 8)
-        ]
-        
-        let pitch2_inning_data = [
-            Inning(inn_number: 1, amount: 3),
-            Inning(inn_number: 2, amount: 5),
-            Inning(inn_number: 3, amount: 2),
-            Inning(inn_number: 4, amount: 8),
-            Inning(inn_number: 5, amount: 6),
-            Inning(inn_number: 6, amount: 5),
-            Inning(inn_number: 7, amount: 9)
-        ]
-        
-        let pitch3_inning_data = [
-            Inning(inn_number: 1, amount: 15),
-            Inning(inn_number: 2, amount: 2),
-            Inning(inn_number: 3, amount: 7),
-            Inning(inn_number: 4, amount: 4),
-            Inning(inn_number: 5, amount: 3),
-            Inning(inn_number: 6, amount: 10),
-            Inning(inn_number: 7, amount: 12)
-        ]
-        
-        pitchtypes_inn_data = [
-            PitchType(name: "Fastball", pitchtype_data: pitch1_inning_data),
-            PitchType(name: "Curveball", pitchtype_data: pitch2_inning_data),
-            PitchType(name: "Change-Up", pitchtype_data: pitch3_inning_data)
-        ]
-
-        
-    }
-    
-}
