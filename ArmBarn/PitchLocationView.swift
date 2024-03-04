@@ -76,7 +76,9 @@ struct PitchLocationView: View {
                         
                             NavigationLink(destination: PitchResultView().navigationBarBackButtonHidden(true).onAppear {
                                 ptconfig.pitch_x_loc.append(location.x)
+                                event.x_cor = Double(location.x)
                                 ptconfig.pitch_y_loc.append(location.y)
+                                event.y_cor = Double(location.y)
                                 ptconfig.ab_pitch_color.append(ptconfig.ptcolor)
                                 ptconfig.pitch_cur_ab += 1
                                 cur_pitch_color = .clear
@@ -282,6 +284,10 @@ struct PitchLocationView: View {
         game_report.p3_by_inn = [0]
         game_report.p4_by_inn = [0]
         
+        game_report.x_coordinate_list = []
+        game_report.y_coordinate_list = []
+        game_report.pl_color_list = []
+        
         game_report.inn_pitched = (Double(scoreboard.inning) + (Double(scoreboard.outs) * 0.1)) - 1
         
         let arsenal: [String] = [current_pitcher.pitch1, current_pitcher.pitch2, current_pitcher.pitch3, current_pitcher.pitch4]
@@ -328,28 +334,37 @@ struct PitchLocationView: View {
             
             if evnt.pitch_result != "A" && evnt.result_detail != "R" {
                 game_report.strikes += 1
+                game_report.pl_color = Color("PowderBlue")
                 if evnt.balls == 0 && evnt.strikes == 0 {
                     game_report.first_pitch_strike += 1
                 }
                 
-                if evnt.pitch_result == "H" && evnt.result_detail != "E" {
+                if evnt.pitch_result == "H" {
                     game_report.hits += 1
-                    if evnt.result_detail == "S" {
-                        game_report.game_score -= 2
-                    }
-                    else if evnt.result_detail == "D" {
-                        game_report.game_score -= 3
-                    }
-                    else if evnt.result_detail == "T" {
-                        game_report.game_score -= 4
+                    game_report.pl_color = Color("Tangerine")
+                    
+                    if evnt.result_detail != "E" {
+                        
+                        if evnt.result_detail == "S" {
+                            game_report.game_score -= 2
+                        }
+                        else if evnt.result_detail == "D" {
+                            game_report.game_score -= 3
+                        }
+                        else if evnt.result_detail == "T" {
+                            game_report.game_score -= 4
+                            
+                        }
+                        else if evnt.result_detail == "H" {
+                            game_report.game_score -= 6
+                        }
                         
                     }
-                    else if evnt.result_detail == "H" {
-                        game_report.game_score -= 6
-                    }
+                    
                 }
                 else if evnt.pitch_result == "O" {
                     game_report.game_score += 2
+                    game_report.pl_color = Color("Grey")
                 }
                 else if evnt.result_detail == "K" || evnt.result_detail == "C" {
                     game_report.strikeouts += 1
@@ -358,6 +373,7 @@ struct PitchLocationView: View {
             }
             else if  evnt.pitch_result == "A"{
                 game_report.balls += 1
+                game_report.pl_color = Color("Gold")
                 if evnt.balls == 0 && evnt.strikes == 0 {
                     game_report.first_pitch_ball += 1
                 }
@@ -369,6 +385,10 @@ struct PitchLocationView: View {
             }
             
             game_report.batters_faced = evnt.atbats
+            
+            game_report.x_coordinate_list.append(evnt.pitch_x_location)
+            game_report.y_coordinate_list.append(evnt.pitch_y_location)
+            game_report.pl_color_list.append(game_report.pl_color)
             
         }
         
@@ -462,14 +482,14 @@ struct PitchLocationView: View {
     
     func add_prev_event_string() {
         if event.recordEvent{
-            let new_event = Event(pitcher_id: current_pitcher.idcode, pitch_result: event.pitch_result, pitch_type: event.pitch_type, result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, atbats: event.atbats)
+            let new_event = Event(pitcher_id: current_pitcher.idcode, pitch_result: event.pitch_result, pitch_type: event.pitch_type, result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, atbats: event.atbats, pitch_x_location: event.x_cor, pitch_y_location: event.y_cor)
             context.insert(new_event)
             print_Event_String()
         }
     }
     
     func print_Event_String() {
-        print(current_pitcher.idcode, event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats)
+        print(current_pitcher.idcode, event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats, event.x_cor, event.y_cor)
     }
     func record_baserunner_out() {
         event.pitch_result = "O"
