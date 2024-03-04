@@ -42,8 +42,8 @@ import Observation
     var inning: Int = 1
     var atbats: Int = 1
     
-    var x_cor: CGFloat = .zero
-    var y_cor: CGFloat = .zero
+    var x_cor: Double = 0
+    var y_cor: Double = 0
     
     var recordEvent: Bool = false
 }
@@ -83,7 +83,10 @@ import Observation
     var inning: Int
     var atbats: Int
     
-    init(pitcher_id: UUID, pitch_result: String, pitch_type: String, result_detail: String, balls: Int, strikes: Int, outs: Int, inning: Int, atbats: Int) {
+    var pitch_x_location: Double = 0
+    var pitch_y_location: Double = 0
+    
+    init(pitcher_id: UUID, pitch_result: String, pitch_type: String, result_detail: String, balls: Int, strikes: Int, outs: Int, inning: Int, atbats: Int, pitch_x_location: Double, pitch_y_location: Double) {
         self.pitcher_id = pitcher_id
         self.pitch_result = pitch_result
         self.pitch_type = pitch_type
@@ -93,6 +96,8 @@ import Observation
         self.outs = outs
         self.inning = inning
         self.atbats = atbats
+        self.pitch_x_location = pitch_x_location
+        self.pitch_y_location = pitch_y_location
     }
 }
 
