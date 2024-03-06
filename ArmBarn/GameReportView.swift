@@ -15,6 +15,8 @@ struct GameReportView: View {
     @Environment(GameReport.self) var game_report
     @Environment(currentPitcher.self) var current_pitcher
     
+    @Environment(\.dismiss) var dismiss
+    
     var gradient = Gradient(colors: [Color("PowderBlue"), Color("Gold"), Color("Tangerine")])
     var colorset = [Color("PowderBlue"), Color("Gold"), Color("Tangerine"), Color("Grey")]
     
@@ -27,15 +29,16 @@ struct GameReportView: View {
             
             let viewsize = proxy.size
             
-            ZStack{
-                
-                ScrollView{
-                    reportView
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }
-                .background(Color(UIColor.secondarySystemBackground))
-                
+            VStack{
                 HStack{
+                    
+                    Button(action: {
+                        dismiss()
+                    }, label: {
+                        Text("Back")
+                            .foregroundStyle(.white)
+                    })
+                    
                     Spacer()
                     
                     VStack{
@@ -53,11 +56,18 @@ struct GameReportView: View {
                                 .foregroundStyle(Color(UIColor.label))
                         })
                         
-                        Spacer()
+                        //Spacer()
                     }
                 }
                 .padding(.top, view_padding)
-                .padding(.trailing, view_padding)
+                .padding(.horizontal, view_padding)
+                
+                ScrollView{
+                    reportView
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+                .background(Color(UIColor.secondarySystemBackground))
+                
             }
         }
     }
@@ -275,7 +285,7 @@ struct GameReportView: View {
                 HStack{
                     VStack{
                         HStack{
-                            Text("Pitch Location")
+                            Text("Pitch Location Map")
                                 .font(.subheadline)
                                 .padding(.leading, view_padding)
                                 .padding(.top, view_padding)
@@ -296,13 +306,67 @@ struct GameReportView: View {
                                 let yloc = game_report.y_coordinate_list[index] * 0.5 + 40
                                 let point = CGPoint(x: xloc, y: yloc)
                                 let pitch_color = game_report.pl_color_list[index]
+                                let outline = game_report.pl_outline_list[index]
+
                                 Circle()
                                     .fill(pitch_color)
+                                    .stroke(outline, lineWidth: 4)
                                     .frame(width: 20, height: 20, alignment: .center)
                                     .position(point)
                             }
                             
                         }
+                        
+                        HStack(spacing: 5){
+                            
+                            Spacer()
+                            
+                            Circle()
+                                .fill(Color("PowderBlue"))
+                                .frame(width: 8, height: 8, alignment: .center)
+                                                        
+                            Text("Ball ")
+                                .font(.system(size: 11))
+                                .foregroundStyle(.gray)
+                        
+                            Circle()
+                                .fill(Color("Gold"))
+                                .frame(width: 8, height: 8, alignment: .center)
+                            
+                            Text("Strike ")
+                                .font(.system(size: 11))
+                                .foregroundStyle(.gray)
+                            
+                            Circle()
+                                .fill(Color("Tangerine"))
+                                .frame(width: 8, height: 8, alignment: .center)
+                            
+                            Text("Hit")
+                                .font(.system(size: 11))
+                                .foregroundStyle(.gray)
+                        
+                            Circle()
+                                .fill(Color("Grey"))
+                                .frame(width: 8, height: 8, alignment: .center)
+                            
+                            Text("Out ")
+                                .font(.system(size: 11))
+                                .foregroundStyle(.gray)
+                            
+                            Circle()
+                                //.fill(Color("Grey"))
+                                .stroke(.white, lineWidth: 2)
+                                .frame(width: 8, height: 8, alignment: .center)
+                            
+                            Text("Strikeout ")
+                                .font(.system(size: 11))
+                                .foregroundStyle(.gray)
+                            
+                            Spacer()
+                            
+                        }
+                        .padding(.bottom, view_padding)
+
 
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
