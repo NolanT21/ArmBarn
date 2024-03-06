@@ -292,8 +292,6 @@ struct PitchLocationView: View {
         
         let arsenal: [String] = [current_pitcher.pitch1, current_pitcher.pitch2, current_pitcher.pitch3, current_pitcher.pitch4]
         
-        let chart_colors: [String] = ["Yellow", "Orange", "Red", "Gray"]
-        
         var inn_cntr = 1
         var p1_cntr = 0
         var p2_cntr = 0
@@ -332,9 +330,11 @@ struct PitchLocationView: View {
             game_report.p4_by_inn[inn_cntr - 1] = p4_cntr
             game_report.pitches_by_inn = []
             
+            game_report.pl_outline = .clear
+            
             if evnt.pitch_result != "A" && evnt.result_detail != "R" {
                 game_report.strikes += 1
-                game_report.pl_color = Color("PowderBlue")
+                game_report.pl_color = Color("Gold")
                 if evnt.balls == 0 && evnt.strikes == 0 {
                     game_report.first_pitch_strike += 1
                 }
@@ -367,13 +367,14 @@ struct PitchLocationView: View {
                     game_report.pl_color = Color("Grey")
                 }
                 else if evnt.result_detail == "K" || evnt.result_detail == "C" {
+                    game_report.pl_outline = .white
                     game_report.strikeouts += 1
                     game_report.game_score += 3
                 }
             }
             else if  evnt.pitch_result == "A"{
                 game_report.balls += 1
-                game_report.pl_color = Color("Gold")
+                game_report.pl_color = Color("PowderBlue")
                 if evnt.balls == 0 && evnt.strikes == 0 {
                     game_report.first_pitch_ball += 1
                 }
@@ -389,6 +390,7 @@ struct PitchLocationView: View {
             game_report.x_coordinate_list.append(evnt.pitch_x_location)
             game_report.y_coordinate_list.append(evnt.pitch_y_location)
             game_report.pl_color_list.append(game_report.pl_color)
+            game_report.pl_outline_list.append(game_report.pl_outline)
             
         }
         
@@ -412,7 +414,7 @@ struct PitchLocationView: View {
         for index in 0..<temp_inn_pitches.count {
             if temp_inn_pitches[index].reduce(0, +) > 0 {
                 game_report.pitches_by_inn.append(
-                    PitchTypeDataset(name: arsenal[index], color: chart_colors[index], dataset: temp_inn_pitches[index])
+                    PitchTypeDataset(name: arsenal[index], dataset: temp_inn_pitches[index])
                 )
             }
         }
