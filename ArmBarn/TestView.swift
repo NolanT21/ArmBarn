@@ -36,35 +36,57 @@ struct TestView: View {
             HStack{
                 VStack{
                     HStack{
-                        Text("Pitch Location")
+                        Text("Hit Log")
                             .font(.subheadline)
                             .padding(.leading, view_padding)
-                            .padding(.top, view_padding)
+                            .padding(.vertical, view_padding)
                         Spacer()
                     }
 
-                    ZStack{
+                    
+                    //Body goes here
+                    Grid(){
                         
-                        Image("PLO_Background")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .clipShape(RoundedRectangle(cornerRadius: 6))
-                            .padding(.horizontal, 6)
-                            .padding(.bottom, 6)
-                        
-                        ForEach(game_report.x_coordinate_list.indices, id: \.self){ index in
-                            let xloc = game_report.x_coordinate_list[index] * 0.5 + 90
-                            let yloc = game_report.y_coordinate_list[index] * 0.5 + 40
-                            let point = CGPoint(x: xloc, y: yloc)
-                            let pitch_color = game_report.pl_color_list[index]
-                            Circle()
-                                .fill(pitch_color)
-                                .frame(width: 20, height: 20, alignment: .center)
-                                .position(point)
+                        VStack(alignment: .leading){
+                            Text("Inn 1")
+                            Divider()
                         }
                         
+                        HStack{
+                            GridRow{
+                                Text("Double")
+                                Spacer()
+                                Text("2-1")
+                                Spacer()
+                                Text("Fastball")
+                            }
+                        }
+                        .padding(.leading, view_padding * 4)
+                        .padding(.trailing, view_padding * 2)
+                            
+                            
+                        Divider()
+                            
+                        HStack{
+                            GridRow{
+                                Text("Single")
+                                Spacer()
+                                Text("0-2")
+                                Spacer()
+                                Text("Curveball")
+                                
+                            }
+                        }
+                        .padding(.leading, view_padding * 4)
+                        .padding(.trailing, view_padding * 2)
+                            
+                            
+//                        .padding(.leading, view_padding * 4)
+//                        .padding(.trailing, view_padding * 3)
+                    
                     }
-
+                    .padding(.horizontal, view_padding * 2)
+                    
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(Color(UIColor.systemBackground))
