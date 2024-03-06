@@ -35,7 +35,9 @@ import Observation
     var x_coordinate_list: [Double] = []
     var y_coordinate_list: [Double] = []
     var pl_color: Color = .clear
+    var pl_outline: Color = .clear
     var pl_color_list: [Color] = []
+    var pl_outline_list: [Color] = []
     
     var p1_by_inn: [Int] = []
     var p2_by_inn: [Int] = []
@@ -48,7 +50,6 @@ import Observation
 struct PitchTypeDataset: Identifiable {
     let id = UUID()
     let name: String
-    let color: String
     let dataset: [Int]
 }
 
