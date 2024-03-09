@@ -22,6 +22,8 @@ struct TestView: View {
     
     @Environment(\.dismiss) var dismiss
     
+    @State var prev_inn: Int = 0
+    
     @State var sbl_width: Double = 17.0
     @State var sbl_height: Double = 13.0
     
@@ -32,73 +34,105 @@ struct TestView: View {
     
     var body: some View {
         
-        ScrollView{
-            HStack{
-                VStack{
-                    HStack{
-                        Text("Hit Log")
-                            .font(.subheadline)
-                            .padding(.leading, view_padding)
-                            .padding(.vertical, view_padding)
-                        Spacer()
-                    }
+        Grid(){
+            ForEach(Array(game_report.inn_hitlog.enumerated()), id: \.offset) { index, value in
 
-                    
-                    //Body goes here
-                    Grid(){
-                        
-                        VStack(alignment: .leading){
-                            Text("Inn 1")
-                            Divider()
-                        }
-                        
-                        HStack{
-                            GridRow{
-                                Text("Double")
-                                Spacer()
-                                Text("2-1")
-                                Spacer()
-                                Text("Fastball")
-                            }
-                        }
-                        .padding(.leading, view_padding * 4)
-                        .padding(.trailing, view_padding * 2)
-                            
-                            
-                        Divider()
-                            
-                        HStack{
-                            GridRow{
-                                Text("Single")
-                                Spacer()
-                                Text("0-2")
-                                Spacer()
-                                Text("Curveball")
-                                
-                            }
-                        }
-                        .padding(.leading, view_padding * 4)
-                        .padding(.trailing, view_padding * 2)
-                            
-                            
-//                        .padding(.leading, view_padding * 4)
-//                        .padding(.trailing, view_padding * 3)
-                    
+                let hit_type = game_report.result_hitlog[index]
+                let balls = game_report.cnt_hitlog[index].balls
+                let strikes = game_report.cnt_hitlog[index].strikes
+                let pitch_type = game_report.pitchtype_hitlog[index]
+                
+                //game_report.hl_curinn = cur_inn
+                //hd_balls = game_report.cnt_hitlog[index.balls]
+                
+                if index == 0 {
+                    GridRow{
+                        Text("INN \(value)")
+                            .padding(.bottom, view_padding / -2)
+                            .bold()
                     }
-                    .padding(.horizontal, view_padding * 2)
+                    
+                    Divider()
+                    
+                    GridRow{
+                        Text(hit_type)
+                        Text("\(balls) - \(strikes)")
+                        Text(pitch_type)
+                    }
+                    .padding(.leading, view_padding * 3)
+                    .padding(.trailing, view_padding)
+                }
+                
+                else if game_report.inn_hitlog[index] > game_report.inn_hitlog[index - 1] {
+                    GridRow{
+                        Text("INN \(value)")
+                            .padding(.bottom, view_padding / -2)
+                            .padding(.top, view_padding)
+                            .bold()
+                    }
+                    //.padding(.top, view_padding)
+                    
+                    Divider()
+                    
+                    GridRow{
+                        Text(hit_type)
+                        Text("\(balls) - \(strikes)")
+                        Text(pitch_type)
+                    }
+                    .padding(.leading, view_padding * 3)
+                    .padding(.trailing, view_padding)
+                }
+                
+                else {
+                    
+                    Divider()
+                        .padding(.leading, view_padding * 3)
+                        .padding(.trailing, view_padding)
+                    
+                    GridRow{
+                        Text(hit_type)
+                        Text("\(balls) - \(strikes)")
+                        Text(pitch_type)
+                    }
+                    .padding(.leading, view_padding * 3)
+                    .padding(.trailing, view_padding)
+                    
                     
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color(UIColor.systemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
-                .padding(.bottom, view_padding)
-                .padding(.leading, view_padding)
-                .padding(.trailing, view_padding)
+                
             }
         }
+        .padding(.horizontal, view_padding)
+        
         
         
     }
+
+        
+       
+//    var innlineView: some View {
+//        GridRow{
+//            Text("INN \(game_report.hl_curinn)")
+//                .padding(.vertical, -5)
+//                .bold()
+//            
+//            Divider()
+//        }
+//        
+//    }
+//    
+//    var hitlineView: some View {
+//        GridRow{
+//            Text(game_report.hl_hittype)
+//            Spacer()
+//            Text("\(game_report.hl_balls) - \(game_report.hl_strikes)")
+//            Spacer()
+//            Text(game_report.hl_pitchtype)
+//        }
+//        .padding(.leading, view_padding * 4)
+//        .padding(.trailing, view_padding * 2)
+//    }
+//    
 }
         
 
@@ -108,6 +142,7 @@ struct TestView: View {
         .environment(Event_String())
         .environment(currentPitcher())
         .environment(PitchTypeConfig())
+        .environment(GameReport())
 }
 
 //Gauge(value: 0.4) {
