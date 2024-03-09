@@ -302,8 +302,8 @@ struct GameReportView: View {
                                 .padding(.bottom, 6)
                             
                             ForEach(game_report.x_coordinate_list.indices, id: \.self){ index in
-                                let xloc = game_report.x_coordinate_list[index] * 0.5 + 90
-                                let yloc = game_report.y_coordinate_list[index] * 0.5 + 40
+                                let xloc = game_report.x_coordinate_list[index] * 0.54 + 90
+                                let yloc = game_report.y_coordinate_list[index] * 0.5 + 42
                                 let point = CGPoint(x: xloc, y: yloc)
                                 let pitch_color = game_report.pl_color_list[index]
                                 let outline = game_report.pl_outline_list[index]
@@ -326,7 +326,7 @@ struct GameReportView: View {
                                 .frame(width: 8, height: 8, alignment: .center)
                                                         
                             Text("Ball ")
-                                .font(.system(size: 11))
+                                .font(.caption)
                                 .foregroundStyle(.gray)
                         
                             Circle()
@@ -334,15 +334,15 @@ struct GameReportView: View {
                                 .frame(width: 8, height: 8, alignment: .center)
                             
                             Text("Strike ")
-                                .font(.system(size: 11))
+                                .font(.caption2)
                                 .foregroundStyle(.gray)
                             
                             Circle()
                                 .fill(Color("Tangerine"))
                                 .frame(width: 8, height: 8, alignment: .center)
                             
-                            Text("Hit")
-                                .font(.system(size: 11))
+                            Text("Hit ")
+                                .font(.caption2)
                                 .foregroundStyle(.gray)
                         
                             Circle()
@@ -350,7 +350,7 @@ struct GameReportView: View {
                                 .frame(width: 8, height: 8, alignment: .center)
                             
                             Text("Out ")
-                                .font(.system(size: 11))
+                                .font(.caption2)
                                 .foregroundStyle(.gray)
                             
                             Circle()
@@ -359,7 +359,7 @@ struct GameReportView: View {
                                 .frame(width: 8, height: 8, alignment: .center)
                             
                             Text("Strikeout ")
-                                .font(.system(size: 11))
+                                .font(.caption2)
                                 .foregroundStyle(.gray)
                             
                             Spacer()
@@ -378,6 +378,109 @@ struct GameReportView: View {
                 }
                 
                 Spacer()
+                
+                HStack{
+                    VStack{
+                        HStack{
+                            Text("Hit Log")
+                                .font(.subheadline)
+                                .padding(.leading, view_padding)
+                                .padding(.top, view_padding)
+                            
+                            Spacer()
+                        }
+                        
+                        VStack{
+                            Grid(){
+                                if game_report.inn_hitlog.count == 0 {
+                                    GridRow{
+                                        Text("No Baserunners")
+                                            .padding(.bottom, view_padding)
+                                    }
+                                }
+                                else {
+                                    ForEach(Array(game_report.inn_hitlog.enumerated()), id: \.offset) { index, value in
+
+                                        let hit_type = game_report.result_hitlog[index]
+                                        let balls = game_report.cnt_hitlog[index].balls
+                                        let strikes = game_report.cnt_hitlog[index].strikes
+                                        let pitch_type = game_report.pitchtype_hitlog[index]
+                                        
+                                        //game_report.hl_curinn = cur_inn
+                                        //hd_balls = game_report.cnt_hitlog[index.balls]
+                                        
+                                        if index == 0 {
+                                            GridRow{
+                                                Text("INN \(value)")
+                                                    .padding(.top, view_padding * 0.5)
+                                                    .padding(.leading, view_padding * -3)
+                                                    .padding(.bottom, view_padding / -2)
+                                                    .bold()
+                                            }
+                                            
+                                            Divider()
+                                            
+                                            GridRow{
+                                                Text(hit_type)
+                                                Text("\(balls) - \(strikes)")
+                                                Text(pitch_type)
+                                            }
+                                            .padding(.leading, view_padding * 2)
+                                            .padding(.trailing, view_padding * 2)
+                                            .padding(.bottom, view_padding * 0.5)
+                                        }
+                                        
+                                        else if game_report.inn_hitlog[index] > game_report.inn_hitlog[index - 1] {
+                                            GridRow{
+                                                Text("INN \(value)")
+                                                    .padding(.top, view_padding * 0.5)
+                                                    .padding(.leading, view_padding * -3)
+                                                    .padding(.bottom, view_padding / -2)
+                                                    .bold()
+                                            }
+                                            //.padding(.top, view_padding)
+                                            
+                                            Divider()
+                                            
+                                            GridRow{
+                                                Text(hit_type)
+                                                Text("\(balls) - \(strikes)")
+                                                Text(pitch_type)
+                                            }
+                                            .padding(.leading, view_padding * 2)
+                                            .padding(.trailing, view_padding * 2)
+                                            .padding(.bottom, view_padding)
+                                        }
+                                        
+                                        else {
+                                            
+                                            Divider()
+                                                .padding(.leading, view_padding * 3)
+                                                .padding(.trailing, view_padding)
+                                            
+                                            GridRow{
+                                                Text(hit_type)
+                                                Text("\(balls) - \(strikes)")
+                                                Text(pitch_type)
+                                            }
+                                            .padding(.leading, view_padding * 2)
+                                            .padding(.trailing, view_padding * 2)
+                                            .padding(.bottom, view_padding)
+                                        }
+                                    }
+                                }
+                            }
+                            .padding(.horizontal, view_padding)
+                            .padding(.bottom, view_padding / 2)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color(UIColor.systemBackground))
+                    .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
+                    .padding(.bottom, view_padding)
+                    .padding(.leading, view_padding)
+                    .padding(.trailing, view_padding)
+                }
                 
                 HStack{
                     VStack{
@@ -411,7 +514,7 @@ struct GameReportView: View {
                                 current_pitcher.pitch1: Color("PowderBlue"), current_pitcher.pitch2: Color("Gold"), current_pitcher.pitch3: Color("Tangerine"), current_pitcher.pitch4: Color("Grey")
                             ])
                            .frame(height: 200)
-                           .padding(10)
+                           .padding(view_padding)
                            .chartLegend(position: .bottom, alignment: .center, spacing: 10)
                            .chartXScale(domain: [0, game_report.p1_by_inn.count + 1])
                             .chartXAxis {
