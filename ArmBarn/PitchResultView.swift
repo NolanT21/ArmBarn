@@ -194,18 +194,6 @@ struct PitchResultView: View {
         ptconfig.pitch_cur_ab -= 1
         ptconfig.ptcolor = .clear
         
-        //print(event.balls)
-        
-//        scoreboard.balls = event.balls
-//        scoreboard.strikes = event.strikes
-//        scoreboard.outs = event.outs
-//        scoreboard.inning = event.inning
-        //scoreboard.atbats = event.atbats
-        
-//        if scoreboard.pitches > 0 {
-//            scoreboard.pitches -= 1
-//        }
-        
         if scoreboard.balls == 1 {
             scoreboard.b1light = .blue
         }
@@ -255,10 +243,7 @@ struct PitchResultView: View {
                 scoreboard.baserunners += 1
                 reset_Count()
             }
-        
-            //print_Scoreboard()
         }
-        
     }
     
     func add_Strike() {
