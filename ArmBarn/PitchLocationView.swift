@@ -288,6 +288,11 @@ struct PitchLocationView: View {
         game_report.y_coordinate_list = []
         game_report.pl_color_list = []
         
+        game_report.inn_hitlog = []
+        game_report.result_hitlog = []
+        game_report.pitchtype_hitlog = []
+        game_report.cnt_hitlog = []
+        
         game_report.inn_pitched = (Double(scoreboard.inning) + (Double(scoreboard.outs) * 0.1)) - 1
         
         let arsenal: [String] = [current_pitcher.pitch1, current_pitcher.pitch2, current_pitcher.pitch3, current_pitcher.pitch4]
@@ -343,22 +348,48 @@ struct PitchLocationView: View {
                     game_report.hits += 1
                     game_report.pl_color = Color("Tangerine")
                     
+                    game_report.inn_hitlog.append(evnt.inning)
+                    game_report.cnt_hitlog.append((balls: evnt.balls, strikes: evnt.strikes))
+                    //Add logic for
+                    if evnt.pitch_type == "P1" {
+                        game_report.pitchtype_hitlog.append(current_pitcher.pitch1)
+                    }
+                    else if evnt.pitch_type == "P2" {
+                        game_report.pitchtype_hitlog.append(current_pitcher.pitch2)
+                    }
+                    else if evnt.pitch_type == "P3" {
+                        game_report.pitchtype_hitlog.append(current_pitcher.pitch3)
+                    }
+                    else if evnt.pitch_type == "P4" {
+                        game_report.pitchtype_hitlog.append(current_pitcher.pitch4)
+                    }
+                    
                     if evnt.result_detail != "E" {
                         
                         if evnt.result_detail == "S" {
+                            game_report.result_hitlog.append("Single")
                             game_report.game_score -= 2
                         }
                         else if evnt.result_detail == "D" {
+                            game_report.result_hitlog.append("Double")
                             game_report.game_score -= 3
                         }
                         else if evnt.result_detail == "T" {
+                            game_report.result_hitlog.append("Triple")
                             game_report.game_score -= 4
                             
                         }
                         else if evnt.result_detail == "H" {
+                            game_report.result_hitlog.append("Homerun")
                             game_report.game_score -= 6
                         }
                         
+                    }
+                    else if evnt.result_detail == "B" {
+                        game_report.result_hitlog.append("Hit by Pitch")
+                    }
+                    else {
+                        game_report.result_hitlog.append("Error")
                     }
                     
                 }
@@ -409,7 +440,6 @@ struct PitchLocationView: View {
         }
         
         let temp_inn_pitches = [game_report.p1_by_inn, game_report.p2_by_inn, game_report.p3_by_inn, game_report.p4_by_inn]
-        print(temp_inn_pitches)
         
         for index in 0..<temp_inn_pitches.count {
             if temp_inn_pitches[index].reduce(0, +) > 0 {
