@@ -50,6 +50,7 @@ import Observation
     var result_hitlog: [String] = []
     var pitchtype_hitlog: [String] = []
     var cnt_hitlog: [(balls: Int, strikes: Int)] = []
+    var outs_hitlog: [Int] = []
     
     var p1_by_inn: [Int] = []
     var p2_by_inn: [Int] = []
