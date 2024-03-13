@@ -287,6 +287,8 @@ struct PitchLocationView: View {
         game_report.x_coordinate_list = []
         game_report.y_coordinate_list = []
         game_report.pl_color_list = []
+        game_report.pl_outline_list = []
+        game_report.outs_hitlog = []
         
         game_report.inn_hitlog = []
         game_report.result_hitlog = []
@@ -350,6 +352,7 @@ struct PitchLocationView: View {
                     
                     game_report.inn_hitlog.append(evnt.inning)
                     game_report.cnt_hitlog.append((balls: evnt.balls, strikes: evnt.strikes))
+                    game_report.outs_hitlog.append(evnt.outs)
                     //Add logic for
                     if evnt.pitch_type == "P1" {
                         game_report.pitchtype_hitlog.append(current_pitcher.pitch1)
@@ -383,10 +386,10 @@ struct PitchLocationView: View {
                             game_report.result_hitlog.append("Homerun")
                             game_report.game_score -= 6
                         }
+                        else if evnt.result_detail == "B" {
+                            game_report.result_hitlog.append("HBP")
+                        }
                         
-                    }
-                    else if evnt.result_detail == "B" {
-                        game_report.result_hitlog.append("Hit by Pitch")
                     }
                     else {
                         game_report.result_hitlog.append("Error")
@@ -424,6 +427,10 @@ struct PitchLocationView: View {
             game_report.pl_outline_list.append(game_report.pl_outline)
             
         }
+        
+//        print(game_report.pl_color_list)
+//        print(game_report.pl_outline_list)
+        print(game_report.outs_hitlog)
         
         game_report.fpb_to_fps.append(game_report.first_pitch_ball)
         game_report.fpb_to_fps.append(game_report.first_pitch_strike)
