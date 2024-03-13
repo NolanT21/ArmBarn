@@ -67,12 +67,14 @@ struct GameReportView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
                 .background(Color(UIColor.secondarySystemBackground))
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
             }
         }
     }
     
     var reportView: some View {
+        
             VStack{
                 HStack{
                     VStack (alignment: .leading){
@@ -283,7 +285,9 @@ struct GameReportView: View {
                 Spacer()
 
                 HStack{
+                    
                     VStack{
+                        
                         HStack{
                             Text("Pitch Location Map")
                                 .font(.subheadline)
@@ -294,16 +298,18 @@ struct GameReportView: View {
 
                         ZStack{
                             
+                            let screenSize = UIScreen.main.bounds.size
+                            
                             Image("PLO_Background")
                                 .resizable()
-                                .aspectRatio(contentMode: .fit)
+                                .aspectRatio(contentMode: .fill)
                                 .clipShape(RoundedRectangle(cornerRadius: 6))
                                 .padding(.horizontal, 6)
                                 .padding(.bottom, 6)
                             
                             ForEach(game_report.x_coordinate_list.indices, id: \.self){ index in
-                                let xloc = game_report.x_coordinate_list[index] * 0.54 + 90
-                                let yloc = game_report.y_coordinate_list[index] * 0.5 + 42
+                                let xloc = game_report.x_coordinate_list[index] * 0.54 + (screenSize.width * 0.205) //90
+                                let yloc = game_report.y_coordinate_list[index] * 0.52 + (screenSize.height * 0.04) //42
                                 let point = CGPoint(x: xloc, y: yloc)
                                 let pitch_color = game_report.pl_color_list[index]
                                 let outline = game_report.pl_outline_list[index]
@@ -405,6 +411,7 @@ struct GameReportView: View {
                                         let balls = game_report.cnt_hitlog[index].balls
                                         let strikes = game_report.cnt_hitlog[index].strikes
                                         let pitch_type = game_report.pitchtype_hitlog[index]
+                                        let hl_outs = game_report.outs_hitlog[index]
                                         
                                         //game_report.hl_curinn = cur_inn
                                         //hd_balls = game_report.cnt_hitlog[index.balls]
@@ -422,12 +429,17 @@ struct GameReportView: View {
                                             
                                             GridRow{
                                                 Text(hit_type)
+                                                    .font(.callout)
                                                 Text("\(balls) - \(strikes)")
+                                                    .font(.callout)
+                                                Text("\(hl_outs) Out(s)")
+                                                    .font(.callout)
                                                 Text(pitch_type)
+                                                    .font(.callout)
                                             }
                                             .padding(.leading, view_padding * 2)
                                             .padding(.trailing, view_padding * 2)
-                                            .padding(.bottom, view_padding * 0.5)
+                                            //.padding(.bottom, view_padding * 0.5)
                                         }
                                         
                                         else if game_report.inn_hitlog[index] > game_report.inn_hitlog[index - 1] {
@@ -444,12 +456,17 @@ struct GameReportView: View {
                                             
                                             GridRow{
                                                 Text(hit_type)
+                                                    .font(.callout)
                                                 Text("\(balls) - \(strikes)")
+                                                    .font(.callout)
+                                                Text("\(hl_outs) Out(s)")
+                                                    .font(.callout)
                                                 Text(pitch_type)
+                                                    .font(.callout)
                                             }
                                             .padding(.leading, view_padding * 2)
                                             .padding(.trailing, view_padding * 2)
-                                            .padding(.bottom, view_padding)
+                                            //.padding(.bottom, view_padding)
                                         }
                                         
                                         else {
@@ -460,18 +477,23 @@ struct GameReportView: View {
                                             
                                             GridRow{
                                                 Text(hit_type)
+                                                    .font(.callout)
                                                 Text("\(balls) - \(strikes)")
+                                                    .font(.callout)
+                                                Text("\(hl_outs) Out(s)")
+                                                    .font(.callout)
                                                 Text(pitch_type)
+                                                    .font(.callout)
                                             }
                                             .padding(.leading, view_padding * 2)
                                             .padding(.trailing, view_padding * 2)
-                                            .padding(.bottom, view_padding)
+                                            //.padding(.bottom, view_padding)
                                         }
                                     }
                                 }
                             }
                             .padding(.horizontal, view_padding)
-                            .padding(.bottom, view_padding / 2)
+                            .padding(.bottom, view_padding)
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
