@@ -74,7 +74,7 @@ struct GameReportView: View {
     }
     
     var reportView: some View {
-        
+
             VStack{
                 HStack{
                     VStack (alignment: .leading){
@@ -397,8 +397,9 @@ struct GameReportView: View {
                         }
                         
                         VStack{
-                            Grid(){
-                                if game_report.inn_hitlog.count == 0 {
+                            Grid(alignment: .center, horizontalSpacing: 10){
+                                let num_of_hits = game_report.inn_hitlog.count
+                                if num_of_hits < 1 {
                                     GridRow{
                                         Text("No Baserunners")
                                             .padding(.bottom, view_padding)
@@ -407,7 +408,7 @@ struct GameReportView: View {
                                 else {
                                     ForEach(Array(game_report.inn_hitlog.enumerated()), id: \.offset) { index, value in
 
-                                        let hit_type = game_report.result_hitlog[index]
+                                        let hit_type = game_report.result_hitlog[index] //Thread 1: Fatal error: Index out of range
                                         let balls = game_report.cnt_hitlog[index].balls
                                         let strikes = game_report.cnt_hitlog[index].strikes
                                         let pitch_type = game_report.pitchtype_hitlog[index]
@@ -426,6 +427,9 @@ struct GameReportView: View {
                                             }
                                             
                                             Divider()
+                                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                                .gridCellUnsizedAxes(.horizontal)
+                                                
                                             
                                             GridRow{
                                                 Text(hit_type)
@@ -437,8 +441,8 @@ struct GameReportView: View {
                                                 Text(pitch_type)
                                                     .font(.callout)
                                             }
-                                            .padding(.leading, view_padding * 2)
-                                            .padding(.trailing, view_padding * 2)
+                                            //.padding(.leading, view_padding * 2)
+                                            //.padding(.trailing, view_padding * 3)
                                             //.padding(.bottom, view_padding * 0.5)
                                         }
                                         
@@ -453,6 +457,7 @@ struct GameReportView: View {
                                             //.padding(.top, view_padding)
                                             
                                             Divider()
+                                                
                                             
                                             GridRow{
                                                 Text(hit_type)
@@ -465,7 +470,7 @@ struct GameReportView: View {
                                                     .font(.callout)
                                             }
                                             .padding(.leading, view_padding * 2)
-                                            .padding(.trailing, view_padding * 2)
+                                            .padding(.trailing, view_padding * 3)
                                             //.padding(.bottom, view_padding)
                                         }
                                         
@@ -486,7 +491,7 @@ struct GameReportView: View {
                                                     .font(.callout)
                                             }
                                             .padding(.leading, view_padding * 2)
-                                            .padding(.trailing, view_padding * 2)
+                                            .padding(.trailing, view_padding * 3)
                                             //.padding(.bottom, view_padding)
                                         }
                                     }
