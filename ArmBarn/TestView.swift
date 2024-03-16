@@ -32,107 +32,51 @@ struct TestView: View {
     var view_padding: CGFloat = 10
     var view_crnr_radius: CGFloat = 12
     
+    let columns = [
+        GridItem(.flexible())
+    ]
+    
+    let rows = [
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
     var body: some View {
         
-        Grid(){
+        LazyVGrid(columns: columns){
             ForEach(Array(game_report.inn_hitlog.enumerated()), id: \.offset) { index, value in
-
-                let hit_type = game_report.result_hitlog[index]
+                
+                let hit_type = game_report.result_hitlog[index] //Thread 1: Fatal error: Index out of range
                 let balls = game_report.cnt_hitlog[index].balls
                 let strikes = game_report.cnt_hitlog[index].strikes
                 let pitch_type = game_report.pitchtype_hitlog[index]
-                
-                //game_report.hl_curinn = cur_inn
-                //hd_balls = game_report.cnt_hitlog[index.balls]
-                
+                let hl_outs = game_report.outs_hitlog[index]
+            
                 if index == 0 {
-                    GridRow{
+                    LazyVGrid(columns: columns, alignment: .leading){
                         Text("INN \(value)")
-                            .padding(.bottom, view_padding / -2)
-                            .bold()
+                            .padding(.leading, view_padding)
+                        Divider()
                     }
-                    
-                    Divider()
-                    
-                    GridRow{
-                        Text(hit_type)
-                        Text("\(balls) - \(strikes)")
-                        Text(pitch_type)
-                    }
-                    .padding(.leading, view_padding * 3)
-                    .padding(.trailing, view_padding)
+                    .padding(.horizontal, view_padding)
                 }
                 
-                else if game_report.inn_hitlog[index] > game_report.inn_hitlog[index - 1] {
-                    GridRow{
-                        Text("INN \(value)")
-                            .padding(.bottom, view_padding / -2)
-                            .padding(.top, view_padding)
-                            .bold()
-                    }
-                    //.padding(.top, view_padding)
-                    
-                    Divider()
-                    
-                    GridRow{
-                        Text(hit_type)
-                        Text("\(balls) - \(strikes)")
-                        Text(pitch_type)
-                    }
-                    .padding(.leading, view_padding * 3)
-                    .padding(.trailing, view_padding)
+                LazyHGrid(rows: columns){
+                    Text(hit_type)
+                    Text("\(balls) - \(strikes)")
+                    Text(pitch_type)
+                    Text("\(hl_outs) Out(s)")
                 }
-                
-                else {
-                    
-                    Divider()
-                        .padding(.leading, view_padding * 3)
-                        .padding(.trailing, view_padding)
-                    
-                    GridRow{
-                        Text(hit_type)
-                        Text("\(balls) - \(strikes)")
-                        Text(pitch_type)
-                    }
-                    .padding(.leading, view_padding * 3)
-                    .padding(.trailing, view_padding)
-                    
-                    
-                }
+                .padding(.leading, view_padding * 3)
+                .padding(.trailing, view_padding)
                 
             }
         }
-        .padding(.horizontal, view_padding)
-        
         
         
     }
-
-        
-       
-//    var innlineView: some View {
-//        GridRow{
-//            Text("INN \(game_report.hl_curinn)")
-//                .padding(.vertical, -5)
-//                .bold()
-//            
-//            Divider()
-//        }
-//        
-//    }
-//    
-//    var hitlineView: some View {
-//        GridRow{
-//            Text(game_report.hl_hittype)
-//            Spacer()
-//            Text("\(game_report.hl_balls) - \(game_report.hl_strikes)")
-//            Spacer()
-//            Text(game_report.hl_pitchtype)
-//        }
-//        .padding(.leading, view_padding * 4)
-//        .padding(.trailing, view_padding * 2)
-//    }
-//    
 }
         
 

@@ -430,7 +430,8 @@ struct PitchLocationView: View {
         
 //        print(game_report.pl_color_list)
 //        print(game_report.pl_outline_list)
-        print(game_report.outs_hitlog)
+//        print(game_report.outs_hitlog)
+        print(game_report.inn_hitlog, game_report.inn_hitlog.count)
         
         game_report.fpb_to_fps.append(game_report.first_pitch_ball)
         game_report.fpb_to_fps.append(game_report.first_pitch_strike)
