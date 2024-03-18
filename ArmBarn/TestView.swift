@@ -33,7 +33,10 @@ struct TestView: View {
     var view_crnr_radius: CGFloat = 12
     
     let columns = [
-        GridItem(.flexible())
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+        GridItem(.flexible()),
     ]
     
     let rows = [
@@ -53,29 +56,37 @@ struct TestView: View {
                 let strikes = game_report.cnt_hitlog[index].strikes
                 let pitch_type = game_report.pitchtype_hitlog[index]
                 let hl_outs = game_report.outs_hitlog[index]
-            
+                
                 if index == 0 {
-                    LazyVGrid(columns: columns, alignment: .leading){
+                    VStack{
                         Text("INN \(value)")
-                            .padding(.leading, view_padding)
                         Divider()
                     }
-                    .padding(.horizontal, view_padding)
+                    
+                    Divider()
+                    Divider()
+                    Divider()
+                    
+                }
+                else if game_report.inn_hitlog[index] > game_report.inn_hitlog[index - 1] {
+                    VStack{
+                        Text("INN \(value)")
+                        Text("")
+                        Text("")
+                        Text("")
+                        
+                        Divider()
+                    }
+                    
                 }
                 
-                LazyHGrid(rows: columns){
-                    Text(hit_type)
-                    Text("\(balls) - \(strikes)")
-                    Text(pitch_type)
-                    Text("\(hl_outs) Out(s)")
-                }
-                .padding(.leading, view_padding * 3)
-                .padding(.trailing, view_padding)
-                
+                Text(hit_type)
+                Text("\(balls) - \(strikes)")
+                Text(pitch_type)
+                Text("\(hl_outs) Out(s)")
+
             }
         }
-        
-        
     }
 }
         
@@ -88,6 +99,33 @@ struct TestView: View {
         .environment(PitchTypeConfig())
         .environment(GameReport())
 }
+
+//                if index == 0 {
+//                    LazyVGrid(columns: columns, alignment: .leading){
+//                        Text("INN \(value)")
+//                            .padding(.leading, view_padding)
+//                        Divider()
+//                    }
+//                    .padding(.horizontal, view_padding)
+//                }
+//
+//                else if game_report.inn_hitlog[index] > game_report.inn_hitlog[index - 1] {
+//                    LazyVGrid(columns: columns, alignment: .leading){
+//                        Text("INN \(value)")
+//                            .padding(.leading, view_padding)
+//                        Divider()
+//                    }
+//                    .padding(.horizontal, view_padding)
+//                }
+//
+//                LazyHGrid(rows: columns){
+//                    Text(hit_type)
+//                    Text("\(balls) - \(strikes)")
+//                    Text(pitch_type)
+//                    Text("\(hl_outs) Out(s)")
+//                }
+//                .padding(.leading, view_padding * 3)
+//                .padding(.trailing, view_padding)
 
 //Gauge(value: 0.4) {
 //    Text("Game Score")
