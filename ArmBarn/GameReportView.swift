@@ -397,7 +397,7 @@ struct GameReportView: View {
                         }
                         
                         VStack{
-                            Grid(alignment: .center, horizontalSpacing: 10){
+                            Grid(alignment: .center, horizontalSpacing: 30){
                                 let num_of_hits = game_report.inn_hitlog.count
                                 if num_of_hits < 1 {
                                     GridRow{
@@ -421,7 +421,7 @@ struct GameReportView: View {
                                             GridRow{
                                                 Text("INN \(value)")
                                                     .padding(.top, view_padding * 0.5)
-                                                    .padding(.leading, view_padding * -3)
+                                                    //.padding(.leading, view_padding * -1)
                                                     .padding(.bottom, view_padding / -2)
                                                     .bold()
                                             }
@@ -450,14 +450,15 @@ struct GameReportView: View {
                                             GridRow{
                                                 Text("INN \(value)")
                                                     .padding(.top, view_padding * 0.5)
-                                                    .padding(.leading, view_padding * -3)
+                                                    //.padding(.leading, view_padding * -1)
                                                     .padding(.bottom, view_padding / -2)
                                                     .bold()
                                             }
                                             //.padding(.top, view_padding)
                                             
                                             Divider()
-                                                
+                                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                                .gridCellUnsizedAxes(.horizontal)
                                             
                                             GridRow{
                                                 Text(hit_type)
@@ -469,16 +470,18 @@ struct GameReportView: View {
                                                 Text(pitch_type)
                                                     .font(.callout)
                                             }
-                                            .padding(.leading, view_padding * 2)
-                                            .padding(.trailing, view_padding * 3)
+                                            //.padding(.leading, view_padding * 2)
+                                            //.padding(.trailing, view_padding * 3)
                                             //.padding(.bottom, view_padding)
                                         }
                                         
                                         else {
                                             
                                             Divider()
-                                                .padding(.leading, view_padding * 3)
-                                                .padding(.trailing, view_padding)
+                                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                                .gridCellUnsizedAxes(.horizontal)
+                                                .padding(.leading, view_padding * 2)
+                                                .padding(.trailing, view_padding * 2)
                                             
                                             GridRow{
                                                 Text(hit_type)
@@ -490,14 +493,14 @@ struct GameReportView: View {
                                                 Text(pitch_type)
                                                     .font(.callout)
                                             }
-                                            .padding(.leading, view_padding * 2)
-                                            .padding(.trailing, view_padding * 3)
+                                            //.padding(.leading, view_padding * 2)
+                                            //.padding(.trailing, view_padding * 3)
                                             //.padding(.bottom, view_padding)
                                         }
                                     }
                                 }
                             }
-                            .padding(.horizontal, view_padding)
+                            //.padding(.horizontal, view_padding)
                             .padding(.bottom, view_padding)
                         }
                     }
@@ -508,6 +511,8 @@ struct GameReportView: View {
                     .padding(.leading, view_padding)
                     .padding(.trailing, view_padding)
                 }
+                
+                Spacer()
                 
                 HStack{
                     VStack{
