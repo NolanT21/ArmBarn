@@ -8,8 +8,6 @@
 import SwiftUI
 import Charts
 
-
-
 struct GameReportView: View {
     
     @Environment(GameReport.self) var game_report
@@ -42,19 +40,23 @@ struct GameReportView: View {
                     Spacer()
                     
                     VStack{
-                        Button(action: {
-                            
-                            guard let image = ImageRenderer(content: reportView.frame(width: viewsize.width, height: viewsize.height, alignment: .center)).uiImage else {
-                                print("Failed to render view as an image")
-                                return
-                            }
-                            
-                            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-                            
-                        }, label: {
-                            Image(systemName: "square.and.arrow.up")
-                                .foregroundStyle(Color(UIColor.label))
-                        })
+                        
+                        ShareLink("", item: render(viewSize: viewsize))
+                            .foregroundStyle(Color.white)
+                        
+//                        Button(action: {
+//                            
+//                            guard let image = ImageRenderer(content: reportView.frame(width: viewsize.width, height: viewsize.height, alignment: .center)).uiImage else {
+//                                print("Failed to render view as an image")
+//                                return
+//                            }
+//                            
+//                            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+//                            
+//                        }, label: {
+//                            Image(systemName: "square.and.arrow.up")
+//                                .foregroundStyle(Color(UIColor.label))
+//                        })
                         
                         //Spacer()
                     }
@@ -301,26 +303,27 @@ struct GameReportView: View {
                             let screenSize = UIScreen.main.bounds.size
                             
                             Image("PLO_Background")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
+                                //.resizable()
+                                //.aspectRatio(contentMode: .fill)
+                                //.scaledToFill()
                                 .clipShape(RoundedRectangle(cornerRadius: 6))
                                 .padding(.horizontal, 6)
                                 .padding(.bottom, 6)
-                            
-                            ForEach(game_report.x_coordinate_list.indices, id: \.self){ index in
-                                let xloc = game_report.x_coordinate_list[index] * 0.54 + (screenSize.width * 0.205) //90
-                                let yloc = game_report.y_coordinate_list[index] * 0.52 + (screenSize.height * 0.04) //42
-                                let point = CGPoint(x: xloc, y: yloc)
-                                let pitch_color = game_report.pl_color_list[index]
-                                let outline = game_report.pl_outline_list[index]
+                                .overlay(alignment: .center){
+                                    ForEach(game_report.x_coordinate_list.indices, id: \.self){ index in
+                                        let xloc = game_report.x_coordinate_list[index] * (202/screenSize.width) + 75
+                                        let yloc = game_report.y_coordinate_list[index] * (400/screenSize.height) + 42//0.52 + (screenSize.height * 0.04) //42
+                                        let point = CGPoint(x: xloc, y: yloc)
+                                        let pitch_color = game_report.pl_color_list[index]
+                                        let outline = game_report.pl_outline_list[index]
 
-                                Circle()
-                                    .fill(pitch_color)
-                                    .stroke(outline, lineWidth: 4)
-                                    .frame(width: 20, height: 20, alignment: .center)
-                                    .position(point)
-                            }
-                            
+                                        Circle()
+                                            .fill(pitch_color)
+                                            .stroke(outline, lineWidth: 4)
+                                            .frame(width: 20, height: 20, alignment: .center)
+                                            .position(point)
+                                    }
+                                }
                         }
                         
                         HStack(spacing: 5){
@@ -571,7 +574,34 @@ struct GameReportView: View {
                 
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.black)
     }
+    
+    @MainActor
+    func render(viewSize: CGSize) -> URL {
+        let renderer = ImageRenderer(content: reportView)
+        
+        let url = URL.documentsDirectory.appending(path: "test.pdf")
+        
+        renderer.render { size, context in
+            var box = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+            
+            guard let pdf = CGContext(url as CFURL, mediaBox: &box, nil) else {
+                return
+            }
+            
+            pdf.beginPDFPage(nil)
+            
+            context(pdf)
+            
+            pdf.endPDFPage()
+            pdf.closePDF()
+        }
+        
+        return url
+        
+    }
+    
 }
 
 #Preview {
