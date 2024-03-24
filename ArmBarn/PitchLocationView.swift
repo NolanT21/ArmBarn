@@ -25,7 +25,6 @@ struct PitchLocationView: View {
     @State var ver_padding: Double = 35.0
 
     @State private var hidePitchOverlay = false
-    @State private var showEndGame = false
     @State private var showGameReport = false
     @State private var showPitcherSelect = false
     @State private var showTestView = false
@@ -180,9 +179,9 @@ struct PitchLocationView: View {
                             .frame(width: sbl_width, height: sbl_height)
                             .foregroundColor(.white)
                             .bold()
-                        Text("Undo")
-                            .bold()
-                            .imageScale(.large)
+                        Text("UNDO")
+                            .font(.headline)
+                            .fontWeight(.heavy)
                             .foregroundColor(.white)
                             //.font(weight: .semibold)
                     }
@@ -190,39 +189,41 @@ struct PitchLocationView: View {
                 
                 ToolbarItemGroup(placement: .principal) {
                     HStack(alignment: .center){
-                        Button(action: {
-                            showPitcherSelect = true
-                        }) {
-                            Text("P")
-                                .bold()
-                                .foregroundColor(Color.white)
-                            Text(current_pitcher.lastName)
-                                .imageScale(.large)
-                                .foregroundColor(.white)
-                                .bold()
+                        
+                        Text("P")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color.white)
+                        
+                        ZStack(alignment: .leading){
+                            //Rectangle()
+                            RoundedRectangle(cornerRadius: 4) 
+                                .foregroundStyle(
+                                    Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
+                                )
+                                .frame(width: 180, height: 30)
+
+                            Button(action: {
+                                showPitcherSelect = true
+                            }) {
+                                Text(current_pitcher.lastName)
+                                    .textCase(.uppercase)
+                                    .font(.title3)
+                                    .fontWeight(.black)
+                                    .foregroundColor(.white)
+                            }
+                            .popover(isPresented: $showPitcherSelect) {
+                                SelectPitcherView()
+                            }
+                                
                         }
-                        .popover(isPresented: $showPitcherSelect) {
-                            SelectPitcherView()
-                        }
+                        
+                        
                     }
                 }
                 
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     HStack{
-                
-                        Button(action: {
-                            showEndGame = true
-                        }) {
-                            Image(systemName: "flag.checkered")
-                                .frame(width: sbl_width, height: sbl_height)
-                                .foregroundColor(Color.white)
-                        }
-                        .popover(isPresented: $showEndGame) {
-                            EndGameView()
-                        }
-                        
-                        Spacer()
-                        
                         Button(action: {
                             showGameReport = true
                         }) {
