@@ -106,10 +106,10 @@ struct OutDetailView: View {
                                     .frame(width: sbl_width, height: sbl_height)
                                     .foregroundColor(.white)
                                     .bold()
-                                Text("Back")
-                                    .imageScale(.large)
+                                Text("BACK")
+                                    .font(.headline)
+                                    .fontWeight(.heavy)
                                     .foregroundColor(.white)
-                                    .bold()
                                     //.font(weight: .semibold)
                             }
                                 //.font(weight: .semibold)
@@ -120,12 +120,25 @@ struct OutDetailView: View {
                     ToolbarItemGroup(placement: .principal) {
                         HStack(alignment: .center){
                             Text("P")
-                                .bold()
+                                .font(.title3)
+                                .fontWeight(.bold)
                                 .foregroundColor(Color.white)
-                            
-                            Text("\(current_pitcher.lastName)")
-                                .bold()
-                                .foregroundColor(Color.white)
+                            ZStack(alignment: .leading){
+                                //Rectangle()
+                                RoundedRectangle(cornerRadius: 4)
+                                    .foregroundStyle(
+                                        Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
+                                    )
+                                    .frame(width: 180, height: 30)
+
+                                Text(current_pitcher.lastName)
+                                    .textCase(.uppercase)
+                                    .font(.title3)
+                                    .fontWeight(.black)
+                                    .foregroundColor(.white)
+                                    .padding(.leading,  5)
+                                    
+                            }
                         }
                     }
                     
