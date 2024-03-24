@@ -17,9 +17,6 @@ struct MainView: View {
     var body: some View {
         
         VStack{
-            
-            Spacer()
-                .frame(height: 10)
             ScoreboardView()
             MainContainerView().task {
                 do {
