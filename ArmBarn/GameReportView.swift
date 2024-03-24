@@ -15,11 +15,24 @@ struct GameReportView: View {
     
     @Environment(\.dismiss) var dismiss
     
+    @State private var showEndGame = false
+    
     var gradient = Gradient(colors: [Color("PowderBlue"), Color("Gold"), Color("Tangerine")])
     var colorset = [Color("PowderBlue"), Color("Gold"), Color("Tangerine"), Color("Grey")]
     
     var view_padding: CGFloat = 10
     var view_crnr_radius: CGFloat = 12
+    
+    @State var sbl_width: Double = 17.0
+    @State var sbl_height: Double = 13.0
+    
+    var background: Color = .black
+    var component_background: UIColor = .darkGray
+    var text_color: Color = .white
+    var legend_color: Color = .gray
+    
+    let background_gradient = Gradient(colors: [Color("ScoreboardGreen"), .black, .black, .black, .black, .black])
+    let header_gradient = Gradient(colors: [Color("ScoreboardGreen"), Color("ScoreboardGreen"), Color("ScoreboardGreen"), .black])
     
     var body: some View {
         
@@ -34,32 +47,34 @@ struct GameReportView: View {
                         dismiss()
                     }, label: {
                         Text("Back")
-                            .foregroundStyle(.white)
+                            .foregroundStyle(text_color)
+                            .fontWeight(.bold)
                     })
                     
                     Spacer()
                     
-                    VStack{
+                    HStack{
                         
-                        ShareLink("", item: render(viewSize: viewsize))
-                            .foregroundStyle(Color.white)
-                        
-//                        Button(action: {
-//                            
-//                            guard let image = ImageRenderer(content: reportView.frame(width: viewsize.width, height: viewsize.height, alignment: .center)).uiImage else {
-//                                print("Failed to render view as an image")
-//                                return
-//                            }
-//                            
-//                            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-//                            
-//                        }, label: {
-//                            Image(systemName: "square.and.arrow.up")
-//                                .foregroundStyle(Color(UIColor.label))
-//                        })
+                        Button(action: {
+                            showEndGame = true
+                        }) {
+                            Image(systemName: "flag.checkered")
+                                .frame(width: sbl_width, height: sbl_height)
+                                .foregroundColor(Color.white)
+                        }
+                        .popover(isPresented: $showEndGame) {
+                            EndGameView()
+                        }
                         
                         //Spacer()
+                        
+                        VStack{
+                            ShareLink("", item: render(viewSize: viewsize))
+                                .foregroundStyle(text_color)
+                                .fontWeight(.bold)
+                        }
                     }
+                    
                 }
                 .padding(.top, view_padding)
                 .padding(.horizontal, view_padding)
@@ -68,10 +83,12 @@ struct GameReportView: View {
                     reportView
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                .background(Color(UIColor.secondarySystemBackground))
+                //.background(background)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
             }
+            //.background(Color("ScoreboardGreen"))
+            .background(LinearGradient(gradient: header_gradient, startPoint: .top, endPoint: .bottom))
         }
     }
     
@@ -80,16 +97,15 @@ struct GameReportView: View {
             VStack{
                 HStack{
                     VStack (alignment: .leading){
-                        Text("Game Summary")
+                        Text(current_pitcher.firstName + " " + current_pitcher.lastName)
                             .font(.title)
                             .bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        HStack{
-                            Text(" " + current_pitcher.firstName + " " + current_pitcher.lastName + ",")
-                                .font(.subheadline)
-                            Text(Date().formatted(.dateTime.day().month().year()))
-                                .font(.subheadline)
-                        }
+                            .foregroundStyle(text_color)
+                            
+                        Text(Date().formatted(.dateTime.day().month().year()))
+                            .font(.subheadline)
+                            .foregroundStyle(text_color)
                     }
                 }
                 .padding(.horizontal, view_padding)
@@ -103,6 +119,7 @@ struct GameReportView: View {
                         HStack{
                             Text("Box Score")
                                 .font(.subheadline)
+                                .foregroundStyle(text_color)
                             Spacer()
                         }
                         
@@ -115,10 +132,12 @@ struct GameReportView: View {
                                 Text("SO")
                                 Text("BB")
                             }
+                            .foregroundStyle(text_color)
                             .padding(.vertical, -5)
                             .bold()
                             
                             Divider()
+                                .foregroundStyle(text_color)
                             
                             GridRow{
                                 Text("\(game_report.inn_pitched, specifier: "%.1f")")
@@ -128,13 +147,14 @@ struct GameReportView: View {
                                 Text("\(game_report.strikeouts)")
                                 Text("\(game_report.walks)")
                             }
+                            .foregroundStyle(text_color)
                             
                         }
                         
                     }
                     .padding(view_padding)
                     .frame(maxWidth: .infinity)
-                    .background(Color(UIColor.systemBackground))
+                    .background(Color("DarkGrey"))
                     .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
                     
                 }
@@ -149,6 +169,7 @@ struct GameReportView: View {
                             Text("1st Pitch Strike %")
                                 .font(.subheadline)
                                 .padding(.top, view_padding)
+                                .foregroundStyle(text_color)
                             
                             Spacer()
                         }
@@ -168,9 +189,11 @@ struct GameReportView: View {
                                 VStack{
                                     Text("\(game_report.first_pit_strike_per)%")
                                         .font(.system(size: 40))
+                                        .foregroundStyle(text_color)
                                         .bold()
                                     Text("\(game_report.first_pitch_strike)/\(game_report.batters_faced)")
                                         .font(.subheadline)
+                                        .foregroundStyle(text_color)
                                 }
                                 .padding(.top, view_padding)
                             }
@@ -185,7 +208,7 @@ struct GameReportView: View {
                         
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(UIColor.systemBackground))
+                    .background(Color("DarkGrey"))
                     .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
                     .padding(.bottom, view_padding)
                     .padding(.leading, view_padding)
@@ -195,6 +218,7 @@ struct GameReportView: View {
                         HStack{
                             Text("Strike %")
                                 .font(.subheadline)
+                                .foregroundStyle(text_color)
                                 .padding(.top, view_padding)
                             
                             Spacer()
@@ -213,9 +237,11 @@ struct GameReportView: View {
                                 VStack{
                                     Text("\(game_report.strikes_per)%")
                                         .font(.system(size: 40))
+                                        .foregroundStyle(text_color)
                                         .bold()
                                     Text("\(game_report.strikes)/\(game_report.pitches)")
                                         .font(.subheadline)
+                                        .foregroundStyle(text_color)
                                 }
                                 .padding(.top, view_padding)
                             }
@@ -230,7 +256,7 @@ struct GameReportView: View {
                         
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(UIColor.systemBackground))
+                    .background(Color("DarkGrey"))
                     .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
                     .padding(.bottom, view_padding)
                     .padding(.leading, view_padding/2)
@@ -243,6 +269,7 @@ struct GameReportView: View {
                         HStack{
                             Text("Game Score")
                                 .font(.subheadline)
+                                .foregroundStyle(text_color)
                                 .padding(.leading, view_padding)
                                 .padding(.top, view_padding)
                             
@@ -254,6 +281,7 @@ struct GameReportView: View {
                             HStack{
                                 Text("\(game_report.game_score)")
                                     .font(.system(size: 40))
+                                    .foregroundStyle(text_color)
                                     .padding(.horizontal, view_padding)
                                     .padding(.bottom, -20)
                                     .bold()
@@ -266,6 +294,7 @@ struct GameReportView: View {
                             VStack{
                                 Gauge(value: Double(game_report.game_score) * 0.01) {
                                     Text("Game Score")
+                                        .foregroundStyle(text_color)
                                 }
                                 .gaugeStyle(.accessoryLinear)
                                 .tint(gradient)
@@ -276,7 +305,7 @@ struct GameReportView: View {
 
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(UIColor.systemBackground))
+                    .background(Color("DarkGrey"))
                     .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
                     .padding(.bottom, view_padding)
                     .padding(.leading, view_padding)
@@ -293,6 +322,7 @@ struct GameReportView: View {
                         HStack{
                             Text("Pitch Location Map")
                                 .font(.subheadline)
+                                .foregroundStyle(text_color)
                                 .padding(.leading, view_padding)
                                 .padding(.top, view_padding)
                             Spacer()
@@ -336,7 +366,7 @@ struct GameReportView: View {
                                                         
                             Text("Ball ")
                                 .font(.caption)
-                                .foregroundStyle(.gray)
+                                .foregroundStyle(legend_color)
                         
                             Circle()
                                 .fill(Color("Gold"))
@@ -344,7 +374,7 @@ struct GameReportView: View {
                             
                             Text("Strike ")
                                 .font(.caption2)
-                                .foregroundStyle(.gray)
+                                .foregroundStyle(legend_color)
                             
                             Circle()
                                 .fill(Color("Tangerine"))
@@ -352,7 +382,7 @@ struct GameReportView: View {
                             
                             Text("Hit ")
                                 .font(.caption2)
-                                .foregroundStyle(.gray)
+                                .foregroundStyle(legend_color)
                         
                             Circle()
                                 .fill(Color("Grey"))
@@ -360,7 +390,7 @@ struct GameReportView: View {
                             
                             Text("Out ")
                                 .font(.caption2)
-                                .foregroundStyle(.gray)
+                                .foregroundStyle(legend_color)
                             
                             Circle()
                                 //.fill(Color("Grey"))
@@ -369,7 +399,7 @@ struct GameReportView: View {
                             
                             Text("Strikeout ")
                                 .font(.caption2)
-                                .foregroundStyle(.gray)
+                                .foregroundStyle(legend_color)
                             
                             Spacer()
                             
@@ -379,7 +409,7 @@ struct GameReportView: View {
 
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(UIColor.systemBackground))
+                    .background(Color("DarkGrey"))
                     .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
                     .padding(.bottom, view_padding)
                     .padding(.leading, view_padding)
@@ -393,6 +423,7 @@ struct GameReportView: View {
                         HStack{
                             Text("Hit Log")
                                 .font(.subheadline)
+                                .foregroundStyle(text_color)
                                 .padding(.leading, view_padding)
                                 .padding(.top, view_padding)
                             
@@ -404,7 +435,8 @@ struct GameReportView: View {
                                 let num_of_hits = game_report.inn_hitlog.count
                                 if num_of_hits < 1 {
                                     GridRow{
-                                        Text("No Baserunners")
+                                        Text("No Previous Hits")
+                                            .foregroundStyle(text_color)
                                             .padding(.bottom, view_padding)
                                     }
                                 }
@@ -423,6 +455,7 @@ struct GameReportView: View {
                                         if index == 0 {
                                             GridRow{
                                                 Text("INN \(value)")
+                                                    .foregroundStyle(text_color)
                                                     .padding(.top, view_padding * 0.5)
                                                     //.padding(.leading, view_padding * -1)
                                                     .padding(.bottom, view_padding / -2)
@@ -432,17 +465,22 @@ struct GameReportView: View {
                                             Divider()
                                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                                                 .gridCellUnsizedAxes(.horizontal)
+                                                .foregroundStyle(text_color)
                                                 
                                             
                                             GridRow{
                                                 Text(hit_type)
                                                     .font(.callout)
+                                                    .foregroundStyle(text_color)
                                                 Text("\(balls) - \(strikes)")
                                                     .font(.callout)
+                                                    .foregroundStyle(text_color)
                                                 Text("\(hl_outs) Out(s)")
                                                     .font(.callout)
+                                                    .foregroundStyle(text_color)
                                                 Text(pitch_type)
                                                     .font(.callout)
+                                                    .foregroundStyle(text_color)
                                             }
                                             //.padding(.leading, view_padding * 2)
                                             //.padding(.trailing, view_padding * 3)
@@ -466,12 +504,16 @@ struct GameReportView: View {
                                             GridRow{
                                                 Text(hit_type)
                                                     .font(.callout)
+                                                    .foregroundStyle(text_color)
                                                 Text("\(balls) - \(strikes)")
                                                     .font(.callout)
+                                                    .foregroundStyle(text_color)
                                                 Text("\(hl_outs) Out(s)")
                                                     .font(.callout)
+                                                    .foregroundStyle(text_color)
                                                 Text(pitch_type)
                                                     .font(.callout)
+                                                    .foregroundStyle(text_color)
                                             }
                                             //.padding(.leading, view_padding * 2)
                                             //.padding(.trailing, view_padding * 3)
@@ -489,12 +531,16 @@ struct GameReportView: View {
                                             GridRow{
                                                 Text(hit_type)
                                                     .font(.callout)
+                                                    .foregroundStyle(text_color)
                                                 Text("\(balls) - \(strikes)")
                                                     .font(.callout)
+                                                    .foregroundStyle(text_color)
                                                 Text("\(hl_outs) Out(s)")
                                                     .font(.callout)
+                                                    .foregroundStyle(text_color)
                                                 Text(pitch_type)
                                                     .font(.callout)
+                                                    .foregroundStyle(text_color)
                                             }
                                             //.padding(.leading, view_padding * 2)
                                             //.padding(.trailing, view_padding * 3)
@@ -508,7 +554,7 @@ struct GameReportView: View {
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(UIColor.systemBackground))
+                    .background(Color("DarkGrey"))
                     .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
                     .padding(.bottom, view_padding)
                     .padding(.leading, view_padding)
@@ -522,6 +568,7 @@ struct GameReportView: View {
                         HStack{
                             Text("Pitch Usage by Inning")
                                 .font(.subheadline)
+                                .foregroundStyle(text_color)
                                 .padding(.leading, view_padding)
                                 .padding(.top, view_padding)
                             
@@ -549,21 +596,85 @@ struct GameReportView: View {
                                 current_pitcher.pitch1: Color("PowderBlue"), current_pitcher.pitch2: Color("Gold"), current_pitcher.pitch3: Color("Tangerine"), current_pitcher.pitch4: Color("Grey")
                             ])
                            .frame(height: 200)
-                           .padding(view_padding)
-                           .chartLegend(position: .bottom, alignment: .center, spacing: 10)
+                           .padding(.horizontal, view_padding)
+                           .padding(.top, view_padding)
+                           .chartLegend(.hidden)
+                           //.chartLegend(position: .bottom, alignment: .center, spacing: 10)
                            .chartXScale(domain: [0, game_report.p1_by_inn.count + 1])
                             .chartXAxis {
-                                AxisMarks(values: .automatic(desiredCount: game_report.p1_by_inn.count + 1))
+                                AxisMarks(values: .automatic(desiredCount: game_report.p1_by_inn.count + 1)){
+                                    
+                                    AxisValueLabel()
+                                        .foregroundStyle(legend_color)
+                                    
+                                    AxisGridLine()
+                                        .foregroundStyle(legend_color)
+                                }
                             }
                             .chartYAxis {
-                                AxisMarks(position: .leading)
+                                AxisMarks(position: .leading) {
+                                    
+                                    AxisValueLabel()
+                                        .foregroundStyle(legend_color)
+                                    
+                                    AxisGridLine()
+                                        .foregroundStyle(legend_color)
+                                    
+                                }
                             }
+                            
+                            HStack(spacing: 5){
+                                
+                                Spacer()
+                                
+                                Circle()
+                                    .fill(Color("PowderBlue"))
+                                    .frame(width: 8, height: 8, alignment: .center)
+                                                            
+                                Text(current_pitcher.pitch1 + " ")
+                                    .font(.caption)
+                                    .foregroundStyle(legend_color)
+                            
+                                if current_pitcher.pitch2 != "None" {
+                                    Circle()
+                                        .fill(Color("Gold"))
+                                        .frame(width: 8, height: 8, alignment: .center)
+                                    
+                                    Text(current_pitcher.pitch2 + " ")
+                                        .font(.caption2)
+                                        .foregroundStyle(legend_color)
+                                }
+                                
+                                if current_pitcher.pitch3 != "None" {
+                                    Circle()
+                                        .fill(Color("Tangerine"))
+                                        .frame(width: 8, height: 8, alignment: .center)
+                                    
+                                    Text(current_pitcher.pitch3 + " ")
+                                        .font(.caption2)
+                                        .foregroundStyle(legend_color)
+                                }
+                                
+                                if current_pitcher.pitch4 != "None" {
+                                    Circle()
+                                        .fill(Color("Grey"))
+                                        .frame(width: 8, height: 8, alignment: .center)
+                                    
+                                    Text(current_pitcher.pitch4 + " ")
+                                        .font(.caption2)
+                                        .foregroundStyle(legend_color)
+                                }
+                            
+                                Spacer()
+                                
+                            }
+                            //.padding(.bottom, view_padding)
+                            
                             Spacer()
                         }
-                        
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(UIColor.systemBackground))
+                    .background(Color("DarkGrey"))
                     .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
                     .padding(.bottom, view_padding)
                     .padding(.leading, view_padding)
@@ -574,14 +685,23 @@ struct GameReportView: View {
                 
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.black)
+            .background(LinearGradient(gradient: background_gradient, startPoint: .top, endPoint: .bottom))
     }
     
     @MainActor
     func render(viewSize: CGSize) -> URL {
         let renderer = ImageRenderer(content: reportView)
         
-        let url = URL.documentsDirectory.appending(path: "test.pdf")
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "M.d.yy"
+
+        let formattedDate = dateFormatter.string(from: Date())
+
+        //print("Formatted date: \(formattedDate)")
+        
+        let path_string = current_pitcher.firstName + current_pitcher.lastName + formattedDate + ".pdf"
+        
+        let url = URL.documentsDirectory.appending(path: path_string)
         
         renderer.render { size, context in
             var box = CGRect(x: 0, y: 0, width: size.width, height: size.height)
