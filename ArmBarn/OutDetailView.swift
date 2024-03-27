@@ -120,7 +120,7 @@ struct OutDetailView: View {
                     ToolbarItemGroup(placement: .principal) {
                         HStack(alignment: .center){
                             Text("P")
-                                .font(.title3)
+                                .font(.system(size: 20))
                                 .fontWeight(.bold)
                                 .foregroundColor(Color.white)
                             ZStack(alignment: .leading){
