@@ -181,7 +181,7 @@ struct PitchResultView: View {
 
                             Text(current_pitcher.lastName)
                                 .textCase(.uppercase)
-                                .font(.title3)
+                                .font(.system(size: 20))
                                 .fontWeight(.black)
                                 .foregroundColor(.white)
                                 .padding(.leading,  5)
