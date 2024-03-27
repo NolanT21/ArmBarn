@@ -15,6 +15,7 @@ struct ScoreboardView: View {
     
     @State var sbl_size: Double = 20.0
     @State var crnr_radius: CGFloat = 4
+    @State var font_size: CGFloat = 20.0
     
     var body: some View {
         VStack {
@@ -22,7 +23,7 @@ struct ScoreboardView: View {
                 Spacer()
                 VStack{
                     Text("INN")
-                        .font(.title3)
+                        .font(.system(size: font_size))
                         .fontWeight(.bold)
                     ZStack(alignment: .center){
                         //Rectangle()
@@ -33,7 +34,7 @@ struct ScoreboardView: View {
                             .frame(width: 30, height: 30)
                         
                         Text(String(scoreboard.inning))
-                            .font(.title3)
+                            .font(.system(size: font_size))
                             .fontWeight(.black)
                     }
                     .padding(.top, -10)
@@ -47,7 +48,7 @@ struct ScoreboardView: View {
                     Spacer()
                     VStack{
                         Text("BALLS")
-                            .font(.title3)
+                            .font(.system(size: font_size))
                             .fontWeight(.bold)
                         HStack(spacing: 2.0){
                             Ellipse()
@@ -67,7 +68,7 @@ struct ScoreboardView: View {
                     Spacer()
                     VStack{
                         Text("STRIKES")
-                            .font(.title3)
+                            .font(.system(size: font_size))
                             .fontWeight(.bold)
                         HStack(spacing: 2.0){
                             Ellipse()
@@ -82,7 +83,7 @@ struct ScoreboardView: View {
                     Spacer()
                     VStack{
                         Text("OUTS")
-                            .font(.title3)
+                            .font(.system(size: font_size))
                             .fontWeight(.bold)
                         HStack(spacing: 2.0){
                             Ellipse()
@@ -104,7 +105,7 @@ struct ScoreboardView: View {
                 VStack(alignment: .trailing){
                     HStack{
                         Text("P#")
-                            .font(.title3)
+                            .font(.system(size: font_size))
                             .fontWeight(.bold)
                         ZStack(alignment: .center){
                             //Rectangle()
@@ -114,14 +115,14 @@ struct ScoreboardView: View {
                                 )
                                 .frame(width: 40, height: 30)
                             Text(String(scoreboard.pitches))
-                                .font(.title3)
+                                .font(.system(size: font_size))
                                 .fontWeight(.black)
                         }
                     }
                     .padding(.top, 10)
                     HStack{
                         Text("AB")
-                            .font(.title3)
+                            .font(.system(size: font_size))
                             .fontWeight(.bold)
                         ZStack(alignment: .center){
                             //Rectangle()
@@ -131,7 +132,7 @@ struct ScoreboardView: View {
                                 )
                                 .frame(width: 30, height: 30)
                             Text(String(scoreboard.atbats))
-                                .font(.title3)
+                                .font(.system(size: font_size))
                                 .fontWeight(.black)
                         }
                     }
