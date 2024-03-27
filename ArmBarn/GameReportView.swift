@@ -12,10 +12,13 @@ struct GameReportView: View {
     
     @Environment(GameReport.self) var game_report
     @Environment(currentPitcher.self) var current_pitcher
+    @Environment(Scoreboard.self) var scoreboard
+    @Environment(PitchTypeConfig.self) var ptconfig
     
     @Environment(\.dismiss) var dismiss
     
     @State private var showEndGame = false
+    @State private var showGameReceipt = false
     
     var gradient = Gradient(colors: [Color("PowderBlue"), Color("Gold"), Color("Tangerine")])
     var colorset = [Color("PowderBlue"), Color("Gold"), Color("Tangerine"), Color("Grey")]
@@ -62,17 +65,44 @@ struct GameReportView: View {
                                 .frame(width: sbl_width, height: sbl_height)
                                 .foregroundColor(Color.white)
                         }
-                        .popover(isPresented: $showEndGame) {
+                        .alert (isPresented: $showEndGame) {
+                            Alert(
+                                title: Text("End Game?"),
+                                message: Text("Are you sure? This game will not be saved!"),
+                                primaryButton: .default(
+                                    Text("Yes"),
+                                    action: {
+                                        dismiss()
+                                        new_game_func()
+                                    }
+                                ),
+                                secondaryButton: .destructive(
+                                    Text("No")
+                                    //action: deleteWorkoutData
+                                )
+                            )
+                        }
+                        
+                        //Spacer()
+                        
+                        Button(action: {
+                            showGameReceipt = true
+                        }) {
+                            Image(systemName: "tray.full.fill")
+                                .frame(width: sbl_width, height: sbl_height)
+                                .foregroundColor(Color.white)
+                        }
+                        .padding(.leading, view_padding/2)
+                        .popover(isPresented: $showGameReceipt) {
                             EndGameView()
                         }
                         
                         //Spacer()
                         
-                        VStack{
-                            ShareLink("", item: render(viewSize: viewsize))
-                                .foregroundStyle(text_color)
-                                .fontWeight(.bold)
-                        }
+                        ShareLink("", item: render(viewSize: viewsize))
+                            .foregroundStyle(text_color)
+                            .fontWeight(.bold)
+                            .padding(.leading, view_padding/2)
                     }
                     
                 }
@@ -490,6 +520,7 @@ struct GameReportView: View {
                                         else if game_report.inn_hitlog[index] > game_report.inn_hitlog[index - 1] {
                                             GridRow{
                                                 Text("INN \(value)")
+                                                    .foregroundStyle(text_color)
                                                     .padding(.top, view_padding * 0.5)
                                                     //.padding(.leading, view_padding * -1)
                                                     .padding(.bottom, view_padding / -2)
@@ -500,6 +531,7 @@ struct GameReportView: View {
                                             Divider()
                                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                                                 .gridCellUnsizedAxes(.horizontal)
+                                                .foregroundStyle(text_color)
                                             
                                             GridRow{
                                                 Text(hit_type)
@@ -525,6 +557,7 @@ struct GameReportView: View {
                                             Divider()
                                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                                                 .gridCellUnsizedAxes(.horizontal)
+                                                .foregroundStyle(text_color)
                                                 .padding(.leading, view_padding * 2)
                                                 .padding(.trailing, view_padding * 2)
                                             
@@ -720,6 +753,74 @@ struct GameReportView: View {
         
         return url
         
+    }
+    
+    func new_game_func() {
+        
+        //dismiss()
+        
+        clear_game_report()
+        
+        scoreboard.balls = 0
+        scoreboard.strikes = 0
+        scoreboard.outs = 0
+        scoreboard.pitches = 0
+        scoreboard.atbats = 1
+        scoreboard.inning = 1
+        scoreboard.baserunners = 0
+        
+        ptconfig.pitch_x_loc.removeAll()
+        ptconfig.pitch_y_loc.removeAll()
+        ptconfig.ab_pitch_color.removeAll()
+        ptconfig.pitch_cur_ab = 0
+
+        
+        scoreboard.b1light = .black
+        scoreboard.b2light = .black
+        scoreboard.b3light = .black
+        
+        scoreboard.s1light = .black
+        scoreboard.s2light = .black
+        
+        scoreboard.o1light = .black
+        scoreboard.o2light = .black
+        
+    }
+    
+    func clear_game_report() {
+        game_report.batters_faced = 0
+        game_report.strikes = 0
+        game_report.balls = 0
+        game_report.hits = 0
+        game_report.strikeouts = 0
+        game_report.walks = 0
+        
+        game_report.first_pitch_strike = 0
+        game_report.first_pitch_ball = 0
+        game_report.first_pit_strike_per = 0
+        game_report.fpb_to_fps = []
+        
+        game_report.strikes_per = 0
+        game_report.balls_to_strikes = []
+        
+        game_report.game_score = 40
+        game_report.pitches = scoreboard.pitches
+        
+        game_report.p1_by_inn = [0]
+        game_report.p2_by_inn = [0]
+        game_report.p3_by_inn = [0]
+        game_report.p4_by_inn = [0]
+        
+        game_report.x_coordinate_list = []
+        game_report.y_coordinate_list = []
+        game_report.pl_color_list = []
+        game_report.pl_outline_list = []
+        game_report.outs_hitlog = []
+        
+        game_report.inn_hitlog = []
+        game_report.result_hitlog = []
+        game_report.pitchtype_hitlog = []
+        game_report.cnt_hitlog = []
     }
     
 }
