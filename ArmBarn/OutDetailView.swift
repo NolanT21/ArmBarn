@@ -25,63 +25,100 @@ struct OutDetailView: View {
         NavigationStack{
                 VStack{
                     
-                    NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                        event.result_detail = "F"
-                        record_Out()
-                    }){
-                        Text("Flyout")
+                    NavigationLink{
+                        MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                            event.result_detail = "F"
+                            record_Out()
+                        }
+                    } label: {
+                        Text("FLYOUT")
+                            .font(.system(size: 22))
+                            .fontWeight(.black)
+                            .padding(.horizontal, 45.0)
+                            .padding(.vertical, 15.0)
                     }
-                    .padding(.horizontal, 45.0)
-                    .padding(.vertical, 15.0)
-                    .background(Color.orange)
+                    .background(Color("ScoreboardGreen"))
                     .foregroundColor(Color.white)
                     .cornerRadius(8.0)
                 
-                    NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                        event.result_detail = "G"
-                        record_Out()
-                    }){
-                        Text("Groundout")
+                    NavigationLink{
+                        MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                            event.result_detail = "G"
+                            record_Out()
+                        }
+                    } label: {
+                        Text("GROUNDOUT")
+                            .font(.system(size: 22))
+                            .fontWeight(.black)
+                            .padding(.horizontal, 15.0)
+                            .padding(.vertical, 15.0)
                     }
-                    .padding(.horizontal, 28.0)
-                    .padding(.vertical, 15.0)
-                    .background(Color.orange)
+                    .background(Color("ScoreboardGreen"))
                     .foregroundColor(Color.white)
                     .cornerRadius(8.0)
                     
-                    NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                        event.result_detail = "L"
-                        record_Out()
-                    }){
-                        Text("Lineout")
+                    NavigationLink{
+                        MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                            event.result_detail = "L"
+                            record_Out()
+                        }
+                    } label: {
+                        Text("LINEOUT")
+                            .font(.system(size: 22))
+                            .fontWeight(.black)
+                            .padding(.horizontal, 38.0)
+                            .padding(.vertical, 15.0)
                     }
-                    .padding(.horizontal, 40.0)
-                    .padding(.vertical, 15.0)
-                    .background(Color.orange)
+                    .background(Color("ScoreboardGreen"))
                     .foregroundColor(Color.white)
                     .cornerRadius(8.0)
                     
-                    NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                        event.result_detail = "P"
-                        record_Out()
-                    }){
-                        Text("Popout")
+                    NavigationLink{
+                        MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                            event.result_detail = "P"
+                            record_Out()
+                        }
+                    } label: {
+                        Text("POPOUT")
+                        
+                            .font(.system(size: 22))
+                            .fontWeight(.black)
+                            .padding(.horizontal, 40.0)
+                            .padding(.vertical, 15.0)
                     }
-                    .padding(.horizontal, 40.0)
-                    .padding(.vertical, 15.0)
-                    .background(Color.orange)
+                    .background(Color("ScoreboardGreen"))
                     .foregroundColor(Color.white)
                     .cornerRadius(8.0)
                     
-                    NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                        event.result_detail = "O"
-                        record_Out()
-                    }){
-                        Text("Other")
+                    NavigationLink{
+                        MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                            event.result_detail = "Y"
+                            record_Out()
+                        }
+                    } label: {
+                        Text("SAC BUNT")
+                            .font(.system(size: 22))
+                            .fontWeight(.black)
+                            .padding(.horizontal, 30.0)
+                            .padding(.vertical, 15.0)
                     }
-                    .padding(.horizontal, 45.0)
-                    .padding(.vertical, 15.0)
-                    .background(Color.orange)
+                    .background(Color("ScoreboardGreen"))
+                    .foregroundColor(Color.white)
+                    .cornerRadius(8.0)
+                    
+                    NavigationLink{
+                        MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                            event.result_detail = "O"
+                            record_Out()
+                        }
+                    } label: {
+                        Text("OTHER")
+                            .font(.system(size: 22))
+                            .fontWeight(.black)
+                            .padding(.horizontal, 49.0)
+                            .padding(.vertical, 15.0)
+                    }
+                    .background(Color("ScoreboardGreen"))
                     .foregroundColor(Color.white)
                     .cornerRadius(8.0)
                 }
@@ -103,6 +140,7 @@ struct OutDetailView: View {
                                 print("dismiss")
                             }) {
                                 Image(systemName: "chevron.left")
+                                    .imageScale(.medium)
                                     .frame(width: sbl_width, height: sbl_height)
                                     .foregroundColor(.white)
                                     .bold()
@@ -180,18 +218,18 @@ struct OutDetailView: View {
             scoreboard.atbats += 1
             
             if scoreboard.outs == 1 {
-                scoreboard.o1light = .red
+                scoreboard.o1light = true
             }
             if scoreboard.outs == 2 {
-                scoreboard.o2light = .red
+                scoreboard.o2light = true
             }
             
             if scoreboard.outs == 3 {
                 scoreboard.outs = 0
                 scoreboard.inning += 1
                 scoreboard.baserunners = 0
-                scoreboard.o1light = .black
-                scoreboard.o2light = .black
+                scoreboard.o1light = false
+                scoreboard.o2light = false
             }
             
             reset_Count()
@@ -208,12 +246,12 @@ struct OutDetailView: View {
         ptconfig.ab_pitch_color.removeAll()
         ptconfig.pitch_cur_ab = 0
         
-        scoreboard.b1light = .black
-        scoreboard.b2light = .black
-        scoreboard.b3light = .black
+        scoreboard.b1light = false
+        scoreboard.b2light = false
+        scoreboard.b3light = false
         
-        scoreboard.s1light = .black
-        scoreboard.s2light = .black
+        scoreboard.s1light = false
+        scoreboard.s2light = false
     }
     
     func print_Scoreboard() {

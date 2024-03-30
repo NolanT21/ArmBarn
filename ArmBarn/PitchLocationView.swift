@@ -134,15 +134,19 @@ struct PitchLocationView: View {
                                     Spacer()
                                     
                                     Button(action: {
-                                        print("Baserunner Out")
+                                        //print("Baserunner Out")
                                         record_baserunner_out()
                                     }) {
-                                        Text("Baserunner Out")
+                                        Text("RUNNER OUT")
+                                            .font(.system(size: 18))
+                                            .fontWeight(.black)
+                                            .padding(.vertical, 8.0)
+                                            .padding(.horizontal, 5.0)
                                     }
-                                    .padding(12.0)
                                     .foregroundColor(Color.white)
-                                    .background(Color.orange)
+                                    .background(Color("ScoreboardGreen"))
                                     .cornerRadius(8.0)
+                                    .padding(.trailing, 5)
                                 }
                                 Spacer()
                             }
@@ -176,6 +180,7 @@ struct PitchLocationView: View {
                         }
                     }) {
                         Image(systemName: "arrow.counterclockwise")
+                            .imageScale(.medium)
                             .frame(width: sbl_width, height: sbl_height)
                             .foregroundColor(.white)
                             .bold()
@@ -442,7 +447,7 @@ struct PitchLocationView: View {
             game_report.first_pit_strike_per = (game_report.first_pitch_strike * 100) / game_report.batters_faced
         }
         
-        if game_report.strikes > 0 {
+        if game_report.strikes > 0 && game_report.pitches > 0{
             game_report.strikes_per = (game_report.strikes * 100) / game_report.pitches
         }
         
@@ -476,15 +481,15 @@ struct PitchLocationView: View {
         ptconfig.pitch_cur_ab = 0
 
         
-        scoreboard.b1light = .black
-        scoreboard.b2light = .black
-        scoreboard.b3light = .black
+        scoreboard.b1light = false
+        scoreboard.b2light = false
+        scoreboard.b3light = false
         
-        scoreboard.s1light = .black
-        scoreboard.s2light = .black
+        scoreboard.s1light = false
+        scoreboard.s2light = false
         
-        scoreboard.o1light = .black
-        scoreboard.o2light = .black
+        scoreboard.o1light = false
+        scoreboard.o2light = false
         
     }
     
@@ -540,37 +545,37 @@ struct PitchLocationView: View {
             ptconfig.pitch_cur_ab -= 1
         }
         
-        scoreboard.b1light = .black
-        scoreboard.b2light = .black
-        scoreboard.b3light = .black
+        scoreboard.b1light = false
+        scoreboard.b2light = false
+        scoreboard.b3light = false
         
-        scoreboard.s1light = .black
-        scoreboard.s2light = .black
+        scoreboard.s1light = false
+        scoreboard.s2light = false
         
-        scoreboard.o1light = .black
-        scoreboard.o2light = .black
+        scoreboard.o1light = false
+        scoreboard.o2light = false
         
         if scoreboard.balls >= 1 {
-            scoreboard.b1light = .blue
+            scoreboard.b1light = true
             if scoreboard.balls >= 2 {
-                scoreboard.b2light = .blue
+                scoreboard.b2light = true
                 if scoreboard.balls == 3 {
-                    scoreboard.b3light = .blue
+                    scoreboard.b3light = true
                 }
             }
         }
         
         if scoreboard.strikes >= 1 {
-            scoreboard.s1light = .yellow
+            scoreboard.s1light = true
             if scoreboard.strikes == 2 {
-                scoreboard.s2light = .yellow
+                scoreboard.s2light = true
             }
         }
         
         if scoreboard.outs >= 1 {
-            scoreboard.o1light = .red
+            scoreboard.o1light = true
             if scoreboard.outs == 2 {
-                scoreboard.o2light = .red
+                scoreboard.o2light = true
             }
         }
         
@@ -610,18 +615,18 @@ struct PitchLocationView: View {
         scoreboard.baserunners -= 1
         
         if scoreboard.outs == 1 {
-            scoreboard.o1light = .red
+            scoreboard.o1light = true
         }
         if scoreboard.outs == 2 {
-            scoreboard.o2light = .red
+            scoreboard.o2light = true
         }
         
         if scoreboard.outs == 3 {
             scoreboard.outs = 0
             scoreboard.inning += 1
             scoreboard.baserunners = 0
-            scoreboard.o1light = .black
-            scoreboard.o2light = .black
+            scoreboard.o1light = false
+            scoreboard.o2light = false
             reset_Count()
         }
         
@@ -638,12 +643,12 @@ struct PitchLocationView: View {
         ptconfig.ab_pitch_color.removeAll()
         ptconfig.pitch_cur_ab = 0
         
-        scoreboard.b1light = .black
-        scoreboard.b2light = .black
-        scoreboard.b3light = .black
+        scoreboard.b1light = false
+        scoreboard.b2light = false
+        scoreboard.b3light = false
         
-        scoreboard.s1light = .black
-        scoreboard.s2light = .black
+        scoreboard.s1light = false
+        scoreboard.s2light = false
     }
     
 }
@@ -697,11 +702,12 @@ struct PitchLocationInput : View {
                                         ptconfig.ptcolor = ptconfig.arsenal_colors[pt_num]
                                         }
                                     }) {
-                                    //Text(current_pitcher.arsenal[pt_num])
                                         Text("\(current_pitcher.arsenal[pt_num])")
-                                        .frame(maxWidth: .infinity)
+                                            .textCase(.uppercase)
+                                            .fontWeight(.bold)
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, ver_padding)
                                     }
-                                .padding(.vertical, ver_padding)
                                 .background(ptconfig.arsenal_colors[pt_num])
                                 .foregroundColor(Color.white)
                                 .cornerRadius(8.0)
@@ -719,11 +725,12 @@ struct PitchLocationInput : View {
                                             ptconfig.ptcolor = ptconfig.arsenal_colors[pt_num]
                                         }
                                     }) {
-                                        //Text(current_pitcher.arsenal[pt_num])
                                             Text("\(current_pitcher.arsenal[pt_num])")
-                                            .frame(maxWidth: .infinity)
+                                                .textCase(.uppercase)
+                                                .fontWeight(.bold)
+                                                .frame(maxWidth: .infinity)
+                                                .padding(.vertical, ver_padding / 2)
                                     }
-                                    .padding(.vertical, ver_padding / 2)
                                     .background(ptconfig.arsenal_colors[pt_num])
                                     .foregroundColor(Color.white)
                                     .cornerRadius(8.0)
@@ -741,9 +748,11 @@ struct PitchLocationInput : View {
                                     }) {
                                         //Text(current_pitcher.arsenal[pt_num])
                                         Text("\(current_pitcher.arsenal[pt_num])")
+                                            .textCase(.uppercase)
+                                            .fontWeight(.bold)
                                             .frame(maxWidth: .infinity)
+                                            .padding(.vertical, ver_padding / 2)
                                     }
-                                    .padding(.vertical, ver_padding / 2)
                                     .background(ptconfig.arsenal_colors[pt_num])
                                     .foregroundColor(Color.white)
                                     .cornerRadius(8.0)

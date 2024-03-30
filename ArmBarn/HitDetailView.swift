@@ -25,77 +25,87 @@ struct HitDetailView: View {
         NavigationStack{
                 VStack{
                     
-                    NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                        event.result_detail = "S"
-                        record_Hit()
-                        }){
-                        Text("Single")
+                    NavigationLink{
+                        MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                            event.result_detail = "S"
+                            record_Hit()
+                        }
+                    } label: {
+                        Text("SINGLE")
+                            .font(.system(size: 22))
+                            .fontWeight(.black)
+                            .padding(.horizontal, 43.0)
+                            .padding(.vertical, 15.0)
                     }
-                    .padding(.horizontal, 45.0)
-                    .padding(.vertical, 15.0)
-                    .background(Color.orange)
+                    .background(Color("ScoreboardGreen"))
                     .foregroundColor(Color.white)
                     .cornerRadius(8.0)
                 
-                    NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                        event.result_detail = "D"
-                        record_Hit()
-                        }){
-                        Text("Double")
+                    NavigationLink{
+                        MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                            event.result_detail = "D"
+                            record_Hit()
+                        }
+                    } label: {
+                        Text("DOUBLE")
+                            .font(.system(size: 22))
+                            .fontWeight(.black)
+                            .padding(.horizontal, 38.0)
+                            .padding(.vertical, 15.0)
                     }
-                    .padding(.horizontal, 38.0)
-                    .padding(.vertical, 15.0)
-                    .background(Color.orange)
+                    .background(Color("ScoreboardGreen"))
                     .foregroundColor(Color.white)
                     .cornerRadius(8.0)
                     
-                    NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                        event.result_detail = "T"
-                        record_Hit()
-                        }){
-                        Text("Triple")
+                    NavigationLink{
+                        MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                            event.result_detail = "T"
+                            record_Hit()
+                        }
+                    } label: {
+                        Text("TRIPLE")
+                            .font(.system(size: 22))
+                            .fontWeight(.black)
+                            .padding(.horizontal, 45.0)
+                            .padding(.vertical, 15.0)
                     }
-                    .padding(.horizontal, 45.0)
-                    .padding(.vertical, 15.0)
-                    .background(Color.orange)
+                    .background(Color("ScoreboardGreen"))
                     .foregroundColor(Color.white)
                     .cornerRadius(8.0)
                     
-                    NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                        event.result_detail = "H"
-                        record_Hit()
-                        }){
-                        Text("Homerun")
+                    NavigationLink{
+                        MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                            event.result_detail = "H"
+                            record_Hit()
+                        }
+                    } label: {
+                        Text("HOMERUN")
+                            .font(.system(size: 22))
+                            .fontWeight(.black)
+                            .padding(.horizontal, 26.0)
+                            .padding(.vertical, 15.0)
                     }
-                    .padding(.horizontal, 30.0)
-                    .padding(.vertical, 15.0)
-                    .background(Color.orange)
+                    .background(Color("ScoreboardGreen"))
                     .foregroundColor(Color.white)
                     .cornerRadius(8.0)
                     
-                    NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                        event.result_detail = "E"
-                        record_Hit()
-                        }){
-                        Text("Error")
+                    NavigationLink{
+                        MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                            event.result_detail = "E"
+                            record_Hit()
+                        }
+                    } label: {
+                        Text("ERROR")
+                            .font(.system(size: 22))
+                            .fontWeight(.black)
+                            .padding(.horizontal, 46.0)
+                            .padding(.vertical, 15.0)
                     }
-                    .padding(.horizontal, 46.0)
-                    .padding(.vertical, 15.0)
-                    .background(Color.orange)
+                    
+                    .background(Color("ScoreboardGreen"))
                     .foregroundColor(Color.white)
                     .cornerRadius(8.0)
                     
-                    NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                        event.result_detail = "B"
-                        record_Hit()
-                        }){
-                        Text("Hit By Pitch")
-                    }
-                    .padding(.horizontal, 20.0)
-                    .padding(.vertical, 15.0)
-                    .background(Color.orange)
-                    .foregroundColor(Color.white)
-                    .cornerRadius(8.0)
                 }
                 .navigationTitle("")
                 .toolbarBackground(.visible, for: .navigationBar)
@@ -114,6 +124,7 @@ struct HitDetailView: View {
                                 print("dismiss")
                             }) {
                                 Image(systemName: "chevron.left")
+                                    .imageScale(.medium)
                                     .frame(width: sbl_width, height: sbl_height)
                                     .foregroundColor(.white)
                                     .bold()
@@ -210,12 +221,12 @@ struct HitDetailView: View {
         ptconfig.ab_pitch_color.removeAll()
         ptconfig.pitch_cur_ab = 0
         
-        scoreboard.b1light = .black
-        scoreboard.b2light = .black
-        scoreboard.b3light = .black
+        scoreboard.b1light = false
+        scoreboard.b2light = false
+        scoreboard.b3light = false
         
-        scoreboard.s1light = .black
-        scoreboard.s2light = .black
+        scoreboard.s1light = false
+        scoreboard.s2light = false
     }
     
     func print_Scoreboard() {
