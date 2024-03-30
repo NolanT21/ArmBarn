@@ -19,15 +19,15 @@ import Observation
     
     var baserunners: Int = 0
     
-    var b1light: Color = .black
-    var b2light: Color = .black
-    var b3light: Color = .black
+    var b1light: Bool = false
+    var b2light: Bool = false
+    var b3light: Bool = false
     
-    var s1light: Color = .black
-    var s2light: Color = .black
+    var s1light: Bool = false
+    var s2light: Bool = false
     
-    var o1light: Color = .black
-    var o2light: Color = .black
+    var o1light: Bool = false
+    var o2light: Bool = false
     
     var update_scoreboard: Bool = true
 }
