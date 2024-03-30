@@ -16,6 +16,11 @@ struct ScoreboardView: View {
     @State var sbl_size: Double = 20.0
     @State var crnr_radius: CGFloat = 4
     @State var font_size: CGFloat = 20.0
+    @State var light_radius: CGFloat = 3
+    @State var light_background: Color = .black
+    
+    @State var hidepitchnum: Bool = false
+    @State var hideatbats: Bool = false
     
     var body: some View {
         VStack {
@@ -51,17 +56,59 @@ struct ScoreboardView: View {
                             .font(.system(size: font_size))
                             .fontWeight(.bold)
                         HStack(spacing: 2.0){
-                            Ellipse()
-                                .fill(scoreboard.b1light)
-                                .frame(width: sbl_size, height: sbl_size)
                             
-                            Ellipse()
-                                .fill(scoreboard.b2light)
-                                .frame(width: sbl_size, height: sbl_size)
+                            ZStack{
+                                
+                                Ellipse()
+                                    .fill(light_background)
+                                    .frame(width: sbl_size, height: sbl_size)
+                                
+                                if scoreboard.b1light == true {
+                                    Ellipse()
+                                        .fill(Color("LightBeam"))
+                                        .frame(width: sbl_size, height: sbl_size)
+                                        .blur(radius: light_radius)
+                                }
+                                Ellipse()
+                                    .fill(Color("BlueLight"))
+                                    .frame(width: sbl_size, height: sbl_size)
+                            }
                             
-                            Ellipse()
-                                .fill(scoreboard.b3light)
-                                .frame(width: sbl_size, height: sbl_size)
+                            ZStack{
+                                
+                                Ellipse()
+                                    .fill(light_background)
+                                    .frame(width: sbl_size, height: sbl_size)
+                                
+                                if scoreboard.b2light == true {
+                                    Ellipse()
+                                        .fill(Color("LightBeam"))
+                                        .frame(width: sbl_size, height: sbl_size)
+                                        .blur(radius: light_radius)
+                                }
+                                
+                                Ellipse()
+                                    .fill(Color("BlueLight"))
+                                    .frame(width: sbl_size, height: sbl_size)
+                            }
+                            
+                            ZStack{
+                                
+                                Ellipse()
+                                    .fill(light_background)
+                                    .frame(width: sbl_size, height: sbl_size)
+                                
+                                if scoreboard.b3light == true {
+                                    Ellipse()
+                                        .fill(Color("LightBeam"))
+                                        .frame(width: sbl_size, height: sbl_size)
+                                        .blur(radius: light_radius)
+                                }
+                                
+                                Ellipse()
+                                    .fill(Color("BlueLight"))
+                                    .frame(width: sbl_size, height: sbl_size)
+                            }
                         }
                         .padding(.top, -5.0)
                     }
@@ -71,12 +118,41 @@ struct ScoreboardView: View {
                             .font(.system(size: font_size))
                             .fontWeight(.bold)
                         HStack(spacing: 2.0){
-                            Ellipse()
-                                .fill(scoreboard.s1light)
-                                .frame(width: sbl_size, height: sbl_size)
-                            Ellipse()
-                                .fill(scoreboard.s2light)
-                                .frame(width: sbl_size, height: sbl_size)
+                            ZStack{
+                                
+                                Ellipse()
+                                    .fill(light_background)
+                                    .frame(width: sbl_size, height: sbl_size)
+                                
+                                if scoreboard.s1light == true {
+                                    Ellipse()
+                                        .fill(Color("LightBeam"))
+                                        .frame(width: sbl_size, height: sbl_size)
+                                        .blur(radius: light_radius)
+                                }
+                                
+                                Ellipse()
+                                    .fill(Color("RedLight"))
+                                    .frame(width: sbl_size, height: sbl_size)
+                            }
+                            
+                            ZStack{
+                                
+                                Ellipse()
+                                    .fill(light_background)
+                                    .frame(width: sbl_size, height: sbl_size)
+                                
+                                if scoreboard.s2light == true {
+                                    Ellipse()
+                                        .fill(Color("LightBeam"))
+                                        .frame(width: sbl_size, height: sbl_size)
+                                        .blur(radius: light_radius)
+                                }
+                                
+                                Ellipse()
+                                    .fill(Color("RedLight"))
+                                    .frame(width: sbl_size, height: sbl_size)
+                            }
                         }
                         .padding(.top, -5.0)
                     }
@@ -86,12 +162,41 @@ struct ScoreboardView: View {
                             .font(.system(size: font_size))
                             .fontWeight(.bold)
                         HStack(spacing: 2.0){
-                            Ellipse()
-                                .fill(scoreboard.o1light)
-                                .frame(width: sbl_size, height: sbl_size)
-                            Ellipse()
-                                .fill(scoreboard.o2light)
-                                .frame(width: sbl_size, height: sbl_size)
+                            
+                            ZStack{
+                                
+                                Ellipse()
+                                    .fill(light_background)
+                                    .frame(width: sbl_size, height: sbl_size)
+                                
+                                if scoreboard.o1light == true {
+                                    Ellipse()
+                                        .fill(Color("LightBeam"))
+                                        .frame(width: sbl_size, height: sbl_size)
+                                        .blur(radius: light_radius)
+                                }
+                                
+                                Ellipse()
+                                    .fill(Color("RedLight"))
+                                    .frame(width: sbl_size, height: sbl_size)
+                            }
+                            
+                            ZStack{
+                                
+                                Ellipse()
+                                    .fill(light_background)
+                                    .frame(width: sbl_size, height: sbl_size)
+                                
+                                if scoreboard.o2light == true {
+                                    Ellipse()
+                                        .fill(Color("LightBeam"))
+                                        .frame(width: sbl_size, height: sbl_size)
+                                        .blur(radius: light_radius)
+                                }
+                                Ellipse()
+                                    .fill(Color("RedLight"))
+                                    .frame(width: sbl_size, height: sbl_size)
+                            }
                         }
                         .padding(.top, -5.0)
                     }
@@ -114,9 +219,15 @@ struct ScoreboardView: View {
                                     Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
                                 )
                                 .frame(width: 40, height: 30)
+                            
                             Text(String(scoreboard.pitches))
                                 .font(.system(size: font_size))
                                 .fontWeight(.black)
+                            
+                            if hidepitchnum == true {
+                                
+                            }
+                            
                         }
                     }
                     .padding(.top, 10)
@@ -131,9 +242,20 @@ struct ScoreboardView: View {
                                     Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
                                 )
                                 .frame(width: 30, height: 30)
+                            
                             Text(String(scoreboard.atbats))
                                 .font(.system(size: font_size))
                                 .fontWeight(.black)
+                            
+                            if hideatbats == true {
+                                ZStack{
+                                    
+                                }
+//                                .frame(maxWidth: 30, maxHeight: 30)
+//                                .background(.ultraThinMaterial.opacity(0.6))
+//                                .blur(radius: 5)
+                            }
+                            
                         }
                     }
                     .padding(.top, -5)
