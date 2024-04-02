@@ -49,136 +49,20 @@ struct TestView: View {
     var body: some View {
         
         VStack{
+            
             Spacer()
             
-            HStack{
-                VStack{
-                    HStack{
-                        Text("Hit Log")
-                            .font(.subheadline)
-                            .padding(.leading, view_padding)
-                            .padding(.top, view_padding)
-                        
-                        Spacer()
-                    }
-                    
-                    VStack{
-                        Grid(alignment: .center, horizontalSpacing: 5){
-                            let num_of_hits = game_report.inn_hitlog.count
-                            if num_of_hits < 1 {
-                                GridRow{
-                                    Text("No Baserunners")
-                                        .padding(.bottom, view_padding)
-                                }
-                            }
-                            else {
-                                ForEach(Array(game_report.inn_hitlog.enumerated()), id: \.offset) { index, value in
-
-                                    let hit_type = game_report.result_hitlog[index] //Thread 1: Fatal error: Index out of range
-                                    let balls = game_report.cnt_hitlog[index].balls
-                                    let strikes = game_report.cnt_hitlog[index].strikes
-                                    let pitch_type = game_report.pitchtype_hitlog[index]
-                                    let hl_outs = game_report.outs_hitlog[index]
-                                    
-                                    //game_report.hl_curinn = cur_inn
-                                    //hd_balls = game_report.cnt_hitlog[index.balls]
-                                    
-                                    if index == 0 {
-                                        GridRow{
-                                            Text("INN \(value)")
-                                                .padding(.top, view_padding * 0.5)
-                                                .padding(.leading, view_padding * -3)
-                                                .padding(.bottom, view_padding / -2)
-                                                .bold()
-                                        }
-                                        
-                                        Divider()
-                                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                            .gridCellUnsizedAxes(.horizontal)
-                                            
-                                        
-                                        GridRow{
-                                            Text(hit_type)
-                                                .font(.callout)
-                                            Text("\(balls) - \(strikes)")
-                                                .font(.callout)
-                                            Text("\(hl_outs) Out(s)")
-                                                .font(.callout)
-                                            Text(pitch_type)
-                                                .font(.callout)
-                                        }
-                                        //.padding(.leading, view_padding * 2)
-                                        //.padding(.trailing, view_padding * 3)
-                                        //.padding(.bottom, view_padding * 0.5)
-                                    }
-                                    
-                                    else if game_report.inn_hitlog[index] > game_report.inn_hitlog[index - 1] {
-                                        GridRow{
-                                            Text("INN \(value)")
-                                                .padding(.top, view_padding * 0.5)
-                                                .padding(.leading, view_padding * -3)
-                                                .padding(.bottom, view_padding / -2)
-                                                .bold()
-                                        }
-                                        //.padding(.top, view_padding)
-                                        
-                                        Divider()
-                                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                            .gridCellUnsizedAxes(.horizontal)
-                                        
-                                        GridRow{
-                                            Text(hit_type)
-                                                .font(.callout)
-                                            Text("\(balls) - \(strikes)")
-                                                .font(.callout)
-                                            Text("\(hl_outs) Out(s)")
-                                                .font(.callout)
-                                            Text(pitch_type)
-                                                .font(.callout)
-                                        }
-                                        //.padding(.leading, view_padding * 2)
-                                        //.padding(.trailing, view_padding * 3)
-                                        //.padding(.bottom, view_padding)
-                                    }
-                                    
-                                    else {
-                                        
-                                        Divider()
-                                            .padding(.leading, view_padding * 3)
-                                            .padding(.trailing, view_padding)
-                                        
-                                        GridRow{
-                                            Text(hit_type)
-                                                .font(.callout)
-                                            Text("\(balls) - \(strikes)")
-                                                .font(.callout)
-                                            Text("\(hl_outs) Out(s)")
-                                                .font(.callout)
-                                            Text(pitch_type)
-                                                .font(.callout)
-                                        }
-                                        //.padding(.leading, view_padding * 2)
-                                        //.padding(.trailing, view_padding * 3)
-                                        //.padding(.bottom, view_padding)
-                                    }
-                                }
-                            }
-                        }
-                        .padding(.horizontal, view_padding)
-                        .padding(.bottom, view_padding)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color(UIColor.systemBackground))
-                .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
-                .padding(.bottom, view_padding)
-                .padding(.leading, view_padding)
-                .padding(.trailing, view_padding)
+            ZStack{
+                Rectangle()
+                    .fill(Color.black)
+                    .frame(width: 40, height: 20)
+                    //.blur(radius: 10, opaque: false)
             }
             
             Spacer()
             
         }
+        .blur(radius: 5, opaque: false)
         
     }
 }
