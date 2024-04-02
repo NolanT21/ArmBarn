@@ -207,11 +207,13 @@ struct PitchLocationView: View {
                                     Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
                                 )
                                 .frame(width: 180, height: 30)
+                            
+                            let pitcher_lname = String(current_pitcher.lastName.prefix(10))
 
                             Button(action: {
                                 showPitcherSelect = true
                             }) {
-                                Text(current_pitcher.lastName)
+                                Text(pitcher_lname)
                                     .textCase(.uppercase)
                                     .font(.system(size: 20))
                                     .fontWeight(.black)
