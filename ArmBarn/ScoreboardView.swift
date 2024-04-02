@@ -22,6 +22,20 @@ struct ScoreboardView: View {
     @State var hidepitchnum: Bool = false
     @State var hideatbats: Bool = false
     
+    var tap_pn: some Gesture {
+        SpatialTapGesture()
+            .onEnded { click in
+                hidepitchnum.toggle()
+             }
+    }
+    
+    var tap_ab: some Gesture{
+        SpatialTapGesture()
+            .onEnded { click in
+                hideatbats.toggle()
+             }
+    }
+    
     var body: some View {
         VStack {
             HStack {
@@ -220,15 +234,24 @@ struct ScoreboardView: View {
                                 )
                                 .frame(width: 40, height: 30)
                             
-                            Text(String(scoreboard.pitches))
-                                .font(.system(size: font_size))
-                                .fontWeight(.black)
-                            
                             if hidepitchnum == true {
-                                
+                                VStack{
+                                    Text(String(scoreboard.pitches))
+                                        .font(.system(size: font_size))
+                                        .fontWeight(.black)
+                                }
+                                .blur(radius: 4, opaque: false)
+                            }
+                            else{
+                                VStack{
+                                    Text(String(scoreboard.pitches))
+                                        .font(.system(size: font_size))
+                                        .fontWeight(.black)
+                                }
                             }
                             
                         }
+                        .gesture(tap_pn)
                     }
                     .padding(.top, 10)
                     HStack{
@@ -243,20 +266,22 @@ struct ScoreboardView: View {
                                 )
                                 .frame(width: 30, height: 30)
                             
-                            Text(String(scoreboard.atbats))
-                                .font(.system(size: font_size))
-                                .fontWeight(.black)
-                            
                             if hideatbats == true {
                                 ZStack{
-                                    
+                                    Text(String(scoreboard.atbats))
+                                        .font(.system(size: font_size))
+                                        .fontWeight(.black)
                                 }
-//                                .frame(maxWidth: 30, maxHeight: 30)
-//                                .background(.ultraThinMaterial.opacity(0.6))
-//                                .blur(radius: 5)
+                                .blur(radius: 4, opaque: false)
+                            }
+                            else {
+                                Text(String(scoreboard.atbats))
+                                    .font(.system(size: font_size))
+                                    .fontWeight(.black)
                             }
                             
                         }
+                        .gesture(tap_ab)
                     }
                     .padding(.top, -5)
                 }
