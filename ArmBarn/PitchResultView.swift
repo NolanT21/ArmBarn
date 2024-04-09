@@ -22,8 +22,11 @@ struct PitchResultView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) var dismiss
     
-    @State private var showFoulBall = false
     @State private var showOutRecorded = false
+    
+    @State private var showPitchResult = true
+    @State private var showHitResult = false
+    @State private var showOutResult = false
     
     @State var sbl_width: Double = 17.0
     @State var sbl_height: Double = 13.0
@@ -57,155 +60,196 @@ struct PitchResultView: View {
                 }
                 .blur(radius: 20, opaque: false)
                 
-                HStack{
-                    
-                    Spacer()
-                    
-                    VStack{
+                if showPitchResult == true {
+                    HStack{
                         
                         Spacer()
                         
-                        NavigationLink {
-                            MainContainerView().navigationBarBackButtonHidden(true).onAppear {
-                                add_Ball()
-                            }
-                        } label: {
-                            Text("BALL")
-                                .font(.system(size: 22))
-                                .fontWeight(.black)
-                                .padding(.horizontal, 53.0)
-                                .padding(.vertical, 15.0)
-                        }
-                        .foregroundColor(Color.white)
-                        .background(Color("ScoreboardGreen"))
-                        .cornerRadius(8.0)
-                        
-                        if scoreboard.strikes < 2 {
+                        VStack{
+                            
+                            Spacer()
+                            
                             NavigationLink {
                                 MainContainerView().navigationBarBackButtonHidden(true).onAppear {
+                                    add_Ball()
+                                }
+                            } label: {
+                                Text("BALL")
+                                    .font(.system(size: 22))
+                                    .fontWeight(.black)
+                                    .padding(.horizontal, 53.0)
+                                    .padding(.vertical, 15.0)
+                            }
+                            .foregroundColor(Color.white)
+                            .background(Color("ScoreboardGreen"))
+                            .cornerRadius(8.0)
+                            
+                            if scoreboard.strikes < 2 {
+                                NavigationLink {
+                                    MainContainerView().navigationBarBackButtonHidden(true).onAppear {
+                                        event.pitch_result = "Z"
+                                        event.result_detail = "N"
+                                        add_Strike()
+                                    }
+                                } label: {
+                                    Text("STRIKE")
+                                        .font(.system(size: 22))
+                                        .fontWeight(.black)
+                                        .padding(.horizontal, 40.0)
+                                        .padding(.vertical, 15.0)
+                                }
+                                .foregroundColor(Color.white)
+                                .background(Color("ScoreboardGreen"))
+                                .cornerRadius(8.0)
+                            }
+                            else {
+                                Button(action: {
                                     event.pitch_result = "Z"
+                                    event.result_detail = "N"
+                                    if scoreboard.strikes == 2 {
+                                        showOutRecorded = true
+                                    }
+                                    else {
+                                        add_Strike()
+                                    }
+                                }) {
+                                    Text("STRIKE")
+                                        .font(.system(size: 22))
+                                        .fontWeight(.black)
+                                        .padding(.horizontal, 40.0)
+                                        .padding(.vertical, 15.0)
+                                }
+                                .alert ("Out Recorded?", isPresented: $showOutRecorded) {
+                                    NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                                            event.pitch_result = "Z"
+                                            event.result_detail = "K"
+                                            add_Strike()
+                                        }){
+                                            Text("Yes")
+                                        }
+                                    NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                                            event.pitch_result = "Z"
+                                            event.result_detail = "C"
+                                            reset_Count()
+                                        }){
+                                            Text("No")
+                                        }
+                                }
+                                .background(Color("ScoreboardGreen"))
+                                .foregroundColor(Color.white)
+                                .cornerRadius(8.0)
+                            }
+                            
+                            NavigationLink {
+                                MainContainerView().navigationBarBackButtonHidden(true).onAppear {
+                                    event.pitch_result = "T"
                                     event.result_detail = "N"
                                     add_Strike()
                                 }
                             } label: {
-                                Text("STRIKE")
+                                Text("FOUL BALL")
                                     .font(.system(size: 22))
                                     .fontWeight(.black)
-                                    .padding(.horizontal, 40.0)
                                     .padding(.vertical, 15.0)
+                                    .padding(.horizontal, 20.0)
                             }
-                            .foregroundColor(Color.white)
                             .background(Color("ScoreboardGreen"))
+                            .foregroundColor(Color.white)
                             .cornerRadius(8.0)
-                        }
-                        else {
+                            
+//                            NavigationLink {
+//                                HitDetailView()
+//                                    .navigationBarBackButtonHidden(true)
+//                            } label: {
+//                                Text("HIT")
+//                                    .font(.system(size: 22))
+//                                    .fontWeight(.black)
+//                                    .padding(.horizontal, 60.0)
+//                                    .padding(.vertical, 15.0)
+//                            }
+//                            .background(Color("ScoreboardGreen"))
+//                            .foregroundColor(Color.white)
+//                            .cornerRadius(8.0)
+                            
                             Button(action: {
-                                event.pitch_result = "Z"
-                                event.result_detail = "N"
-                                if scoreboard.strikes == 2 {
-                                    showOutRecorded = true
-                                }
-                                else {
-                                    add_Strike()
+                                withAnimation{
+                                    showPitchResult = false
+                                    showHitResult = true
                                 }
                             }) {
-                                Text("STRIKE")
+                                Text("HIT")
                                     .font(.system(size: 22))
                                     .fontWeight(.black)
-                                    .padding(.horizontal, 40.0)
+                                    .padding(.horizontal, 60.0)
                                     .padding(.vertical, 15.0)
-                            }
-                            .alert ("Out Recorded?", isPresented: $showOutRecorded) {
-                                NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                                        event.pitch_result = "Z"
-                                        event.result_detail = "K"
-                                        add_Strike()
-                                    }){
-                                        Text("Yes")
-                                    }
-                                NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                                        event.pitch_result = "Z"
-                                        event.result_detail = "C"
-                                        reset_Count()
-                                    }){
-                                        Text("No")
-                                    }
                             }
                             .background(Color("ScoreboardGreen"))
                             .foregroundColor(Color.white)
                             .cornerRadius(8.0)
-                        }
-                        
-                        NavigationLink {
-                            MainContainerView().navigationBarBackButtonHidden(true).onAppear {
-                                event.pitch_result = "T"
-                                event.result_detail = "N"
-                                add_Strike()
+                            
+//                            NavigationLink {
+//                                OutDetailView().navigationBarBackButtonHidden(true)
+//                            } label: {
+//                                Text("OUT")
+//                                    .font(.system(size: 22))
+//                                    .fontWeight(.black)
+//                                    .padding(.horizontal, 55.0)
+//                                    .padding(.vertical, 15.0)
+//                            }
+//                            .background(Color("ScoreboardGreen"))
+//                            .foregroundColor(Color.white)
+//                            .cornerRadius(8.0)
+                            
+                            Button(action: {
+                                withAnimation{
+                                    showPitchResult = false
+                                    showOutResult = true
+                                }
+                            }) {
+                                Text("OUT")
+                                    .font(.system(size: 22))
+                                    .fontWeight(.black)
+                                    .padding(.horizontal, 55.0)
+                                    .padding(.vertical, 15.0)
                             }
-                        } label: {
-                            Text("FOUL BALL")
-                                .font(.system(size: 22))
-                                .fontWeight(.black)
-                                .padding(.vertical, 15.0)
-                                .padding(.horizontal, 20.0)
-                        }
-                        .background(Color("ScoreboardGreen"))
-                        .foregroundColor(Color.white)
-                        .cornerRadius(8.0)
-                        
-                        
-                        NavigationLink {
-                            HitDetailView().navigationBarBackButtonHidden(true)
-                        } label: {
-                            Text("HIT")
-                                .font(.system(size: 22))
-                                .fontWeight(.black)
-                                .padding(.horizontal, 60.0)
-                                .padding(.vertical, 15.0)
-                        }
-                        .background(Color("ScoreboardGreen"))
-                        .foregroundColor(Color.white)
-                        .cornerRadius(8.0)
-                        
-                        
-                        NavigationLink {
-                            OutDetailView().navigationBarBackButtonHidden(true)
-                        } label: {
-                            Text("OUT")
-                                .font(.system(size: 22))
-                                .fontWeight(.black)
-                                .padding(.horizontal, 55.0)
-                                .padding(.vertical, 15.0)
-                        }
-                        .background(Color("ScoreboardGreen"))
-                        .foregroundColor(Color.white)
-                        .cornerRadius(8.0)
-                        
-                        NavigationLink {
-                            MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                                event.result_detail = "B"
-                                record_HBP()
+                            .background(Color("ScoreboardGreen"))
+                            .foregroundColor(Color.white)
+                            .cornerRadius(8.0)
+                            
+                            NavigationLink {
+                                MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                                    event.result_detail = "B"
+                                    record_HBP()
+                                }
+                            } label: {
+                                Text("HIT BY PITCH")
+                                    .font(.system(size: 22))
+                                    .fontWeight(.black)
+                                    .padding(.horizontal, 5.0)
+                                    .padding(.vertical, 15.0)
                             }
-                        } label: {
-                            Text("HIT BY PITCH")
-                                .font(.system(size: 22))
-                                .fontWeight(.black)
-                                .padding(.horizontal, 5.0)
-                                .padding(.vertical, 15.0)
+                            .background(Color("ScoreboardGreen"))
+                            .foregroundColor(Color.white)
+                            .cornerRadius(8.0)
+                            
+                            Spacer()
+                            
                         }
-                        .background(Color("ScoreboardGreen"))
-                        .foregroundColor(Color.white)
-                        .cornerRadius(8.0)
                         
                         Spacer()
                         
                     }
-                    
-                    Spacer()
-                    
+                    .transition(.opacity)
                 }
-                //.background(.ultraThinMaterial)
-                //.background(Color.black.opacity(0.1))
+                else if showHitResult == true {
+                    HitResultView()
+                        .transition(.opacity)
+                }
+                else if showOutResult == true {
+                    OutResultView()
+                        .transition(.opacity)
+                }
+                
                 
             }
             .background(.black)
@@ -219,8 +263,22 @@ struct PitchResultView: View {
 
                         Button(action: {
                             event.pitch_result = "NONE"
-                            back_func()
-                            dismiss()
+                            if showHitResult == true {
+                                withAnimation{
+                                    showHitResult = false
+                                    showPitchResult = true
+                                }
+                            }
+                            else if showOutResult == true {
+                                withAnimation{
+                                    showOutResult = false
+                                    showPitchResult = true
+                                }
+                            }
+                            else {
+                                back_func()
+                                dismiss()
+                            }
                             
                         }) {
                             Image(systemName: "chevron.left")
@@ -229,7 +287,7 @@ struct PitchResultView: View {
                                 .foregroundColor(.white)
                                 .bold()
                             Text("BACK")
-                                .font(.headline)
+                                .font(.system(size: 17))
                                 .fontWeight(.heavy)
                                 .foregroundColor(.white)
                                 //.font(weight: .semibold)
@@ -425,6 +483,323 @@ struct PitchResultView: View {
         print("Strikes: ", scoreboard.strikes, "Balls: ", scoreboard.balls, "Outs: ", scoreboard.outs)
     }
     
+}
+
+struct HitResultView: View {
+    @Environment(Scoreboard.self) var scoreboard
+    @Environment(Event_String.self) var event
+    @Environment(PitchTypeConfig.self) var ptconfig
+    
+    var body: some View {
+        HStack{
+            
+            Spacer()
+            
+            VStack{
+                
+                Spacer()
+                
+                NavigationLink{
+                    MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                        event.result_detail = "S"
+                        record_Hit()
+                    }
+                } label: {
+                    Text("SINGLE")
+                        .font(.system(size: 22))
+                        .fontWeight(.black)
+                        .padding(.horizontal, 43.0)
+                        .padding(.vertical, 15.0)
+                }
+                .background(Color("ScoreboardGreen"))
+                .foregroundColor(Color.white)
+                .cornerRadius(8.0)
+            
+                NavigationLink{
+                    MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                        event.result_detail = "D"
+                        record_Hit()
+                    }
+                } label: {
+                    Text("DOUBLE")
+                        .font(.system(size: 22))
+                        .fontWeight(.black)
+                        .padding(.horizontal, 38.0)
+                        .padding(.vertical, 15.0)
+                }
+                .background(Color("ScoreboardGreen"))
+                .foregroundColor(Color.white)
+                .cornerRadius(8.0)
+                
+                NavigationLink{
+                    MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                        event.result_detail = "T"
+                        record_Hit()
+                    }
+                } label: {
+                    Text("TRIPLE")
+                        .font(.system(size: 22))
+                        .fontWeight(.black)
+                        .padding(.horizontal, 45.0)
+                        .padding(.vertical, 15.0)
+                }
+                .background(Color("ScoreboardGreen"))
+                .foregroundColor(Color.white)
+                .cornerRadius(8.0)
+                
+                NavigationLink{
+                    MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                        event.result_detail = "H"
+                        record_Hit()
+                    }
+                } label: {
+                    Text("HOMERUN")
+                        .font(.system(size: 22))
+                        .fontWeight(.black)
+                        .padding(.horizontal, 26.0)
+                        .padding(.vertical, 15.0)
+                }
+                .background(Color("ScoreboardGreen"))
+                .foregroundColor(Color.white)
+                .cornerRadius(8.0)
+                
+                NavigationLink{
+                    MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                        event.result_detail = "E"
+                        record_Hit()
+                    }
+                } label: {
+                    Text("ERROR")
+                        .font(.system(size: 22))
+                        .fontWeight(.black)
+                        .padding(.horizontal, 46.0)
+                        .padding(.vertical, 15.0)
+                }
+                
+                .background(Color("ScoreboardGreen"))
+                .foregroundColor(Color.white)
+                .cornerRadius(8.0)
+                
+                Spacer()
+                
+            }
+            
+            Spacer()
+            
+        }
+    }
+    
+    func record_Hit() {
+        event.pitch_result = "H"
+        event.balls = scoreboard.balls
+        event.strikes = scoreboard.strikes
+        event.outs = scoreboard.outs
+        event.inning = scoreboard.inning
+        event.atbats = scoreboard.atbats
+        
+        if scoreboard.update_scoreboard {
+            scoreboard.pitches += 1
+            scoreboard.atbats += 1
+            
+            if event.result_detail != "H" {
+                scoreboard.baserunners += 1
+            }
+            
+            reset_Count()
+        }
+        
+        //print_Scoreboard()
+    }
+    
+    func reset_Count() {
+        scoreboard.balls = 0
+        scoreboard.strikes = 0
+        
+        ptconfig.pitch_x_loc.removeAll()
+        ptconfig.pitch_y_loc.removeAll()
+        ptconfig.ab_pitch_color.removeAll()
+        ptconfig.pitch_cur_ab = 0
+        
+        scoreboard.b1light = false
+        scoreboard.b2light = false
+        scoreboard.b3light = false
+        
+        scoreboard.s1light = false
+        scoreboard.s2light = false
+    }
+}
+
+struct OutResultView: View {
+    
+    @Environment(Scoreboard.self) var scoreboard
+    @Environment(Event_String.self) var event
+    @Environment(PitchTypeConfig.self) var ptconfig
+    
+    var body: some View {
+        
+        HStack{
+            
+            Spacer()
+            
+            VStack{
+                
+                Spacer()
+                
+                NavigationLink{
+                    MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                        event.result_detail = "F"
+                        record_Out()
+                    }
+                } label: {
+                    Text("FLYOUT")
+                        .font(.system(size: 22))
+                        .fontWeight(.black)
+                        .padding(.horizontal, 45.0)
+                        .padding(.vertical, 15.0)
+                }
+                .background(Color("ScoreboardGreen"))
+                .foregroundColor(Color.white)
+                .cornerRadius(8.0)
+            
+                NavigationLink{
+                    MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                        event.result_detail = "G"
+                        record_Out()
+                    }
+                } label: {
+                    Text("GROUNDOUT")
+                        .font(.system(size: 22))
+                        .fontWeight(.black)
+                        .padding(.horizontal, 15.0)
+                        .padding(.vertical, 15.0)
+                }
+                .background(Color("ScoreboardGreen"))
+                .foregroundColor(Color.white)
+                .cornerRadius(8.0)
+                
+                NavigationLink{
+                    MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                        event.result_detail = "L"
+                        record_Out()
+                    }
+                } label: {
+                    Text("LINEOUT")
+                        .font(.system(size: 22))
+                        .fontWeight(.black)
+                        .padding(.horizontal, 38.0)
+                        .padding(.vertical, 15.0)
+                }
+                .background(Color("ScoreboardGreen"))
+                .foregroundColor(Color.white)
+                .cornerRadius(8.0)
+                
+                NavigationLink{
+                    MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                        event.result_detail = "P"
+                        record_Out()
+                    }
+                } label: {
+                    Text("POPOUT")
+                    
+                        .font(.system(size: 22))
+                        .fontWeight(.black)
+                        .padding(.horizontal, 40.0)
+                        .padding(.vertical, 15.0)
+                }
+                .background(Color("ScoreboardGreen"))
+                .foregroundColor(Color.white)
+                .cornerRadius(8.0)
+                
+                NavigationLink{
+                    MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                        event.result_detail = "Y"
+                        record_Out()
+                    }
+                } label: {
+                    Text("SAC BUNT")
+                        .font(.system(size: 22))
+                        .fontWeight(.black)
+                        .padding(.horizontal, 30.0)
+                        .padding(.vertical, 15.0)
+                }
+                .background(Color("ScoreboardGreen"))
+                .foregroundColor(Color.white)
+                .cornerRadius(8.0)
+                
+                NavigationLink{
+                    MainContainerView().navigationBarBackButtonHidden(true).onAppear{
+                        event.result_detail = "O"
+                        record_Out()
+                    }
+                } label: {
+                    Text("OTHER")
+                        .font(.system(size: 22))
+                        .fontWeight(.black)
+                        .padding(.horizontal, 49.0)
+                        .padding(.vertical, 15.0)
+                }
+                .background(Color("ScoreboardGreen"))
+                .foregroundColor(Color.white)
+                .cornerRadius(8.0)
+                
+                Spacer()
+                
+            }
+            
+            Spacer()
+            
+        }
+    }
+    
+    func record_Out() {
+        event.pitch_result = "O"
+        event.balls = scoreboard.balls
+        event.strikes = scoreboard.strikes
+        event.outs = scoreboard.outs
+        event.inning = scoreboard.inning
+        event.atbats = scoreboard.atbats
+        
+        if scoreboard.update_scoreboard {
+            scoreboard.pitches += 1
+            scoreboard.outs += 1
+            scoreboard.atbats += 1
+            
+            if scoreboard.outs == 1 {
+                scoreboard.o1light = true
+            }
+            if scoreboard.outs == 2 {
+                scoreboard.o2light = true
+            }
+            
+            if scoreboard.outs == 3 {
+                scoreboard.outs = 0
+                scoreboard.inning += 1
+                scoreboard.baserunners = 0
+                scoreboard.o1light = false
+                scoreboard.o2light = false
+            }
+            
+            reset_Count()
+            //print_Scoreboard()
+        }
+    }
+    
+    func reset_Count() {
+        scoreboard.balls = 0
+        scoreboard.strikes = 0
+        
+        ptconfig.pitch_x_loc.removeAll()
+        ptconfig.pitch_y_loc.removeAll()
+        ptconfig.ab_pitch_color.removeAll()
+        ptconfig.pitch_cur_ab = 0
+        
+        scoreboard.b1light = false
+        scoreboard.b2light = false
+        scoreboard.b3light = false
+        
+        scoreboard.s1light = false
+        scoreboard.s2light = false
+    }
 }
 
 #Preview {
