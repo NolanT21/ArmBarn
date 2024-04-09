@@ -171,7 +171,7 @@ struct HitDetailView: View {
                                 .foregroundColor(.white)
                                 .bold()
                             Text("BACK")
-                                .font(.headline)
+                                .font(.system(size: 17))
                                 .fontWeight(.heavy)
                                 .foregroundColor(.white)
                                 //.font(weight: .semibold)
