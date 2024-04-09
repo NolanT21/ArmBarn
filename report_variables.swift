@@ -39,19 +39,6 @@ import Observation
     var pl_color_list: [Color] = []
     var pl_outline_list: [Color] = []
     
-    var hl_hittype: String = ""
-    var hl_balls: Int = 0
-    var hl_strikes: Int = 0
-    var hl_pitchtype: String = ""
-    var hl_curinn: Int = 0
-    var hl_previnn: Int = 0
-    
-    var inn_hitlog: [Int] = []
-    var result_hitlog: [String] = []
-    var pitchtype_hitlog: [String] = []
-    var cnt_hitlog: [(balls: Int, strikes: Int)] = []
-    var outs_hitlog: [Int] = []
-    
     var p1_by_inn: [Int] = []
     var p2_by_inn: [Int] = []
     var p3_by_inn: [Int] = []

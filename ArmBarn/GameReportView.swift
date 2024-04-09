@@ -67,7 +67,7 @@ struct GameReportView: View {
                     
                     Spacer()
                     
-                    HStack{
+                    HStack(alignment: .center){
                         
                         Button(action: {
                             showEndGame = true
@@ -79,7 +79,7 @@ struct GameReportView: View {
                         .alert (isPresented: $showEndGame) {
                             Alert(
                                 title: Text("End Game?"),
-                                message: Text("Are you sure? This game will not be saved!"),
+                                message: Text("This game will not be saved!"),
                                 primaryButton: .default(
                                     Text("Yes"),
                                     action: {
@@ -186,7 +186,7 @@ struct GameReportView: View {
                             .bold()
                             
                             Divider()
-                                .foregroundStyle(text_color)
+                                //.background(Color.gray)
                             
                             GridRow{
                                 Text("\(game_report.inn_pitched, specifier: "%.1f")")
@@ -313,56 +313,9 @@ struct GameReportView: View {
                     
                 }
                 
-                HStack{
-                    VStack{
-                        HStack{
-                            Text("Game Score")
-                                .font(.subheadline)
-                                .foregroundStyle(text_color)
-                                .padding(.leading, view_padding)
-                                .padding(.top, view_padding)
-                            
-                            Spacer()
-                            
-                        }
-                        
-                        VStack{
-                            HStack{
-                                Text("\(game_report.game_score)")
-                                    .font(.system(size: 40))
-                                    .foregroundStyle(text_color)
-                                    .padding(.horizontal, view_padding)
-                                    .padding(.bottom, -20)
-                                    .bold()
-                                
-                                Spacer()
-                            }
-                            
-                            //Spacer()
-                            
-                            VStack{
-                                Gauge(value: Double(game_report.game_score) * 0.01) {
-                                    Text("Game Score")
-                                        .foregroundStyle(text_color)
-                                }
-                                .gaugeStyle(.accessoryLinear)
-                                .tint(gradient)
-                                .frame(height: 10)
-                            }
-                            .padding(view_padding)
-                        }
-
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color("DarkGrey"))
-                    .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
-                    .padding(.bottom, view_padding)
-                    .padding(.leading, view_padding)
-                    .padding(.trailing, view_padding)
-                    
-                }
-                
-                Spacer()
+//                HStack{}
+//                
+//                Spacer()
 
                 HStack{
                     
@@ -467,153 +420,70 @@ struct GameReportView: View {
                 
                 Spacer()
                 
-//                HStack{
-//                    VStack{
-//                        HStack{
-//                            Text("Hit Log")
-//                                .font(.subheadline)
-//                                .foregroundStyle(text_color)
-//                                .padding(.leading, view_padding)
-//                                .padding(.top, view_padding)
-//                            
-//                            Spacer()
-//                        }
-//                        
-//                        VStack{
-//                            Grid(alignment: .center, horizontalSpacing: 30){
-//                                let num_of_hits = game_report.inn_hitlog.count
-//                                if num_of_hits < 1 {
-//                                    GridRow{
-//                                        Text("No Previous Hits")
-//                                            .foregroundStyle(text_color)
-//                                            .padding(.bottom, view_padding)
-//                                    }
-//                                }
-//                                else {
-//                                    ForEach(Array(game_report.inn_hitlog.enumerated()), id: \.offset) { index, value in
-//
-//                                        let hit_type = game_report.result_hitlog[index] //Thread 1: Fatal error: Index out of range
-//                                        let balls = game_report.cnt_hitlog[index].balls
-//                                        let strikes = game_report.cnt_hitlog[index].strikes
-//                                        let pitch_type = game_report.pitchtype_hitlog[index]
-//                                        let hl_outs = game_report.outs_hitlog[index]
-//                                        
-//                                        //game_report.hl_curinn = cur_inn
-//                                        //hd_balls = game_report.cnt_hitlog[index.balls]
-//                                        
-//                                        if index == 0 {
-//                                            GridRow{
-//                                                Text("INN \(value)")
-//                                                    .foregroundStyle(text_color)
-//                                                    .padding(.top, view_padding * 0.5)
-//                                                    //.padding(.leading, view_padding * -1)
-//                                                    .padding(.bottom, view_padding / -2)
-//                                                    .bold()
-//                                            }
-//                                            
-//                                            Divider()
-//                                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                                                .gridCellUnsizedAxes(.horizontal)
-//                                                .foregroundStyle(text_color)
-//                                                
-//                                            
-//                                            GridRow{
-//                                                Text(hit_type)
-//                                                    .font(.callout)
-//                                                    .foregroundStyle(text_color)
-//                                                Text("\(balls) - \(strikes)")
-//                                                    .font(.callout)
-//                                                    .foregroundStyle(text_color)
-//                                                Text("\(hl_outs) Out(s)")
-//                                                    .font(.callout)
-//                                                    .foregroundStyle(text_color)
-//                                                Text(pitch_type)
-//                                                    .font(.callout)
-//                                                    .foregroundStyle(text_color)
-//                                            }
-//                                            //.padding(.leading, view_padding * 2)
-//                                            //.padding(.trailing, view_padding * 3)
-//                                            //.padding(.bottom, view_padding * 0.5)
-//                                        }
-//                                        
-//                                        else if game_report.inn_hitlog[index] > game_report.inn_hitlog[index - 1] {
-//                                            GridRow{
-//                                                Text("INN \(value)")
-//                                                    .foregroundStyle(text_color)
-//                                                    .padding(.top, view_padding * 0.5)
-//                                                    //.padding(.leading, view_padding * -1)
-//                                                    .padding(.bottom, view_padding / -2)
-//                                                    .bold()
-//                                            }
-//                                            //.padding(.top, view_padding)
-//                                            
-//                                            Divider()
-//                                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                                                .gridCellUnsizedAxes(.horizontal)
-//                                                .foregroundStyle(text_color)
-//                                            
-//                                            GridRow{
-//                                                Text(hit_type)
-//                                                    .font(.callout)
-//                                                    .foregroundStyle(text_color)
-//                                                Text("\(balls) - \(strikes)")
-//                                                    .font(.callout)
-//                                                    .foregroundStyle(text_color)
-//                                                Text("\(hl_outs) Out(s)")
-//                                                    .font(.callout)
-//                                                    .foregroundStyle(text_color)
-//                                                Text(pitch_type)
-//                                                    .font(.callout)
-//                                                    .foregroundStyle(text_color)
-//                                            }
-//                                            //.padding(.leading, view_padding * 2)
-//                                            //.padding(.trailing, view_padding * 3)
-//                                            //.padding(.bottom, view_padding)
-//                                        }
-//                                        
-//                                        else {
-//                                            
-//                                            Divider()
-//                                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                                                .gridCellUnsizedAxes(.horizontal)
-//                                                .foregroundStyle(text_color)
-//                                                .padding(.leading, view_padding * 2)
-//                                                .padding(.trailing, view_padding * 2)
-//                                            
-//                                            GridRow{
-//                                                Text(hit_type)
-//                                                    .font(.callout)
-//                                                    .foregroundStyle(text_color)
-//                                                Text("\(balls) - \(strikes)")
-//                                                    .font(.callout)
-//                                                    .foregroundStyle(text_color)
-//                                                Text("\(hl_outs) Out(s)")
-//                                                    .font(.callout)
-//                                                    .foregroundStyle(text_color)
-//                                                Text(pitch_type)
-//                                                    .font(.callout)
-//                                                    .foregroundStyle(text_color)
-//                                            }
-//                                            //.padding(.leading, view_padding * 2)
-//                                            //.padding(.trailing, view_padding * 3)
-//                                            //.padding(.bottom, view_padding)
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                            //.padding(.horizontal, view_padding)
-//                            .padding(.bottom, view_padding)
-//                        }
-//                    }
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                    .background(Color("DarkGrey"))
-//                    .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
-//                    .padding(.bottom, view_padding)
-//                    .padding(.leading, view_padding)
-//                    .padding(.trailing, view_padding)
-//                }
-//                
-//                Spacer()
+                VStack{
+                    VStack{
+                        HStack{
+                            Text("Game Score")
+                                .font(.subheadline)
+                                .foregroundStyle(text_color)
+                            
+                            Spacer()
+                        }
+                        .padding(.leading, view_padding)
+                        .padding(.top, view_padding - 3)
+                        VStack{
+                            HStack{
+                                Text("\(game_report.game_score)")
+                                    .font(.system(size: 40))
+                                    .foregroundStyle(text_color)
+                                    .padding(.horizontal, view_padding)
+                                    .padding(.bottom, -20)
+                                    .bold()
+                                
+                                Spacer()
+                            }
+                            
+                            //Spacer()
+                            
+                            VStack{
+                                Gauge(value: Double(game_report.game_score) * 0.01) {
+                                    Text("Game Score")
+                                        .foregroundStyle(text_color)
+                                }
+                                .gaugeStyle(.accessoryLinear)
+                                .tint(gradient)
+                                .frame(height: 10)
+                            }
+                            .padding(view_padding)
+                        }
+
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color("DarkGrey"))
+                    .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
+                    .padding(.leading, view_padding)
+                    .padding(.trailing, view_padding)
+                    HStack{
+                        Text("*")
+                            .baselineOffset(3.0)
+                            .foregroundStyle(.gray)
+                            .font(.system(size: 10))
+                        
+                        + Text("Calculated using Tango's formula without runs, with extra weight placed on XBHs")
+                            .foregroundStyle(.gray)
+                            .font(.system(size: 10))
+                        
+                        Spacer()
+                        
+                    }
+                    .padding(.top, view_padding * -0.8)
+                    .padding(.bottom, view_padding)
+                    .padding(.leading, view_padding * 1.8)
+                    .padding(.trailing, view_padding)
+                    
+                }
+                
+                Spacer()
                 
                 HStack{
                     VStack{
@@ -736,7 +606,7 @@ struct GameReportView: View {
                 Spacer()
                 
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
             .background(LinearGradient(gradient: background_gradient, startPoint: .top, endPoint: .bottom))
     }
     
@@ -831,12 +701,6 @@ struct GameReportView: View {
         game_report.y_coordinate_list = []
         game_report.pl_color_list = []
         game_report.pl_outline_list = []
-        game_report.outs_hitlog = []
-        
-        game_report.inn_hitlog = []
-        game_report.result_hitlog = []
-        game_report.pitchtype_hitlog = []
-        game_report.cnt_hitlog = []
     }
     
 }
