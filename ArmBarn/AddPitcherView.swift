@@ -56,12 +56,9 @@ struct AddPitcherView: View {
                     context.insert(pitcher)
                     dismiss()
                 }
+                .foregroundStyle(.white)
             }
-            .foregroundColor(Color(UIColor.label))
-            .background(.green)
-            .tint(.gray)
         }
-        //.frame(width: 400, height: 400)
     }
 }
 

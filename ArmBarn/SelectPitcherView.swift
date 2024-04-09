@@ -18,8 +18,12 @@ struct SelectPitcherView: View {
     @Query(sort: \Pitcher.lastName) var pitchers: [Pitcher]
     
     @State private var searchText = ""
+    
     @State private var showAddPitcher = false
     @State private var showEditPitcher = false
+    
+    @State private var text_color = Color.white
+    
     
     var filteredPitchers: [Pitcher] {
         guard !searchText.isEmpty else {return pitchers}
@@ -28,69 +32,71 @@ struct SelectPitcherView: View {
 
     var body: some View {
         
-        NavigationStack{
-            List {
-                ForEach(filteredPitchers, id:\.id) { p_er in
-                    Button(p_er.firstName + " " + p_er.lastName) {
-                        current_pitcher.pitch_num = 0
-                        current_pitcher.firstName = p_er.firstName
-                        current_pitcher.lastName = p_er.lastName
-                        current_pitcher.pitch1 = p_er.pitch1
-                        current_pitcher.idcode = p_er.id
-                        if current_pitcher.pitch1 != "None" {
-                            current_pitcher.pitch_num += 1
-                            current_pitcher.arsenal[0] = p_er.pitch1
+        ZStack{
+            
+            NavigationStack{
+                List {
+                    ForEach(filteredPitchers, id:\.id) { p_er in
+                        Button(p_er.firstName + " " + p_er.lastName) {
+                            current_pitcher.pitch_num = 0
+                            current_pitcher.firstName = p_er.firstName
+                            current_pitcher.lastName = p_er.lastName
+                            current_pitcher.pitch1 = p_er.pitch1
+                            current_pitcher.idcode = p_er.id
+                            if current_pitcher.pitch1 != "None" {
+                                current_pitcher.pitch_num += 1
+                                current_pitcher.arsenal[0] = p_er.pitch1
+                            }
+                            
+                            current_pitcher.pitch2 = p_er.pitch2
+                            if current_pitcher.pitch2 != "None" {
+                                current_pitcher.pitch_num += 1
+                                current_pitcher.arsenal[1] = p_er.pitch2
+                            }
+                            
+                            current_pitcher.pitch3 = p_er.pitch3
+                            if current_pitcher.pitch3 != "None" {
+                                current_pitcher.pitch_num += 1
+                                current_pitcher.arsenal[2] = p_er.pitch3
+                            }
+                            
+                            current_pitcher.pitch4 = p_er.pitch4
+                            if current_pitcher.pitch4 != "None" {
+                                current_pitcher.pitch_num += 1
+                                current_pitcher.arsenal[3] = p_er.pitch4
+                            }
+                            dismiss()
                         }
-                        
-                        current_pitcher.pitch2 = p_er.pitch2
-                        if current_pitcher.pitch2 != "None" {
-                            current_pitcher.pitch_num += 1
-                            current_pitcher.arsenal[1] = p_er.pitch2
+                        .foregroundColor(text_color)
+                        .swipeActions(edge: .leading) {
+                            Button(action: {
+                                showEditPitcher = true
+                            }, label: {
+                                Text("Edit")
+                            })
                         }
-                        
-                        current_pitcher.pitch3 = p_er.pitch3
-                        if current_pitcher.pitch3 != "None" {
-                            current_pitcher.pitch_num += 1
-                            current_pitcher.arsenal[2] = p_er.pitch3
-                        }
-                        
-                        current_pitcher.pitch4 = p_er.pitch4
-                        if current_pitcher.pitch4 != "None" {
-                            current_pitcher.pitch_num += 1
-                            current_pitcher.arsenal[3] = p_er.pitch4
-                        }
-                        dismiss()
                     }
-                    .foregroundColor(Color(UIColor.label))
-                    .swipeActions(edge: .leading) {
-                        Button(action: {
-                            showEditPitcher = true
-                        }, label: {
-                            Text("Edit")
-                        })
+                    .onDelete(perform: removePitcher)
+    //                .popover(isPresented: $showEditPitcher) {
+    //                    EditPitcherView()
+    //                }
+                }
+                .navigationTitle("Pitchers")
+                .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search by Last Name")
+                .toolbar{
+                    Button(action: {
+                        showAddPitcher = true
+                    }, label: {
+                        Image(systemName: "plus")
+                            .foregroundColor(text_color)
+                    })
+                    .popover(isPresented: $showAddPitcher) {
+                        AddPitcherView()
+                            .preferredColorScheme(.dark)
                     }
                 }
-                .onDelete(perform: removePitcher)
-//                .popover(isPresented: $showEditPitcher) {
-//                    EditPitcherView()
-//                }
             }
-            .navigationTitle("Pitchers")
-            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search Pitchers")
-            .toolbar{
-                Button(action: {
-                    showAddPitcher = true
-                }, label: {
-                    Image(systemName: "plus")
-                        .foregroundColor(Color.blue)
-                })
-                .popover(isPresented: $showAddPitcher) {
-                    AddPitcherView()
-                }
-            }
-            .background(LinearGradient(gradient: Gradient(colors: [Color("ScoreboardGreen"), .black]), startPoint: .top, endPoint: .bottom))
         }
-        
     }
     
     func removePitcher(at indexSet: IndexSet) {
