@@ -73,7 +73,10 @@ struct PitchLocationView: View {
                             .frame(width: 35.0, height: 35.0, alignment: .center)
                             .position(location)
                         
-                            NavigationLink(destination: PitchResultView().navigationBarBackButtonHidden(true).onAppear {
+                            NavigationLink(destination: PitchResultView()
+                                                            .navigationBarBackButtonHidden(true)
+                                                            .preferredColorScheme(.dark)
+                                                            .onAppear {
                                 ptconfig.pitch_x_loc.append(location.x)
                                 event.x_cor = Double(location.x)
                                 ptconfig.pitch_y_loc.append(location.y)
@@ -125,7 +128,7 @@ struct PitchLocationView: View {
                             PitchLocationInput()
                         }
                         
-                        if scoreboard.baserunners > 0 {
+                        if scoreboard.baserunners > 0 && ptconfig.hidePitchOverlay == false{
                             VStack {
                                 Spacer()
                                     .frame(height: 50)
@@ -141,7 +144,7 @@ struct PitchLocationView: View {
                                             .font(.system(size: 18))
                                             .fontWeight(.black)
                                             .padding(.vertical, 8.0)
-                                            .padding(.horizontal, 5.0)
+                                            .padding(.horizontal, 8.0)
                                     }
                                     .foregroundColor(Color.white)
                                     .background(Color("ScoreboardGreen"))
@@ -185,7 +188,7 @@ struct PitchLocationView: View {
                             .foregroundColor(.white)
                             .bold()
                         Text("UNDO")
-                            .font(.headline)
+                            .font(.system(size: 17))
                             .fontWeight(.heavy)
                             .foregroundColor(.white)
                             //.font(weight: .semibold)
@@ -221,11 +224,9 @@ struct PitchLocationView: View {
                             }
                             .popover(isPresented: $showPitcherSelect) {
                                 SelectPitcherView()
+                                    .preferredColorScheme(.dark)
                             }
-                                
                         }
-                        
-                        
                     }
                 }
                 
@@ -240,7 +241,7 @@ struct PitchLocationView: View {
                                 .bold()
                         }
                         .popover(isPresented: $showGameReport) {
-                            GameReportView().task{
+                            GameReportView().preferredColorScheme(.dark).task{
                                 generate_game_report()
                             }
                         }
@@ -294,12 +295,6 @@ struct PitchLocationView: View {
         game_report.y_coordinate_list = []
         game_report.pl_color_list = []
         game_report.pl_outline_list = []
-        game_report.outs_hitlog = []
-        
-        game_report.inn_hitlog = []
-        game_report.result_hitlog = []
-        game_report.pitchtype_hitlog = []
-        game_report.cnt_hitlog = []
         
         game_report.inn_pitched = (Double(scoreboard.inning) + (Double(scoreboard.outs) * 0.1)) - 1
         
@@ -356,49 +351,23 @@ struct PitchLocationView: View {
                     game_report.hits += 1
                     game_report.pl_color = Color("Tangerine")
                     
-                    game_report.inn_hitlog.append(evnt.inning)
-                    game_report.cnt_hitlog.append((balls: evnt.balls, strikes: evnt.strikes))
-                    game_report.outs_hitlog.append(evnt.outs)
-                    //Add logic for
-                    if evnt.pitch_type == "P1" {
-                        game_report.pitchtype_hitlog.append(current_pitcher.pitch1)
-                    }
-                    else if evnt.pitch_type == "P2" {
-                        game_report.pitchtype_hitlog.append(current_pitcher.pitch2)
-                    }
-                    else if evnt.pitch_type == "P3" {
-                        game_report.pitchtype_hitlog.append(current_pitcher.pitch3)
-                    }
-                    else if evnt.pitch_type == "P4" {
-                        game_report.pitchtype_hitlog.append(current_pitcher.pitch4)
-                    }
                     
                     if evnt.result_detail != "E" {
                         
                         if evnt.result_detail == "S" {
-                            game_report.result_hitlog.append("Single")
                             game_report.game_score -= 2
                         }
                         else if evnt.result_detail == "D" {
-                            game_report.result_hitlog.append("Double")
                             game_report.game_score -= 3
                         }
                         else if evnt.result_detail == "T" {
-                            game_report.result_hitlog.append("Triple")
                             game_report.game_score -= 4
                             
                         }
                         else if evnt.result_detail == "H" {
-                            game_report.result_hitlog.append("Homerun")
                             game_report.game_score -= 6
                         }
-                        else if evnt.result_detail == "B" {
-                            game_report.result_hitlog.append("HBP")
-                        }
                         
-                    }
-                    else {
-                        game_report.result_hitlog.append("Error")
                     }
                     
                 }
@@ -523,12 +492,6 @@ struct PitchLocationView: View {
         game_report.y_coordinate_list = []
         game_report.pl_color_list = []
         game_report.pl_outline_list = []
-        game_report.outs_hitlog = []
-        
-        game_report.inn_hitlog = []
-        game_report.result_hitlog = []
-        game_report.pitchtype_hitlog = []
-        game_report.cnt_hitlog = []
     }
     
     func load_previous_event() {
@@ -590,6 +553,42 @@ struct PitchLocationView: View {
         
         //Logic For:
         //logic for loading last at-bats pitches, if at-bat changes
+        if scoreboard.atbats > 1 {
+            var abindex = events.count - 2
+            let atbat_before_last = events[abindex]
+            if atbat_before_last.atbats < scoreboard.atbats && (atbat_before_last.strikes != 0 && atbat_before_last.balls != 0){
+                
+                while atbat_before_last.atbats == events[abindex].atbats {
+
+                    let evnt = events[abindex]
+
+                    if evnt.pitch_type != "NP" {
+                        ptconfig.pitch_x_loc.insert(evnt.pitch_x_location, at: 0)
+                        ptconfig.pitch_y_loc.insert(evnt.pitch_y_location, at: 0)
+                        
+                        if evnt.pitch_type == "P1"{
+                            ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[0], at: 0)
+                        }
+                        else if evnt.pitch_type == "P2"{
+                            ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[1], at: 0)
+                        }
+                        else if evnt.pitch_type == "P3"{
+                            ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[2], at: 0)
+                        }
+                        else if evnt.pitch_type == "P4"{
+                            ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[3], at: 0)
+                        }
+
+                        ptconfig.pitch_cur_ab += 1
+                    }
+
+                    abindex = abindex - 1
+                }
+            }
+            
+            PitchOverlayPrevPitches()
+            
+        }
     }
     
     func add_prev_event_string() {
@@ -612,6 +611,8 @@ struct PitchLocationView: View {
         event.outs = scoreboard.outs
         event.inning = scoreboard.inning
         event.atbats = scoreboard.atbats
+        event.x_cor = 0
+        event.y_cor = 0
         
         scoreboard.outs += 1
         scoreboard.baserunners -= 1
@@ -686,8 +687,14 @@ struct PitchLocationInput : View {
     var body: some View {
         if !ptconfig.hidePitchOverlay{
             
-            PitchOverlayPrevPitches()
-                .transition(.opacity)
+            ZStack{
+                
+                PitchOverlayPrevPitches()
+                    .transition(.opacity)
+                
+                Rectangle()
+                    .fill(Color.black.opacity(0.01))
+            }
             
             VStack{
                 
@@ -707,6 +714,7 @@ struct PitchLocationInput : View {
                                         Text("\(current_pitcher.arsenal[pt_num])")
                                             .textCase(.uppercase)
                                             .fontWeight(.bold)
+                                            .font(.system(size: 15))
                                             .frame(maxWidth: .infinity)
                                             .padding(.vertical, ver_padding)
                                     }
@@ -730,6 +738,7 @@ struct PitchLocationInput : View {
                                             Text("\(current_pitcher.arsenal[pt_num])")
                                                 .textCase(.uppercase)
                                                 .fontWeight(.bold)
+                                                .font(.system(size: 17))
                                                 .frame(maxWidth: .infinity)
                                                 .padding(.vertical, ver_padding / 2)
                                     }
@@ -752,6 +761,7 @@ struct PitchLocationInput : View {
                                         Text("\(current_pitcher.arsenal[pt_num])")
                                             .textCase(.uppercase)
                                             .fontWeight(.bold)
+                                            .font(.system(size: 17))
                                             .frame(maxWidth: .infinity)
                                             .padding(.vertical, ver_padding / 2)
                                     }
@@ -780,8 +790,6 @@ struct PitchOverlayPrevPitches : View {
     @Environment(PitchTypeConfig.self) var ptconfig
     
     var body: some View {
-        Rectangle()
-            .fill(Color.black.opacity(0.01))
                             
         ForEach(ptconfig.pitch_x_loc.indices, id: \.self){ index in
             let xloc = ptconfig.pitch_x_loc[index]
@@ -797,6 +805,7 @@ struct PitchOverlayPrevPitches : View {
                     Text("\(index + 1)")
                         .foregroundColor(.white)
                         .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                        .font(.system(size: 17))
                         .position(point)
                 }
         }
