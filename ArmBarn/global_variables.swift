@@ -68,6 +68,7 @@ import Observation
     var pitch_cur_ab: Int = 0
     var arsenal_colors: [Color] = [Color("PowderBlue"), Color("Gold"), Color("Tangerine"), Color("Grey")]
     var hidePitchOverlay: Bool = false
+    var loadPitchOverlay: Bool = false
 }
 
 @Model class Event{
