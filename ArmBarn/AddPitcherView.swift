@@ -22,6 +22,11 @@ struct AddPitcherView: View {
     @State private var pitch3 = "None"
     @State private var pitch4 = "None"
     
+    @State private var text_color = Color.white
+    
+    @State var sbl_width: Double = 17.0
+    @State var sbl_height: Double = 13.0
+    
     var body: some View {
         VStack{
             Form{
@@ -59,6 +64,7 @@ struct AddPitcherView: View {
                 .foregroundStyle(.white)
             }
         }
+        
     }
 }
 

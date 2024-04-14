@@ -34,6 +34,8 @@ struct GameReportView: View {
     @State var sbl_width: Double = 17.0
     @State var sbl_height: Double = 13.0
     
+    @State var font_size: CGFloat = 20.0
+    
     var background: Color = .black
     var component_background: UIColor = .darkGray
     var text_color: Color = .white
@@ -60,7 +62,7 @@ struct GameReportView: View {
                             .foregroundColor(text_color)
                             .bold()
                         Text("BACK")
-                            .font(.headline)
+                            .font(.system(size: font_size))
                             .fontWeight(.heavy)
                             .foregroundColor(text_color)
                     })
@@ -73,6 +75,7 @@ struct GameReportView: View {
                             showEndGame = true
                         }) {
                             Image(systemName: "flag.checkered")
+                                .imageScale(.large)
                                 .frame(width: sbl_width, height: sbl_height)
                                 .foregroundColor(Color.white)
                         }
@@ -108,6 +111,7 @@ struct GameReportView: View {
                             showGameReceipt = true
                         }) {
                             Image(systemName: "tray.full.fill")
+                                .imageScale(.large)
                                 .frame(width: sbl_width, height: sbl_height)
                                 .foregroundColor(Color.white)
                         }
@@ -119,6 +123,7 @@ struct GameReportView: View {
                         //Spacer()
                         
                         ShareLink("", item: render(viewSize: viewsize))
+                            .imageScale(.large)
                             .foregroundStyle(text_color)
                             .fontWeight(.bold)
                             .padding(.leading, view_padding/2)
