@@ -172,6 +172,7 @@ struct PitchLocationView: View {
                         if events.count > 0 {
                             if events.count != 1 {
                                 load_previous_event()
+                                load_previous_ab_pitches()
                             }
                             else {
                                 if scoreboard.pitches > 0 {
@@ -181,6 +182,8 @@ struct PitchLocationView: View {
                             }
                             context.delete(events[events.count - 1])
                         }
+                        ptconfig.hidePitchOverlay = false
+                        ptconfig.ptcolor = .clear
                     }) {
                         Image(systemName: "arrow.counterclockwise")
                             .imageScale(.medium)
@@ -236,6 +239,7 @@ struct PitchLocationView: View {
                             showGameReport = true
                         }) {
                             Image(systemName: "chart.bar.xaxis")
+                                .imageScale(.large)
                                 .frame(width: sbl_width, height: sbl_height)
                                 .foregroundColor(Color.white)
                                 .bold()
@@ -252,6 +256,7 @@ struct PitchLocationView: View {
                             showTestView = true
                         }) {
                             Image(systemName: "gearshape.fill")
+                                .imageScale(.large)
                                 .frame(width: sbl_width, height: sbl_height)
                                 .foregroundColor(Color.white)
                         }
@@ -496,14 +501,14 @@ struct PitchLocationView: View {
     
     func load_previous_event() {
         let previous_event = events[events.count - 1]
-
+        
         scoreboard.balls = previous_event.balls
         scoreboard.strikes = previous_event.strikes
         scoreboard.outs = previous_event.outs
         scoreboard.atbats = previous_event.atbats
         scoreboard.inning = previous_event.inning
         
-        if ptconfig.pitch_x_loc.count > 0{
+        if ptconfig.pitch_x_loc.count > 0 && previous_event.result_detail != "R"{
             ptconfig.pitch_x_loc.removeLast()
             ptconfig.pitch_y_loc.removeLast()
             ptconfig.ab_pitch_color.removeLast()
@@ -550,47 +555,58 @@ struct PitchLocationView: View {
         else if previous_event.result_detail == "R" {
             scoreboard.baserunners += 1
         }
+    }
+    
+    func load_previous_ab_pitches() {
+        let end_ab_rd = ["S", "D", "T", "H", "E", "B", "F", "G", "L", "P", "Y", "W", "K", "C"]
+        let prev_event = events[events.count - 1] //Previous event (t)
+        var bl_ab_index = events.count - 2
+        let atbat_before_last = events[bl_ab_index] //Before Last event (t - 1)
         
-        //Logic For:
-        //logic for loading last at-bats pitches, if at-bat changes
-        if scoreboard.atbats > 1 {
-            var abindex = events.count - 2
-            let atbat_before_last = events[abindex]
-            if atbat_before_last.atbats < scoreboard.atbats && (atbat_before_last.strikes != 0 && atbat_before_last.balls != 0){
-                
-                while atbat_before_last.atbats == events[abindex].atbats {
-
-                    let evnt = events[abindex]
-
-                    if evnt.pitch_type != "NP" {
-                        ptconfig.pitch_x_loc.insert(evnt.pitch_x_location, at: 0)
-                        ptconfig.pitch_y_loc.insert(evnt.pitch_y_location, at: 0)
-                        
-                        if evnt.pitch_type == "P1"{
-                            ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[0], at: 0)
-                        }
-                        else if evnt.pitch_type == "P2"{
-                            ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[1], at: 0)
-                        }
-                        else if evnt.pitch_type == "P3"{
-                            ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[2], at: 0)
-                        }
-                        else if evnt.pitch_type == "P4"{
-                            ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[3], at: 0)
-                        }
-
-                        ptconfig.pitch_cur_ab += 1
+        //print(prev_event.atbats)
+        //print(atbat_before_last.atbats)
+        
+        if end_ab_rd.contains(prev_event.result_detail) && (prev_event.balls != 0 || prev_event.strikes != 0){
+            while atbat_before_last.atbats == events[bl_ab_index].atbats {
+                //print(atbat_before_last.atbats, events[bl_ab_index].atbats)
+                let prev_evnt = events[bl_ab_index]
+                if prev_evnt.pitch_type != "NP" {
+                    ptconfig.pitch_x_loc.insert(prev_evnt.pitch_x_location, at: 0)
+                    ptconfig.pitch_y_loc.insert(prev_evnt.pitch_y_location, at: 0)
+                    
+                    if prev_evnt.pitch_type == "P1"{
+                        ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[0], at: 0)
                     }
-
-                    abindex = abindex - 1
+                    else if prev_evnt.pitch_type == "P2"{
+                        ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[1], at: 0)
+                    }
+                    else if prev_evnt.pitch_type == "P3"{
+                        ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[2], at: 0)
+                    }
+                    else if prev_evnt.pitch_type == "P4"{
+                        ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[3], at: 0)
+                    }
+                    
+                    ptconfig.pitch_cur_ab += 1
+                }
+                
+                if bl_ab_index > 0 {
+                    bl_ab_index -= 1
+                }
+                else{
+                    break
                 }
             }
             
             PitchOverlayPrevPitches()
             
         }
+        else if (prev_event.balls == 0 && prev_event.strikes == 0) {
+            
+        }
     }
-    
+        
+        
     func add_prev_event_string() {
         if event.recordEvent{
             let new_event = Event(pitcher_id: current_pitcher.idcode, pitch_result: event.pitch_result, pitch_type: event.pitch_type, result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, atbats: event.atbats, pitch_x_location: event.x_cor, pitch_y_location: event.y_cor)
