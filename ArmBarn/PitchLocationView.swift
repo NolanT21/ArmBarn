@@ -76,7 +76,7 @@ struct PitchLocationView: View {
                             NavigationLink(destination: PitchResultView()
                                                             .navigationBarBackButtonHidden(true)
                                                             .preferredColorScheme(.dark)
-                                                            .onAppear {
+                                                            .task {
                                 ptconfig.pitch_x_loc.append(location.x)
                                 event.x_cor = Double(location.x)
                                 ptconfig.pitch_y_loc.append(location.y)
@@ -214,7 +214,7 @@ struct PitchLocationView: View {
                                 )
                                 .frame(width: 180, height: 30)
                             
-                            let pitcher_lname = String(current_pitcher.lastName.prefix(10))
+                            let pitcher_lname = String(current_pitcher.lastName.prefix(11))
 
                             Button(action: {
                                 showPitcherSelect = true
@@ -345,7 +345,7 @@ struct PitchLocationView: View {
             
             game_report.pl_outline = .clear
             
-            if evnt.pitch_result != "A" && evnt.result_detail != "R" {
+            if evnt.pitch_result != "A" && evnt.result_detail != "R" && evnt.result_detail != "B"{
                 game_report.strikes += 1
                 game_report.pl_color = Color("Gold")
                 if evnt.balls == 0 && evnt.strikes == 0 {
@@ -380,13 +380,13 @@ struct PitchLocationView: View {
                     game_report.game_score += 2
                     game_report.pl_color = Color("Grey")
                 }
-                else if evnt.result_detail == "K" || evnt.result_detail == "C" {
+                else if evnt.result_detail == "K" || evnt.result_detail == "C" || evnt.result_detail == "M"{
                     game_report.pl_outline = .white
                     game_report.strikeouts += 1
                     game_report.game_score += 3
                 }
             }
-            else if  evnt.pitch_result == "A"{
+            else if evnt.pitch_result == "A" || evnt.result_detail == "B"{
                 game_report.balls += 1
                 game_report.pl_color = Color("PowderBlue")
                 if evnt.balls == 0 && evnt.strikes == 0 {
@@ -407,11 +407,6 @@ struct PitchLocationView: View {
             game_report.pl_outline_list.append(game_report.pl_outline)
             
         }
-        
-//        print(game_report.pl_color_list)
-//        print(game_report.pl_outline_list)
-//        print(game_report.outs_hitlog)
-//        print(game_report.inn_hitlog, game_report.inn_hitlog.count)
         
         game_report.fpb_to_fps.append(game_report.first_pitch_ball)
         game_report.fpb_to_fps.append(game_report.first_pitch_strike)
