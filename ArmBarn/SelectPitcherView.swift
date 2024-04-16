@@ -97,10 +97,10 @@ struct SelectPitcherView: View {
                                     .frame(width: sbl_width, height: sbl_height)
                                     .foregroundColor(text_color)
                                     .bold()
-                                Text("Back")
+                                //Text("Back")
                                     //.font(.system(size: font_size))
                                     //.fontWeight(.heavy)
-                                    .foregroundColor(text_color)
+                                    //.foregroundColor(text_color)
                             })
                         }
                         
