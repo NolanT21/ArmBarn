@@ -13,13 +13,6 @@ struct OutDetailView: View {
     @Environment(Scoreboard.self) var scoreboard
     @Environment(Event_String.self) var event
     @Environment(PitchTypeConfig.self) var ptconfig
-    @Environment(currentPitcher.self) var current_pitcher
-    @Query(sort: \Pitcher.lastName) var pitchers: [Pitcher]
-    
-    @State var sbl_width: Double = 17.0
-    @State var sbl_height: Double = 13.0
-    
-    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         NavigationStack{
@@ -165,87 +158,6 @@ struct OutDetailView: View {
             }
             .background(.black)
             .ignoresSafeArea()
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(Color("ScoreboardGreen"))
-            .toolbar {
-                ToolbarItemGroup(placement: .topBarLeading) {
-                    
-                    
-                    HStack{
-                        
-                        Button(action: {
-                            ptconfig.pitch_x_loc.removeLast()
-                            ptconfig.pitch_y_loc.removeLast()
-                            ptconfig.ab_pitch_color.removeLast()
-                            ptconfig.pitch_cur_ab -= 1
-                            dismiss()
-                            print("dismiss")
-                        }) {
-                            Image(systemName: "chevron.left")
-                                .imageScale(.medium)
-                                .frame(width: sbl_width, height: sbl_height)
-                                .foregroundColor(.white)
-                                .bold()
-                            Text("BACK")
-                                .font(.system(size: 17))
-                                .fontWeight(.heavy)
-                                .foregroundColor(.white)
-                                //.font(weight: .semibold)
-                        }
-                            //.font(weight: .semibold)
-                        
-                    }
-                }
-                
-                ToolbarItemGroup(placement: .principal) {
-                    HStack(alignment: .center){
-                        Text("P")
-                            .font(.system(size: 20))
-                            .fontWeight(.bold)
-                            .foregroundColor(Color.white)
-                        ZStack(alignment: .leading){
-                            //Rectangle()
-                            RoundedRectangle(cornerRadius: 4)
-                                .foregroundStyle(
-                                    Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
-                                )
-                                .frame(width: 180, height: 30)
-                            
-                            let pitcher_lname = String(current_pitcher.lastName.prefix(10))
-
-                            Text(pitcher_lname)
-                                .textCase(.uppercase)
-                                .font(.system(size: 20))
-                                .fontWeight(.black)
-                                .foregroundColor(.white)
-                                .padding(.leading,  5)
-                                
-                        }
-                    }
-                }
-                
-//                    ToolbarItemGroup(placement: .topBarTrailing) {
-//                        HStack{
-//                            Image(systemName: "square.and.arrow.up")
-//                                .frame(width: sbl_width, height: sbl_height)
-//                                .foregroundColor(Color.white)
-//
-//                            Spacer()
-//
-//                            Image(systemName: "flag.checkered")
-//                                .frame(width: sbl_width, height: sbl_height)
-//                                .foregroundColor(Color.white)
-//
-//                            Spacer()
-//
-//                            Image(systemName: "gearshape.fill")
-//                                .frame(width: sbl_width, height: sbl_height)
-//                                .foregroundColor(Color.white)
-//
-//                        }
-//                    }
-            
-            }
                 
                 
             }
