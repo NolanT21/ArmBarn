@@ -177,9 +177,11 @@ struct PitchResultView: View {
                                             .fontWeight(.black)
                                             .padding(.horizontal, 5.0)
                                             .padding(.vertical, 15.0)
+                                        
                                     }
-                                    .padding(.horizontal, 10.0)
-                                    .padding(.vertical, 15.0)
+                                    .foregroundColor(Color.white)
+                                    .background(Color("ScoreboardGreen"))
+                                    .cornerRadius(8.0)
                                     
                                 }
                                 .background(Color("ScoreboardGreen"))
