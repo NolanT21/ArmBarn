@@ -19,9 +19,9 @@ struct PopupAlertView: View {
     
     let title: String
     let message: String
-    let leftButtonText: String
+    let leftButtonText: String = "YES"
     let leftButtonAction: () -> ()
-    let rightButtonText: String
+    let rightButtonText: String = "NO"
     let rightButtonAction: () -> ()
     
     var body: some View {
@@ -36,16 +36,13 @@ struct PopupAlertView: View {
                     .foregroundStyle(font_color)
                     .padding()
                 
-                Text(message)
-                    .foregroundStyle(font_color)
-                
                 HStack{
                     
                     //Spacer()
                     
                     Button {
-                        leftButtonAction()
                         close()
+                        leftButtonAction()
                     } label: {
                         ZStack{
                             RoundedRectangle(cornerRadius: crnr_radius)
@@ -63,8 +60,10 @@ struct PopupAlertView: View {
                     Spacer()
                     
                     Button {
-                        rightButtonAction()
                         close()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12){
+                            rightButtonAction()
+                        }
                     } label: {
                         ZStack{
                             RoundedRectangle(cornerRadius: crnr_radius)
@@ -98,6 +97,7 @@ struct PopupAlertView: View {
                 }
             }
         }
+        .ignoresSafeArea()
     }
     
     func close() {
@@ -109,5 +109,5 @@ struct PopupAlertView: View {
 }
 
 #Preview {
-    PopupAlertView(isActive: .constant(true), title: "Title", message: "Message", leftButtonText: "YES", leftButtonAction: {}, rightButtonText: "NO", rightButtonAction: {})
+    PopupAlertView(isActive: .constant(true), title: "Title", message: "Message", leftButtonAction: {}, rightButtonAction: {})
 }
