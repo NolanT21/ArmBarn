@@ -633,6 +633,12 @@ struct GameReportView: View {
     
     func new_game_func() {
         
+        do {
+            try context.delete(model: Event.self)
+        } catch {
+            print("Failed to delete all events.")
+        }
+        
         scoreboard.balls = 0
         scoreboard.strikes = 0
         scoreboard.outs = 0
@@ -645,8 +651,6 @@ struct GameReportView: View {
         ptconfig.pitch_y_loc.removeAll()
         ptconfig.ab_pitch_color.removeAll()
         ptconfig.pitch_cur_ab = 0
-
-        clear_game_report()
         
         scoreboard.b1light = false
         scoreboard.b2light = false
@@ -658,9 +662,6 @@ struct GameReportView: View {
         scoreboard.o1light = false
         scoreboard.o2light = false
         
-    }
-    
-    func clear_game_report() {
         game_report.batters_faced = 0
         game_report.strikes = 0
         game_report.balls = 0
@@ -688,6 +689,7 @@ struct GameReportView: View {
         game_report.y_coordinate_list = []
         game_report.pl_color_list = []
         game_report.pl_outline_list = []
+        
     }
     
 }
