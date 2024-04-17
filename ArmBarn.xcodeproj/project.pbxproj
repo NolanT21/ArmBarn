@@ -14,6 +14,7 @@
 		D554293C2B5580CC00BD5E92 /* MainContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D554293B2B5580CC00BD5E92 /* MainContainerView.swift */; };
 		D56AF5FE2B606DC000610214 /* SelectPitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56AF5FD2B606DC000610214 /* SelectPitcherView.swift */; };
 		D59D415C2BCDCAA200A944BF /* PopupAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59D415B2BCDCAA200A944BF /* PopupAlertView.swift */; };
+		D59D415E2BCF45E500A944BF /* StrikeoutAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59D415D2BCF45E500A944BF /* StrikeoutAlertView.swift */; };
 		D5A335872AFB0DD0005480DE /* PitchResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A335862AFB0DD0005480DE /* PitchResultView.swift */; };
 		D5AA934C2B70658600B5BA80 /* GameReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AA934B2B70658600B5BA80 /* GameReportView.swift */; };
 		D5DD111F2AF52FE70064F1A5 /* ArmBarnApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */; };
@@ -36,6 +37,7 @@
 		D554293B2B5580CC00BD5E92 /* MainContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainContainerView.swift; sourceTree = "<group>"; };
 		D56AF5FD2B606DC000610214 /* SelectPitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPitcherView.swift; sourceTree = "<group>"; };
 		D59D415B2BCDCAA200A944BF /* PopupAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupAlertView.swift; sourceTree = "<group>"; };
+		D59D415D2BCF45E500A944BF /* StrikeoutAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrikeoutAlertView.swift; sourceTree = "<group>"; };
 		D5A335862AFB0DD0005480DE /* PitchResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchResultView.swift; sourceTree = "<group>"; };
 		D5AA934B2B70658600B5BA80 /* GameReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameReportView.swift; sourceTree = "<group>"; };
 		D5DD111B2AF52FE60064F1A5 /* ArmBarn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArmBarn.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -64,6 +66,7 @@
 		D5DD11122AF52FE60064F1A5 = {
 			isa = PBXGroup;
 			children = (
+				D59D415D2BCF45E500A944BF /* StrikeoutAlertView.swift */,
 				D59D415B2BCDCAA200A944BF /* PopupAlertView.swift */,
 				D54B8B4E2B7C622F00F2F65B /* report_variables.swift */,
 				D5DD111D2AF52FE70064F1A5 /* ArmBarn */,
@@ -181,6 +184,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D59D415E2BCF45E500A944BF /* StrikeoutAlertView.swift in Sources */,
 				D5E5B3A62B4B0AF300BF14B6 /* TestView.swift in Sources */,
 				D5A335872AFB0DD0005480DE /* PitchResultView.swift in Sources */,
 				D5FAD81A2B28BADC00E9EB91 /* AddPitcherView.swift in Sources */,
