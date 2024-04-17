@@ -22,12 +22,13 @@ struct PitchResultView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) var dismiss
     
-    @State private var showOutRecordedLook: Bool = false
-    @State private var showOutRecordedSwing: Bool = false
+    @State private var showOutRecorded: Bool = false
     
     @State private var showPitchResult = true
     @State private var showHitResult = false
     @State private var showOutResult = false
+    
+    @State private var result_detail: String = ""
     
     @State var sbl_width: Double = 17.0
     @State var sbl_height: Double = 13.0
@@ -132,10 +133,12 @@ struct PitchResultView: View {
                             }
                             else {
                                 Button(action: {
-//                                    event.pitch_result = "L"
-//                                    event.result_detail = "N"
+                                    event.pitch_result = "L"
+                                    result_detail = "M"
+                                    
                                     if scoreboard.strikes == 2 {
-                                        showOutRecordedLook = true
+                                        showOutRecorded = true
+
                                     }
                                     else {
                                         add_Strike()
@@ -157,62 +160,31 @@ struct PitchResultView: View {
                                 .background(Color("ScoreboardGreen"))
                                 .foregroundColor(Color.white)
                                 .cornerRadius(8.0)
-//                                .alert ("Out Recorded?", isPresented: $showOutRecordedLook) {
-//                                    NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-//                                            event.pitch_result = "L"
-//                                            event.result_detail = "M"
-//                                            add_Strike()
-//                                        }){
-//                                            Text("Yes")
-//                                        }
-//                                    NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-//                                            event.pitch_result = "L"
-//                                            event.result_detail = "C"
-//                                            reset_Count()
-//                                        }){
-//                                            Text("No")
-//                                        }
-//                                }
 
-                                
                                 Button(action: {
                                     event.pitch_result = "Z"
-                                    event.result_detail = "N"
+                                    result_detail = "K"
                                     if scoreboard.strikes == 2 {
-                                        showOutRecordedSwing = true
+                                        showOutRecorded = true
                                     }
                                     else {
                                         add_Strike()
                                     }
                                 }) {
-                                    Text("K - SWINGING")
-                                        .font(.system(size: 22))
-                                        .fontWeight(.black)
-                                        .padding(.horizontal, 5.0)
-                                        .padding(.vertical, 15.0)
-                                }
-                                .alert ("Out Recorded?", isPresented: $showOutRecordedSwing) {
-                                    NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                                            event.pitch_result = "Z"
-                                            event.result_detail = "K"
-                                            add_Strike()
-                                        }){
-                                            Text("Yes")
-                                        }
-                                    NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                                            event.pitch_result = "Z"
-                                            event.result_detail = "C"
-                                            add_Strike()
-                                        }){
-                                            Text("No")
-                                        }
+                                    HStack{
+                                        Text("K - SWINGING")
+                                            .font(.system(size: 22))
+                                            .fontWeight(.black)
+                                            .padding(.horizontal, 5.0)
+                                            .padding(.vertical, 15.0)
+                                    }
+                                    .padding(.horizontal, 10.0)
+                                    .padding(.vertical, 15.0)
+                                    
                                 }
                                 .background(Color("ScoreboardGreen"))
                                 .foregroundColor(Color.white)
                                 .cornerRadius(8.0)
-                                .cornerRadius(8.0)
-                                
-                                
                             }
                             
                             NavigationLink {
@@ -298,29 +270,10 @@ struct PitchResultView: View {
                         .transition(.opacity)
                 }
                 
-                if showOutRecordedLook {
-                    PopupAlertView(isActive: $showOutRecordedLook, title: "Out Recorded?", message: "", leftButtonText: "YES",
-                        leftButtonAction: {
-                            print("1")
-                            event.pitch_result = "L"
-                            event.result_detail = "M"
-                            print(event.result_detail)
-                            add_Strike()
-                            dismiss()
-                        },
-                                   
-                        rightButtonText: "NO",
-                                   
-                        rightButtonAction: {
-                            event.pitch_result = "L"
-                            event.result_detail = "C"
-                            reset_Count()
-                            dismiss()
-                        }
-                    )
+                if showOutRecorded == true{
+                    StrikeoutAlertView(isActive: $showOutRecorded, result_detail: result_detail)
                 }
-                
-                
+
             }
             .background(.black)
             .ignoresSafeArea()

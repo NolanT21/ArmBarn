@@ -46,103 +46,85 @@ struct GameReportView: View {
     
     var body: some View {
         
-        GeometryReader { proxy in
+        ZStack{
             
-            let viewsize = proxy.size
-            
-            VStack{
-                HStack{
-                    
-                    Button(action: {
-                        dismiss()
-                    }, label: {
-                        Image(systemName: "chevron.left")
-                            .imageScale(.medium)
-                            .frame(width: sbl_width, height: sbl_height)
-                            .foregroundColor(text_color)
-                            .bold()
-                        Text("BACK")
-                            .font(.system(size: font_size))
-                            .fontWeight(.heavy)
-                            .foregroundColor(text_color)
-                    })
-                    
-                    Spacer()
-                    
-                    HStack(alignment: .center){
+            GeometryReader { proxy in
+                
+                let viewsize = proxy.size
+                
+                VStack{
+                    HStack{
                         
                         Button(action: {
-                            showEndGame = true
-                        }) {
-                            Image(systemName: "flag.checkered")
-                                .imageScale(.large)
+                            dismiss()
+                        }, label: {
+                            Image(systemName: "chevron.left")
+                                .imageScale(.medium)
                                 .frame(width: sbl_width, height: sbl_height)
-                                .foregroundColor(Color.white)
-                        }
-                        .alert (isPresented: $showEndGame) {
-                            Alert(
-                                title: Text("End Game?"),
-                                message: Text("This game will not be saved!"),
-                                primaryButton: .default(
-                                    Text("Yes"),
-                                    action: {
-                                        dismiss()
-
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
-                                            do {
-                                                try context.delete(model: Event.self)
-                                            } catch {
-                                                print("Failed to delete all events.")
-                                            }
-                                            new_game_func()
-                                        }
-                                    }
-                                ),
-                                secondaryButton: .destructive(
-                                    Text("No")
-                                    //action: deleteWorkoutData
-                                )
-                            )
-                        }
+                                .foregroundColor(text_color)
+                                .bold()
+                            Text("BACK")
+                                .font(.system(size: font_size))
+                                .fontWeight(.heavy)
+                                .foregroundColor(text_color)
+                        })
                         
-                        //Spacer()
+                        Spacer()
                         
-                        Button(action: {
-                            showGameReceipt = true
-                        }) {
-                            Image(systemName: "tray.full.fill")
-                                .imageScale(.large)
-                                .frame(width: sbl_width, height: sbl_height)
-                                .foregroundColor(Color.white)
-                        }
-                        .padding(.leading, view_padding/2)
-                        .popover(isPresented: $showGameReceipt) {
-                            EndGameView()
-                        }
-                        
-                        //Spacer()
-                        
-                        ShareLink("", item: render(viewSize: viewsize))
-                            .imageScale(.large)
-                            .foregroundStyle(text_color)
-                            .fontWeight(.bold)
+                        HStack(alignment: .center){
+                            
+                            Button(action: {
+                                showEndGame = true
+                            }) {
+                                Image(systemName: "flag.checkered")
+                                    .imageScale(.large)
+                                    .frame(width: sbl_width, height: sbl_height)
+                                    .foregroundColor(Color.white)
+                            }
+                            
+                            //Spacer()
+                            
+                            Button(action: {
+                                showGameReceipt = true
+                            }) {
+                                Image(systemName: "tray.full.fill")
+                                    .imageScale(.large)
+                                    .frame(width: sbl_width, height: sbl_height)
+                                    .foregroundColor(Color.white)
+                            }
                             .padding(.leading, view_padding/2)
+                            .popover(isPresented: $showGameReceipt) {
+                                EndGameView()
+                            }
+                            
+                            //Spacer()
+                            
+                            ShareLink("", item: render(viewSize: viewsize))
+                                .imageScale(.large)
+                                .foregroundStyle(text_color)
+                                .fontWeight(.bold)
+                                .padding(.leading, view_padding/2)
+                        }
+                        
                     }
+                    .padding(.top, view_padding)
+                    .padding(.horizontal, view_padding)
+                    
+                    ScrollView{
+                        reportView
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    }
+                    //.background(background)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     
                 }
-                .padding(.top, view_padding)
-                .padding(.horizontal, view_padding)
-                
-                ScrollView{
-                    reportView
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }
-                //.background(background)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                
+                //.background(Color("ScoreboardGreen"))
+                .background(LinearGradient(gradient: header_gradient, startPoint: .top, endPoint: .bottom))
             }
-            //.background(Color("ScoreboardGreen"))
-            .background(LinearGradient(gradient: header_gradient, startPoint: .top, endPoint: .bottom))
+            
+            if showEndGame == true{
+                PopupAlertView(isActive: $showEndGame, title: "End Game?", message: "This game and its data will not be saved!", leftButtonAction: {new_game_func(); dismiss()}, rightButtonAction: {showEndGame = false})
+            }
         }
     }
     
