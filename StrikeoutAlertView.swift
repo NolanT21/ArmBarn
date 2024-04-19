@@ -68,39 +68,6 @@ struct StrikeoutAlertView: View {
                                     .padding()
                             }
                         }
-
-//                    Button {
-//                        //leftButtonAction()
-//                        close()
-//                    } label: {
-//                        ZStack{
-//                            RoundedRectangle(cornerRadius: crnr_radius)
-//                                .foregroundColor(Color("ScoreboardGreen"))
-//                            
-//                            Text(leftButtonText)
-//                                .font(.system(size: 20, weight: .bold))
-//                                .foregroundStyle(font_color)
-//                                .padding()
-//                        }
-//                    }
-//                    
-//                    Spacer()
-//                    Spacer()
-//                    
-//                    Button {
-//                        //rightButtonAction()
-//                        close()
-//                    } label: {
-//                        ZStack{
-//                            RoundedRectangle(cornerRadius: crnr_radius)
-//                                .foregroundColor(Color("ScoreboardGreen"))
-//                            
-//                            Text(rightButtonText)
-//                                .font(.system(size: 20, weight: .bold))
-//                                .foregroundStyle(font_color)
-//                                .padding()
-//                        }
-//                    }
                 }
                 .padding()
             }
@@ -113,7 +80,7 @@ struct StrikeoutAlertView: View {
             .offset(x: 0, y: offset)
             .onAppear{
                 withAnimation(.spring()) {
-                    offset = 0
+                    offset = -120
                 }
             }
         }

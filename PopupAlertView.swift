@@ -36,6 +36,10 @@ struct PopupAlertView: View {
                     .foregroundStyle(font_color)
                     .padding()
                 
+                Text(message)
+                    .font(.system(size: 15))
+                    .foregroundStyle(font_color)
+                
                 HStack{
                     
                     //Spacer()
@@ -93,10 +97,11 @@ struct PopupAlertView: View {
             .offset(x: 0, y: offset)
             .onAppear{
                 withAnimation(.spring()) {
-                    offset = 0
+                    offset = -100
                 }
             }
         }
+        .padding(.top, 50)
         .ignoresSafeArea()
     }
     
