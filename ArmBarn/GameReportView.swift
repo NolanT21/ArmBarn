@@ -123,7 +123,7 @@ struct GameReportView: View {
             }
             
             if showEndGame == true{
-                PopupAlertView(isActive: $showEndGame, title: "End Game?", message: "This game and its data will not be saved!", leftButtonAction: {new_game_func(); dismiss()}, rightButtonAction: {showEndGame = false})
+                PopupAlertView(isActive: $showEndGame, title: "End Game?", message: "This game and its data will not be saved!", leftButtonAction: {new_game_func(); dismiss(); MainContainerView()}, rightButtonAction: {showEndGame = false})
             }
         }
     }
