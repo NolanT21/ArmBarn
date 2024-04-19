@@ -160,6 +160,9 @@ struct HitDetailView: View {
             if event.result_detail != "H" {
                 scoreboard.baserunners += 1
             }
+            else if event.result_detail == "T" {
+                scoreboard.baserunners = 1
+            }
             
             reset_Count()
         }
