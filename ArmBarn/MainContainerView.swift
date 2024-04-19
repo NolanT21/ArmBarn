@@ -14,8 +14,9 @@ struct MainContainerView: View {
     var body: some View {
         VStack{
             NavigationStack{
-                VStack{
+                ZStack{
                     PitchLocationView()
+                    
                 }
             }
         }
