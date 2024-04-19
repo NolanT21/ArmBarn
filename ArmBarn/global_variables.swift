@@ -102,7 +102,7 @@ import Observation
     }
 }
 
-@Model class Pitcher: Identifiable{
+@Model class Pitcher{
     var id = UUID()
     //@Attribute(.unique) var id: UUID
     var firstName: String

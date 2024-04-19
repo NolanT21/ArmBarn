@@ -10,13 +10,9 @@
 		D50E3E902B0926A8006699FB /* global_variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50E3E8F2B0926A8006699FB /* global_variables.swift */; };
 		D50E3E942B0A3D04006699FB /* HitDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50E3E932B0A3D04006699FB /* HitDetailView.swift */; };
 		D50E3E962B0A3DE7006699FB /* OutDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50E3E952B0A3DE7006699FB /* OutDetailView.swift */; };
-		D54B8B4F2B7C622F00F2F65B /* report_variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54B8B4E2B7C622F00F2F65B /* report_variables.swift */; };
 		D554293C2B5580CC00BD5E92 /* MainContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D554293B2B5580CC00BD5E92 /* MainContainerView.swift */; };
 		D56AF5FE2B606DC000610214 /* SelectPitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56AF5FD2B606DC000610214 /* SelectPitcherView.swift */; };
-		D59D415C2BCDCAA200A944BF /* PopupAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59D415B2BCDCAA200A944BF /* PopupAlertView.swift */; };
-		D59D415E2BCF45E500A944BF /* StrikeoutAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59D415D2BCF45E500A944BF /* StrikeoutAlertView.swift */; };
 		D5A335872AFB0DD0005480DE /* PitchResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A335862AFB0DD0005480DE /* PitchResultView.swift */; };
-		D5AA934C2B70658600B5BA80 /* GameReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AA934B2B70658600B5BA80 /* GameReportView.swift */; };
 		D5DD111F2AF52FE70064F1A5 /* ArmBarnApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */; };
 		D5DD11212AF52FE70064F1A5 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DD11202AF52FE70064F1A5 /* MainView.swift */; };
 		D5DD11232AF52FE80064F1A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5DD11222AF52FE80064F1A5 /* Assets.xcassets */; };
@@ -32,14 +28,9 @@
 		D50E3E8F2B0926A8006699FB /* global_variables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = global_variables.swift; sourceTree = "<group>"; };
 		D50E3E932B0A3D04006699FB /* HitDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitDetailView.swift; sourceTree = "<group>"; };
 		D50E3E952B0A3DE7006699FB /* OutDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutDetailView.swift; sourceTree = "<group>"; };
-		D53FBA3E2B9388DA009C9B4E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		D54B8B4E2B7C622F00F2F65B /* report_variables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = report_variables.swift; sourceTree = "<group>"; };
 		D554293B2B5580CC00BD5E92 /* MainContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainContainerView.swift; sourceTree = "<group>"; };
 		D56AF5FD2B606DC000610214 /* SelectPitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPitcherView.swift; sourceTree = "<group>"; };
-		D59D415B2BCDCAA200A944BF /* PopupAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupAlertView.swift; sourceTree = "<group>"; };
-		D59D415D2BCF45E500A944BF /* StrikeoutAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrikeoutAlertView.swift; sourceTree = "<group>"; };
 		D5A335862AFB0DD0005480DE /* PitchResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchResultView.swift; sourceTree = "<group>"; };
-		D5AA934B2B70658600B5BA80 /* GameReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameReportView.swift; sourceTree = "<group>"; };
 		D5DD111B2AF52FE60064F1A5 /* ArmBarn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArmBarn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArmBarnApp.swift; sourceTree = "<group>"; };
 		D5DD11202AF52FE70064F1A5 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -66,9 +57,9 @@
 		D5DD11122AF52FE60064F1A5 = {
 			isa = PBXGroup;
 			children = (
-				D59D415D2BCF45E500A944BF /* StrikeoutAlertView.swift */,
-				D59D415B2BCDCAA200A944BF /* PopupAlertView.swift */,
-				D54B8B4E2B7C622F00F2F65B /* report_variables.swift */,
+				D56AF5FD2B606DC000610214 /* SelectPitcherView.swift */,
+				D554293B2B5580CC00BD5E92 /* MainContainerView.swift */,
+				D5E5B3A52B4B0AF300BF14B6 /* TestView.swift */,
 				D5DD111D2AF52FE70064F1A5 /* ArmBarn */,
 				D5DD111C2AF52FE60064F1A5 /* Products */,
 			);
@@ -85,21 +76,16 @@
 		D5DD111D2AF52FE70064F1A5 /* ArmBarn */ = {
 			isa = PBXGroup;
 			children = (
-				D53FBA3E2B9388DA009C9B4E /* Info.plist */,
 				D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */,
 				D50E3E8F2B0926A8006699FB /* global_variables.swift */,
-				D5DD11202AF52FE70064F1A5 /* MainView.swift */,
-				D554293B2B5580CC00BD5E92 /* MainContainerView.swift */,
 				D5E103C02B3D122100752E7F /* ScoreboardView.swift */,
+				D5DD11202AF52FE70064F1A5 /* MainView.swift */,
 				D5E103BE2B2F6D4A00752E7F /* PitchLocationView.swift */,
+				D5F758F52B5CC83100632005 /* EndGameView.swift */,
 				D5A335862AFB0DD0005480DE /* PitchResultView.swift */,
 				D50E3E952B0A3DE7006699FB /* OutDetailView.swift */,
 				D50E3E932B0A3D04006699FB /* HitDetailView.swift */,
-				D5F758F52B5CC83100632005 /* EndGameView.swift */,
-				D5AA934B2B70658600B5BA80 /* GameReportView.swift */,
-				D56AF5FD2B606DC000610214 /* SelectPitcherView.swift */,
 				D5FAD8192B28BADC00E9EB91 /* AddPitcherView.swift */,
-				D5E5B3A52B4B0AF300BF14B6 /* TestView.swift */,
 				D5DD11222AF52FE80064F1A5 /* Assets.xcassets */,
 				D5DD11242AF52FE80064F1A5 /* Preview Content */,
 			);
@@ -184,21 +170,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D59D415E2BCF45E500A944BF /* StrikeoutAlertView.swift in Sources */,
 				D5E5B3A62B4B0AF300BF14B6 /* TestView.swift in Sources */,
 				D5A335872AFB0DD0005480DE /* PitchResultView.swift in Sources */,
 				D5FAD81A2B28BADC00E9EB91 /* AddPitcherView.swift in Sources */,
 				D5DD11212AF52FE70064F1A5 /* MainView.swift in Sources */,
 				D5F758F62B5CC83100632005 /* EndGameView.swift in Sources */,
 				D5E103BF2B2F6D4A00752E7F /* PitchLocationView.swift in Sources */,
-				D59D415C2BCDCAA200A944BF /* PopupAlertView.swift in Sources */,
 				D5DD111F2AF52FE70064F1A5 /* ArmBarnApp.swift in Sources */,
 				D50E3E902B0926A8006699FB /* global_variables.swift in Sources */,
 				D50E3E942B0A3D04006699FB /* HitDetailView.swift in Sources */,
 				D56AF5FE2B606DC000610214 /* SelectPitcherView.swift in Sources */,
-				D5AA934C2B70658600B5BA80 /* GameReportView.swift in Sources */,
 				D5E103C12B3D122100752E7F /* ScoreboardView.swift in Sources */,
-				D54B8B4F2B7C622F00F2F65B /* report_variables.swift in Sources */,
 				D554293C2B5580CC00BD5E92 /* MainContainerView.swift in Sources */,
 				D50E3E962B0A3DE7006699FB /* OutDetailView.swift in Sources */,
 			);
@@ -334,18 +316,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ArmBarn/Preview Content\"";
-				DEVELOPMENT_TEAM = W28AWUPDAN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ArmBarn/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Needed to save GameReport as an Image";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = "";
-				INFOPLIST_KEY_UIRequiresFullScreen = YES;
-				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -369,18 +344,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"ArmBarn/Preview Content\"";
-				DEVELOPMENT_TEAM = W28AWUPDAN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ArmBarn/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Needed to save GameReport as an Image";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = "";
-				INFOPLIST_KEY_UIRequiresFullScreen = YES;
-				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
