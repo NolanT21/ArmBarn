@@ -596,9 +596,6 @@ struct PitchLocationView: View {
             PitchOverlayPrevPitches()
             
         }
-        else if (prev_event.balls == 0 && prev_event.strikes == 0) {
-            
-        }
     }
         
         
