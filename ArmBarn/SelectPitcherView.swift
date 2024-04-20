@@ -17,6 +17,8 @@ struct SelectPitcherView: View {
     
     @Query(sort: \Pitcher.lastName) var pitchers: [Pitcher]
     
+    @State private var edit_pitcher: Pitcher?
+    
     @State private var searchText = ""
     
     @State private var showAddPitcher = false
@@ -74,15 +76,17 @@ struct SelectPitcherView: View {
                             .swipeActions(edge: .leading) {
                                 Button(action: {
                                     showEditPitcher = true
+                                    edit_pitcher = p_er
                                 }, label: {
                                     Text("Edit")
                                 })
                             }
                         }
                         .onDelete(perform: removePitcher)
-        //                .popover(isPresented: $showEditPitcher) {
-        //                    EditPitcherView()
-        //                }
+                        .sheet(item: $edit_pitcher) { edit in
+                            EditPitcherView(edit_pitcher: edit)
+                                .preferredColorScheme(.dark)
+                        }
                     }
                     .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search by Last Name")
                     .toolbar{
@@ -140,11 +144,17 @@ struct SelectPitcherView: View {
     }
 }
 
+#Preview {
+    SelectPitcherView()
+}
+
+
 struct EditPitcherView: View {
     
+    @Environment(currentPitcher.self) var current_pitcher
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) var dismiss
-    @Binding var current_pitcher: currentPitcher
+    @Bindable var edit_pitcher: Pitcher
     
     let pitch_types = ["None", "Fastball", "Curveball", "Slider", "Change-Up", "Splitter", "Cutter", "Sinker", "Other"]
     
@@ -152,45 +162,40 @@ struct EditPitcherView: View {
         VStack{
             Form{
                 Section(header: Text("Player Name")){
-                    TextField("First Name", text: $current_pitcher.firstName)
-                    TextField("Last Name", text: $current_pitcher.lastName)
+                    TextField("First Name", text: $edit_pitcher.firstName)
+                    TextField("Last Name", text: $edit_pitcher.lastName)
                 }
                 Section(header: Text("Pitch Arsenal")){
-                    Picker("Pitch 1", selection: $current_pitcher.pitch1){
+                    Picker("Pitch 1", selection: $edit_pitcher.pitch1){
                         ForEach(pitch_types, id: \.self){
                             Text($0)
                         }
                     }
-                    Picker("Pitch 2", selection: $current_pitcher.pitch2){
+                    Picker("Pitch 2", selection: $edit_pitcher.pitch2){
                         ForEach(pitch_types, id: \.self){
                             Text($0)
                         }
                     }
-                    Picker("Pitch 3", selection: $current_pitcher.pitch3){
+                    Picker("Pitch 3", selection: $edit_pitcher.pitch3){
                         ForEach(pitch_types, id: \.self){
                             Text($0)
                         }
                     }
-                    Picker("Pitch 4", selection: $current_pitcher.pitch4){
+                    Picker("Pitch 4", selection: $edit_pitcher.pitch4){
                         ForEach(pitch_types, id: \.self){
                             Text($0)
                         }
                     }
                 }
                 Button("Save") {
-                    //let pitcher = Pitcher(firstName: firstName, lastName: lastName, pitch1: pitch1, pitch2: pitch2, pitch3: pitch3, pitch4: pitch4)
-                    //context.insert(pitcher)
                     dismiss()
                 }
             }
-            .foregroundColor(.black)
-            .background(.green)
-            .tint(.gray)
+//            .foregroundColor(.black)
+//            .background(.green)
+//            .tint(.gray)
         }
         //.frame(width: 400, height: 400)
     }
 }
 
-#Preview {
-    SelectPitcherView()
-}
