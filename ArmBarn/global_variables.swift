@@ -104,7 +104,6 @@ import Observation
 
 @Model class Pitcher{
     var id = UUID()
-    //@Attribute(.unique) var id: UUID
     var firstName: String
     var lastName: String
     var pitch1: String

@@ -16,7 +16,6 @@ struct MainContainerView: View {
             NavigationStack{
                 ZStack{
                     PitchLocationView()
-                    
                 }
             }
         }
