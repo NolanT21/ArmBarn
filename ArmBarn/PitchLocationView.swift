@@ -108,21 +108,35 @@ struct PitchLocationView: View {
                         
                     ZStack{
                         if current_pitcher.pitch_num <= 0 {
+                            
+                            Spacer()
+                            
                             VStack{
+                                
                                 Spacer()
                                 
-                                HStack {
-                                    Spacer()
+                                VStack{
+                                    Button{
+                                        showPitcherSelect = true
+                                    } label: {
+                                        Text("Select Pitcher")
+                                            .textCase(.uppercase)
+                                            .fontWeight(.black)
+                                            .font(.system(size: 22))
+                                            .frame(maxWidth: .infinity)
+                                            .padding(.vertical, ver_padding)
+                                    }
+                                    .background(Color("ScoreboardGreen"))
+                                    .foregroundColor(Color.white)
+                                    .cornerRadius(8.0)
                                     
-                                    Text("Select Pitcher")
-                                    
-                                    Spacer()
                                 }
+                                .padding(30)
+                                .background(Color.black.opacity(0.8))
+                                .foregroundColor(.white)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
                                 
-                                Spacer()
                             }
-                            .background(Color.black.opacity(0.8))
-                            .foregroundColor(.white)
                         }
                         else {
                             PitchLocationInput()
@@ -783,6 +797,7 @@ struct PitchLocationInput : View {
                 .padding(.vertical, 25.0)
                 .padding(.horizontal, 20.0)
                 .background(Color.black.opacity(0.8))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
                     
             }
             .transition(.move(edge: .bottom))
