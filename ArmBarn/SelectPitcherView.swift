@@ -23,6 +23,7 @@ struct SelectPitcherView: View {
     
     @State private var showAddPitcher = false
     @State private var showEditPitcher = false
+    @State private var newAtBat = false
     
     @State private var text_color = Color.white
     
@@ -131,10 +132,8 @@ struct SelectPitcherView: View {
                             }
                         }
                     }
-                    //.navigationTitle("Pitchers")
                 }
             }
-    
     }
     
     func removePitcher(at indexSet: IndexSet) {

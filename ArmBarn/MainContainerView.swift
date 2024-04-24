@@ -10,12 +10,21 @@ import SwiftData
 import Observation
 
 struct MainContainerView: View {
+    
+    @Environment(Event_String.self) var event
+    
+    @Query var events: [Event]
+    
+
       
     var body: some View {
         VStack{
             NavigationStack{
                 ZStack{
-                    PitchLocationView()
+                    PitchLocationView().task{
+                        
+                    }
+                    
                 }
             }
         }
@@ -28,5 +37,4 @@ struct MainContainerView: View {
 
 #Preview {
     MainContainerView()
-        .environment(Event_String())
 }

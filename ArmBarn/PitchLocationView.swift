@@ -28,6 +28,7 @@ struct PitchLocationView: View {
     @State private var showGameReport = false
     @State private var showPitcherSelect = false
     @State private var showTestView = false
+    @State private var newAtBat: Bool = false
     
     @State var location: CGPoint = .zero
     @State var cur_pitch_color = Color.clear
@@ -61,6 +62,13 @@ struct PitchLocationView: View {
                             add_prev_event_string()
                             event.recordEvent = true
                             scoreboard.update_scoreboard = true
+                            
+//                            if  event.result_detail == "" {
+//                                newAtBat = true
+//                            }
+                            if event.end_ab_rd.contains(event.result_detail) {
+                                newAtBat = true
+                            }
                         }
                         
                         Image("PLI_Background")
@@ -118,6 +126,7 @@ struct PitchLocationView: View {
                                 VStack{
                                     Button{
                                         showPitcherSelect = true
+                                        newAtBat = true
                                     } label: {
                                         Text("Select Pitcher")
                                             .textCase(.uppercase)
@@ -170,6 +179,10 @@ struct PitchLocationView: View {
                         }
 
                     }
+                    
+                    if newAtBat == true {
+                        BatterPositionView(isActive: $newAtBat, close_action: {newAtBat = false})
+                    }
 
                 }
                 .ignoresSafeArea()
@@ -192,12 +205,14 @@ struct PitchLocationView: View {
                                 if scoreboard.pitches > 0 {
                                     scoreboard.pitches -= 1
                                 }
+                                newAtBat = true
                                 new_game_func()
                             }
                             context.delete(events[events.count - 1])
                         }
                         ptconfig.hidePitchOverlay = false
                         ptconfig.ptcolor = .clear
+                        
                     }) {
                         Image(systemName: "arrow.counterclockwise")
                             .imageScale(.medium)
@@ -232,6 +247,9 @@ struct PitchLocationView: View {
 
                             Button(action: {
                                 showPitcherSelect = true
+                                if current_pitcher.lastName == "Change Me" {
+                                    newAtBat = true
+                                }
                             }) {
                                 Text(pitcher_lname)
                                     .textCase(.uppercase)
@@ -524,6 +542,10 @@ struct PitchLocationView: View {
             ptconfig.pitch_cur_ab -= 1
         }
         
+        if event.end_ab_rd.contains(previous_event.result_detail){
+            newAtBat = false
+        }
+        
         scoreboard.b1light = false
         scoreboard.b2light = false
         scoreboard.b3light = false
@@ -567,7 +589,6 @@ struct PitchLocationView: View {
     }
     
     func load_previous_ab_pitches() {
-        let end_ab_rd = ["S", "D", "T", "H", "E", "B", "F", "G", "L", "P", "Y", "W", "K", "C"]
         let prev_event = events[events.count - 1] //Previous event (t)
         var bl_ab_index = events.count - 2
         let atbat_before_last = events[bl_ab_index] //Before Last event (t - 1)
@@ -575,7 +596,7 @@ struct PitchLocationView: View {
         //print(prev_event.atbats)
         //print(atbat_before_last.atbats)
         
-        if end_ab_rd.contains(prev_event.result_detail) && (prev_event.balls != 0 || prev_event.strikes != 0){
+        if event.end_ab_rd.contains(prev_event.result_detail) && (prev_event.balls != 0 || prev_event.strikes != 0){
             while atbat_before_last.atbats == events[bl_ab_index].atbats {
                 //print(atbat_before_last.atbats, events[bl_ab_index].atbats)
                 let prev_evnt = events[bl_ab_index]
@@ -615,14 +636,14 @@ struct PitchLocationView: View {
         
     func add_prev_event_string() {
         if event.recordEvent{
-            let new_event = Event(pitcher_id: current_pitcher.idcode, pitch_result: event.pitch_result, pitch_type: event.pitch_type, result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, atbats: event.atbats, pitch_x_location: event.x_cor, pitch_y_location: event.y_cor)
+            let new_event = Event(pitcher_id: current_pitcher.idcode, pitch_result: event.pitch_result, pitch_type: event.pitch_type, result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, atbats: event.atbats, pitch_x_location: event.x_cor, pitch_y_location: event.y_cor, batter_stance: event.batter_stance)
             context.insert(new_event)
             print_Event_String()
         }
     }
-    
+
     func print_Event_String() {
-        print(current_pitcher.idcode, event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats, event.x_cor, event.y_cor)
+        print(current_pitcher.idcode, event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats, event.x_cor, event.y_cor, event.batter_stance)
     }
     func record_baserunner_out() {
         event.pitch_result = "O"

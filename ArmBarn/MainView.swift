@@ -189,11 +189,10 @@ struct MainView: View {
     }
     
     func load_recent_ab_pitches() {
-        let end_ab_rd = ["S", "D", "T", "H", "E", "B", "F", "G", "L", "P", "Y", "W", "K", "C", "M"]
         var cur_ab_index = events.count - 1
         let cur_event = events[events.count - 1] //Previous event (t)
         
-        if !end_ab_rd.contains(cur_event.result_detail) {
+        if !event.end_ab_rd.contains(cur_event.result_detail) {
             while cur_event.atbats == events[cur_ab_index].atbats {
                 let prev_evnt = events[cur_ab_index]
                 if prev_evnt.pitch_type != "NP" {
@@ -224,39 +223,6 @@ struct MainView: View {
             }
             PitchOverlayPrevPitches()
         }
-        
-//        if end_ab_rd.contains(recent_event.result_detail) && (recent_event.balls != 0 || recent_event.strikes != 0){
-//            while atbat_before_last.atbats == events[bl_ab_index].atbats {
-//                let recent_evnt = events[bl_ab_index]
-//                if recent_evnt.pitch_type != "NP" {
-//                    ptconfig.pitch_x_loc.insert(recent_evnt.pitch_x_location, at: 0)
-//                    ptconfig.pitch_y_loc.insert(recent_evnt.pitch_y_location, at: 0)
-//                    
-//                    if recent_evnt.pitch_type == "P1"{
-//                        ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[0], at: 0)
-//                    }
-//                    else if recent_evnt.pitch_type == "P2"{
-//                        ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[1], at: 0)
-//                    }
-//                    else if recent_evnt.pitch_type == "P3"{
-//                        ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[2], at: 0)
-//                    }
-//                    else if recent_evnt.pitch_type == "P4"{
-//                        ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[3], at: 0)
-//                    }
-//                    
-//                    ptconfig.pitch_cur_ab += 1
-//                }
-//                
-//                if bl_ab_index > 0 {
-//                    bl_ab_index -= 1
-//                }
-//                else{
-//                    break
-//                }
-//            }
-//            PitchOverlayPrevPitches()
-//        }
     }
     
     func new_game_func() {
