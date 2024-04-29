@@ -37,6 +37,8 @@ struct EndGameView: View {
                         Text("\(evnt.outs)")
                         Text("\(evnt.inning)")
                         Text("\(evnt.atbats)")
+                        Text(evnt.batter_stance)
+                        Text("\(evnt.velocity)")
                         Text("\(evnt.pitch_x_location)")
                         Text("\(evnt.pitch_y_location)")
                     }
