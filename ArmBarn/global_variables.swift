@@ -44,8 +44,10 @@ import Observation
     var x_cor: Double = 0
     var y_cor: Double = 0
     var batter_stance: String = ""
+    var velocity: Double = 0
     
     var end_ab_rd: [String] = ["S", "D", "T", "H", "E", "B", "F", "G", "L", "P", "Y", "W", "K", "C", "M"]
+    var newAtBat: Bool = false
     
     var recordEvent: Bool = false
 }
@@ -88,8 +90,9 @@ import Observation
     var pitch_x_location: Double = 0
     var pitch_y_location: Double = 0
     var batter_stance: String = ""
+    var velocity: Double = 0
     
-    init(pitcher_id: UUID, pitch_result: String, pitch_type: String, result_detail: String, balls: Int, strikes: Int, outs: Int, inning: Int, atbats: Int, pitch_x_location: Double, pitch_y_location: Double, batter_stance: String) {
+    init(pitcher_id: UUID, pitch_result: String, pitch_type: String, result_detail: String, balls: Int, strikes: Int, outs: Int, inning: Int, atbats: Int, pitch_x_location: Double, pitch_y_location: Double, batter_stance: String, velocity: Double) {
         self.pitcher_id = pitcher_id
         self.pitch_result = pitch_result
         self.pitch_type = pitch_type
@@ -102,6 +105,7 @@ import Observation
         self.pitch_x_location = pitch_x_location
         self.pitch_y_location = pitch_y_location
         self.batter_stance = batter_stance
+        self.velocity = velocity
     }
 }
 
