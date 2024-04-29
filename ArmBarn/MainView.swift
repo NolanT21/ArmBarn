@@ -34,24 +34,18 @@ struct MainView: View {
             
             ZStack{
                
-                MainContainerView().task{
-                    if events.count > 0 && (scoreboard.balls == 0 && scoreboard.strikes == 0 && scoreboard.pitches == 0 && scoreboard.atbats == 1) {
-                        showNewGame = true
-                    }
-                }
-                
-                if showNewGame == true {
-                    PopupAlertView(isActive: $showNewGame, title: "Resume Game?", message: "A previous game was being recorded. Do you want to resume?", leftButtonAction: {load_recent_event(); load_recent_ab_pitches(); set_pitcher(); showNewGame = false}, rightButtonAction: {new_game_func(); showNewGame = false})
-                }
+                MainContainerView()
+//                    .task{
+//                    if events.count > 0 && (scoreboard.balls == 0 && scoreboard.strikes == 0 && scoreboard.pitches == 0 && scoreboard.atbats == 1) {
+//                        showNewGame = true
+//                    }
+//                }
+//                
+//                if showNewGame == true {
+//                    PopupAlertView(isActive: $showNewGame, title: "Resume Game?", message: "A previous game was being recorded. Do you want to resume?", leftButtonAction: {load_recent_event(); load_recent_ab_pitches(); set_pitcher(); showNewGame = false}, rightButtonAction: {new_game_func(); showNewGame = false})
+//                }
                 
             }
-            
-//                .task {
-//                do {
-//                    try context.delete(model: Event.self)
-//                } catch {
-//                    print("Failed to delete all events.")
-//                }
             
         }
         .background(Color("ScoreboardGreen"))
@@ -107,6 +101,7 @@ struct MainView: View {
         if end_ab_br.contains(recent_event.result_detail) {
             scoreboard.balls = 0
             scoreboard.strikes = 0
+            //show newAtBat
         }
         else if end_ab_out.contains(recent_event.result_detail) {
             scoreboard.balls = 0
@@ -116,6 +111,7 @@ struct MainView: View {
                 scoreboard.inning += 1
                 scoreboard.outs = 0
             }
+            //show newAtBat
         }
         else if recent_event.pitch_result == "A" {
             scoreboard.balls += 1

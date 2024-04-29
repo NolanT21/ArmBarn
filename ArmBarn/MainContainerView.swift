@@ -21,10 +21,7 @@ struct MainContainerView: View {
         VStack{
             NavigationStack{
                 ZStack{
-                    PitchLocationView().task{
-                        
-                    }
-                    
+                    PitchLocationView()
                 }
             }
         }
