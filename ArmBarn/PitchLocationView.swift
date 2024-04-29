@@ -21,19 +21,23 @@ struct PitchLocationView: View {
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var context
-    
-    @State var ver_padding: Double = 35.0
 
+    @State private var balls: Int = 0
+    @State private var strikes: Int = 0
+    
     @State private var hidePitchOverlay = false
     @State private var showGameReport = false
     @State private var showPitcherSelect = false
     @State private var showTestView = false
-    @State private var newAtBat: Bool = false
+    @State private var newAtBat = false
+    @State private var showEndGame = false
+    @State private var showNewGame = false
     
     @State var location: CGPoint = .zero
     @State var cur_pitch_color = Color.clear
     @State var cur_pitch_outline = Color.clear
     
+    @State var ver_padding: Double = 35.0
     @State var sbl_width: Double = 17.0
     @State var sbl_height: Double = 13.0
     
@@ -63,10 +67,17 @@ struct PitchLocationView: View {
                             event.recordEvent = true
                             scoreboard.update_scoreboard = true
                             
-//                            if  event.result_detail == "" {
-//                                newAtBat = true
-//                            }
+                            balls = scoreboard.balls
+                            strikes = scoreboard.strikes
+                            
+                            if events.count > 0 && (scoreboard.balls == 0 && scoreboard.strikes == 0 && scoreboard.pitches == 0 && scoreboard.atbats == 1) {
+                                showNewGame = true
+                            }
+                            
                             if event.end_ab_rd.contains(event.result_detail) {
+                                newAtBat = true
+                            }
+                            else if balls == 0 && strikes == 0 && scoreboard.pitches > 0{
                                 newAtBat = true
                             }
                         }
@@ -115,39 +126,7 @@ struct PitchLocationView: View {
                         
                         
                     ZStack{
-                        if current_pitcher.pitch_num <= 0 {
-                            
-                            Spacer()
-                            
-                            VStack{
-                                
-                                Spacer()
-                                
-                                VStack{
-                                    Button{
-                                        showPitcherSelect = true
-                                        newAtBat = true
-                                    } label: {
-                                        Text("Select Pitcher")
-                                            .textCase(.uppercase)
-                                            .fontWeight(.black)
-                                            .font(.system(size: 22))
-                                            .frame(maxWidth: .infinity)
-                                            .padding(.vertical, ver_padding)
-                                    }
-                                    .background(Color("ScoreboardGreen"))
-                                    .foregroundColor(Color.white)
-                                    .cornerRadius(8.0)
-                                    
-                                }
-                                .padding(30)
-                                .background(Color.black.opacity(0.8))
-                                .foregroundColor(.white)
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                                
-                            }
-                        }
-                        else {
+                        if  current_pitcher.pitch_num > 0{
                             PitchLocationInput()
                         }
                         
@@ -164,10 +143,10 @@ struct PitchLocationView: View {
                                         record_baserunner_out()
                                     }) {
                                         Text("RUNNER OUT")
-                                            .font(.system(size: 18))
+                                            .font(.system(size: 16))
                                             .fontWeight(.black)
                                             .padding(.vertical, 8.0)
-                                            .padding(.horizontal, 8.0)
+                                            .padding(.horizontal, 5.0)
                                     }
                                     .foregroundColor(Color.white)
                                     .background(Color("ScoreboardGreen"))
@@ -177,13 +156,107 @@ struct PitchLocationView: View {
                                 Spacer()
                             }
                         }
+                        
+                        VStack{
+                            
+                            Button {
+                                newAtBat = true
+                                
+                            } label: {
+                                HStack(alignment: .center){
+                                    
+                                    Spacer()
+                                    
+                                    if event.batter_stance == "R" {
+                                        Image(systemName: "chevron.left")
+                                            .imageScale(.small)
+                                            .foregroundStyle(.white)
+                                            .padding(.trailing, -5)
+                                    }
+                                    else {
+                                        Image(systemName: "chevron.left")
+                                            .imageScale(.small)
+                                            .foregroundStyle(.clear)
+                                            .padding(.trailing, -5)
+                                    }
+          
+                                    Text("Batter Stance")
+                                        .font(.system(size: 16))
+                                        .foregroundStyle(.white)
+                                    
+                                    if event.batter_stance == "L" {
+                                        Image(systemName: "chevron.right")
+                                            .imageScale(.small)
+                                            .foregroundStyle(.white)
+                                            .padding(.leading, -5)
+                                    }
+                                    else {
+                                        Image(systemName: "chevron.right")
+                                            .imageScale(.small)
+                                            .foregroundStyle(.clear)
+                                            .padding(.leading, -5)
+                                    }
 
+                                    Spacer()
+                                    
+                                }
+                                
+                            }
+                            .padding(.top, 58)
+                            
+                            Spacer()
+                        }
+                        
+                        if newAtBat == true {
+                            BatterPositionView(isActive: $newAtBat, close_action: {newAtBat = false})
+                        }
+                        
+                        if current_pitcher.pitch_num <= 0 {
+                            ZStack {
+                                Color(.black)
+                                    .opacity(0.2)
+                                
+                                Spacer()
+                                
+                                VStack{
+                                    
+                                    Spacer()
+                                    
+                                    VStack{
+                                        Button{
+                                            showPitcherSelect = true
+                                            newAtBat = true
+                                        } label: {
+                                            Text("Select Pitcher")
+                                                .textCase(.uppercase)
+                                                .fontWeight(.black)
+                                                .font(.system(size: 22))
+                                                .frame(maxWidth: .infinity)
+                                                .padding(.vertical, ver_padding)
+                                        }
+                                        .background(Color("ScoreboardGreen"))
+                                        .foregroundColor(Color.white)
+                                        .cornerRadius(8.0)
+                                        
+                                    }
+                                    .padding(50)
+                                    .background(Color.black.opacity(0.8))
+                                    .foregroundColor(.white)
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    
+                                }
+                            }
+                        }
+                        
+                        if showEndGame == true{
+                            PopupAlertView(isActive: $showEndGame, title: "End Game?", message: "This game and its data will not be saved!", leftButtonAction: {new_game_func(); newAtBat = true; showEndGame = false}, rightButtonAction: {showEndGame = false})
+                        }
+                        
+                        if showNewGame == true {
+                            PopupAlertView(isActive: $showNewGame, title: "Resume Game?", message: "A previous game was being recorded. Do you want to resume?", leftButtonAction: {load_recent_event(); load_recent_ab_pitches(); set_pitcher(); showNewGame = false}, rightButtonAction: {new_game_func(); showNewGame = false})
+                        }
+                        
                     }
-                    
-                    if newAtBat == true {
-                        BatterPositionView(isActive: $newAtBat, close_action: {newAtBat = false})
-                    }
-
                 }
                 .ignoresSafeArea()
                 .background(backgroundcolor)
@@ -198,6 +271,9 @@ struct PitchLocationView: View {
                     Button(action: {
                         if events.count > 0 {
                             if events.count != 1 {
+//                                if newAtBat == true{
+//                                    newAtBat = false
+//                                }
                                 load_previous_event()
                                 load_previous_ab_pitches()
                             }
@@ -216,7 +292,7 @@ struct PitchLocationView: View {
                     }) {
                         Image(systemName: "arrow.counterclockwise")
                             .imageScale(.medium)
-                            .frame(width: sbl_width, height: sbl_height)
+                            //.frame(width: sbl_width, height: sbl_height)
                             .foregroundColor(.white)
                             .bold()
                         Text("UNDO")
@@ -224,12 +300,13 @@ struct PitchLocationView: View {
                             .fontWeight(.heavy)
                             .foregroundColor(.white)
                             //.font(weight: .semibold)
+                            .padding(.leading, -5)
                     }
+                    .padding(.leading, -5)
                 }
                 
                 ToolbarItemGroup(placement: .principal) {
                     HStack(alignment: .center){
-                        
                         Text("P")
                             .font(.system(size: 20))
                             .fontWeight(.bold)
@@ -241,7 +318,7 @@ struct PitchLocationView: View {
                                 .foregroundStyle(
                                     Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
                                 )
-                                .frame(width: 180, height: 30)
+                                .frame(width: 170, height: 30)
                             
                             let pitcher_lname = String(current_pitcher.lastName.prefix(11))
 
@@ -256,6 +333,7 @@ struct PitchLocationView: View {
                                     .font(.system(size: 20))
                                     .fontWeight(.black)
                                     .foregroundColor(.white)
+                                    .padding(.leading, -3)
                             }
                             .popover(isPresented: $showPitcherSelect) {
                                 SelectPitcherView()
@@ -263,10 +341,14 @@ struct PitchLocationView: View {
                             }
                         }
                     }
+                    .padding(.leading, -10)
                 }
                 
                 ToolbarItemGroup(placement: .topBarTrailing) {
-                    HStack{
+                    HStack(spacing: 5){
+                        
+                        //Spacer()
+                        
                         Button(action: {
                             showGameReport = true
                         }) {
@@ -282,7 +364,18 @@ struct PitchLocationView: View {
                             }
                         }
                         
-                        Spacer()
+                        //Spacer()
+                        
+                        Button(action: {
+                            showEndGame = true
+                        }) {
+                            Image(systemName: "flag.checkered")
+                                .imageScale(.large)
+                                .frame(width: sbl_width, height: sbl_height)
+                                .foregroundColor(Color.white)
+                        }
+                        
+                        //Spacer()
                         
                         Button(action: {
                             showTestView = true
@@ -298,6 +391,7 @@ struct PitchLocationView: View {
                             }
                         }
                     }
+                    .padding(.trailing, -5)
                 }
             }
         }
@@ -384,29 +478,24 @@ struct PitchLocationView: View {
                     game_report.first_pitch_strike += 1
                 }
                 
-                if evnt.pitch_result == "H" {
+                if evnt.pitch_result == "H" && evnt.result_detail != "E"{
                     game_report.hits += 1
                     game_report.pl_color = Color("Tangerine")
-                    
-                    
-                    if evnt.result_detail != "E" {
                         
-                        if evnt.result_detail == "S" {
-                            game_report.game_score -= 2
-                        }
-                        else if evnt.result_detail == "D" {
-                            game_report.game_score -= 3
-                        }
-                        else if evnt.result_detail == "T" {
-                            game_report.game_score -= 4
-                            
-                        }
-                        else if evnt.result_detail == "H" {
-                            game_report.game_score -= 6
-                        }
+                    if evnt.result_detail == "S" {
+                        game_report.game_score -= 2
+                    }
+                    else if evnt.result_detail == "D" {
+                        game_report.game_score -= 3
+                    }
+                    else if evnt.result_detail == "T" {
+                        game_report.game_score -= 4
                         
                     }
-                    
+                    else if evnt.result_detail == "H" {
+                        game_report.game_score -= 6
+                    }
+                        
                 }
                 else if evnt.pitch_result == "O" {
                     game_report.game_score += 2
@@ -468,7 +557,11 @@ struct PitchLocationView: View {
     
     func new_game_func() {
         
-        clear_game_report()
+        do {
+            try context.delete(model: Event.self)
+        } catch {
+            print("Failed to delete all events.")
+        }
         
         scoreboard.balls = 0
         scoreboard.strikes = 0
@@ -477,12 +570,12 @@ struct PitchLocationView: View {
         scoreboard.atbats = 1
         scoreboard.inning = 1
         scoreboard.baserunners = 0
+        event.batter_stance = ""
         
         ptconfig.pitch_x_loc.removeAll()
         ptconfig.pitch_y_loc.removeAll()
         ptconfig.ab_pitch_color.removeAll()
         ptconfig.pitch_cur_ab = 0
-
         
         scoreboard.b1light = false
         scoreboard.b2light = false
@@ -494,9 +587,6 @@ struct PitchLocationView: View {
         scoreboard.o1light = false
         scoreboard.o2light = false
         
-    }
-    
-    func clear_game_report() {
         game_report.batters_faced = 0
         game_report.strikes = 0
         game_report.balls = 0
@@ -524,6 +614,7 @@ struct PitchLocationView: View {
         game_report.y_coordinate_list = []
         game_report.pl_color_list = []
         game_report.pl_outline_list = []
+        
     }
     
     func load_previous_event() {
@@ -542,8 +633,8 @@ struct PitchLocationView: View {
             ptconfig.pitch_cur_ab -= 1
         }
         
-        if event.end_ab_rd.contains(previous_event.result_detail){
-            newAtBat = false
+        if previous_event.balls == 0 && previous_event.strikes == 0 && previous_event.result_detail != "R"{
+            newAtBat = true
         }
         
         scoreboard.b1light = false
@@ -632,18 +723,206 @@ struct PitchLocationView: View {
             
         }
     }
+    
+    func change_cur_ab_stance() {
+        if events.count >= 2 {
+            var cur_event = events[events.count - 1]
+            var prev_ab_index = events.count - 2
+            var prev_event = events[prev_ab_index]
+            while (cur_event.batter_stance != prev_event.batter_stance) && (cur_event.atbats == prev_event.atbats) {
+                events[prev_ab_index].batter_stance = cur_event.batter_stance
+                
+                if prev_ab_index >= 1 {
+                    prev_ab_index -= 1
+                }
+                else {
+                    break
+                }
+            }
+        }
+    }
+    
+    func set_pitcher() {
+        let pitcher_id = events[events.count - 1].pitcher_id
+        for pitcher in pitchers {
+            if pitcher.id == pitcher_id {
+                current_pitcher.pitch_num = 0
+                current_pitcher.firstName = pitcher.firstName
+                current_pitcher.lastName = pitcher.lastName
+                current_pitcher.pitch1 = pitcher.pitch1
+                current_pitcher.idcode = pitcher.id
+                if current_pitcher.pitch1 != "None" {
+                    current_pitcher.pitch_num += 1
+                    current_pitcher.arsenal[0] = pitcher.pitch1
+                }
+                
+                current_pitcher.pitch2 = pitcher.pitch2
+                if current_pitcher.pitch2 != "None" {
+                    current_pitcher.pitch_num += 1
+                    current_pitcher.arsenal[1] = pitcher.pitch2
+                }
+                
+                current_pitcher.pitch3 = pitcher.pitch3
+                if current_pitcher.pitch3 != "None" {
+                    current_pitcher.pitch_num += 1
+                    current_pitcher.arsenal[2] = pitcher.pitch3
+                }
+                
+                current_pitcher.pitch4 = pitcher.pitch4
+                if current_pitcher.pitch4 != "None" {
+                    current_pitcher.pitch_num += 1
+                    current_pitcher.arsenal[3] = pitcher.pitch4
+                }
+                break
+            }
+        }
+    }
+    
+    func load_recent_event() {
+        let recent_event = events[events.count - 1]
+        let end_ab_br = ["S", "D", "T", "H", "E", "B", "C", "W"]
+        let end_ab_out = ["F", "G", "L", "P", "Y", "K", "M", "R"]
         
+        scoreboard.balls = recent_event.balls
+        scoreboard.strikes = recent_event.strikes
+        scoreboard.outs = recent_event.outs
+        scoreboard.atbats = recent_event.atbats
+        scoreboard.inning = recent_event.inning
+        event.batter_stance = recent_event.batter_stance
+        
+        if end_ab_br.contains(recent_event.result_detail) {
+            scoreboard.balls = 0
+            scoreboard.strikes = 0
+            newAtBat = true
+        }
+        else if end_ab_out.contains(recent_event.result_detail) {
+            scoreboard.balls = 0
+            scoreboard.strikes = 0
+            scoreboard.outs += 1
+            if scoreboard.outs >= 3 {
+                scoreboard.inning += 1
+                scoreboard.outs = 0
+            }
+            newAtBat = true
+        }
+        else if recent_event.pitch_result == "A" {
+            scoreboard.balls += 1
+        }
+        else {
+            scoreboard.strikes += 1
+        }
+        
+        if ptconfig.pitch_x_loc.count > 0 && recent_event.result_detail != "R"{
+            ptconfig.pitch_x_loc.removeLast()
+            ptconfig.pitch_y_loc.removeLast()
+            ptconfig.ab_pitch_color.removeLast()
+            ptconfig.pitch_cur_ab -= 1
+        }
+        
+        scoreboard.b1light = false
+        scoreboard.b2light = false
+        scoreboard.b3light = false
+        
+        scoreboard.s1light = false
+        scoreboard.s2light = false
+        
+        scoreboard.o1light = false
+        scoreboard.o2light = false
+        
+        if scoreboard.balls >= 1 {
+            scoreboard.b1light = true
+            if scoreboard.balls >= 2 {
+                scoreboard.b2light = true
+                if scoreboard.balls == 3 {
+                    scoreboard.b3light = true
+                }
+            }
+        }
+        
+        if scoreboard.strikes >= 1 {
+            scoreboard.s1light = true
+            if scoreboard.strikes == 2 {
+                scoreboard.s2light = true
+            }
+        }
+        
+        if scoreboard.outs >= 1 {
+            scoreboard.o1light = true
+            if scoreboard.outs == 2 {
+                scoreboard.o2light = true
+            }
+        }
+
+        for evnt in events{
+            if evnt.result_detail != "R" {
+                scoreboard.pitches += 1
+            }
+            else {
+                if scoreboard.baserunners > 0{
+                    scoreboard.baserunners -= 1
+                }
+            }
+            if end_ab_br.contains(evnt.result_detail) {
+                if scoreboard.baserunners < 3 {
+                    scoreboard.baserunners += 1
+                }
+                if evnt.result_detail == "T" {
+                    scoreboard.baserunners = 1
+                }
+                else if evnt.result_detail == "H" {
+                    scoreboard.baserunners = 0
+                }
+            }
+        }
+    }
+    
+    func load_recent_ab_pitches() {
+        var cur_ab_index = events.count - 1
+        let cur_event = events[events.count - 1] //Previous event (t)
+        
+        if !event.end_ab_rd.contains(cur_event.result_detail) {
+            while cur_event.atbats == events[cur_ab_index].atbats {
+                let prev_evnt = events[cur_ab_index]
+                if prev_evnt.pitch_type != "NP" {
+                    ptconfig.pitch_x_loc.insert(prev_evnt.pitch_x_location, at: 0)
+                    ptconfig.pitch_y_loc.insert(prev_evnt.pitch_y_location, at: 0)
+
+                    if prev_evnt.pitch_type == "P1"{
+                        ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[0], at: 0)
+                    }
+                    else if prev_evnt.pitch_type == "P2"{
+                        ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[1], at: 0)
+                    }
+                    else if prev_evnt.pitch_type == "P3"{
+                        ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[2], at: 0)
+                    }
+                    else if prev_evnt.pitch_type == "P4"{
+                        ptconfig.ab_pitch_color.insert(ptconfig.arsenal_colors[3], at: 0)
+                    }
+
+                    ptconfig.pitch_cur_ab += 1
+                }
+                if cur_ab_index > 0 {
+                    cur_ab_index -= 1
+                }
+                else {
+                    break
+                }
+            }
+            PitchOverlayPrevPitches()
+        }
+    }
         
     func add_prev_event_string() {
         if event.recordEvent{
-            let new_event = Event(pitcher_id: current_pitcher.idcode, pitch_result: event.pitch_result, pitch_type: event.pitch_type, result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, atbats: event.atbats, pitch_x_location: event.x_cor, pitch_y_location: event.y_cor, batter_stance: event.batter_stance)
+            let new_event = Event(pitcher_id: current_pitcher.idcode, pitch_result: event.pitch_result, pitch_type: event.pitch_type, result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, atbats: event.atbats, pitch_x_location: event.x_cor, pitch_y_location: event.y_cor, batter_stance: event.batter_stance, velocity: event.velocity)
             context.insert(new_event)
             print_Event_String()
         }
     }
 
     func print_Event_String() {
-        print(current_pitcher.idcode, event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats, event.x_cor, event.y_cor, event.batter_stance)
+        print(current_pitcher.idcode, event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats, event.batter_stance, event.velocity, event.x_cor, event.y_cor)
     }
     func record_baserunner_out() {
         event.pitch_result = "O"

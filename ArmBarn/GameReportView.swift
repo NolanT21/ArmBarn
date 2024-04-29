@@ -22,7 +22,6 @@ struct GameReportView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var context
     
-    @State private var showEndGame = false
     @State private var showGameReceipt = false
     
     var gradient = Gradient(colors: [Color("PowderBlue"), Color("Gold"), Color("Tangerine")])
@@ -63,24 +62,15 @@ struct GameReportView: View {
                                 .frame(width: sbl_width, height: sbl_height)
                                 .foregroundColor(text_color)
                                 .bold()
-                            Text("BACK")
-                                .font(.system(size: font_size))
-                                .fontWeight(.heavy)
-                                .foregroundColor(text_color)
+//                            Text("BACK")
+//                                .font(.system(size: font_size))
+//                                .fontWeight(.heavy)
+//                                .foregroundColor(text_color)
                         })
                         
                         Spacer()
                         
                         HStack(alignment: .center){
-                            
-                            Button(action: {
-                                showEndGame = true
-                            }) {
-                                Image(systemName: "flag.checkered")
-                                    .imageScale(.large)
-                                    .frame(width: sbl_width, height: sbl_height)
-                                    .foregroundColor(Color.white)
-                            }
                             
                             //Spacer()
                             
@@ -122,9 +112,8 @@ struct GameReportView: View {
                 .background(LinearGradient(gradient: header_gradient, startPoint: .top, endPoint: .bottom))
             }
             
-            if showEndGame == true{
-                PopupAlertView(isActive: $showEndGame, title: "End Game?", message: "This game and its data will not be saved!", leftButtonAction: {new_game_func(); dismiss(); MainContainerView()}, rightButtonAction: {showEndGame = false})
-            }
+            
+
         }
     }
     
@@ -472,123 +461,126 @@ struct GameReportView: View {
                 
                 Spacer()
                 
-                HStack{
-                    VStack{
-                        HStack{
-                            Text("Pitch Usage by Inning")
-                                .font(.subheadline)
-                                .foregroundStyle(text_color)
-                                .padding(.leading, view_padding)
-                                .padding(.top, view_padding)
-                            
-                            Spacer()
-                        }
-                        
+                if game_report.p1_by_inn.count > 1{
+                    HStack{
                         VStack{
-                            Chart{
-                                ForEach(game_report.pitches_by_inn) { pit_dataset in
-                                    ForEach(Array(pit_dataset.dataset.enumerated()), id: \.offset){ index, value in
-                                        LineMark(x: .value("Inning", index + 1),
-                                                 y: .value("# of Pitches", value))
-                                        PointMark(x: .value("Inning", index + 1),
-                                                 y: .value("# of Pitches", value))
+                            HStack{
+                                Text("Pitch Usage by Inning")
+                                    .font(.subheadline)
+                                    .foregroundStyle(text_color)
+                                    .padding(.leading, view_padding)
+                                    .padding(.top, view_padding)
+                                
+                                Spacer()
+                            }
+                            
+                            VStack{
+                                Chart{
+                                    ForEach(game_report.pitches_by_inn) { pit_dataset in
+                                        ForEach(Array(pit_dataset.dataset.enumerated()), id: \.offset){ index, value in
+                                            LineMark(x: .value("Inning", index + 1),
+                                                     y: .value("# of Pitches", value))
+                                            PointMark(x: .value("Inning", index + 1),
+                                                     y: .value("# of Pitches", value))
+                                        }
+                                        .foregroundStyle(by: .value("Pitch Type", pit_dataset.name))
                                     }
-                                    .foregroundStyle(by: .value("Pitch Type", pit_dataset.name))
                                 }
-                            }
-                            .chartForegroundStyleScale([
-//                                ForEach(Array(current_pitcher.arsenal.enumerated()), id: \.offset) { index in
-//                                    if current_pitcher.arsenal[index] != "None" {
-//                                        current_pitcher.arsenal[index]: colorset[index]
-//                                    }
-//                                }
-                                current_pitcher.pitch1: Color("PowderBlue"), current_pitcher.pitch2: Color("Gold"), current_pitcher.pitch3: Color("Tangerine"), current_pitcher.pitch4: Color("Grey")
-                            ])
-                           .frame(height: 200)
-                           .padding(.horizontal, view_padding)
-                           .padding(.top, view_padding)
-                           .chartLegend(.hidden)
-                           //.chartLegend(position: .bottom, alignment: .center, spacing: 10)
-                           .chartXScale(domain: [0, game_report.p1_by_inn.count + 1])
-                            .chartXAxis {
-                                AxisMarks(values: .automatic(desiredCount: game_report.p1_by_inn.count + 1)){
-                                    
-                                    AxisValueLabel()
-                                        .foregroundStyle(legend_color)
-                                    
-                                    AxisGridLine()
-                                        .foregroundStyle(legend_color)
+                                .chartForegroundStyleScale([
+    //                                ForEach(Array(current_pitcher.arsenal.enumerated()), id: \.offset) { index in
+    //                                    if current_pitcher.arsenal[index] != "None" {
+    //                                        current_pitcher.arsenal[index]: colorset[index]
+    //                                    }
+    //                                }
+                                    current_pitcher.pitch1: Color("PowderBlue"), current_pitcher.pitch2: Color("Gold"), current_pitcher.pitch3: Color("Tangerine"), current_pitcher.pitch4: Color("Grey")
+                                ])
+                               .frame(height: 200)
+                               .padding(.horizontal, view_padding)
+                               .padding(.top, view_padding)
+                               .chartLegend(.hidden)
+                               //.chartLegend(position: .bottom, alignment: .center, spacing: 10)
+                               .chartXScale(domain: [0, game_report.p1_by_inn.count + 1])
+                                .chartXAxis {
+                                    AxisMarks(values: .automatic(desiredCount: game_report.p1_by_inn.count + 1)){
+                                        
+                                        AxisValueLabel()
+                                            .foregroundStyle(legend_color)
+                                        
+                                        AxisGridLine()
+                                            .foregroundStyle(legend_color)
+                                    }
                                 }
-                            }
-                            .chartYAxis {
-                                AxisMarks(position: .leading) {
+                                .chartYAxis {
+                                    AxisMarks(position: .leading) {
+                                        
+                                        AxisValueLabel()
+                                            .foregroundStyle(legend_color)
+                                        
+                                        AxisGridLine()
+                                            .foregroundStyle(legend_color)
+                                        
+                                    }
+                                }
+                                
+                                HStack(spacing: 5){
                                     
-                                    AxisValueLabel()
-                                        .foregroundStyle(legend_color)
+                                    Spacer()
                                     
-                                    AxisGridLine()
+                                    Circle()
+                                        .fill(Color("PowderBlue"))
+                                        .frame(width: 8, height: 8, alignment: .center)
+                                                                
+                                    Text(current_pitcher.pitch1 + " ")
+                                        .font(.caption)
                                         .foregroundStyle(legend_color)
+                                
+                                    if current_pitcher.pitch2 != "None" {
+                                        Circle()
+                                            .fill(Color("Gold"))
+                                            .frame(width: 8, height: 8, alignment: .center)
+                                        
+                                        Text(current_pitcher.pitch2 + " ")
+                                            .font(.caption2)
+                                            .foregroundStyle(legend_color)
+                                    }
+                                    
+                                    if current_pitcher.pitch3 != "None" {
+                                        Circle()
+                                            .fill(Color("Tangerine"))
+                                            .frame(width: 8, height: 8, alignment: .center)
+                                        
+                                        Text(current_pitcher.pitch3 + " ")
+                                            .font(.caption2)
+                                            .foregroundStyle(legend_color)
+                                    }
+                                    
+                                    if current_pitcher.pitch4 != "None" {
+                                        Circle()
+                                            .fill(Color("Grey"))
+                                            .frame(width: 8, height: 8, alignment: .center)
+                                        
+                                        Text(current_pitcher.pitch4 + " ")
+                                            .font(.caption2)
+                                            .foregroundStyle(legend_color)
+                                    }
+                                
+                                    Spacer()
                                     
                                 }
-                            }
-                            
-                            HStack(spacing: 5){
+                                //.padding(.bottom, view_padding)
                                 
                                 Spacer()
-                                
-                                Circle()
-                                    .fill(Color("PowderBlue"))
-                                    .frame(width: 8, height: 8, alignment: .center)
-                                                            
-                                Text(current_pitcher.pitch1 + " ")
-                                    .font(.caption)
-                                    .foregroundStyle(legend_color)
-                            
-                                if current_pitcher.pitch2 != "None" {
-                                    Circle()
-                                        .fill(Color("Gold"))
-                                        .frame(width: 8, height: 8, alignment: .center)
-                                    
-                                    Text(current_pitcher.pitch2 + " ")
-                                        .font(.caption2)
-                                        .foregroundStyle(legend_color)
-                                }
-                                
-                                if current_pitcher.pitch3 != "None" {
-                                    Circle()
-                                        .fill(Color("Tangerine"))
-                                        .frame(width: 8, height: 8, alignment: .center)
-                                    
-                                    Text(current_pitcher.pitch3 + " ")
-                                        .font(.caption2)
-                                        .foregroundStyle(legend_color)
-                                }
-                                
-                                if current_pitcher.pitch4 != "None" {
-                                    Circle()
-                                        .fill(Color("Grey"))
-                                        .frame(width: 8, height: 8, alignment: .center)
-                                    
-                                    Text(current_pitcher.pitch4 + " ")
-                                        .font(.caption2)
-                                        .foregroundStyle(legend_color)
-                                }
-                            
-                                Spacer()
-                                
                             }
-                            //.padding(.bottom, view_padding)
-                            
-                            Spacer()
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color("DarkGrey"))
+                        .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
+                        .padding(.bottom, view_padding)
+                        .padding(.leading, view_padding)
+                        .padding(.trailing, view_padding)
                     }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color("DarkGrey"))
-                    .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
-                    .padding(.bottom, view_padding)
-                    .padding(.leading, view_padding)
-                    .padding(.trailing, view_padding)
                 }
+                
                 
                 Spacer()
                 
@@ -630,68 +622,6 @@ struct GameReportView: View {
         return url
         
     }
-    
-    func new_game_func() {
-        
-        do {
-            try context.delete(model: Event.self)
-        } catch {
-            print("Failed to delete all events.")
-        }
-        
-        scoreboard.balls = 0
-        scoreboard.strikes = 0
-        scoreboard.outs = 0
-        scoreboard.pitches = 0
-        scoreboard.atbats = 1
-        scoreboard.inning = 1
-        scoreboard.baserunners = 0
-        
-        ptconfig.pitch_x_loc.removeAll()
-        ptconfig.pitch_y_loc.removeAll()
-        ptconfig.ab_pitch_color.removeAll()
-        ptconfig.pitch_cur_ab = 0
-        
-        scoreboard.b1light = false
-        scoreboard.b2light = false
-        scoreboard.b3light = false
-        
-        scoreboard.s1light = false
-        scoreboard.s2light = false
-        
-        scoreboard.o1light = false
-        scoreboard.o2light = false
-        
-        game_report.batters_faced = 0
-        game_report.strikes = 0
-        game_report.balls = 0
-        game_report.hits = 0
-        game_report.strikeouts = 0
-        game_report.walks = 0
-        
-        game_report.first_pitch_strike = 0
-        game_report.first_pitch_ball = 0
-        game_report.first_pit_strike_per = 0
-        game_report.fpb_to_fps = []
-        
-        game_report.strikes_per = 0
-        game_report.balls_to_strikes = []
-        
-        game_report.game_score = 40
-        game_report.pitches = scoreboard.pitches
-        
-        game_report.p1_by_inn = [0]
-        game_report.p2_by_inn = [0]
-        game_report.p3_by_inn = [0]
-        game_report.p4_by_inn = [0]
-        
-        game_report.x_coordinate_list = []
-        game_report.y_coordinate_list = []
-        game_report.pl_color_list = []
-        game_report.pl_outline_list = []
-        
-    }
-    
 }
 
 #Preview {

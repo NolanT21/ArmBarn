@@ -39,6 +39,8 @@ struct PopupAlertView: View {
                 Text(message)
                     .font(.system(size: 15))
                     .foregroundStyle(font_color)
+                    .padding()
+                    .multilineTextAlignment(.center)
                 
                 HStack{
                     
@@ -101,7 +103,7 @@ struct PopupAlertView: View {
                 }
             }
         }
-        .padding(.top, 50)
+        .padding(.top, 45)
         .ignoresSafeArea()
     }
     
