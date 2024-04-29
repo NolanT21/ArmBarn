@@ -22,6 +22,7 @@ struct PitchResultView: View {
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) var dismiss
     
+    @State private var showVeloInput: Bool = true
     @State private var showOutRecorded: Bool = false
     
     @State private var showPitchResult = true
@@ -275,6 +276,11 @@ struct PitchResultView: View {
                 if showOutRecorded == true{
                     StrikeoutAlertView(isActive: $showOutRecorded, result_detail: result_detail)
                 }
+                
+                if showVeloInput == true {
+                    VelocityInputView(isActive: $showVeloInput, close_action: {showVeloInput = false})
+                        .preferredColorScheme(.dark)
+                }
 
             }
             .background(.black)
@@ -300,6 +306,9 @@ struct PitchResultView: View {
                                     showPitchResult = true
                                 }
                             }
+                            else if showVeloInput == false{
+                                showVeloInput = true
+                            }
                             else {
                                 back_func()
                                 dismiss()
@@ -315,8 +324,10 @@ struct PitchResultView: View {
                                 .font(.system(size: 17))
                                 .fontWeight(.heavy)
                                 .foregroundColor(.white)
+                                .padding(.leading, -5)
                                 //.font(weight: .semibold)
                         }
+                        .padding(.leading, -5)
                     }
                 }
                 
@@ -333,7 +344,7 @@ struct PitchResultView: View {
                                 .foregroundStyle(
                                     Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
                                 )
-                                .frame(width: 180, height: 30)
+                                .frame(width: 170, height: 30)
                             
                             let pitcher_lname = String(current_pitcher.lastName.prefix(11))
 
@@ -342,8 +353,7 @@ struct PitchResultView: View {
                                 .font(.system(size: 20))
                                 .fontWeight(.black)
                                 .foregroundColor(.white)
-                                .padding(.leading,  5)
-                                
+                                .padding(.leading,  4)
                         }
                         
                     }
