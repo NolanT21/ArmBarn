@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D5064EEA2BDF180400F01886 /* VelocityInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5064EE92BDF180400F01886 /* VelocityInputView.swift */; };
 		D57E62382BD2CD7D003987E1 /* ArmBarnApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */; };
 		D57E62392BD2CD7D003987E1 /* global_variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50E3E8F2B0926A8006699FB /* global_variables.swift */; };
 		D57E623A2BD2CD7D003987E1 /* ScoreboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E103C02B3D122100752E7F /* ScoreboardView.swift */; };
@@ -30,6 +31,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D5064EE92BDF180400F01886 /* VelocityInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VelocityInputView.swift; sourceTree = "<group>"; };
 		D50E3E8F2B0926A8006699FB /* global_variables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = global_variables.swift; sourceTree = "<group>"; };
 		D50E3E932B0A3D04006699FB /* HitDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitDetailView.swift; sourceTree = "<group>"; };
 		D50E3E952B0A3DE7006699FB /* OutDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutDetailView.swift; sourceTree = "<group>"; };
@@ -67,6 +69,7 @@
 		D5DD11122AF52FE60064F1A5 = {
 			isa = PBXGroup;
 			children = (
+				D5064EE92BDF180400F01886 /* VelocityInputView.swift */,
 				D58FE76C2BD717DC004FC234 /* BatterPositionView.swift */,
 				D5DD111D2AF52FE70064F1A5 /* ArmBarn */,
 				D5DD111C2AF52FE60064F1A5 /* Products */,
@@ -198,6 +201,7 @@
 				D57E62412BD2CD7D003987E1 /* AddPitcherView.swift in Sources */,
 				D57E62422BD2CD7D003987E1 /* GameReportView.swift in Sources */,
 				D57E62432BD2CD7D003987E1 /* MainContainerView.swift in Sources */,
+				D5064EEA2BDF180400F01886 /* VelocityInputView.swift in Sources */,
 				D57E62442BD2CD7D003987E1 /* PopupAlertView.swift in Sources */,
 				D57E62452BD2CD7D003987E1 /* report_variables.swift in Sources */,
 				D57E62462BD2CD7D003987E1 /* SelectPitcherView.swift in Sources */,
