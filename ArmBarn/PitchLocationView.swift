@@ -10,6 +10,8 @@ import SwiftData
 
 struct PitchLocationView: View {
     
+    @AppStorage("BatterStance") var ASBatterStance: Bool?
+    
     @Environment(Scoreboard.self) var scoreboard
     @Environment(PitchTypeConfig.self) var ptconfig
     @Environment(currentPitcher.self) var current_pitcher
@@ -28,7 +30,7 @@ struct PitchLocationView: View {
     @State private var hidePitchOverlay = false
     @State private var showGameReport = false
     @State private var showPitcherSelect = false
-    @State private var showTestView = false
+    @State private var showSettingsView = false
     @State private var newAtBat = false
     @State private var showEndGame = false
     @State private var showNewGame = false
@@ -159,55 +161,57 @@ struct PitchLocationView: View {
                         
                         VStack{
                             
-                            Button {
-                                newAtBat = true
-                                
-                            } label: {
-                                HStack(alignment: .center){
+                            if ASBatterStance == true{
+                                Button {
+                                    newAtBat = true
                                     
-                                    Spacer()
-                                    
-                                    if event.batter_stance == "R" {
-                                        Image(systemName: "chevron.left")
-                                            .imageScale(.small)
+                                } label: {
+                                    HStack(alignment: .center){
+                                        
+                                        Spacer()
+                                        
+                                        if event.batter_stance == "R" {
+                                            Image(systemName: "chevron.left")
+                                                .imageScale(.small)
+                                                .foregroundStyle(.white)
+                                                .padding(.trailing, -5)
+                                        }
+                                        else {
+                                            Image(systemName: "chevron.left")
+                                                .imageScale(.small)
+                                                .foregroundStyle(.clear)
+                                                .padding(.trailing, -5)
+                                        }
+                                        
+                                        Text("Batter Stance")
+                                            .font(.system(size: 16))
                                             .foregroundStyle(.white)
-                                            .padding(.trailing, -5)
-                                    }
-                                    else {
-                                        Image(systemName: "chevron.left")
-                                            .imageScale(.small)
-                                            .foregroundStyle(.clear)
-                                            .padding(.trailing, -5)
-                                    }
-          
-                                    Text("Batter Stance")
-                                        .font(.system(size: 16))
-                                        .foregroundStyle(.white)
-                                    
-                                    if event.batter_stance == "L" {
-                                        Image(systemName: "chevron.right")
-                                            .imageScale(.small)
-                                            .foregroundStyle(.white)
-                                            .padding(.leading, -5)
-                                    }
-                                    else {
-                                        Image(systemName: "chevron.right")
-                                            .imageScale(.small)
-                                            .foregroundStyle(.clear)
-                                            .padding(.leading, -5)
-                                    }
+                                        
+                                        if event.batter_stance == "L" {
+                                            Image(systemName: "chevron.right")
+                                                .imageScale(.small)
+                                                .foregroundStyle(.white)
+                                                .padding(.leading, -5)
+                                        }
+                                        else {
+                                            Image(systemName: "chevron.right")
+                                                .imageScale(.small)
+                                                .foregroundStyle(.clear)
+                                                .padding(.leading, -5)
+                                        }
 
-                                    Spacer()
+                                        Spacer()
+                                        
+                                    }
                                     
                                 }
-                                
+                                .padding(.top, 58)
                             }
-                            .padding(.top, 58)
-                            
+
                             Spacer()
                         }
                         
-                        if newAtBat == true {
+                        if newAtBat == true  && ASBatterStance == true{
                             BatterPositionView(isActive: $newAtBat, close_action: {newAtBat = false})
                         }
                         
@@ -378,17 +382,16 @@ struct PitchLocationView: View {
                         //Spacer()
                         
                         Button(action: {
-                            showTestView = true
+                            showSettingsView = true
                         }) {
                             Image(systemName: "gearshape.fill")
                                 .imageScale(.large)
                                 .frame(width: sbl_width, height: sbl_height)
                                 .foregroundColor(Color.white)
                         }
-                        .popover(isPresented: $showTestView) {
-                            TestView().task{
-                                generate_game_report()
-                            }
+                        .popover(isPresented: $showSettingsView) {
+                            SettingsView()
+                                .preferredColorScheme(.dark)
                         }
                     }
                     .padding(.trailing, -5)
