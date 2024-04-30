@@ -15,7 +15,9 @@ struct VelocityInputView: View {
     @Binding var isActive: Bool
     @State var close_action: () -> ()
     
-    @State var veloinput: Double?
+    @State var veloinput: Double = Double()
+    
+    @FocusState private var fieldIsFocused: Bool
     
     @State private var font_color: Color = .white
     @State private var offset: CGFloat = 1000
@@ -24,6 +26,7 @@ struct VelocityInputView: View {
     let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
+        formatter.zeroSymbol = ""
         return formatter
     }()
     
@@ -42,9 +45,10 @@ struct VelocityInputView: View {
                 
                 VStack{
                     TextField("MPH", value: $veloinput, formatter: formatter)
+                        .focused($fieldIsFocused)
                         .submitLabel(.done)
                         .onSubmit {
-                            event.velocity = veloinput ?? 0
+                            event.velocity = veloinput
                             close()
                             close_action()
                         }
@@ -63,10 +67,11 @@ struct VelocityInputView: View {
                             }
                             
                         }
-                        
+                        .padding(.horizontal, 20)
                     Button {
                         //print(veloinput)
-                        event.velocity = veloinput ?? 0
+                        event.velocity = veloinput
+                        fieldIsFocused = false
                         close()
                         close_action()
                     } label : {
@@ -81,6 +86,7 @@ struct VelocityInputView: View {
                         }
                     }
                     .padding(.horizontal, 20)
+                    .padding(.top, 20)
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 20)
