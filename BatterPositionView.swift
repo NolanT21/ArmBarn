@@ -6,11 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct BatterPositionView: View {
     
     @Environment(Event_String.self) var event
+    @Environment(Scoreboard.self) var scoreboard
     @Environment(\.dismiss) var dismiss
+    
+    @Environment(\.modelContext) var context
     
     @State private var font_color: Color = .white
     @State private var offset: CGFloat = 1000
@@ -58,6 +62,7 @@ struct BatterPositionView: View {
                                 event.batter_stance = "R"
                                 close()
                                 close_action()
+                                update_ab_stance(using: context)
                             } label: {
                                 ZStack{
                                     RoundedRectangle(cornerRadius: crnr_radius)
@@ -74,6 +79,7 @@ struct BatterPositionView: View {
                                 event.batter_stance = "L"
                                 close()
                                 close_action()
+                                update_ab_stance(using: context)
                             } label: {
                                 ZStack{
                                     RoundedRectangle(cornerRadius: crnr_radius)
@@ -147,6 +153,29 @@ struct BatterPositionView: View {
         }
     }
     
+    func update_ab_stance(using context: ModelContext){
+        
+        let fetchDescriptor = FetchDescriptor<Event>()
+        
+        do {
+            let events = try context.fetch(fetchDescriptor)
+                
+            for evnt in events.reversed() {
+                print(evnt)
+                if event.end_ab_rd.contains(evnt.result_detail) {
+                    print("Entered break")
+                    break
+                }
+                else if evnt.atbats == scoreboard.atbats && evnt.batter_stance != event.batter_stance{
+                    print("Entered changed stance")
+                    evnt.batter_stance = event.batter_stance
+                }
+            }
+        } catch {
+            print("Error")
+        }
+        
+    }
 }
 
 //#Preview {
