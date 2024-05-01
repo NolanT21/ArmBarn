@@ -9,6 +9,8 @@ import SwiftUI
 
 struct VelocityInputView: View {
     
+    @AppStorage("VelocityUnits") var ASVeloUnits : String?
+    
     @Environment(Event_String.self) var event
     @Environment(\.dismiss) var dismiss
     
@@ -44,7 +46,7 @@ struct VelocityInputView: View {
                     .padding()
                 
                 VStack{
-                    TextField("MPH", value: $veloinput, formatter: formatter)
+                    TextField(ASVeloUnits ?? "MPH", value: $veloinput, formatter: formatter)
                         .focused($fieldIsFocused)
                         .submitLabel(.done)
                         .onSubmit {
@@ -104,10 +106,14 @@ struct VelocityInputView: View {
                     offset = -150
                 }
             }
-            
         }
         .padding(.top, 45)
         .ignoresSafeArea()
+        .onAppear{
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+                fieldIsFocused = true
+            }
+        }
     }
     
     func close() {
