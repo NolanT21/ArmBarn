@@ -273,11 +273,12 @@ struct PitchLocationView: View {
                 ToolbarItemGroup(placement: .topBarLeading) {
                     
                     Button(action: {
-                        if events.count > 0 {
+                        if ptconfig.hidePitchOverlay == true {
+                            cur_pitch_color = .clear
+                            cur_pitch_outline = .clear
+                        }
+                        else if events.count > 0 {
                             if events.count != 1 {
-//                                if newAtBat == true{
-//                                    newAtBat = false
-//                                }
                                 load_previous_event()
                                 load_previous_ab_pitches()
                             }
@@ -294,17 +295,28 @@ struct PitchLocationView: View {
                         ptconfig.ptcolor = .clear
                         
                     }) {
-                        Image(systemName: "arrow.counterclockwise")
-                            .imageScale(.medium)
-                            //.frame(width: sbl_width, height: sbl_height)
-                            .foregroundColor(.white)
-                            .bold()
-                        Text("UNDO")
-                            .font(.system(size: 17))
-                            .fontWeight(.heavy)
-                            .foregroundColor(.white)
-                            //.font(weight: .semibold)
-                            .padding(.leading, -5)
+                        if ptconfig.hidePitchOverlay == true{
+                            Image(systemName: "chevron.left")
+                                .imageScale(.medium)
+                                .foregroundColor(.white)
+                                .bold()
+                            Text("BACK")
+                                .font(.system(size: 17))
+                                .fontWeight(.heavy)
+                                .foregroundColor(.white)
+                                .padding(.leading, -5)
+                        }
+                        else {
+                            Image(systemName: "arrow.counterclockwise")
+                                .imageScale(.medium)
+                                .foregroundColor(.white)
+                                .bold()
+                            Text("UNDO")
+                                .font(.system(size: 17))
+                                .fontWeight(.heavy)
+                                .foregroundColor(.white)
+                                .padding(.leading, -5)
+                        }
                     }
                     .padding(.leading, -5)
                 }
@@ -395,6 +407,7 @@ struct PitchLocationView: View {
                         }
                     }
                     .padding(.trailing, -5)
+                    .shadow(radius: 10)
                 }
             }
         }
@@ -579,6 +592,14 @@ struct PitchLocationView: View {
         ptconfig.pitch_y_loc.removeAll()
         ptconfig.ab_pitch_color.removeAll()
         ptconfig.pitch_cur_ab = 0
+        
+        current_pitcher.lastName = "Change Me"
+        current_pitcher.firstName = ""
+        current_pitcher.pitch1 = "None"
+        current_pitcher.pitch2 = "None"
+        current_pitcher.pitch3 = "None"
+        current_pitcher.pitch4 = "None"
+        current_pitcher.pitch_num = 0
         
         scoreboard.b1light = false
         scoreboard.b2light = false
