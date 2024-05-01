@@ -12,6 +12,7 @@ struct SettingsView: View {
     @AppStorage("BatterStance") var ASBatterStance : Bool?
     @AppStorage("VelocityInput") var ASVeloInput : Bool?
     @AppStorage("StrikeType") var ASStrikeType : Bool?
+    @AppStorage("VelocityUnits") var ASVeloUnits : String?
     
     @State private var useBatterStance = false
     @State private var useStrikeType = false
@@ -30,7 +31,6 @@ struct SettingsView: View {
                             Toggle("Batter Stance", isOn: $useBatterStance)
                                 .onChange(of: useBatterStance){
                                     ASBatterStance = useBatterStance
-                                    print(useBatterStance)
                                 }
                         }
                         .tint(Color("ScoreboardGreen"))
@@ -39,7 +39,6 @@ struct SettingsView: View {
                             Toggle("Strike Type", isOn: $useStrikeType)
                                 .onChange(of: useStrikeType){
                                     ASStrikeType = useStrikeType
-                                    print(useStrikeType)
                                 }
                         }
                         .tint(Color("ScoreboardGreen"))
@@ -48,17 +47,20 @@ struct SettingsView: View {
                             Toggle("Velocity Input", isOn: $useVelocityInput)
                                 .onChange(of: useVelocityInput){
                                     ASVeloInput = useVelocityInput
-                                    print(useVelocityInput)
                                 }
                         }
                         .tint(Color("ScoreboardGreen"))
                         Picker("Velocity Units", selection: $selected_velo_units) {
                             ForEach(velo_units, id: \.self) {
                                 Text($0)
-//                                    .bold()
+                                    .bold()
                             }
                         }
                         .pickerStyle(.segmented)
+                        .onChange(of: selected_velo_units){
+                            ASVeloUnits = selected_velo_units
+                            print(selected_velo_units)
+                        }
                     }
                     Section{
                         Button {
@@ -76,6 +78,7 @@ struct SettingsView: View {
                 useBatterStance = ASBatterStance ?? false
                 useVelocityInput = ASVeloInput ?? false
                 useStrikeType = ASStrikeType ?? false
+                selected_velo_units = ASVeloUnits ?? "MPH"
             }
         }
     }
