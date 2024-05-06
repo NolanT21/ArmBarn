@@ -161,13 +161,10 @@ struct BatterPositionView: View {
             let events = try context.fetch(fetchDescriptor)
                 
             for evnt in events.reversed() {
-                print(evnt)
                 if event.end_ab_rd.contains(evnt.result_detail) {
-                    print("Entered break")
                     break
                 }
                 else if evnt.atbats == scoreboard.atbats && evnt.batter_stance != event.batter_stance{
-                    print("Entered changed stance")
                     evnt.batter_stance = event.batter_stance
                 }
             }
