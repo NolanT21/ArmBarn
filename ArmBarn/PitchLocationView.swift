@@ -257,7 +257,7 @@ struct PitchLocationView: View {
                         }
                         
                         if showNewGame == true {
-                            PopupAlertView(isActive: $showNewGame, title: "Resume Game?", message: "A previous game was being recorded. Do you want to resume?", leftButtonAction: {load_recent_event(); load_recent_ab_pitches(); set_pitcher(); showNewGame = false}, rightButtonAction: {new_game_func(); showNewGame = false})
+                            PopupAlertView(isActive: $showNewGame, title: "Resume Game?", message: "A previous game was being recorded. Do you want to continue?", leftButtonAction: {load_recent_event(); load_recent_ab_pitches(); set_pitcher(); showNewGame = false}, rightButtonAction: {new_game_func(); showNewGame = false})
                         }
                         
                     }
@@ -377,6 +377,7 @@ struct PitchLocationView: View {
                         .popover(isPresented: $showGameReport) {
                             GameReportView().preferredColorScheme(.dark).task{
                                 generate_game_report()
+                                generate_pbp_array()
                             }
                         }
                         
@@ -412,6 +413,135 @@ struct PitchLocationView: View {
             }
         }
     }
+    func generate_pbp_array(){
+        var pitch_num = 0
+        let pitch_abbreviations = ["FB" : "Fastball", "CU" : "Curveball", "SL" : "Slider", "CH" : "Change-Up", "FS" : "Splitter", "Cutter" : "FC", "Sinker" : "SI", "Other" : "XX"]
+        game_report.pbp_event_list = []
+        for evnt in events {
+            
+            var result = ""
+            let pitch_result = evnt.pitch_result
+            let result_detail = evnt.result_detail
+            let balls = evnt.balls
+            let strikes = evnt.strikes
+            let outs = evnt.outs
+            var outs_label = ""
+            let inning = evnt.inning
+            let pitcher_id = evnt.pitcher_id
+            var pitcher_name = ""
+            let velo = evnt.velocity
+            
+            for pitcher in pitchers {
+                if pitcher.id == pitcher_id {
+                    pitcher_name = pitcher.firstName + " " + pitcher.lastName
+                    if pitcher_id != game_report.cur_pitcher_id {
+                        game_report.cur_pitcher_id = pitcher_id
+                        pitch_num = 0
+                    }
+                }
+            }
+            
+            if outs != 1 {
+                outs_label = "Outs"
+            }
+            else {
+                outs_label = "Out"
+            }
+
+            var pitch_type = evnt.pitch_type
+            
+            if pitch_type == "P1" {
+                pitch_type = current_pitcher.pitch1
+            }
+            else if pitch_type == "P2" {
+                pitch_type = current_pitcher.pitch2
+            }
+            else if pitch_type == "P3" {
+                pitch_type = current_pitcher.pitch3
+            }
+            else if pitch_type == "P4" {
+                pitch_type = current_pitcher.pitch4
+            }
+            
+            for abbr in pitch_abbreviations {
+                if abbr.value == pitch_type {
+                    pitch_type = abbr.key
+                }
+            }
+            //pitch_type = pitch_abbreviations.filter { $0.value == pitch_type }
+            
+            if result_detail != "R"{
+                
+                pitch_num += 1
+                
+                if pitch_result == "A" {
+                    if result_detail == "N" {
+                        result = "Ball"
+                    }
+                    else if result_detail == "W" {
+                        result = "Walk"
+                    }
+                }
+                else if pitch_result == "Z" || pitch_result == "L"{
+                    if result_detail == "N" {
+                        result = "Strike"
+                    }
+                    else if result_detail == "K" || result_detail == "C" || result_detail == "M"{
+                        result = "Strikeout"
+                    }
+                }
+                else if pitch_result == "T" {
+                    result = "Foul Ball"
+                }
+                else if pitch_result == "O" {
+                    if result_detail == "F" {
+                        result = "Flyout"
+                    }
+                    else if result_detail == "G" {
+                        result = "Groundout"
+                    }
+                    else if result_detail == "L" {
+                        result = "Lineout"
+                    }
+                    else if result_detail == "P" {
+                        result = "Popout"
+                    }
+                    else if result_detail == "Y" {
+                        result = "Sac Bunt"
+                    }
+                    else if result_detail == "O" {
+                        result = "Other"
+                    }
+                }
+                else if pitch_result == "H" {
+                    if result_detail == "S" {
+                        result = "Single"
+                    }
+                    else if result_detail == "D" {
+                        result = "Double"
+                    }
+                    else if result_detail == "T" {
+                        result = "Triple"
+                    }
+                    else if result_detail == "H" {
+                        result = "Homerun"
+                    }
+                    else if result_detail == "E" {
+                        result = "Error"
+                    }
+                    else if result_detail == "B" {
+                        result = "Hit by Pitch"
+                    }
+                }
+            }
+            else {
+                result = "RUNNER OUT"
+            }
+            
+            game_report.pbp_event_list.append(PBPLog(pitch_num: pitch_num, pitch_type: pitch_type, result: result, balls: balls, strikes: strikes, outs: outs, out_label: outs_label, velo: velo, inning: inning, result_detail: result_detail, pitcher: pitcher_name))
+            
+        }
+    }
     
     func generate_game_report(){
         
@@ -432,6 +562,24 @@ struct PitchLocationView: View {
         
         game_report.game_score = 40
         game_report.pitches = scoreboard.pitches
+        
+        game_report.singles = 0
+        game_report.doubles = 0
+        game_report.triples = 0
+        game_report.homeruns = 0
+        game_report.errors = 0
+        game_report.p1_hits = 0
+        game_report.p2_hits = 0
+        game_report.p3_hits = 0
+        game_report.p4_hits = 0
+        game_report.most_hit_pit = ""
+        game_report.mhp_pitches = 0
+        game_report.mhp_hits = 0
+        
+        game_report.swings = 0
+        game_report.swing_per = 0
+        game_report.whiffs = 0
+        game_report.whiff_per = 0
         
         game_report.p1_by_inn = [0]
         game_report.p2_by_inn = [0]
@@ -468,15 +616,31 @@ struct PitchLocationView: View {
             
             if evnt.pitch_type == "P1" {
                 p1_cntr += 1
+                game_report.pl_color = Color("PowderBlue")
+                if evnt.pitch_result == "H" && evnt.result_detail != "E" {
+                    game_report.p1_hits += 1
+                }
             }
             else if evnt.pitch_type == "P2" {
                 p2_cntr += 1
+                game_report.pl_color = Color("Gold")
+                if evnt.pitch_result == "H" && evnt.result_detail != "E" {
+                    game_report.p2_hits += 1
+                }
             }
             else if evnt.pitch_type == "P3" {
                 p3_cntr += 1
+                game_report.pl_color = Color("Tangerine")
+                if evnt.pitch_result == "H" && evnt.result_detail != "E" {
+                    game_report.p3_hits += 1
+                }
             }
             else if evnt.pitch_type == "P4" {
                 p4_cntr += 1
+                game_report.pl_color = Color("Grey")
+                if evnt.pitch_result == "H" && evnt.result_detail != "E" {
+                    game_report.p4_hits += 1
+                }
             }
             
             game_report.p1_by_inn[inn_cntr - 1] = p1_cntr
@@ -489,33 +653,48 @@ struct PitchLocationView: View {
             
             if evnt.pitch_result != "A" && evnt.result_detail != "R" && evnt.result_detail != "B"{
                 game_report.strikes += 1
-                game_report.pl_color = Color("Gold")
                 if evnt.balls == 0 && evnt.strikes == 0 {
                     game_report.first_pitch_strike += 1
                 }
                 
+                if evnt.pitch_result == "T" {
+                    game_report.swings += 1
+                }
+                else if evnt.pitch_result == "Z"{
+                    game_report.whiffs += 1
+                    game_report.swings += 1
+                }
+                
                 if evnt.pitch_result == "H" && evnt.result_detail != "E"{
                     game_report.hits += 1
-                    game_report.pl_color = Color("Tangerine")
+                    game_report.swings += 1
                         
                     if evnt.result_detail == "S" {
                         game_report.game_score -= 2
+                        game_report.singles += 1
                     }
                     else if evnt.result_detail == "D" {
                         game_report.game_score -= 3
+                        game_report.doubles += 1
                     }
                     else if evnt.result_detail == "T" {
                         game_report.game_score -= 4
+                        game_report.triples += 1
                         
                     }
                     else if evnt.result_detail == "H" {
                         game_report.game_score -= 6
+                        game_report.homeruns += 1
                     }
                         
                 }
+                else if evnt.result_detail == "E" {
+                    game_report.errors += 1
+                    game_report.swings += 1
+                }
                 else if evnt.pitch_result == "O" {
                     game_report.game_score += 2
-                    game_report.pl_color = Color("Grey")
+                    game_report.swings += 1
                 }
                 else if evnt.result_detail == "K" || evnt.result_detail == "C" || evnt.result_detail == "M"{
                     game_report.pl_outline = .white
@@ -525,7 +704,6 @@ struct PitchLocationView: View {
             }
             else if evnt.pitch_result == "A" || evnt.result_detail == "B"{
                 game_report.balls += 1
-                game_report.pl_color = Color("PowderBlue")
                 if evnt.balls == 0 && evnt.strikes == 0 {
                     game_report.first_pitch_ball += 1
                 }
@@ -555,8 +733,42 @@ struct PitchLocationView: View {
             game_report.first_pit_strike_per = (game_report.first_pitch_strike * 100) / game_report.batters_faced
         }
         
+        if game_report.swings > 0 {
+            game_report.swing_per = (game_report.swings * 100) / game_report.strikes
+        }
+        
+        if game_report.whiffs > 0 {
+            game_report.whiff_per = (game_report.whiffs * 100) / game_report.swings
+        }
+        
         if game_report.strikes > 0 && game_report.pitches > 0{
             game_report.strikes_per = (game_report.strikes * 100) / game_report.pitches
+        }
+        
+        if game_report.p1_hits > game_report.p2_hits && game_report.p1_hits > game_report.p3_hits && game_report.p1_hits > game_report.p4_hits {
+            game_report.most_hit_pit = current_pitcher.pitch1
+            game_report.mhp_pitches = game_report.p1_by_inn.reduce(0, +)
+            game_report.mhp_hits = game_report.p1_hits
+        }
+        else if game_report.p2_hits > game_report.p3_hits && game_report.p2_hits > game_report.p4_hits {
+            game_report.most_hit_pit = current_pitcher.pitch2
+            game_report.mhp_pitches = game_report.p2_by_inn.reduce(0, +)
+            game_report.mhp_hits = game_report.p2_hits
+        }
+        else if game_report.p3_hits > game_report.p4_hits {
+            game_report.most_hit_pit = current_pitcher.pitch3
+            game_report.mhp_pitches = game_report.p3_by_inn.reduce(0, +)
+            game_report.mhp_hits = game_report.p3_hits
+        }
+        else if game_report.p4_hits > game_report.p3_hits{
+            game_report.most_hit_pit = current_pitcher.pitch4
+            game_report.mhp_pitches = game_report.p3_by_inn.reduce(0, +)
+            game_report.mhp_hits = game_report.p4_hits
+        }
+        else {
+            game_report.most_hit_pit = "None"
+            game_report.mhp_pitches = 0
+            game_report.mhp_hits = 0
         }
         
         let temp_inn_pitches = [game_report.p1_by_inn, game_report.p2_by_inn, game_report.p3_by_inn, game_report.p4_by_inn]
@@ -629,6 +841,24 @@ struct PitchLocationView: View {
         game_report.game_score = 40
         game_report.pitches = scoreboard.pitches
         
+        game_report.singles = 0
+        game_report.doubles = 0
+        game_report.triples = 0
+        game_report.homeruns = 0
+        game_report.errors = 0
+        game_report.p1_hits = 0
+        game_report.p2_hits = 0
+        game_report.p3_hits = 0
+        game_report.p4_hits = 0
+        game_report.most_hit_pit = ""
+        game_report.mhp_pitches = 0
+        game_report.mhp_hits = 0
+        
+        game_report.swings = 0
+        game_report.swing_per = 0
+        game_report.whiffs = 0
+        game_report.whiff_per = 0
+        
         game_report.p1_by_inn = [0]
         game_report.p2_by_inn = [0]
         game_report.p3_by_inn = [0]
@@ -649,6 +879,7 @@ struct PitchLocationView: View {
         scoreboard.outs = previous_event.outs
         scoreboard.atbats = previous_event.atbats
         scoreboard.inning = previous_event.inning
+        event.batter_stance = previous_event.batter_stance
         
         if ptconfig.pitch_x_loc.count > 0 && previous_event.result_detail != "R"{
             ptconfig.pitch_x_loc.removeLast()
@@ -657,7 +888,9 @@ struct PitchLocationView: View {
             ptconfig.pitch_cur_ab -= 1
         }
         
-        if previous_event.balls == 0 && previous_event.strikes == 0 && previous_event.result_detail != "R"{
+        if newAtBat == true {
+            newAtBat = false
+        } else if previous_event.balls == 0 && previous_event.strikes == 0 && previous_event.result_detail != "R"{
             newAtBat = true
         }
         
