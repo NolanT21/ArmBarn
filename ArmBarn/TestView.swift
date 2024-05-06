@@ -12,9 +12,12 @@ import Observation
 
 struct TestView: View {
     
+    @AppStorage("VelocityInput") var ASVeloInput : Bool?
+    
     @Environment(Scoreboard.self) var scoreboard
     @Environment(PitchTypeConfig.self) var ptconfig
     @Environment(currentPitcher.self) var current_pitcher
+    @Query var events: [Event]
     @Query(sort: \Pitcher.lastName) var pitchers: [Pitcher]
     @Environment(Event_String.self) var event
     
@@ -22,6 +25,8 @@ struct TestView: View {
     
     @Environment(\.dismiss) var dismiss
     
+    @State var pitch_num: Int = 0
+    @State var result: String = ""
     @State var prev_inn: Int = 0
     
     @State var sbl_width: Double = 17.0
@@ -33,144 +38,81 @@ struct TestView: View {
     var view_crnr_radius: CGFloat = 12
     
     let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-    ]
-    
-    let rows = [
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible())
+        GridItem(.flexible(minimum: 0, maximum: 10000))
     ]
     
     var body: some View {
         
-        VStack{
-            
-            Spacer()
-            
-            ZStack{
-                Rectangle()
-                    .fill(Color.black)
-                    .frame(width: 40, height: 20)
-                    //.blur(radius: 10, opaque: false)
+        ScrollView{
+            VStack{
+                Grid(alignment: .leading, horizontalSpacing: 3, verticalSpacing: 10){
+                    ForEach(Array(game_report.pbp_event_list.enumerated()), id: \.offset){ index, evnt in
+                        
+                        if index == 0 || game_report.pbp_event_list[index].inning > game_report.pbp_event_list[index - 1].inning{
+                            Text("INN \(evnt.inning)")
+                                .bold()
+                                .padding(.top, 20)
+                                .padding(.bottom, -10)
+                                
+                            
+                            Divider()
+                                .background(Color.black)
+                                .frame(height: 10)
+                                .padding(.bottom, -4)
+                        }
+                        
+                        if index == 0 || game_report.pbp_event_list[index].pitcher != game_report.pbp_event_list[index - 1].pitcher{
+                            HStack{
+                                Spacer()
+                                Text(evnt.pitcher + " Entered")
+                                    .padding(.vertical, 5)
+                                    .foregroundStyle(Color.green.opacity(2))
+                                Spacer()
+                            }
+                            .background(Color.green.opacity(0.1))
+                            
+                            Divider()
+                        }
+                        
+                        if evnt.result == "RUNNER OUT" {
+                            HStack{
+                                Spacer()
+                                Text("Baserunner Out")
+                                    .padding(.vertical, 5)
+                                    .foregroundStyle(Color.red.opacity(2))
+                                Spacer()
+                            }
+                            .background(Color.red.opacity(0.1))
+                            
+                            Divider()
+                                .background((event.end_ab_rd.contains(evnt.result_detail)) ? Color.black : Color.clear)
+                        }
+                        else {
+                            GridRow{
+                                Text("\(evnt.pitch_num)")
+                                Text(evnt.pitch_type)
+                                
+                                if ASVeloInput == true {
+                                    Text("\(evnt.velo, specifier: "%.1f")")
+                                }
+                                
+                                Text(evnt.result)
+                                Text("\(evnt.balls) - \(evnt.strikes)")
+                                Text("\(evnt.outs) " + evnt.out_label)
+                            }
+                            
+                            Divider()
+                                .background((event.end_ab_rd.contains(evnt.result_detail)) ? Color.black : Color.clear)
+                        }
+                        
+                    }
+                }
             }
-            
-            Spacer()
-            
+            .padding(15)
         }
-        .blur(radius: 5, opaque: false)
-        
     }
 }
-        
 
 #Preview {
     TestView()
-        .environment(Scoreboard())
-        .environment(Event_String())
-        .environment(currentPitcher())
-        .environment(PitchTypeConfig())
-        .environment(GameReport())
 }
-
-//                if index == 0 {
-//                    LazyVGrid(columns: columns, alignment: .leading){
-//                        Text("INN \(value)")
-//                            .padding(.leading, view_padding)
-//                        Divider()
-//                    }
-//                    .padding(.horizontal, view_padding)
-//                }
-//
-//                else if game_report.inn_hitlog[index] > game_report.inn_hitlog[index - 1] {
-//                    LazyVGrid(columns: columns, alignment: .leading){
-//                        Text("INN \(value)")
-//                            .padding(.leading, view_padding)
-//                        Divider()
-//                    }
-//                    .padding(.horizontal, view_padding)
-//                }
-//
-//                LazyHGrid(rows: columns){
-//                    Text(hit_type)
-//                    Text("\(balls) - \(strikes)")
-//                    Text(pitch_type)
-//                    Text("\(hl_outs) Out(s)")
-//                }
-//                .padding(.leading, view_padding * 3)
-//                .padding(.trailing, view_padding)
-
-//Gauge(value: 0.4) {
-//    Text("Game Score")
-//}
-//.gaugeStyle(.accessoryLinear)
-//.tint(gradient)
-//
-//Gauge(value: currentSpeed, in: minSpeed...maxSpeed) {
-//  Text("MPH")
-//} currentValueLabel: {
-//               VStack{
-//                    Text(currentSpeed.formatted())
-//                    Text("13/22")
-//                }
-//}
-//.scaleEffect(2.5)
-//.gaugeStyle(.accessoryCircularCapacity)
-//.tint(.purple)
-
-//            Chart{
-//                ForEach(Array(fps_to_fpb.enumerated()), id: \.offset) { index, value in
-//                    SectorMark(
-//                        angle: .value(
-//                            Text(verbatim: "\(index)"),
-//                            value
-//                        ),
-//                        innerRadius: .ratio(0.7)
-//                    )
-//                    .foregroundStyle(
-//                        by: .value(
-//                            Text(verbatim: "\(index)"),
-//                            value
-//                        )
-//                    )
-//                }
-//            }
-            
-//            Chart{
-//                ForEach(appData.sales) { product in
-//                    ForEach(product.sales) { sale in
-//                        LineMark(x: .value("Date", sale.date, unit: .day),
-//                                 y: .value("Sales", sale.amount))
-//                    }.foregroundStyle(by: .value("Products", product.name))
-//                }
-//            }
-//           .frame(height: 200)
-//            .padding(10)
-//            .chartXScale(domain: [0, 10])
-//            .chartXAxis {
-//                AxisMarks(values: .automatic(desiredCount: 9))
-//            }
-//            .chartYAxis {
-//                AxisMarks(position: .leading)
-//            }
-//            Spacer()
-
-//                                Chart{
-//                                    ForEach(Array(game_report.game_score_inn_data.enumerated()), id: \.offset) { index, value in
-//                                        PointMark(x: .value("Inning", index),
-//                                                  y: .value("Game Score", value))
-//
-//                                        LineMark(x: .value("Inning", index),
-//                                                 y: .value("Game Score", value))
-//                                    }
-//                                }
-//                                .padding(.trailing, view_padding * 2)
-//                                //.padding(.bottom, view_padding)
-//                                .frame(width: 225, height: 35)
-//                                .chartXAxis(.hidden)
-//                                .chartYAxis(.hidden)
-//                                .chartYScale(domain: [game_report.game_score_min, game_report.game_score_max])
