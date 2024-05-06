@@ -7,9 +7,14 @@
 
 import SwiftUI
 import SwiftData
+import TipKit
 
 @main
 struct ArmBarnApp: App {
+    
+    init() {
+        try? Tips.configure()
+      }
     
     var body: some Scene {
         WindowGroup {
