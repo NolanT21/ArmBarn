@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import TipKit
 
 struct SelectPitcherView: View {
     
@@ -25,6 +26,8 @@ struct SelectPitcherView: View {
     @State private var showEditPitcher = false
     @State private var newAtBat = false
     
+    private let tip = EditPitcherTip()
+    
     @State private var text_color = Color.white
     
     @State var sbl_width: Double = 17.0
@@ -41,6 +44,11 @@ struct SelectPitcherView: View {
             
             ZStack{
                 NavigationStack{
+                    
+                    TipView(tip)
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 10)
+                    
                     List {
                         ForEach(filteredPitchers, id:\.id) { p_er in
                             Button(p_er.firstName + " " + p_er.lastName) {
