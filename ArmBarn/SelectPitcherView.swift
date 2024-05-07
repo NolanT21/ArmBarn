@@ -12,6 +12,8 @@ import TipKit
 struct SelectPitcherView: View {
     
     @Environment(currentPitcher.self) var current_pitcher
+    @Environment(GameReport.self) var game_report
+    @Environment(Scoreboard.self) var scoreboard
     @Environment(\.dismiss) var dismiss
     
     @Environment(\.modelContext) private var context
@@ -52,6 +54,7 @@ struct SelectPitcherView: View {
                     List {
                         ForEach(filteredPitchers, id:\.id) { p_er in
                             Button(p_er.firstName + " " + p_er.lastName) {
+                                clear_game_report()
                                 current_pitcher.pitch_num = 0
                                 current_pitcher.firstName = p_er.firstName
                                 current_pitcher.lastName = p_er.lastName
@@ -149,6 +152,55 @@ struct SelectPitcherView: View {
             context.delete(pitchers[index])
         }
     }
+    
+    func clear_game_report() {
+        game_report.batters_faced = 0
+        game_report.strikes = 0
+        game_report.balls = 0
+        game_report.hits = 0
+        game_report.strikeouts = 0
+        game_report.walks = 0
+        
+        game_report.first_pitch_strike = 0
+        game_report.first_pitch_ball = 0
+        game_report.first_pit_strike_per = 0
+        game_report.fpb_to_fps = []
+        
+        game_report.strikes_per = 0
+        game_report.balls_to_strikes = []
+        
+        game_report.game_score = 40
+        game_report.pitches = scoreboard.pitches
+        
+        game_report.singles = 0
+        game_report.doubles = 0
+        game_report.triples = 0
+        game_report.homeruns = 0
+        game_report.errors = 0
+        game_report.p1_hits = 0
+        game_report.p2_hits = 0
+        game_report.p3_hits = 0
+        game_report.p4_hits = 0
+        game_report.most_hit_pit = ""
+        game_report.mhp_pitches = 0
+        game_report.mhp_hits = 0
+        
+        game_report.swings = 0
+        game_report.swing_per = 0
+        game_report.whiffs = 0
+        game_report.whiff_per = 0
+        
+        game_report.p1_by_inn = [0]
+        game_report.p2_by_inn = [0]
+        game_report.p3_by_inn = [0]
+        game_report.p4_by_inn = [0]
+        
+        game_report.x_coordinate_list = []
+        game_report.y_coordinate_list = []
+        game_report.pl_color_list = []
+        game_report.pl_outline_list = []
+    }
+    
 }
 
 #Preview {

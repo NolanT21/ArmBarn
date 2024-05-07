@@ -11,7 +11,7 @@ import Observation
 
 
 @Observable class GameReport{
-    var inn_pitched: Double = 0
+    var inn_pitched: Double = 0.0
     var pitches: Int = 0
     var batters_faced: Int = 0
     var hits: Int = 0
