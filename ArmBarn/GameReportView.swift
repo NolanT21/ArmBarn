@@ -165,49 +165,74 @@ struct GameReportView: View {
                     .font(.headline)
                     .padding(.top, 10)
                 
-                Grid(alignment: .leading, horizontalSpacing: 3, verticalSpacing: 10){
+                Grid(alignment: .leading, horizontalSpacing: 25){
                     ForEach(Array(game_report.pbp_event_list.enumerated()), id: \.offset){ index, evnt in
                         
                         if index == 0 || game_report.pbp_event_list[index].inning > game_report.pbp_event_list[index - 1].inning{
-                            Text("INN \(evnt.inning)")
-                                .bold()
-                                .font(.body)
-                                .padding(.top, 20)
-                                .padding(.bottom, -10)
-                                
-                            Divider()
-                                .background(Color.black)
-                                .frame(height: 10)
-                                .padding(.bottom, -4)
+                            GridRow {
+                                VStack{
+                                    Text("INN \(evnt.inning)")
+                                        .bold()
+                                        .font(.body)
+                                        .padding(.top, 20)
+                                        .padding(.bottom, -10)
+                                    
+                                    Divider()
+                                        .background(Color.black)
+                                        .frame(height: 10)
+                                        .padding(.bottom, -4)
+                                        
+                                }
+                            }
+                            .gridCellColumns(6)
+                            
+                            //                                if ASVeloInput == true {
+                            //                                    Text("\(evnt.velo, specifier: "%.1f")")
+                            //                                }
                         }
                         
                         if index == 0 || game_report.pbp_event_list[index].pitcher != game_report.pbp_event_list[index - 1].pitcher{
-                            HStack{
-                                Spacer()
-                                Text(evnt.pitcher + " Entered")
-                                    .font(.body)
-                                    .padding(.vertical, 5)
-                                    .foregroundStyle(Color.green.opacity(2))
-                                Spacer()
+                            GridRow{
+                                VStack{
+                                    HStack{
+                                        Spacer()
+                                        Text(evnt.pitcher + " Entered")
+                                            .font(.body)
+                                            .padding(.vertical, 5)
+                                            .foregroundStyle(Color.green.opacity(2))
+                                        Spacer()
+                                    }
+                                    .background(Color.green.opacity(0.1))
+                                    
+                                    Divider()
+                                    
+                                }
                             }
-                            .background(Color.green.opacity(0.1))
+                            .gridCellColumns(6)
                             
-                            Divider()
                         }
                         
                         if evnt.result == "RUNNER OUT" {
-                            HStack{
-                                Spacer()
-                                Text("Baserunner Out")
-                                    .font(.body)
-                                    .padding(.vertical, 5)
-                                    .foregroundStyle(Color.red.opacity(2))
-                                Spacer()
+                           GridRow{
+                               VStack{
+                                   HStack{
+                                       Spacer()
+                                       Text("Baserunner Out")
+                                           .font(.body)
+                                           .padding(.vertical, 5)
+                                           .foregroundStyle(Color.red.opacity(2))
+                                       Spacer()
+                                   }
+                                   .background(Color.red.opacity(0.1))
+                                   
+                                   Divider()
+                                       .background((event.end_ab_rd.contains(evnt.result_detail)) ? Color.black : Color.clear)
+                                   
+                               }
+                                
                             }
-                            .background(Color.red.opacity(0.1))
+                            .gridCellColumns(6)
                             
-                            Divider()
-                                .background((event.end_ab_rd.contains(evnt.result_detail)) ? Color.black : Color.clear)
                         }
                         else {
                             GridRow{
@@ -230,11 +255,13 @@ struct GameReportView: View {
                         }
                     }
                 }
+                .frame(maxWidth: .infinity)
                 
                 Spacer()
                 
             }
             .padding(.horizontal, view_padding/2)
+            .frame(maxWidth: .infinity)
             
         }
         .padding(view_padding)
