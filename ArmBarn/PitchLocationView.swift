@@ -310,6 +310,7 @@ struct PitchLocationView: View {
                             Image(systemName: "arrow.counterclockwise")
                                 .imageScale(.medium)
                                 .foregroundColor(.white)
+                                .padding(.leading, -5)
                                 .bold()
                             Text("UNDO")
                                 .font(.system(size: 17))
@@ -403,7 +404,7 @@ struct PitchLocationView: View {
                                 .foregroundColor(Color.white)
                         }
                         .popover(isPresented: $showSettingsView) {
-                            SettingsView()
+                            TestView()
                                 .preferredColorScheme(.dark)
                         }
                     }
@@ -415,7 +416,7 @@ struct PitchLocationView: View {
     }
     func generate_pbp_array(){
         var pitch_num = 0
-        let pitch_abbreviations = ["FB" : "Fastball", "CU" : "Curveball", "SL" : "Slider", "CH" : "Change-Up", "FS" : "Splitter", "Cutter" : "FC", "Sinker" : "SI", "Other" : "XX"]
+        let pitch_abbreviations = ["FB" : "Fastball", "CU" : "Curveball", "SL" : "Slider", "CH" : "Change-Up", "FS" : "Splitter", "Cutter" : "FC", "Sinker" : "SI", "OT" : "Other"]
         game_report.pbp_event_list = []
         for evnt in events {
             
