@@ -404,7 +404,7 @@ struct PitchLocationView: View {
                                 .foregroundColor(Color.white)
                         }
                         .popover(isPresented: $showSettingsView) {
-                            TestView()
+                            SettingsView()
                                 .preferredColorScheme(.dark)
                         }
                     }
