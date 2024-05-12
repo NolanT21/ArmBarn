@@ -32,6 +32,8 @@ struct TestView: View {
     @State var sbl_width: Double = 17.0
     @State var sbl_height: Double = 13.0
     
+    var text_color: Color = .white
+    
     let gradient = Gradient(colors: [.yellow, .orange, .red])
     
     var view_padding: CGFloat = 10
@@ -45,70 +47,82 @@ struct TestView: View {
         
         ScrollView{
             VStack{
-                Grid(alignment: .leading, horizontalSpacing: 3, verticalSpacing: 10){
-                    ForEach(Array(game_report.pbp_event_list.enumerated()), id: \.offset){ index, evnt in
+                
+                Spacer()
+                
+                HStack{
+                    
+                    VStack{
                         
-                        if index == 0 || game_report.pbp_event_list[index].inning > game_report.pbp_event_list[index - 1].inning{
-                            Text("INN \(evnt.inning)")
-                                .bold()
-                                .padding(.top, 20)
-                                .padding(.bottom, -10)
-                                
-                            
-                            Divider()
-                                .background(Color.black)
-                                .frame(height: 10)
-                                .padding(.bottom, -4)
+                        HStack{
+                            Text("Pitch Velocity")
+                                .font(.subheadline)
+                                .foregroundStyle(text_color)
+                            Spacer()
                         }
                         
-                        if index == 0 || game_report.pbp_event_list[index].pitcher != game_report.pbp_event_list[index - 1].pitcher{
+                        VStack{
                             HStack{
-                                Spacer()
-                                Text(evnt.pitcher + " Entered")
-                                    .padding(.vertical, 5)
-                                    .foregroundStyle(Color.green.opacity(2))
-                                Spacer()
-                            }
-                            .background(Color.green.opacity(0.1))
-                            
-                            Divider()
-                        }
-                        
-                        if evnt.result == "RUNNER OUT" {
-                            HStack{
-                                Spacer()
-                                Text("Baserunner Out")
-                                    .padding(.vertical, 5)
-                                    .foregroundStyle(Color.red.opacity(2))
-                                Spacer()
-                            }
-                            .background(Color.red.opacity(0.1))
-                            
-                            Divider()
-                                .background((event.end_ab_rd.contains(evnt.result_detail)) ? Color.black : Color.clear)
-                        }
-                        else {
-                            GridRow{
-                                Text("\(evnt.pitch_num)")
-                                Text(evnt.pitch_type)
-                                
-                                if ASVeloInput == true {
-                                    Text("\(evnt.velo, specifier: "%.1f")")
+                                VStack(alignment: .trailing){
+                                    Text("Fastball")
+                                        .font(.headline)
+                                        .foregroundStyle(text_color)
+                                    Text("Max: 102.9")
+                                        .font(.caption2)
+                                        .foregroundStyle(.grey)
                                 }
                                 
-                                Text(evnt.result)
-                                Text("\(evnt.balls) - \(evnt.strikes)")
-                                Text("\(evnt.outs) " + evnt.out_label)
+                                Spacer()
+                                
+                                ZStack{
+                                    Rectangle()
+                                        .fill(.grey)
+                                        .frame(maxWidth: .infinity, maxHeight: 1)
+                                    
+                                    GeometryReader{ geometry in
+                                        
+                                        HStack(spacing: 0){
+                                            Rectangle()
+                                                .fill(.clear)
+                                                .frame(width: geometry.size.width * 0.96)
+                                            
+                                            ZStack{
+                                                Rectangle()
+                                                    .fill(LinearGradient(colors: [.clear, Color("Gold"), Color("Gold"), .clear], startPoint: .leading, endPoint: .trailing).opacity(0.7))
+                                                    .frame(width: 20, height: 15)
+                                                
+                                                Rectangle()
+                                                    .fill(.black)
+                                                    .frame(width: 2, height: 17)
+                                                
+                                            }
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                .padding(.horizontal, view_padding)
+
                             }
                             
-                            Divider()
-                                .background((event.end_ab_rd.contains(evnt.result_detail)) ? Color.black : Color.clear)
                         }
                         
                     }
+                    .padding(view_padding)
+                    .frame(maxWidth: .infinity)
+                    .background(Color("DarkGrey"))
+                    .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
+                    
                 }
+                .padding(.horizontal, view_padding)
+                .padding(.bottom, view_padding)
+                
+                Spacer()
+                
             }
-            .padding(15)
+            .background(.black)
+            
         }
     }
 }
