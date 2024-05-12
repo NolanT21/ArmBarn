@@ -203,6 +203,15 @@ struct SettingsView: View {
                 showHitSummary = ASHitSummary ?? true
                 showGameScore = ASGameScore ?? true
                 showPitByInn = ASPitByInn ?? true
+                
+                ASBoxScore = showBoxScore
+                ASStrikePer = showStrikePer
+                ASLocation = showLocationMap
+                ASHitSummary = showHitSummary
+                ASGameScore = showGameScore
+                ASPitByInn = showPitByInn
+                
+                
             }
         }
     }

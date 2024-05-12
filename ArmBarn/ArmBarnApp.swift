@@ -10,10 +10,21 @@ import SwiftData
 import TipKit
 
 @main
+
 struct ArmBarnApp: App {
     
     init() {
         try? Tips.configure()
+        
+        UserDefaults.standard.register(defaults: [
+            "BoxScore" : true,
+            "StrikePer" : true,
+            "Location" : true,
+            "HitSummary" : true,
+            "GameScore" : true,
+            "PitByInn" : true
+            ])
+        
       }
     
     var body: some Scene {
