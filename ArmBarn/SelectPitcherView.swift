@@ -14,11 +14,13 @@ struct SelectPitcherView: View {
     @Environment(currentPitcher.self) var current_pitcher
     @Environment(GameReport.self) var game_report
     @Environment(Scoreboard.self) var scoreboard
+    @Environment(Event_String.self) var event
     @Environment(\.dismiss) var dismiss
     
     @Environment(\.modelContext) private var context
     
     @Query(sort: \Pitcher.lastName) var pitchers: [Pitcher]
+    @Query var events: [Event]
     
     @State private var edit_pitcher: Pitcher?
     
@@ -82,6 +84,9 @@ struct SelectPitcherView: View {
                                     current_pitcher.pitch_num += 1
                                     current_pitcher.arsenal[3] = p_er.pitch4
                                 }
+                                
+                                generate_pitches_and_abs(pitcher_id: current_pitcher.idcode)
+                                
                                 dismiss()
                             }
                             .foregroundColor(text_color)
@@ -153,6 +158,23 @@ struct SelectPitcherView: View {
         }
     }
     
+    func generate_pitches_and_abs(pitcher_id: UUID) {
+        
+        scoreboard.pitches = 0
+        scoreboard.atbats = 1
+        
+        for evnt in events {
+            if evnt.pitcher_id == pitcher_id {
+                if evnt.result_detail != "R" {
+                    scoreboard.pitches += 1
+                }
+                if event.end_ab_rd.contains(evnt.result_detail) {
+                    scoreboard.atbats += 1
+                }
+            }
+        }
+    }
+    
     func clear_game_report() {
         game_report.batters_faced = 0
         game_report.strikes = 0
@@ -189,6 +211,29 @@ struct SelectPitcherView: View {
         game_report.swing_per = 0
         game_report.whiffs = 0
         game_report.whiff_per = 0
+        
+        game_report.p1_velo_list = []
+        game_report.p2_velo_list = []
+        game_report.p3_velo_list = []
+        game_report.p4_velo_list = []
+        
+        game_report.velo_set_list = []
+        
+        game_report.rh_batters_faced = 0
+        game_report.lh_batters_faced = 0
+        game_report.bs_faced_factor = 0
+        game_report.rh_hits = 0
+        game_report.lh_hits = 0
+        game_report.bs_hits_factor = 0
+        game_report.rh_xbhs = 0
+        game_report.lh_xbhs = 0
+        game_report.bs_xbhs_factor = 0
+        game_report.rh_strikeouts = 0
+        game_report.lh_strikeouts = 0
+        game_report.bs_strikeouts_factor = 0
+        game_report.rh_walks = 0
+        game_report.lh_walks = 0
+        game_report.bs_walks_factor = 0
         
         game_report.p1_by_inn = [0]
         game_report.p2_by_inn = [0]
