@@ -57,6 +57,29 @@ import Observation
     var whiffs: Int = 0
     var whiff_per: Int = 0
     
+    var p1_velo_list: [Double] = []
+    var p2_velo_list: [Double] = []
+    var p3_velo_list: [Double] = []
+    var p4_velo_list: [Double] = []
+    
+    var velo_set_list: [PitchVeloSet] = []
+    
+    var rh_batters_faced: Int = 0
+    var lh_batters_faced: Int = 0
+    var bs_faced_factor: Double = 0
+    var rh_hits: Int = 0
+    var lh_hits: Int = 0
+    var bs_hits_factor: Double = 0
+    var rh_xbhs: Int = 0
+    var lh_xbhs: Int = 0
+    var bs_xbhs_factor: Double = 0
+    var rh_strikeouts: Int = 0
+    var lh_strikeouts: Int = 0
+    var bs_strikeouts_factor: Double = 0
+    var rh_walks: Int = 0
+    var lh_walks: Int = 0
+    var bs_walks_factor: Double = 0
+    
     var p1_by_inn: [Int] = []
     var p2_by_inn: [Int] = []
     var p3_by_inn: [Int] = []
@@ -83,6 +106,14 @@ struct PBPLog: Identifiable {
     var result_detail : String
     var pitcher : String
     
+}
+
+struct PitchVeloSet: Identifiable {
+    let id = UUID()
+    var pitch_type : String
+    var max_velo : Double
+    var avg_velo : Double
+    var velo_factor: Double
 }
 
 struct PitchTypeDataset: Identifiable {

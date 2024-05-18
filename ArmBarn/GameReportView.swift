@@ -11,6 +11,7 @@ import Charts
 
 struct GameReportView: View {
     
+    @AppStorage("BatterStance") var ASBatterStance : Bool?
     @AppStorage("VelocityInput") var ASVeloInput : Bool?
     @AppStorage("StrikeType") var ASStrikeType : Bool?
     
@@ -44,7 +45,13 @@ struct GameReportView: View {
     @State var sbl_width: Double = 17.0
     @State var sbl_height: Double = 13.0
     
-    @State var font_size: CGFloat = 17.0
+    @State var _default: CGFloat = 17.0
+    @State var title_size: CGFloat = 28.0
+    @State var headbody_size: CGFloat = 17
+    @State var callout_size: CGFloat = 16
+    @State var subheadline_size: CGFloat = 15
+    @State var caption_size: CGFloat = 12
+    @State var caption2_size: CGFloat = 11
     
     var background: Color = .black
     var component_background: UIColor = .darkGray
@@ -163,13 +170,19 @@ struct GameReportView: View {
                 VStack{
                     
                     let screenSize = UIScreen.main.bounds.size
+                    
+                    HStack{
+                        Spacer()
                         
-                    Text("Pitch-by-Pitch Log")
-                        .font(.headline)
-                        .padding(.top, 10)
+                        Text("Pitch-by-Pitch Log")
+                            .font(.system(size: headbody_size))
+                            .bold()
+                            .padding(.top, 10)
                         
-                    Grid(horizontalSpacing: (ASVeloInput == true) ? screenSize.width * 0.065 : screenSize.width * 0.12
-                    ){
+                        Spacer()
+                    }
+                        
+                    Grid(horizontalSpacing: (ASVeloInput == true) ? screenSize.width * 0.065 : screenSize.width * 0.12){
                             ForEach(Array(game_report.pbp_event_list.enumerated()), id: \.offset){ index, evnt in
                                 
                                 if index == 0 || game_report.pbp_event_list[index].inning > game_report.pbp_event_list[index - 1].inning{
@@ -179,7 +192,7 @@ struct GameReportView: View {
                                                 
                                                 Text("INN \(evnt.inning)")
                                                     .bold()
-                                                    .font(.body)
+                                                    .font(.system(size: headbody_size))
                                                     .padding(.top, 20)
                                                     .padding(.bottom, -10)
                                                 
@@ -207,7 +220,7 @@ struct GameReportView: View {
                                             HStack{
                                                 Spacer()
                                                 Text(evnt.pitcher + " Entered")
-                                                    .font(.body)
+                                                    .font(.system(size: headbody_size))
                                                     .padding(.vertical, 5)
                                                     .foregroundStyle(Color.green.opacity(2))
                                                 Spacer()
@@ -228,7 +241,7 @@ struct GameReportView: View {
                                            HStack{
                                                Spacer()
                                                Text("Baserunner Out")
-                                                   .font(.body)
+                                                   .font(.system(size: headbody_size))
                                                    .padding(.vertical, 5)
                                                    .foregroundStyle(Color.red.opacity(2))
                                                Spacer()
@@ -258,7 +271,7 @@ struct GameReportView: View {
                                         Text("\(evnt.outs) " + evnt.out_label)
                                             
                                     }
-                                    .font(.callout)
+                                    .font(.system(size: callout_size))
                                     
                                     Divider()
                                         .background((event.end_ab_rd.contains(evnt.result_detail)) ? Color.black : Color.clear)
@@ -288,13 +301,13 @@ struct GameReportView: View {
                 HStack{
                     VStack (alignment: .leading){
                         Text(current_pitcher.firstName + " " + current_pitcher.lastName)
-                            .font(.title)
+                            .font(.system(size: title_size))
                             .bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundStyle(text_color)
                             
                         Text(Date().formatted(.dateTime.day().month().year()))
-                            .font(.subheadline)
+                            .font(.system(size: subheadline_size))
                             .foregroundStyle(text_color)
                     }
                 }
@@ -309,7 +322,7 @@ struct GameReportView: View {
                             
                             HStack{
                                 Text("Box Score")
-                                    .font(.subheadline)
+                                    .font(.system(size: subheadline_size))
                                     .foregroundStyle(text_color)
                                 Spacer()
                             }
@@ -341,6 +354,7 @@ struct GameReportView: View {
                                 .foregroundStyle(text_color)
                                 
                             }
+                            .font(.system(size: _default))
                             
                         }
                         .padding(view_padding)
@@ -354,112 +368,14 @@ struct GameReportView: View {
                 }
                
                 if ASStrikePer == true {
-                    HStack{
-                        
-                        VStack{
-                            HStack{
-                                Text("Strike %")
-                                    .font(.subheadline)
-                                    .foregroundStyle(text_color)
-                                    .padding(.top, view_padding)
-                                
-                                Spacer()
-                            }
-                            .padding(.leading, view_padding)
-                            .padding(.bottom, view_padding)
-                           
-                            VStack{
-                                ZStack{
-                                    Gauge(value: Double(game_report.strikes_per) * 0.01) {}
-                                    .scaleEffect(2.5)
-                                    .gaugeStyle(.accessoryCircularCapacity)
-                                    .tint(Color("Gold"))
-                                    .padding(view_padding)
-                                    VStack{
-                                        Text("\(game_report.strikes_per)%")
-                                            .font(.system(size: 40))
-                                            .foregroundStyle(text_color)
-                                            .bold()
-                                        Text("\(game_report.strikes)/\(game_report.pitches)")
-                                            .font(.subheadline)
-                                            .foregroundStyle(text_color)
-                                    }
-                                    .padding(.top, view_padding)
-                                }
-                                .padding(view_padding)
-                                
-                                Spacer()
-                                
-                            }
-                            .padding(view_padding)
-                            
-                            Spacer()
-                            
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color("DarkGrey"))
-                        .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
-                        .padding(.bottom, view_padding/2)
-                        .padding(.leading, view_padding)
-                        .padding(.trailing, view_padding/4)
-                        
-                        VStack{
-                            
-                            HStack{
-                                Text("1st Pitch Strike %")
-                                    .font(.subheadline)
-                                    .padding(.top, view_padding)
-                                    .foregroundStyle(text_color)
-                                
-                                Spacer()
-                            }
-                            .padding(.leading, view_padding)
-                            .padding(.bottom, view_padding)
-                            
-                            VStack{
-                                ZStack{
-                                    Gauge(value: Double(game_report.first_pit_strike_per) * 0.01) {}
-                                    .scaleEffect(2.5)
-                                    .gaugeStyle(.accessoryCircularCapacity)
-                                    .tint(Color("PowderBlue"))
-                                    .padding(view_padding)
-                                    VStack{
-                                        Text("\(game_report.first_pit_strike_per)%")
-                                            .font(.system(size: 40))
-                                            .foregroundStyle(text_color)
-                                            .bold()
-                                        Text("\(game_report.first_pitch_strike)/\(game_report.batters_faced)")
-                                            .font(.subheadline)
-                                            .foregroundStyle(text_color)
-                                    }
-                                    .padding(.top, view_padding)
-                                }
-                                .padding(view_padding)
-                                
-                                Spacer()
-                                
-                            }
-                            .padding(view_padding)
-                            
-                            Spacer()
-                            
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color("DarkGrey"))
-                        .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
-                        .padding(.bottom, view_padding/2)
-                        .padding(.leading, view_padding/4)
-                        .padding(.trailing, view_padding)
-                        
-                    }
                     
-                    if ASStrikeType == true {
+                    VStack{
                         HStack{
                             
                             VStack{
                                 HStack{
-                                    Text("Swing %")
-                                        .font(.subheadline)
+                                    Text("Strike %")
+                                        .font(.system(size: subheadline_size))
                                         .foregroundStyle(text_color)
                                         .padding(.top, view_padding)
                                     
@@ -469,20 +385,19 @@ struct GameReportView: View {
                                 .padding(.bottom, view_padding)
                                
                                 VStack{
-                                    //Spacer()
                                     ZStack{
-                                        Gauge(value: Double(game_report.swing_per) * 0.01) {}
+                                        Gauge(value: Double(game_report.strikes_per) * 0.01) {}
                                         .scaleEffect(2.5)
                                         .gaugeStyle(.accessoryCircularCapacity)
-                                        .tint(Color("Tangerine"))
+                                        .tint(Color("Gold"))
                                         .padding(view_padding)
                                         VStack{
-                                            Text("\(game_report.swing_per)%")
+                                            Text("\(game_report.strikes_per)%")
                                                 .font(.system(size: 40))
                                                 .foregroundStyle(text_color)
                                                 .bold()
-                                            Text("\(game_report.swings)/\(game_report.strikes)")
-                                                .font(.subheadline)
+                                            Text("\(game_report.strikes)/\(game_report.pitches)")
+                                                .font(.system(size: subheadline_size))
                                                 .foregroundStyle(text_color)
                                         }
                                         .padding(.top, view_padding)
@@ -507,8 +422,8 @@ struct GameReportView: View {
                             VStack{
                                 
                                 HStack{
-                                    Text("Whiff %")
-                                        .font(.subheadline)
+                                    Text("1st Pitch Strike %")
+                                        .font(.system(size: subheadline_size))
                                         .padding(.top, view_padding)
                                         .foregroundStyle(text_color)
                                     
@@ -519,18 +434,18 @@ struct GameReportView: View {
                                 
                                 VStack{
                                     ZStack{
-                                        Gauge(value: Double(game_report.whiff_per) * 0.01) {}
+                                        Gauge(value: Double(game_report.first_pit_strike_per) * 0.01) {}
                                         .scaleEffect(2.5)
                                         .gaugeStyle(.accessoryCircularCapacity)
-                                        .tint(Color("Grey"))
+                                        .tint(Color("PowderBlue"))
                                         .padding(view_padding)
                                         VStack{
-                                            Text("\(game_report.whiff_per)%")
+                                            Text("\(game_report.first_pit_strike_per)%")
                                                 .font(.system(size: 40))
                                                 .foregroundStyle(text_color)
                                                 .bold()
-                                            Text("\(game_report.whiffs)/\(game_report.swings)")
-                                                .font(.subheadline)
+                                            Text("\(game_report.first_pitch_strike)/\(game_report.batters_faced)")
+                                                .font(.system(size: subheadline_size))
                                                 .foregroundStyle(text_color)
                                         }
                                         .padding(.top, view_padding)
@@ -551,10 +466,196 @@ struct GameReportView: View {
                             .padding(.bottom, view_padding/2)
                             .padding(.leading, view_padding/4)
                             .padding(.trailing, view_padding)
+                            
                         }
+                        
+                        if ASStrikeType == true {
+                            HStack{
+                                
+                                VStack{
+                                    HStack{
+                                        Text("Swing %")
+                                            .font(.system(size: subheadline_size))
+                                            .foregroundStyle(text_color)
+                                            .padding(.top, view_padding)
+                                        
+                                        Spacer()
+                                    }
+                                    .padding(.leading, view_padding)
+                                    .padding(.bottom, view_padding)
+                                   
+                                    VStack{
+                                        //Spacer()
+                                        ZStack{
+                                            Gauge(value: Double(game_report.swing_per) * 0.01) {}
+                                            .scaleEffect(2.5)
+                                            .gaugeStyle(.accessoryCircularCapacity)
+                                            .tint(Color("Tangerine"))
+                                            .padding(view_padding)
+                                            VStack{
+                                                Text("\(game_report.swing_per)%")
+                                                    .font(.system(size: 40))
+                                                    .foregroundStyle(text_color)
+                                                    .bold()
+                                                Text("\(game_report.swings)/\(game_report.strikes)")
+                                                    .font(.system(size: subheadline_size))
+                                                    .foregroundStyle(text_color)
+                                            }
+                                            .padding(.top, view_padding)
+                                        }
+                                        .padding(view_padding)
+                                        
+                                        Spacer()
+                                        
+                                    }
+                                    .padding(view_padding)
+                                    
+                                    Spacer()
+                                    
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(Color("DarkGrey"))
+                                .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
+                                .padding(.bottom, view_padding/2)
+                                .padding(.leading, view_padding)
+                                .padding(.trailing, view_padding/4)
+                                
+                                VStack{
+                                    
+                                    HStack{
+                                        Text("Whiff %")
+                                            .font(.system(size: subheadline_size))
+                                            .padding(.top, view_padding)
+                                            .foregroundStyle(text_color)
+                                        
+                                        Spacer()
+                                    }
+                                    .padding(.leading, view_padding)
+                                    .padding(.bottom, view_padding)
+                                    
+                                    VStack{
+                                        ZStack{
+                                            Gauge(value: Double(game_report.whiff_per) * 0.01) {}
+                                            .scaleEffect(2.5)
+                                            .gaugeStyle(.accessoryCircularCapacity)
+                                            .tint(Color("Grey"))
+                                            .padding(view_padding)
+                                            VStack{
+                                                Text("\(game_report.whiff_per)%")
+                                                    .font(.system(size: 40))
+                                                    .foregroundStyle(text_color)
+                                                    .bold()
+                                                Text("\(game_report.whiffs)/\(game_report.swings)")
+                                                    .font(.system(size: subheadline_size))
+                                                    .foregroundStyle(text_color)
+                                            }
+                                            .padding(.top, view_padding)
+                                        }
+                                        .padding(view_padding)
+                                        
+                                        Spacer()
+                                        
+                                    }
+                                    .padding(view_padding)
+                                    
+                                    Spacer()
+                                    
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(Color("DarkGrey"))
+                                .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
+                                .padding(.leading, view_padding/4)
+                                .padding(.bottom, view_padding/2)
+                                .padding(.trailing, view_padding)
+                            }
+                        }
+                        
+//                        Spacer()
                     }
+                    .padding(.bottom, view_padding/2)
                     
-                    Spacer()
+                }
+                
+                if ASVeloInput == true && game_report.velo_set_list.count > 0{
+                    HStack{
+                        
+                        VStack{
+                            
+                            HStack{
+                                Text("Pitch Velocity")
+                                    .font(.system(size: subheadline_size))
+                                    .foregroundStyle(text_color)
+                                Spacer()
+                            }
+                            
+                            VStack{
+                                
+                                Grid(alignment: .trailing){
+                                    ForEach(Array(game_report.velo_set_list.enumerated()), id: \.offset){ index, pitch in
+                                        GridRow{
+                                            VStack(alignment: .trailing){
+                                                Text(pitch.pitch_type)
+                                                    .font(.system(size: headbody_size))
+                                                    .bold()
+                                                    .foregroundStyle(text_color)
+                                                Text("Max: \(pitch.max_velo, specifier: "%.1f")")
+                                                    .font(.system(size: caption2_size))
+                                                    .foregroundStyle(.grey)
+                                            }
+                                            
+    //                                        Spacer()
+                                            
+                                            ZStack{
+                                                Rectangle()
+                                                    .fill(.grey)
+                                                    .frame(maxWidth: .infinity, maxHeight: 1)
+                                                    .padding(.trailing, 18)
+                                                
+                                                GeometryReader{ geometry in
+                                                    
+                                                    HStack(spacing: 0){
+                                                        Rectangle()
+                                                            .fill(.clear)
+                                                            .frame(width: geometry.size.width * pitch.velo_factor)
+                                                        
+                                                        ZStack{
+                                                            Rectangle()
+                                                                .fill(LinearGradient(colors: [.clear, colorset[index], colorset[index], .clear], startPoint: .leading, endPoint: .trailing).opacity(0.7))
+                                                                .frame(width: 20, height: 15)
+                                                            
+                                                            Rectangle()
+                                                                .fill(.black)
+                                                                .frame(width: 2, height: 17)
+                                                            
+                                                            Text("\(pitch.avg_velo, specifier: "%.1f")")
+                                                                .foregroundStyle(text_color)
+                                                                .font(.system(size: 13))
+                                                                .padding(.top, -25)
+                                                            
+                                                        }
+                                                        
+                                                    }
+                                                    
+                                                }
+                                                
+                                            }
+                                            .padding(.leading, view_padding)
+
+                                        }
+                                    }
+                                }
+                                
+                            }
+                            
+                        }
+                        .padding(view_padding)
+                        .frame(maxWidth: .infinity)
+                        .background(Color("DarkGrey"))
+                        .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
+                        
+                    }
+                    .padding(.horizontal, view_padding)
+                    .padding(.bottom, view_padding)
                 }
                 
                 
@@ -565,7 +666,7 @@ struct GameReportView: View {
                             
                             HStack{
                                 Text("Pitch Location Map")
-                                    .font(.subheadline)
+                                    .font(.system(size: subheadline_size))
                                     .foregroundStyle(text_color)
                                     .padding(.leading, view_padding)
                                     .padding(.top, view_padding)
@@ -606,7 +707,7 @@ struct GameReportView: View {
                                     .frame(width: 8, height: 8, alignment: .center)
                                                             
                                 Text(current_pitcher.pitch1 + " ")
-                                    .font(.caption)
+                                    .font(.system(size: caption_size))
                                     .foregroundStyle(legend_color)
                             
                                 if current_pitcher.pitch2 != "None" {
@@ -615,7 +716,7 @@ struct GameReportView: View {
                                         .frame(width: 8, height: 8, alignment: .center)
                                     
                                     Text(current_pitcher.pitch2 + " ")
-                                        .font(.caption2)
+                                        .font(.system(size: caption2_size))
                                         .foregroundStyle(legend_color)
                                 }
                                 
@@ -625,7 +726,7 @@ struct GameReportView: View {
                                         .frame(width: 8, height: 8, alignment: .center)
                                     
                                     Text(current_pitcher.pitch3 + " ")
-                                        .font(.caption2)
+                                        .font(.system(size: caption2_size))
                                         .foregroundStyle(legend_color)
                                 }
                                 
@@ -635,7 +736,7 @@ struct GameReportView: View {
                                         .frame(width: 8, height: 8, alignment: .center)
                                     
                                     Text(current_pitcher.pitch4 + " ")
-                                        .font(.caption2)
+                                        .font(.system(size: caption2_size))
                                         .foregroundStyle(legend_color)
                                 }
                             
@@ -649,7 +750,7 @@ struct GameReportView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(Color("DarkGrey"))
                         .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
-                        .padding(.top, view_padding/2)
+//                        .padding(.top, view_padding/2)
                         .padding(.bottom, view_padding)
                         .padding(.leading, view_padding)
                         .padding(.trailing, view_padding)
@@ -665,7 +766,7 @@ struct GameReportView: View {
                             
                             HStack{
                                 Text("Hit Summary")
-                                    .font(.subheadline)
+                                    .font(.system(size: subheadline_size))
                                     .foregroundStyle(text_color)
                                 Spacer()
                             }
@@ -693,7 +794,7 @@ struct GameReportView: View {
                                 }
                                 .foregroundStyle(text_color)
                             }
-                            .font(.system(size: font_size))
+                            .font(.system(size: _default))
                             
                             Spacer()
                             
@@ -702,11 +803,11 @@ struct GameReportView: View {
                                     VStack{
                                         HStack{
                                             Text("Most Hit Pitch:")
-                                                .font(.system(size: font_size))
+                                                .font(.system(size: _default))
                                                 .foregroundStyle(text_color)
                                             
                                             Text(game_report.most_hit_pit)
-                                                .font(.system(size: font_size))
+                                                .font(.system(size: _default))
                                                 .foregroundStyle(text_color)
                                                 .bold()
                                         }
@@ -714,17 +815,21 @@ struct GameReportView: View {
                                         HStack{
                                             
                                             Text("Hits:")
+                                                .font(.system(size: _default))
                                                 //.foregroundStyle(text_color)
                                             
                                             Text("\(game_report.mhp_hits)")
+                                                .font(.system(size: _default))
                                                 //.foregroundStyle(text_color)
                                             
                                             Divider()
                                             
                                             Text("Pitches:")
+                                                .font(.system(size: _default))
                                                 //.foregroundStyle(text_color)
                                             
                                             Text("\(game_report.mhp_pitches)")
+                                                .font(.system(size: _default))
                                                 //.foregroundStyle(text_color)
                                             
                                             
@@ -758,7 +863,7 @@ struct GameReportView: View {
                         VStack{
                             HStack{
                                 Text("Game Score")
-                                    .font(.subheadline)
+                                    .font(.system(size: subheadline_size))
                                     .foregroundStyle(text_color)
                                 
                                 Spacer()
@@ -782,6 +887,7 @@ struct GameReportView: View {
                                 VStack{
                                     Gauge(value: Double(game_report.game_score) * 0.01) {
                                         Text("Game Score")
+                                            .font(.system(size: _default))
                                             .foregroundStyle(text_color)
                                     }
                                     .gaugeStyle(.accessoryLinear)
@@ -820,12 +926,268 @@ struct GameReportView: View {
                     Spacer()
                 }
                 
+                if ASBatterStance == true {
+                    
+                        HStack{
+                            
+                            VStack{
+                                
+                                HStack{
+                                    Text("Batter Stance Splits")
+                                        .font(.system(size: subheadline_size))
+                                        .foregroundStyle(text_color)
+                                    Spacer()
+                                }
+                                .padding(.bottom, view_padding)
+                                
+                                if game_report.rh_batters_faced == 0 && game_report.lh_batters_faced != 0{
+                                    Text("No Right Handed Batters Faced")
+                                        .font(.system(size: _default))
+                                }
+                                else if game_report.lh_batters_faced == 0 && game_report.rh_batters_faced != 0{
+                                    Text("No Left Handed Batters Faced")
+                                        .font(.system(size: _default))
+                                }
+                                else {
+                                    
+                                    VStack{
+                                        
+                                        HStack{
+                                            Text("RHH")
+                                                .font(.system(size: _default))
+                                                .bold()
+                                                .overlay(
+                                                    Rectangle()
+                                                        .fill(Color("PowderBlue"))
+                                                        .frame(width: 35, height: 2),
+                                                    alignment: .bottom)
+                                            
+                                            Spacer()
+                                            
+                                            Text("LHH")
+                                                .font(.system(size: _default))
+                                                .bold()
+                                                .overlay(
+                                                    Rectangle()
+                                                        .fill(Color("Gold"))
+                                                        .frame(width: 35, height: 2),
+                                                    alignment: .bottom)
+                                        }
+                                        
+                                        GeometryReader{ geometry in
+                                            VStack{
+                                                
+                                                VStack{
+                                                    HStack{
+                                                        Text("\(game_report.rh_batters_faced)")
+                                                            .font(.system(size: headbody_size))
+                                                            .bold()
+                                                            .foregroundStyle(text_color)
+                                                        
+                                                        Spacer()
+                                                        
+                                                        Text("Batters Faced")
+                                                            .font(.system(size: headbody_size))
+                                                            .bold()
+                                                            .foregroundStyle(text_color)
+                                                        
+                                                        Spacer()
+                                                        
+                                                        Text("\(game_report.lh_batters_faced)")
+                                                            .font(.system(size: headbody_size))
+                                                            .bold()
+                                                            .foregroundStyle(text_color)
+                                                    }
+                                                    .padding(.bottom, view_padding * -0.3)
+                                                    HStack(spacing: 3){
+                                                        Rectangle()
+                                                            .fill(Color("PowderBlue"))
+                                                            .frame(width: geometry.size.width * game_report.bs_faced_factor, height: 7)
+                                                            .cornerRadius(10)
+                                                        
+                                                        
+                                                        Rectangle()
+                                                            .fill(Color("Gold"))
+                                                            .frame(height: 7)
+                                                            .cornerRadius(10)
+                                                    }
+                                                }
+                                                .padding(.bottom, view_padding * 0.3)
+                                                
+                                                VStack{
+                                                    HStack{
+                                                        Text("\(game_report.rh_hits)")
+                                                            .font(.system(size: headbody_size))
+                                                            .bold()
+                                                            .foregroundStyle(text_color)
+                                                        
+                                                        Spacer()
+                                                        
+                                                        Text("Hits")
+                                                            .font(.system(size: headbody_size))
+                                                            .bold()
+                                                            .foregroundStyle(text_color)
+                                                        
+                                                        Spacer()
+                                                        
+                                                        Text("\(game_report.lh_hits)")
+                                                            .font(.system(size: headbody_size))
+                                                            .bold()
+                                                            .foregroundStyle(text_color)
+                                                    }
+                                                    .padding(.bottom, view_padding * -0.3)
+                                                    HStack(spacing: 3){
+                                                        Rectangle()
+                                                            .fill(Color("PowderBlue"))
+                                                            .frame(width: geometry.size.width * game_report.bs_hits_factor, height: 7)
+                                                            .cornerRadius(10)
+                                                        
+                                                        
+                                                        Rectangle()
+                                                            .fill(Color("Gold"))
+                                                            .frame(height: 7)
+                                                            .cornerRadius(10)
+                                                    }
+                                                }
+                                                .padding(.bottom, view_padding * 0.3)
+                                                
+                                                VStack{
+                                                    HStack{
+                                                        Text("\(game_report.rh_xbhs)")
+                                                            .font(.system(size: headbody_size))
+                                                            .bold()
+                                                            .foregroundStyle(text_color)
+                                                        
+                                                        Spacer()
+                                                        
+                                                        Text("XBHs")
+                                                            .font(.system(size: headbody_size))
+                                                            .bold()
+                                                            .foregroundStyle(text_color)
+                                                        
+                                                        Spacer()
+                                                        
+                                                        Text("\(game_report.lh_xbhs)")
+                                                            .font(.system(size: headbody_size))
+                                                            .bold()
+                                                            .foregroundStyle(text_color)
+                                                    }
+                                                    .padding(.bottom, view_padding * -0.3)
+                                                    HStack(spacing: 3){
+                                                        Rectangle()
+                                                            .fill(Color("PowderBlue"))
+                                                            .frame(width: geometry.size.width * game_report.bs_xbhs_factor, height: 7)
+                                                            .cornerRadius(10)
+                                                        
+                                                        
+                                                        Rectangle()
+                                                            .fill(Color("Gold"))
+                                                            .frame(height: 7)
+                                                            .cornerRadius(10)
+                                                    }
+                                                }
+                                                .padding(.bottom, view_padding * 0.3)
+                                                
+                                                VStack{
+                                                    HStack{
+                                                        Text("\(game_report.rh_strikeouts)")
+                                                            .font(.system(size: headbody_size))
+                                                            .bold()
+                                                            .foregroundStyle(text_color)
+                                                        
+                                                        Spacer()
+                                                        
+                                                        Text("Strikeouts")
+                                                            .font(.system(size: headbody_size))
+                                                            .bold()
+                                                            .foregroundStyle(text_color)
+                                                        
+                                                        Spacer()
+                                                        
+                                                        Text("\(game_report.lh_strikeouts)")
+                                                            .font(.system(size: headbody_size))
+                                                            .bold()
+                                                            .foregroundStyle(text_color)
+                                                    }
+                                                    .padding(.bottom, view_padding * -0.3)
+                                                    HStack(spacing: 3){
+                                                        Rectangle()
+                                                            .fill(Color("PowderBlue"))
+                                                            .frame(width: geometry.size.width * game_report.bs_strikeouts_factor, height: 7)
+                                                            .cornerRadius(10)
+                                                        
+                                                        
+                                                        Rectangle()
+                                                            .fill(Color("Gold"))
+                                                            .frame(height: 7)
+                                                            .cornerRadius(10)
+                                                    }
+                                                }
+                                                .padding(.bottom, view_padding * 0.3)
+                                                
+                                                VStack{
+                                                    HStack{
+                                                        Text("\(game_report.rh_walks)")
+                                                            .font(.system(size: headbody_size))
+                                                            .bold()
+                                                            .foregroundStyle(text_color)
+                                                        
+                                                        Spacer()
+                                                        
+                                                        Text("Walks")
+                                                            .font(.system(size: headbody_size))
+                                                            .bold()
+                                                            .foregroundStyle(text_color)
+                                                        
+                                                        Spacer()
+                                                        
+                                                        Text("\(game_report.lh_walks)")
+                                                            .font(.system(size: headbody_size))
+                                                            .bold()
+                                                            .foregroundStyle(text_color)
+                                                    }
+                                                    .padding(.bottom, view_padding * -0.3)
+                                                    HStack(spacing: 3){
+                                                        Rectangle()
+                                                            .fill(Color("PowderBlue"))
+                                                            .frame(width: geometry.size.width * game_report.bs_walks_factor, height: 7)
+                                                            .cornerRadius(10)
+                                                        
+                                                        
+                                                        Rectangle()
+                                                            .fill(Color("Gold"))
+                                                            .frame(height: 7)
+                                                            .cornerRadius(10)
+                                                    }
+                                                }
+                                                .padding(.bottom, view_padding * 0.3)
+                                                
+                                            }
+                                            
+                                        }
+                                        .frame(height: 210)
+                                        
+                                    }
+                                    
+                                }
+                            }
+                            .padding(view_padding)
+                            .frame(maxWidth: .infinity)
+                            .background(Color("DarkGrey"))
+                            .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
+                            
+                        }
+                        .padding(.horizontal, view_padding)
+                        .padding(.bottom, view_padding)
+                }
+                
+                
                 if game_report.p1_by_inn.count > 1 && ASPitByInn == true{
                     HStack{
                         VStack{
                             HStack{
                                 Text("Pitch Usage by Inning")
-                                    .font(.subheadline)
+                                    .font(.system(size: subheadline_size))
                                     .foregroundStyle(text_color)
                                     .padding(.leading, view_padding)
                                     .padding(.top, view_padding)
@@ -890,7 +1252,7 @@ struct GameReportView: View {
                                         .frame(width: 8, height: 8, alignment: .center)
                                                                 
                                     Text(current_pitcher.pitch1 + " ")
-                                        .font(.caption)
+                                        .font(.system(size: caption_size))
                                         .foregroundStyle(legend_color)
                                 
                                     if current_pitcher.pitch2 != "None" {
@@ -899,7 +1261,7 @@ struct GameReportView: View {
                                             .frame(width: 8, height: 8, alignment: .center)
                                         
                                         Text(current_pitcher.pitch2 + " ")
-                                            .font(.caption2)
+                                            .font(.system(size: caption2_size))
                                             .foregroundStyle(legend_color)
                                     }
                                     
@@ -909,7 +1271,7 @@ struct GameReportView: View {
                                             .frame(width: 8, height: 8, alignment: .center)
                                         
                                         Text(current_pitcher.pitch3 + " ")
-                                            .font(.caption2)
+                                            .font(.system(size: caption2_size))
                                             .foregroundStyle(legend_color)
                                     }
                                     
@@ -919,7 +1281,7 @@ struct GameReportView: View {
                                             .frame(width: 8, height: 8, alignment: .center)
                                         
                                         Text(current_pitcher.pitch4 + " ")
-                                            .font(.caption2)
+                                            .font(.system(size: caption2_size))
                                             .foregroundStyle(legend_color)
                                     }
                                 

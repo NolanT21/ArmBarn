@@ -257,7 +257,7 @@ struct PitchLocationView: View {
                         }
                         
                         if showNewGame == true {
-                            PopupAlertView(isActive: $showNewGame, title: "Resume Game?", message: "A previous game was being recorded. Do you want to continue?", leftButtonAction: {load_recent_event(); load_recent_ab_pitches(); set_pitcher(); showNewGame = false}, rightButtonAction: {new_game_func(); showNewGame = false})
+                            PopupAlertView(isActive: $showNewGame, title: "Resume Game?", message: "A previous game was being recorded. Do you want to continue?", leftButtonAction: {set_pitcher(); load_recent_event(); load_recent_ab_pitches(); showNewGame = false}, rightButtonAction: {new_game_func(); showNewGame = false})
                         }
                         
                     }
@@ -582,6 +582,29 @@ struct PitchLocationView: View {
         game_report.whiffs = 0
         game_report.whiff_per = 0
         
+        game_report.rh_batters_faced = 0
+        game_report.lh_batters_faced = 0
+        game_report.bs_faced_factor = 0
+        game_report.rh_hits = 0
+        game_report.lh_hits = 0
+        game_report.bs_hits_factor = 0
+        game_report.rh_xbhs = 0
+        game_report.lh_xbhs = 0
+        game_report.bs_xbhs_factor = 0
+        game_report.rh_strikeouts = 0
+        game_report.lh_strikeouts = 0
+        game_report.bs_strikeouts_factor = 0
+        game_report.rh_walks = 0
+        game_report.lh_walks = 0
+        game_report.bs_walks_factor = 0
+        
+        game_report.p1_velo_list = []
+        game_report.p2_velo_list = []
+        game_report.p3_velo_list = []
+        game_report.p4_velo_list = []
+        
+        game_report.velo_set_list = []
+        
         game_report.p1_by_inn = [0]
         game_report.p2_by_inn = [0]
         game_report.p3_by_inn = [0]
@@ -620,6 +643,7 @@ struct PitchLocationView: View {
                 if evnt.pitch_type == "P1" {
                     p1_cntr += 1
                     game_report.pl_color = Color("PowderBlue")
+                    game_report.p1_velo_list.append(evnt.velocity)
                     if evnt.pitch_result == "H" && evnt.result_detail != "E" {
                         game_report.p1_hits += 1
                     }
@@ -627,6 +651,7 @@ struct PitchLocationView: View {
                 else if evnt.pitch_type == "P2" {
                     p2_cntr += 1
                     game_report.pl_color = Color("Gold")
+                    game_report.p2_velo_list.append(evnt.velocity)
                     if evnt.pitch_result == "H" && evnt.result_detail != "E" {
                         game_report.p2_hits += 1
                     }
@@ -634,6 +659,7 @@ struct PitchLocationView: View {
                 else if evnt.pitch_type == "P3" {
                     p3_cntr += 1
                     game_report.pl_color = Color("Tangerine")
+                    game_report.p3_velo_list.append(evnt.velocity)
                     if evnt.pitch_result == "H" && evnt.result_detail != "E" {
                         game_report.p3_hits += 1
                     }
@@ -641,6 +667,7 @@ struct PitchLocationView: View {
                 else if evnt.pitch_type == "P4" {
                     p4_cntr += 1
                     game_report.pl_color = Color("Grey")
+                    game_report.p4_velo_list.append(evnt.velocity)
                     if evnt.pitch_result == "H" && evnt.result_detail != "E" {
                         game_report.p4_hits += 1
                     }
@@ -659,7 +686,7 @@ struct PitchLocationView: View {
                     
                     if evnt.pitch_result != "A" && evnt.result_detail != "B"{
                         game_report.strikes += 1
-                        if evnt.balls == 0 && evnt.strikes == 0 {
+                        if (evnt.balls == 0 && evnt.strikes == 0) || game_report.pitches == 1{
                             game_report.first_pitch_strike += 1
                         }
                         
@@ -674,6 +701,13 @@ struct PitchLocationView: View {
                         if evnt.pitch_result == "H" && evnt.result_detail != "E"{
                             game_report.hits += 1
                             game_report.swings += 1
+                            
+                            if evnt.batter_stance == "L" {
+                                game_report.lh_hits += 1
+                            }
+                            else if evnt.batter_stance == "R" {
+                                game_report.rh_hits += 1
+                            }
                                 
                             if evnt.result_detail == "S" {
                                 game_report.game_score -= 2
@@ -682,15 +716,37 @@ struct PitchLocationView: View {
                             else if evnt.result_detail == "D" {
                                 game_report.game_score -= 3
                                 game_report.doubles += 1
+                                
+                                if evnt.batter_stance == "L" {
+                                    game_report.lh_xbhs += 1
+                                }
+                                else if evnt.batter_stance == "R" {
+                                    game_report.rh_xbhs += 1
+                                }
+                                
                             }
                             else if evnt.result_detail == "T" {
                                 game_report.game_score -= 4
                                 game_report.triples += 1
                                 
+                                if evnt.batter_stance == "L" {
+                                    game_report.lh_xbhs += 1
+                                }
+                                else if evnt.batter_stance == "R" {
+                                    game_report.rh_xbhs += 1
+                                }
+                                
                             }
                             else if evnt.result_detail == "H" {
                                 game_report.game_score -= 6
                                 game_report.homeruns += 1
+                                
+                                if evnt.batter_stance == "L" {
+                                    game_report.lh_xbhs += 1
+                                }
+                                else if evnt.batter_stance == "R" {
+                                    game_report.rh_xbhs += 1
+                                }
                             }
                                 
                         }
@@ -710,17 +766,33 @@ struct PitchLocationView: View {
                             if evnt.result_detail != "C" {
                                 outs += 1
                             }
+                            
+                            if evnt.batter_stance == "L" {
+                                game_report.lh_strikeouts += 1
+                            }
+                            else if evnt.batter_stance == "R" {
+                                game_report.rh_strikeouts += 1
+                            }
+                            
                         }
                     }
                     else if evnt.pitch_result == "A" || evnt.result_detail == "B"{
                         game_report.balls += 1
-                        if evnt.balls == 0 && evnt.strikes == 0 {
+                        if (evnt.balls == 0 && evnt.strikes == 0) || game_report.pitches == 1{
                             game_report.first_pitch_ball += 1
                         }
                         
                         else if evnt.result_detail == "W"{
                             game_report.walks += 1
                             game_report.game_score -= 2
+                            
+                            if evnt.batter_stance == "L" {
+                                game_report.lh_walks += 1
+                            }
+                            else if evnt.batter_stance == "R" {
+                                game_report.rh_walks += 1
+                            }
+                            
                         }
                     }
                 }
@@ -737,7 +809,17 @@ struct PitchLocationView: View {
                     game_report.inn_pitched = round(game_report.inn_pitched) + (Double(outs) * 0.1)
                 }
                 
-                game_report.batters_faced = evnt.atbats
+                if (evnt.balls == 0 && evnt.strikes == 0 && evnt.result_detail != "R")  || game_report.pitches == 1{
+                    game_report.batters_faced += 1
+                    
+                    if evnt.batter_stance == "L" {
+                        game_report.lh_batters_faced += 1
+                    }
+                    else if evnt.batter_stance == "R" {
+                        game_report.rh_batters_faced += 1
+                    }
+                    
+                }
                 
                 game_report.x_coordinate_list.append(evnt.pitch_x_location)
                 game_report.y_coordinate_list.append(evnt.pitch_y_location)
@@ -794,6 +876,81 @@ struct PitchLocationView: View {
             game_report.mhp_hits = 0
         }
         
+        if game_report.p1_velo_list.count >= 1 {
+            let p1_avg = game_report.p1_velo_list.reduce(0, +) / Double(game_report.p1_velo_list.count)
+            let p1_max = game_report.p1_velo_list.max() ?? 0
+            var p1_factor = (p1_avg - 60) / 40
+            if p1_factor <= 0.01 { p1_factor = 0.01 }
+            else if p1_factor >= 0.86 { p1_factor = 0.86 }
+            
+            game_report.velo_set_list.append(PitchVeloSet(pitch_type: current_pitcher.pitch1, max_velo: p1_max, avg_velo: p1_avg, velo_factor: p1_factor))
+        }
+        if game_report.p2_velo_list.count >= 1 {
+            let p2_avg = game_report.p2_velo_list.reduce(0, +) / Double(game_report.p2_velo_list.count)
+            let p2_max = game_report.p2_velo_list.max() ?? 0
+            var p2_factor = (p2_avg - 60) / 40
+            if p2_factor <= 0.01 { p2_factor = 0.01 }
+            else if p2_factor >= 0.86 { p2_factor = 0.86 }
+            
+            game_report.velo_set_list.append(PitchVeloSet(pitch_type: current_pitcher.pitch2, max_velo: p2_max, avg_velo: p2_avg, velo_factor: p2_factor))
+        }
+        if game_report.p3_velo_list.count >= 1 {
+            let p3_avg = game_report.p3_velo_list.reduce(0, +) / Double(game_report.p3_velo_list.count)
+            let p3_max = game_report.p3_velo_list.max() ?? 0
+            var p3_factor = (p3_avg - 60) / 40
+            if p3_factor <= 0.01 { p3_factor = 0.01 }
+            else if p3_factor >= 0.86 { p3_factor = 0.86 }
+            
+            game_report.velo_set_list.append(PitchVeloSet(pitch_type: current_pitcher.pitch3, max_velo: p3_max, avg_velo: p3_avg, velo_factor: p3_factor))
+        }
+        if game_report.p4_velo_list.count >= 1 {
+            let p4_avg = game_report.p4_velo_list.reduce(0, +) / Double(game_report.p4_velo_list.count)
+            let p4_max = game_report.p4_velo_list.max() ?? 0
+            var p4_factor = (p4_avg - 60) / 40
+            if p4_factor <= 0.01 { p4_factor = 0.01 }
+            else if p4_factor >= 0.86 { p4_factor = 0.86 }
+            
+            game_report.velo_set_list.append(PitchVeloSet(pitch_type: current_pitcher.pitch4, max_velo: p4_max, avg_velo: p4_avg, velo_factor: p4_factor))
+        }
+        
+        
+        if game_report.batters_faced != 0 {
+            game_report.bs_faced_factor = Double(game_report.rh_batters_faced) / Double(game_report.batters_faced)
+        }
+        else {
+            game_report.bs_faced_factor = 0.5
+        }
+        
+        if game_report.hits != 0 {
+            game_report.bs_hits_factor = Double(game_report.rh_hits) / Double(game_report.hits)
+        }
+        else {
+            game_report.bs_hits_factor = 0.5
+        }
+        
+        if (game_report.lh_xbhs + game_report.rh_xbhs) != 0 {
+            game_report.bs_xbhs_factor = Double(game_report.rh_xbhs) / Double(game_report.lh_xbhs + game_report.rh_xbhs)
+        }
+        else {
+            game_report.bs_xbhs_factor = 0.5
+        }
+        
+        if game_report.strikeouts != 0 {
+            game_report.bs_strikeouts_factor = Double(game_report.rh_strikeouts) / Double(game_report.strikeouts)
+        }
+        else {
+            game_report.bs_strikeouts_factor = 0.5
+        }
+        
+        if game_report.walks != 0 {
+            game_report.bs_walks_factor = Double(game_report.rh_walks) / Double(game_report.walks)
+        }
+        else {
+            game_report.bs_walks_factor = 0.5
+        }
+        
+        
+        
         let temp_inn_pitches = [game_report.p1_by_inn, game_report.p2_by_inn, game_report.p3_by_inn, game_report.p4_by_inn]
         
         for index in 0..<temp_inn_pitches.count {
@@ -803,7 +960,6 @@ struct PitchLocationView: View {
                 )
             }
         }
-        
     }
     
     func new_game_func() {
@@ -886,6 +1042,29 @@ struct PitchLocationView: View {
         game_report.swing_per = 0
         game_report.whiffs = 0
         game_report.whiff_per = 0
+        
+        game_report.p1_velo_list = []
+        game_report.p2_velo_list = []
+        game_report.p3_velo_list = []
+        game_report.p4_velo_list = []
+        
+        game_report.velo_set_list = []
+        
+        game_report.rh_batters_faced = 0
+        game_report.lh_batters_faced = 0
+        game_report.bs_faced_factor = 0
+        game_report.rh_hits = 0
+        game_report.lh_hits = 0
+        game_report.bs_hits_factor = 0
+        game_report.rh_xbhs = 0
+        game_report.lh_xbhs = 0
+        game_report.bs_xbhs_factor = 0
+        game_report.rh_strikeouts = 0
+        game_report.lh_strikeouts = 0
+        game_report.bs_strikeouts_factor = 0
+        game_report.rh_walks = 0
+        game_report.lh_walks = 0
+        game_report.bs_walks_factor = 0
         
         game_report.p1_by_inn = [0]
         game_report.p2_by_inn = [0]
@@ -1070,7 +1249,7 @@ struct PitchLocationView: View {
         scoreboard.balls = recent_event.balls
         scoreboard.strikes = recent_event.strikes
         scoreboard.outs = recent_event.outs
-        scoreboard.atbats = recent_event.atbats
+        scoreboard.atbats = 0
         scoreboard.inning = recent_event.inning
         event.batter_stance = recent_event.batter_stance
         
@@ -1138,8 +1317,14 @@ struct PitchLocationView: View {
         }
 
         for evnt in events{
+            
             if evnt.result_detail != "R" {
-                scoreboard.pitches += 1
+                if current_pitcher.idcode == evnt.pitcher_id{
+                    scoreboard.pitches += 1
+                    if (evnt.balls == 0 && evnt.strikes == 0) || scoreboard.pitches == 1{
+                        scoreboard.atbats += 1
+                    }
+                }
             }
             else {
                 if scoreboard.baserunners > 0{
