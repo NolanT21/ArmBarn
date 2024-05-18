@@ -13,6 +13,7 @@ import Observation
 struct TestView: View {
     
     @AppStorage("VelocityInput") var ASVeloInput : Bool?
+    @AppStorage("VelocityUnits") var ASVeloUnits : String?
     
     @Environment(Scoreboard.self) var scoreboard
     @Environment(PitchTypeConfig.self) var ptconfig
@@ -36,6 +37,8 @@ struct TestView: View {
     
     let gradient = Gradient(colors: [.yellow, .orange, .red])
     
+    var colorset = [Color("PowderBlue"), Color("Gold"), Color("Tangerine"), Color("Grey")]
+    
     var view_padding: CGFloat = 10
     var view_crnr_radius: CGFloat = 12
     
@@ -52,71 +55,64 @@ struct TestView: View {
                 
                 HStack{
                     
-                    VStack{
+                    VStack(alignment: .trailing){
                         
-                        HStack{
-                            Text("Pitch Velocity")
-                                .font(.subheadline)
-                                .foregroundStyle(text_color)
-                            Spacer()
-                        }
+                        Text("ArmBarn")
+                            .font(.title)
                         
-                        VStack{
-                            HStack{
-                                VStack(alignment: .trailing){
-                                    Text("Fastball")
-                                        .font(.headline)
-                                        .foregroundStyle(text_color)
-                                    Text("Max: 102.9")
-                                        .font(.caption2)
-                                        .foregroundStyle(.grey)
-                                }
-                                
-                                Spacer()
-                                
-                                ZStack{
-                                    Rectangle()
-                                        .fill(.grey)
-                                        .frame(maxWidth: .infinity, maxHeight: 1)
-                                    
-                                    GeometryReader{ geometry in
-                                        
-                                        HStack(spacing: 0){
-                                            Rectangle()
-                                                .fill(.clear)
-                                                .frame(width: geometry.size.width * 0.96)
-                                            
-                                            ZStack{
-                                                Rectangle()
-                                                    .fill(LinearGradient(colors: [.clear, Color("Gold"), Color("Gold"), .clear], startPoint: .leading, endPoint: .trailing).opacity(0.7))
-                                                    .frame(width: 20, height: 15)
-                                                
-                                                Rectangle()
-                                                    .fill(.black)
-                                                    .frame(width: 2, height: 17)
-                                                
-                                            }
-                                            
-                                        }
-                                        
-                                    }
-                                    
-                                }
-                                .padding(.horizontal, view_padding)
+                        Text("ArmBarn")
+                            .font(.headline)
+                        
+                        Text("ArmBarn")
+                        
+                        Text("ArmBarn")
+                            .font(.body)
+                        
+                        Text("ArmBarn")
+                            .font(.callout)
+                        
+                        Text("ArmBarn")
+                            .font(.subheadline)
+                        
+                        Text("ArmBarn")
+                            .font(.caption)
+                        
+                        Text("ArmBarn")
+                            .font(.caption2)
 
-                            }
-                            
-                        }
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 2){
+                        
+                        Text("ArmBarn")
+                            .font(.system(size: 28))
+                        
+                        Text("ArmBarn")
+                            .font(.system(size: 17))
+                            .bold()
+                        
+                        Text("ArmBarn")
+                            .font(.system(size: 17))
+                        
+                        Text("ArmBarn")
+                            .font(.system(size: 17))
+                        
+                        Text("ArmBarn")
+                            .font(.system(size: 16))
+                        
+                        Text("ArmBarn")
+                            .font(.system(size: 15))
+                        
+                        Text("ArmBarn")
+                            .font(.system(size: 12))
+                        
+                        Text("ArmBarn")
+                            .font(.system(size: 11))
                         
                     }
-                    .padding(view_padding)
-                    .frame(maxWidth: .infinity)
-                    .background(Color("DarkGrey"))
-                    .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
                     
                 }
-                .padding(.horizontal, view_padding)
-                .padding(.bottom, view_padding)
+
                 
                 Spacer()
                 
