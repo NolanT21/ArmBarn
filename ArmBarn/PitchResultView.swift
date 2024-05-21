@@ -348,6 +348,7 @@ struct PitchResultView: View {
                         }) {
                             Image(systemName: "chevron.left")
                                 .imageScale(.medium)
+                                .font(.system(size: 17))
                                 .frame(width: sbl_width, height: sbl_height)
                                 .foregroundColor(.white)
                                 .bold()

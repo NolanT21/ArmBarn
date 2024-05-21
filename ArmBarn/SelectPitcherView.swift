@@ -115,6 +115,7 @@ struct SelectPitcherView: View {
                             }, label: {
                                 Image(systemName: "chevron.left")
                                     .imageScale(.medium)
+                                    .font(.system(size: 17))
                                     .frame(width: sbl_width, height: sbl_height)
                                     .foregroundColor(text_color)
                                     .bold()
@@ -139,6 +140,7 @@ struct SelectPitcherView: View {
                             }, label: {
                                 Image(systemName: "plus")
                                     .imageScale(.medium)
+                                    .font(.system(size: 17))
                                     .foregroundColor(text_color)
                                     .bold()
                             })
