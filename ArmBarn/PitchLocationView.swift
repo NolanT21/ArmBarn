@@ -35,6 +35,8 @@ struct PitchLocationView: View {
     @State private var showEndGame = false
     @State private var showNewGame = false
     
+    @State private var showUndoToast = false
+    
     @State var location: CGPoint = .zero
     @State var cur_pitch_color = Color.clear
     @State var cur_pitch_outline = Color.clear
@@ -252,18 +254,47 @@ struct PitchLocationView: View {
                             }
                         }
                         
+                        if showUndoToast == true {
+                            VStack{
+                                ZStack{
+                                    
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .foregroundColor(Color.black)
+                                        .frame(width: 175, height: 32)
+                                    
+                                    Text("Previous Event Removed")
+                                        .font(.system(size: 13))
+                                        .bold()
+                                    
+                                }
+                                
+                                Spacer()
+                                
+                            }
+                            .padding(.top, 50)
+                        }
+                        
                         if showEndGame == true{
-                            PopupAlertView(isActive: $showEndGame, title: "End Game?", message: "This game and its data will not be saved!", leftButtonAction: {new_game_func(); newAtBat = true; showEndGame = false}, rightButtonAction: {showEndGame = false})
+                            PopupAlertView(isActive: $showEndGame, title: "End Game", message: "This game and its data will not be saved!", leftButtonAction: {new_game_func(); newAtBat = true; showEndGame = false}, rightButtonAction: {showEndGame = false})
                         }
                         
                         if showNewGame == true {
-                            PopupAlertView(isActive: $showNewGame, title: "Resume Game?", message: "A previous game was being recorded. Do you want to continue?", leftButtonAction: {set_pitcher(); load_recent_event(); load_recent_ab_pitches(); showNewGame = false}, rightButtonAction: {new_game_func(); showNewGame = false})
+                            PopupAlertView(isActive: $showNewGame, title: "Resume Game", message: "A previous game was being recorded. Do you want to continue?", leftButtonAction: {set_pitcher(); load_recent_event(); load_recent_ab_pitches(); showNewGame = false}, rightButtonAction: {new_game_func(); showNewGame = false})
                         }
                         
                     }
                 }
                 .ignoresSafeArea()
                 .background(backgroundcolor)
+                .onChange(of: showUndoToast) {
+                    if showUndoToast == true {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            withAnimation{
+                                showUndoToast = false
+                            }
+                        }
+                    }
+                }
             }
             .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
@@ -278,9 +309,13 @@ struct PitchLocationView: View {
                             cur_pitch_outline = .clear
                         }
                         else if events.count > 0 {
+                            
+                            showUndoToast = true
+                            
                             if events.count != 1 {
                                 load_previous_event()
                                 load_previous_ab_pitches()
+                                context.delete(events[events.count - 1])
                             }
                             else {
                                 if scoreboard.pitches > 0 {
@@ -288,8 +323,14 @@ struct PitchLocationView: View {
                                 }
                                 newAtBat = true
                                 new_game_func()
+                                do {
+                                    try context.delete(model: Event.self)
+                                } catch {
+                                    print("Did not clear event data")
+                                }
+                                
                             }
-                            context.delete(events[events.count - 1])
+                            
                         }
                         ptconfig.hidePitchOverlay = false
                         ptconfig.ptcolor = .clear
@@ -309,6 +350,7 @@ struct PitchLocationView: View {
                         else {
                             Image(systemName: "arrow.counterclockwise")
                                 .imageScale(.medium)
+                                .font(.system(size: 17))
                                 .foregroundColor(.white)
                                 .padding(.leading, -5)
                                 .bold()
@@ -371,6 +413,7 @@ struct PitchLocationView: View {
                         }) {
                             Image(systemName: "chart.bar.xaxis")
                                 .imageScale(.large)
+                                .font(.system(size: 17))
                                 .frame(width: sbl_width, height: sbl_height)
                                 .foregroundColor(Color.white)
                                 .bold()
@@ -389,6 +432,7 @@ struct PitchLocationView: View {
                         }) {
                             Image(systemName: "flag.checkered")
                                 .imageScale(.large)
+                                .font(.system(size: 17))
                                 .frame(width: sbl_width, height: sbl_height)
                                 .foregroundColor(Color.white)
                         }
@@ -400,6 +444,7 @@ struct PitchLocationView: View {
                         }) {
                             Image(systemName: "gearshape.fill")
                                 .imageScale(.large)
+                                .font(.system(size: 17))
                                 .frame(width: sbl_width, height: sbl_height)
                                 .foregroundColor(Color.white)
                         }
@@ -409,7 +454,7 @@ struct PitchLocationView: View {
                         }
                     }
                     .padding(.trailing, -5)
-                    .shadow(radius: 10)
+                    //.shadow(radius: 10)
                 }
             }
         }
@@ -984,13 +1029,13 @@ struct PitchLocationView: View {
         ptconfig.ab_pitch_color.removeAll()
         ptconfig.pitch_cur_ab = 0
         
-        current_pitcher.lastName = "Change Me"
-        current_pitcher.firstName = ""
-        current_pitcher.pitch1 = "None"
-        current_pitcher.pitch2 = "None"
-        current_pitcher.pitch3 = "None"
-        current_pitcher.pitch4 = "None"
-        current_pitcher.pitch_num = 0
+//        current_pitcher.lastName = "Change Me"
+//        current_pitcher.firstName = ""
+//        current_pitcher.pitch1 = "None"
+//        current_pitcher.pitch2 = "None"
+//        current_pitcher.pitch3 = "None"
+//        current_pitcher.pitch4 = "None"
+//        current_pitcher.pitch_num = 0
         
         scoreboard.b1light = false
         scoreboard.b2light = false
