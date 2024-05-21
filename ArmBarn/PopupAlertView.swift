@@ -115,6 +115,83 @@ struct PopupAlertView: View {
     
 }
 
+struct InputChangePopUp: View {
+    
+    @Environment(\.dismiss) var dismiss
+    
+    @State private var offset: CGFloat = 1000
+    
+    @State private var showView: Bool = true
+    
+    var font_color: Color = .white
+    var crnr_radius: CGFloat = 12
+    
+    var body: some View {
+        
+        if showView == true {
+            ZStack{
+                
+                Color(.black)
+                    .opacity(0.2)
+                
+                VStack{
+                    
+                    Text("Error")
+                        .font(.system(size: 22, weight: .bold))
+                        .foregroundStyle(font_color)
+                        .padding()
+                    
+                    Text("Please start new game to change input options")
+                        .font(.system(size: 15))
+                        .foregroundStyle(font_color)
+                        .padding()
+                        .multilineTextAlignment(.center)
+                        
+                    Button {
+                        close()
+                    } label: {
+                        ZStack{
+                            RoundedRectangle(cornerRadius: crnr_radius)
+                                .foregroundColor(Color("ScoreboardGreen"))
+                            
+                            Text("Dismiss")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundStyle(font_color)
+                                .padding()
+                        }
+                    }
+                    .padding()
+
+                }
+                .fixedSize(horizontal: false, vertical: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
+                .padding()
+                .background(Color("DarkGrey"))
+                .clipShape(RoundedRectangle(cornerRadius: crnr_radius))
+                .offset(x: 0, y: offset)
+                .onAppear{
+                    withAnimation(.spring()) {
+                        offset = -100
+                    }
+                }
+                .padding(30)
+                .shadow(radius: 20)
+                .padding(.top, 45)
+                
+            }
+            .ignoresSafeArea()
+        }
+    }
+    
+    func close() {
+        withAnimation(.spring()) {
+            offset = 1000
+            showView = false
+        }
+    }
+
+}
+
+
 #Preview {
     PopupAlertView(isActive: .constant(true), title: "Title", message: "Message", leftButtonAction: {}, rightButtonAction: {})
 }
