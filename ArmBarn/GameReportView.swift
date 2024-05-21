@@ -77,6 +77,7 @@ struct GameReportView: View {
                         }, label: {
                             Image(systemName: "chevron.left")
                                 .imageScale(.medium)
+                                .font(.system(size: 17))
                                 .frame(width: sbl_width, height: sbl_height)
                                 .foregroundColor(text_color)
                                 .bold()
@@ -92,12 +93,14 @@ struct GameReportView: View {
                                 if showPBPLog == false {
                                     Image(systemName: "note.text")
                                         .imageScale(.large)
+                                        .font(.system(size: 17))
                                         .frame(width: sbl_width, height: sbl_height)
                                         .foregroundColor(Color.white)
                                 }
                                 else {
                                     Image(systemName: "chart.bar.xaxis")
                                         .imageScale(.large)
+                                        .font(.system(size: 17))
                                         .frame(width: sbl_width, height: sbl_height)
                                         .foregroundColor(Color.white)
                                 }
@@ -114,6 +117,7 @@ struct GameReportView: View {
                             }) {
                                 Image(systemName: "tray.full.fill")
                                     .imageScale(.large)
+                                    .font(.system(size: 17))
                                     .frame(width: sbl_width, height: sbl_height)
                                     .foregroundColor(Color.white)
                             }
@@ -125,6 +129,7 @@ struct GameReportView: View {
                             if showPBPLog == false {
                                 ShareLink("", item: renderGR(viewSize: viewsize))
                                     .imageScale(.large)
+                                    .font(.system(size: 17))
                                     .foregroundStyle(text_color)
                                     .fontWeight(.bold)
                                     .padding(.leading, view_padding/2)
@@ -132,6 +137,7 @@ struct GameReportView: View {
                             else {
                                 ShareLink("", item: renderPBP(viewSize: viewsize))
                                     .imageScale(.large)
+                                    .font(.system(size: 17))
                                     .foregroundStyle(text_color)
                                     .fontWeight(.bold)
                                     .padding(.leading, view_padding/2)
