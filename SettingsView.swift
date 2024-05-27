@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TipKit
 
 struct SettingsView: View {
     
@@ -22,6 +23,9 @@ struct SettingsView: View {
     @AppStorage("PitByInn") var ASPitByInn : Bool?
     
     @Environment(Scoreboard.self) var scoreboard
+    @Environment(Event_String.self) var event
+    
+    private let changeinputtip = ChangeInputTip()
     
     @State private var showInputChange = false
     
@@ -41,9 +45,14 @@ struct SettingsView: View {
     
     var body: some View {
         NavigationStack{
+            
             ZStack{
                 VStack{
                     List{
+                        Section() {
+                            TipView(changeinputtip)
+                        }
+                        
                         Section(header: Text("Input Options")){
                             HStack{
                                 ZStack{
@@ -64,6 +73,7 @@ struct SettingsView: View {
                                         }
                                         else {
                                             ASBatterStance = useBatterStance
+                                            event.batter_stance = ""
                                         }
 
                                     }
@@ -109,6 +119,7 @@ struct SettingsView: View {
                                         }
                                         else {
                                             ASVeloInput = useVelocityInput
+                                            event.velocity = 0.0
                                         }
                                         
                                     }

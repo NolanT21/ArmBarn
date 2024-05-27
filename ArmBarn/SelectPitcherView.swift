@@ -30,7 +30,7 @@ struct SelectPitcherView: View {
     @State private var showEditPitcher = false
     @State private var newAtBat = false
     
-    private let tip = EditPitcherTip()
+    private let editpitchertip = EditPitcherTip()
     
     @State private var text_color = Color.white
     
@@ -48,12 +48,11 @@ struct SelectPitcherView: View {
             
             ZStack{
                 NavigationStack{
-                    
-                    TipView(tip)
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 10)
-                    
                     List {
+                        Section() {
+                            TipView(editpitchertip)
+                        }
+                        
                         ForEach(filteredPitchers, id:\.id) { p_er in
                             Button(p_er.firstName + " " + p_er.lastName) {
                                 clear_game_report()
@@ -119,17 +118,11 @@ struct SelectPitcherView: View {
                                     .frame(width: sbl_width, height: sbl_height)
                                     .foregroundColor(text_color)
                                     .bold()
-                                //Text("Back")
-                                    //.font(.system(size: font_size))
-                                    //.fontWeight(.heavy)
-                                    //.foregroundColor(text_color)
                             })
                         }
                         
                         ToolbarItemGroup(placement: .principal) {
                             Text("Select Pitcher")
-                                //.font(.system(size: font_size))
-                                //.fontWeight(.heavy)
                                 .foregroundColor(text_color)
                         }
                         
@@ -194,7 +187,7 @@ struct SelectPitcherView: View {
         game_report.balls_to_strikes = []
         
         game_report.game_score = 40
-        game_report.pitches = scoreboard.pitches
+        game_report.pitches = 0
         
         game_report.singles = 0
         game_report.doubles = 0

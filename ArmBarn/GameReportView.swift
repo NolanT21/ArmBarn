@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import Charts
+import TipKit
 
 struct GameReportView: View {
     
@@ -52,6 +53,8 @@ struct GameReportView: View {
     @State var subheadline_size: CGFloat = 15
     @State var caption_size: CGFloat = 12
     @State var caption2_size: CGFloat = 11
+    
+    private let exportpdftip = ExportPDFTip()
     
     var background: Color = .black
     var component_background: UIColor = .darkGray
@@ -145,23 +148,36 @@ struct GameReportView: View {
                             
                         }
                         
-                        
                     }
                     .padding(.top, view_padding)
                     .padding(.horizontal, view_padding)
                     
-                    ScrollView{
-                        if showPBPLog == false {
-                            reportView
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    ZStack {
+                        ScrollView{
+                            if showPBPLog == false {
+                                reportView
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            }
+                            else {
+                                pbplogView
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            }
+                            
                         }
-                        else {
-                            pbplogView
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        
+//                        VStack{
+//                            TipView(exportpdftip, arrowEdge: .top)
+//                                .tipBackground(Color("DarkGrey"))
+//                                .tint(Color("ScoreboardGreen"))
+//                                .padding(.leading, 250)
+//                                .preferredColorScheme(.dark)
+//                            
+//                            Spacer()
+//                            
+//                        }
                         
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     
                 }
                 .background(LinearGradient(gradient: header_gradient, startPoint: .top, endPoint: .bottom))
@@ -171,11 +187,11 @@ struct GameReportView: View {
     
     var pbplogView: some View {
             
-            VStack(alignment: .center){
+            HStack{
                 
-                VStack{
-                    
-                    let screenSize = UIScreen.main.bounds.size
+                Spacer()
+                
+                VStack(alignment: .center){
                     
                     HStack{
                         Spacer()
@@ -187,117 +203,142 @@ struct GameReportView: View {
                         
                         Spacer()
                     }
+                    
+                    if game_report.pbp_event_list.count > 0 {
+                        let screenSize = UIScreen.main.bounds.size
                         
-                    Grid(horizontalSpacing: (ASVeloInput == true) ? screenSize.width * 0.065 : screenSize.width * 0.12){
-                            ForEach(Array(game_report.pbp_event_list.enumerated()), id: \.offset){ index, evnt in
-                                
-                                if index == 0 || game_report.pbp_event_list[index].inning > game_report.pbp_event_list[index - 1].inning{
-                                    GridRow {
-                                        VStack{
-                                            HStack{
+                        Grid(horizontalSpacing: (ASVeloInput == true) ? screenSize.width * 0.048 : screenSize.width * 0.085){
+                                ForEach(Array(game_report.pbp_event_list.enumerated()), id: \.offset){ index, evnt in
+                                    
+                                    if index == 0 || game_report.pbp_event_list[index].inning > game_report.pbp_event_list[index - 1].inning{
+                                        GridRow {
+                                            VStack{
+                                                HStack{
+                                                    
+                                                    Text("INN \(evnt.inning)")
+                                                        .bold()
+                                                        .padding(.top, 20)
+                                                        .padding(.bottom, -10)
+                                                    
+                                                    Spacer()
+                                                    
+                                                    
+                                                }
                                                 
-                                                Text("INN \(evnt.inning)")
-                                                    .bold()
-                                                    .font(.system(size: headbody_size))
-                                                    .padding(.top, 20)
-                                                    .padding(.bottom, -10)
+                                                Divider()
+                                                    .background(Color.black)
+                                                    .frame(height: 10)
+                                                    .padding(.bottom, -4)
+                                            }
+                                        }
+                                        .gridCellColumns((ASVeloInput == true) ? 6 : 5)
+                                        
+                                    }
+                                    
+                                    if index == 0 || game_report.pbp_event_list[index].pitcher != game_report.pbp_event_list[index - 1].pitcher{
+                                        GridRow{
+                                            VStack{
+                                                HStack{
+                                                    Spacer()
+                                                    Text(evnt.pitcher + " Entered")
+                                                        .padding(.vertical, 5)
+                                                        .foregroundStyle(Color.green.opacity(2))
+                                                    Spacer()
+                                                }
+                                                .background(Color.green.opacity(0.1))
                                                 
-                                                Spacer()
-                                                
+                                                Divider()
                                                 
                                             }
-                                            
-                                            Divider()
-                                                .background(Color.black)
-                                                .frame(height: 10)
-                                                .padding(.bottom, -4)
                                         }
+                                        .gridCellColumns((ASVeloInput == true) ? 6 : 5)
+                                        
                                     }
-                                    .gridCellColumns((ASVeloInput == true) ? 6 : 5)
                                     
-                                    //                                if ASVeloInput == true {
-                                    //                                    Text("\(evnt.velo, specifier: "%.1f")")
-                                    //                                }
-                                }
-                                
-                                if index == 0 || game_report.pbp_event_list[index].pitcher != game_report.pbp_event_list[index - 1].pitcher{
-                                    GridRow{
-                                        VStack{
-                                            HStack{
-                                                Spacer()
-                                                Text(evnt.pitcher + " Entered")
-                                                    .font(.system(size: headbody_size))
-                                                    .padding(.vertical, 5)
-                                                    .foregroundStyle(Color.green.opacity(2))
-                                                Spacer()
-                                            }
-                                            .background(Color.green.opacity(0.1))
-                                            
-                                            Divider()
-                                            
-                                        }
-                                    }
-                                    .gridCellColumns((ASVeloInput == true) ? 6 : 5)
-                                    
-                                }
-                                
-                                if evnt.result == "RUNNER OUT" {
-                                   GridRow{
-                                       VStack{
-                                           HStack{
-                                               Spacer()
-                                               Text("Baserunner Out")
-                                                   .font(.system(size: headbody_size))
-                                                   .padding(.vertical, 5)
-                                                   .foregroundStyle(Color.red.opacity(2))
-                                               Spacer()
+                                    if evnt.result == "RUNNER OUT" {
+                                       GridRow{
+                                           VStack{
+                                               HStack{
+                                                   Spacer()
+                                                   Text("Baserunner Out")
+                                                       .padding(.vertical, 5)
+                                                       .foregroundStyle(Color.red.opacity(2))
+                                                   Spacer()
+                                               }
+                                               .background(Color.red.opacity(0.1))
+                                               
+                                               Divider()
+                                                   .background((event.end_ab_rd.contains(evnt.result_detail)) ? Color.black : Color.clear)
+                                               
                                            }
-                                           .background(Color.red.opacity(0.1))
-                                           
-                                           Divider()
-                                               .background((event.end_ab_rd.contains(evnt.result_detail)) ? Color.black : Color.clear)
-                                           
-                                       }
+                                            
+                                        }
+                                       .gridCellColumns((ASVeloInput == true) ? 6 : 5)
                                         
                                     }
-                                   .gridCellColumns((ASVeloInput == true) ? 6 : 5)
-                                    
-                                }
-                                else {
-                                    GridRow{
-                                        Text("\(evnt.pitch_num)")
-                                        Text(evnt.pitch_type)
-                                        
-                                        if ASVeloInput == true {
-                                            Text("\(evnt.velo, specifier: "%.1f")")
+                                    else {
+                                        GridRow{
+                                            Text("\(evnt.pitch_num)")
+                                            
+                                            Text(evnt.pitch_type)
+                                            
+                                            if ASVeloInput == true {
+                                                Text("\(evnt.velo, specifier: "%.1f")")
+                                            }
+                                            
+                                            Text(evnt.result)
+                                            Text("\(evnt.balls) - \(evnt.strikes)")
+                                            Text("\(evnt.outs) " + evnt.out_label)
+                                                
                                         }
                                         
-                                        Text(evnt.result)
-                                        Text("\(evnt.balls) - \(evnt.strikes)")
-                                        Text("\(evnt.outs) " + evnt.out_label)
-                                            
+                                        Divider()
+                                            .background((event.end_ab_rd.contains(evnt.result_detail)) ? Color.black : Color.clear)
                                     }
-                                    .font(.system(size: callout_size))
-                                    
-                                    Divider()
-                                        .background((event.end_ab_rd.contains(evnt.result_detail)) ? Color.black : Color.clear)
                                 }
+                                .font(.system(size: 15))
                             }
-                        }
-                        .frame(maxWidth: .infinity)
                         
-                        Spacer()
+                        
+                            
+                            Spacer()
+                    }
+                    
+                    else {
+                        
+                        VStack {
+                            
+                            Spacer()
+                            
+                            HStack{
+                                
+                                Spacer()
+                                
+                                Text("No Pitches Recorded")
+                                    .font(.system(size: headbody_size))
+                                
+                                Spacer()
+                                
+                            }
+                            
+                            Spacer()
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(Color.white)
                         
                     }
-                    .padding(.horizontal, view_padding/2)
-                    .frame(maxWidth: .infinity)
+                        
+                    }
+                    //.padding(.horizontal, view_padding/2)
+                    
                 
+                Spacer()
                 
             }
+            .frame(maxWidth: .infinity)
             .padding(view_padding)
             .background(Color.white)
             .foregroundStyle(Color.black)
-        
 
     }
     
@@ -1337,6 +1378,9 @@ struct GameReportView: View {
             }
             
             pdf.beginPDFPage(nil)
+            
+            pdf.translateBy(x: box.size.width / 2 - size.width / 2,
+                            y: box.size.height / 2 - size.height / 2)
             
             context(pdf)
             
