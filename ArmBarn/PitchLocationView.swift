@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import TipKit
 
 struct PitchLocationView: View {
     
@@ -23,7 +24,11 @@ struct PitchLocationView: View {
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var context
-
+    
+    private let selectpitchertip = SelectPitcherTip()
+    private let locationinputtip = LocationInputTip()
+//    static let locationInput = Event(id: "locationInput")
+    
     @State private var balls: Int = 0
     @State private var strikes: Int = 0
     
@@ -89,17 +94,13 @@ struct PitchLocationView: View {
                         Image("PLI_Background")
                             .resizable()
                             .gesture(tap)
-                        //.aspectRatio(contentMode: .fit)
                         
                         Circle()
                             .stroke(cur_pitch_outline, lineWidth: 8)
                             .frame(width: 35.0, height: 35.0, alignment: .center)
                             .position(location)
                         
-                            NavigationLink(destination: PitchResultView()
-                                                            .navigationBarBackButtonHidden(true)
-                                                            .preferredColorScheme(.dark)
-                                                            .task {
+                            NavigationLink(destination: PitchResultView().navigationBarBackButtonHidden(true).preferredColorScheme(.dark).task {
                                 ptconfig.pitch_x_loc.append(location.x)
                                 event.x_cor = Double(location.x)
                                 ptconfig.pitch_y_loc.append(location.y)
@@ -113,6 +114,8 @@ struct PitchLocationView: View {
 //                                event.y_cor = location.y
                                 
                                 ptconfig.hidePitchOverlay = false
+                                
+                                locationinputtip.invalidate(reason: .actionPerformed)
 //                                let loc = location
 //                                print("Location", loc)
 //                                print(ptconfig.pitch_x_loc, ptconfig.pitch_y_loc)
@@ -133,6 +136,19 @@ struct PitchLocationView: View {
                         if  current_pitcher.pitch_num > 0{
                             PitchLocationInput()
                         }
+                        
+                        VStack{
+                            TipView(locationinputtip)
+                                .tipBackground(Color("DarkGrey"))
+                                .tint(Color("ScoreboardGreen"))
+                                .padding(.horizontal, 10)
+                                .padding(.top, 60)
+                                .preferredColorScheme(.dark)
+                            
+                            Spacer()
+                            
+                        }
+                        
                         
                         if scoreboard.baserunners > 0 && ptconfig.hidePitchOverlay == false{
                             VStack {
@@ -232,6 +248,9 @@ struct PitchLocationView: View {
                                         Button{
                                             showPitcherSelect = true
                                             newAtBat = true
+                                            selectpitchertip.invalidate(reason: .actionPerformed)
+                                            //pass loc_input
+                                            
                                         } label: {
                                             Text("Select Pitcher")
                                                 .textCase(.uppercase)
@@ -273,6 +292,19 @@ struct PitchLocationView: View {
                             }
                             .padding(.top, 50)
                         }
+                        
+                        VStack{
+                            
+                            TipView(selectpitchertip, arrowEdge: .top)
+                                .tipBackground(Color("DarkGrey"))
+                                .tint(Color("ScoreboardGreen"))
+                                .padding(.horizontal, 20)
+                                .preferredColorScheme(.dark)
+                            
+                            Spacer()
+                            
+                        }
+                        .padding(.top, 50)
                         
                         if showEndGame == true{
                             PopupAlertView(isActive: $showEndGame, title: "End Game", message: "This game and its data will not be saved!", leftButtonAction: {new_game_func(); newAtBat = true; showEndGame = false}, rightButtonAction: {showEndGame = false})
@@ -385,6 +417,8 @@ struct PitchLocationView: View {
                                 showPitcherSelect = true
                                 if current_pitcher.lastName == "Change Me" {
                                     newAtBat = true
+                                    selectpitchertip.invalidate(reason: .actionPerformed)
+                                    //pass loc_input
                                 }
                             }) {
                                 Text(pitcher_lname)
@@ -401,6 +435,7 @@ struct PitchLocationView: View {
                         }
                     }
                     .padding(.leading, -10)
+                    
                 }
                 
                 ToolbarItemGroup(placement: .topBarTrailing) {
@@ -666,6 +701,7 @@ struct PitchLocationView: View {
         let arsenal: [String] = [current_pitcher.pitch1, current_pitcher.pitch2, current_pitcher.pitch3, current_pitcher.pitch4]
         
         var inn_cntr = 1
+        var first_inn = 1
         var p1_cntr = 0
         var p2_cntr = 0
         var p3_cntr = 0
@@ -682,7 +718,17 @@ struct PitchLocationView: View {
                     p2_cntr = 0
                     p3_cntr = 0
                     p4_cntr = 0
-                    inn_cntr = evnt.inning
+                    
+                    if evnt.inning - inn_cntr > 1 {
+                        first_inn = evnt.inning
+                        inn_cntr = evnt.inning
+                    }
+                    else {
+                        inn_cntr += 1
+                    }
+                    
+                    
+                    
                 }
                 
                 if evnt.pitch_type == "P1" {
@@ -718,10 +764,18 @@ struct PitchLocationView: View {
                     }
                 }
                 
-                game_report.p1_by_inn[inn_cntr - 1] = p1_cntr
-                game_report.p2_by_inn[inn_cntr - 1] = p2_cntr
-                game_report.p3_by_inn[inn_cntr - 1] = p3_cntr
-                game_report.p4_by_inn[inn_cntr - 1] = p4_cntr
+                print(inn_cntr, p1_cntr)
+                
+                game_report.p1_by_inn[inn_cntr - first_inn] = p1_cntr
+                game_report.p2_by_inn[inn_cntr - first_inn] = p2_cntr
+                game_report.p3_by_inn[inn_cntr - first_inn] = p3_cntr
+                game_report.p4_by_inn[inn_cntr - first_inn] = p4_cntr
+                
+                print(game_report.p1_by_inn)
+                print(game_report.p2_by_inn)
+                print(game_report.p3_by_inn)
+                print(game_report.p4_by_inn)
+                
                 game_report.pitches_by_inn = []
                 
                 game_report.pl_outline = .clear
@@ -1068,7 +1122,7 @@ struct PitchLocationView: View {
         game_report.balls_to_strikes = []
         
         game_report.game_score = 40
-        game_report.pitches = scoreboard.pitches
+        game_report.pitches = 0
         
         game_report.singles = 0
         game_report.doubles = 0
@@ -1545,6 +1599,7 @@ struct PitchLocationInput : View {
                                         ptconfig.hidePitchOverlay.toggle()
                                         event.pitch_type = "P\(pt_num + 1)"
                                         ptconfig.ptcolor = ptconfig.arsenal_colors[pt_num]
+                                        Task { await LocationInputTip.locationInput.donate() }
                                         }
                                     }) {
                                         Text("\(current_pitcher.arsenal[pt_num])")
@@ -1569,6 +1624,7 @@ struct PitchLocationInput : View {
                                             ptconfig.hidePitchOverlay.toggle()
                                             event.pitch_type = "P\(pt_num + 1)"
                                             ptconfig.ptcolor = ptconfig.arsenal_colors[pt_num]
+                                            Task { await LocationInputTip.locationInput.donate() }
                                         }
                                     }) {
                                             Text("\(current_pitcher.arsenal[pt_num])")
@@ -1591,6 +1647,7 @@ struct PitchLocationInput : View {
                                             ptconfig.hidePitchOverlay.toggle()
                                             event.pitch_type = "P\(pt_num + 1)"
                                             ptconfig.ptcolor = ptconfig.arsenal_colors[pt_num]
+                                            Task { await LocationInputTip.locationInput.donate() }
                                         }
                                     }) {
                                         //Text(current_pitcher.arsenal[pt_num])
