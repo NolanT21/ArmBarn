@@ -35,6 +35,7 @@ struct MainView: View {
             ZStack{
                
                 MainContainerView()
+                    .preferredColorScheme(.dark)
 
             }
             

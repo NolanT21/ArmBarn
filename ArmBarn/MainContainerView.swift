@@ -22,6 +22,7 @@ struct MainContainerView: View {
             NavigationStack{
                 ZStack{
                     PitchLocationView()
+                        .preferredColorScheme(.dark)
                 }
             }
         }
