@@ -87,7 +87,7 @@ struct LocationInputTip: Tip {
     }
     
     var message: Text? {
-        Text("Tap once to set location, tap again on the circle to enter that location. After the first tap, the location can be change by tapping somewhere else")
+        Text("Tap once to set location, tap again on the circle to enter that location. After the first tap, the location can be changed by tapping somewhere else")
     }
     
     var image: Image? {
@@ -102,17 +102,16 @@ struct LocationInputTip: Tip {
     
 }
 
+struct ScoreboardInfoTip: Tip {
+    var title: Text {
+        Text("Scoreboard Buttons")
+    }
 
-//struct ScoreboardInfoTip: Tip {
-//    var title: Text {
-//        Text("Scoreboard Buttons")
-//    }
-//
-//    var message: Text {
-//        Text("View stats, start a new game, or change options with this group of three buttons")
-//    }
-//
-//    var image: Image? {
-//        Image(systemName: "info.circle")
-//    }
-//}
+    var message: Text {
+        Text("View stats, start a new game, or change options with this group of three buttons")
+    }
+
+    var image: Image? {
+        Image(systemName: "info.circle")
+    }
+}

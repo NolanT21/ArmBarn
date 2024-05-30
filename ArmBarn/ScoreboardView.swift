@@ -45,7 +45,6 @@ struct ScoreboardView: View {
                         .font(.system(size: font_size))
                         .fontWeight(.bold)
                     ZStack(alignment: .center){
-                        //Rectangle()
                         RoundedRectangle(cornerRadius: crnr_radius)
                             .foregroundStyle(
                                 Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
@@ -216,10 +215,7 @@ struct ScoreboardView: View {
                     }
                     Spacer()
                 }
-                //.padding(.leading, 5)
                 .padding(.top, 5)
-                
-                //Spacer()
                 
                 VStack(alignment: .trailing){
                     HStack{
@@ -227,7 +223,6 @@ struct ScoreboardView: View {
                             .font(.system(size: font_size))
                             .fontWeight(.bold)
                         ZStack(alignment: .center){
-                            //Rectangle()
                             RoundedRectangle(cornerRadius: crnr_radius)
                                 .foregroundStyle(
                                     Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
@@ -259,7 +254,6 @@ struct ScoreboardView: View {
                             .font(.system(size: font_size))
                             .fontWeight(.bold)
                         ZStack(alignment: .center){
-                            //Rectangle()
                             RoundedRectangle(cornerRadius: crnr_radius)
                                 .foregroundStyle(
                                     Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))

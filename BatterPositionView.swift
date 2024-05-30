@@ -22,10 +22,6 @@ struct BatterPositionView: View {
     
     @Binding var isActive: Bool
     var close_action: () -> ()
-    
-    //@Bindable var cur_ab_events: Event
-    
-//    @Binding var cur_ab_events: [Event]
 
     var body: some View {
         ZStack{
@@ -174,26 +170,3 @@ struct BatterPositionView: View {
         
     }
 }
-
-//#Preview {
-//    BatterPositionView(isActive: .constant(true), close_action: {})
-//}
-
-//if events.count > 0 {
-//    if (scoreboard.balls != 0 || scoreboard.strikes != 0) && events[events.count - 1].result_detail != "R"{
-//        let cur_ab = events[events.count - 1]
-//        var prev_ab_index = events.count - 2
-//        var prev_ab = events[prev_ab_index]
-//        while cur_ab.atbats == prev_ab.atbats {
-//            
-//            cur_ab_events.append(prev_ab)
-//            
-//            if prev_ab_index > 0 {
-//                prev_ab_index -= 1
-//            }
-//            else {
-//                break
-//            }
-//        }
-//    }
-//}

@@ -357,7 +357,6 @@ struct PitchResultView: View {
                                 .fontWeight(.heavy)
                                 .foregroundColor(.white)
                                 .padding(.leading, -5)
-                                //.font(weight: .semibold)
                         }
                         .padding(.leading, -5)
                     }
@@ -371,7 +370,6 @@ struct PitchResultView: View {
                             .foregroundColor(Color.white)
                         
                         ZStack(alignment: .leading){
-                            //Rectangle()
                             RoundedRectangle(cornerRadius: 4)
                                 .foregroundStyle(
                                     Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
@@ -524,8 +522,6 @@ struct PitchResultView: View {
             scoreboard.atbats += 1
             reset_Count()
         }
-        
-        //print_Scoreboard()
     }
     
     func reset_Count() {

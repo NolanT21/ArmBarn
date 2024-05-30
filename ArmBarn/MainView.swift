@@ -12,20 +12,6 @@ import Observation
 
 struct MainView: View {
     
-    @Environment(Scoreboard.self) var scoreboard
-    @Environment(Event_String.self) var event
-    @Environment(PitchTypeConfig.self) var ptconfig
-    @Environment(GameReport.self) var game_report
-    @Environment(currentPitcher.self) var current_pitcher
-    
-    @Environment(\.modelContext) var context
-    @Environment(\.dismiss) var dismiss
-    
-    @Query var events: [Event]
-    @Query var pitchers: [Pitcher]
-    
-    @State private var showNewGame: Bool = false
-    
     var body: some View {
         
         VStack{

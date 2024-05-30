@@ -54,8 +54,6 @@ struct GameReportView: View {
     @State var caption_size: CGFloat = 12
     @State var caption2_size: CGFloat = 11
     
-    private let exportpdftip = ExportPDFTip()
-    
     var background: Color = .black
     var component_background: UIColor = .darkGray
     var text_color: Color = .white
@@ -110,24 +108,6 @@ struct GameReportView: View {
                                 
                             }
                             .padding(.leading, view_padding/2)
-//                            .popover(isPresented: $showPBPLog) {
-//                                TestView()
-//                                    .preferredColorScheme(.light)
-//                            }
-                            
-                            Button(action: {
-                                showGameReceipt = true
-                            }) {
-                                Image(systemName: "tray.full.fill")
-                                    .imageScale(.large)
-                                    .font(.system(size: 17))
-                                    .frame(width: sbl_width, height: sbl_height)
-                                    .foregroundColor(Color.white)
-                            }
-                            .padding(.leading, view_padding/2)
-                            .popover(isPresented: $showGameReceipt) {
-                                EndGameView()
-                            }
                             
                             if showPBPLog == false {
                                 ShareLink("", item: renderGR(viewSize: viewsize))
@@ -165,18 +145,7 @@ struct GameReportView: View {
                             
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        
-//                        VStack{
-//                            TipView(exportpdftip, arrowEdge: .top)
-//                                .tipBackground(Color("DarkGrey"))
-//                                .tint(Color("ScoreboardGreen"))
-//                                .padding(.leading, 250)
-//                                .preferredColorScheme(.dark)
-//                            
-//                            Spacer()
-//                            
-//                        }
-                        
+
                     }
                     
                 }
@@ -329,8 +298,6 @@ struct GameReportView: View {
                     }
                         
                     }
-                    //.padding(.horizontal, view_padding/2)
-                    
                 
                 Spacer()
                 
@@ -397,7 +364,6 @@ struct GameReportView: View {
                                     Text("\(game_report.strikeouts)")
                                     Text("\(game_report.walks)")
                                 }
-
                                 .foregroundStyle(text_color)
                                 
                             }
@@ -532,7 +498,7 @@ struct GameReportView: View {
                                     .padding(.bottom, view_padding)
                                    
                                     VStack{
-                                        //Spacer()
+
                                         ZStack{
                                             Gauge(value: Double(game_report.swing_per) * 0.01) {}
                                             .scaleEffect(2.5)
@@ -617,7 +583,6 @@ struct GameReportView: View {
                             }
                         }
                         
-//                        Spacer()
                     }
                     .padding(.bottom, view_padding/2)
                     
@@ -649,8 +614,6 @@ struct GameReportView: View {
                                                     .font(.system(size: caption2_size))
                                                     .foregroundStyle(.grey)
                                             }
-                                            
-    //                                        Spacer()
                                             
                                             ZStack{
                                                 Rectangle()
@@ -731,7 +694,7 @@ struct GameReportView: View {
                                     .overlay(alignment: .center){
                                         ForEach(game_report.x_coordinate_list.indices, id: \.self){ index in
                                             let xloc = game_report.x_coordinate_list[index] * (202/screenSize.width) + 75
-                                            let yloc = game_report.y_coordinate_list[index] * (415/screenSize.height) + 39 //0.52 + (screenSize.height * 0.04) //42
+                                            let yloc = game_report.y_coordinate_list[index] * (415/screenSize.height) + 39
                                             let point = CGPoint(x: xloc, y: yloc)
                                             let pitch_color = game_report.pl_color_list[index]
                                             let outline = game_report.pl_outline_list[index]
@@ -797,7 +760,6 @@ struct GameReportView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(Color("DarkGrey"))
                         .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
-//                        .padding(.top, view_padding/2)
                         .padding(.bottom, view_padding)
                         .padding(.leading, view_padding)
                         .padding(.trailing, view_padding)
@@ -928,8 +890,6 @@ struct GameReportView: View {
                                     
                                     Spacer()
                                 }
-                                
-                                //Spacer()
                                 
                                 VStack{
                                     Gauge(value: Double(game_report.game_score) * 0.01) {
@@ -1255,18 +1215,12 @@ struct GameReportView: View {
                                     }
                                 }
                                 .chartForegroundStyleScale([
-    //                                ForEach(Array(current_pitcher.arsenal.enumerated()), id: \.offset) { index in
-    //                                    if current_pitcher.arsenal[index] != "None" {
-    //                                        current_pitcher.arsenal[index]: colorset[index]
-    //                                    }
-    //                                }
                                     current_pitcher.pitch1: Color("PowderBlue"), current_pitcher.pitch2: Color("Gold"), current_pitcher.pitch3: Color("Tangerine"), current_pitcher.pitch4: Color("Grey")
                                 ])
                                .frame(height: 200)
                                .padding(.horizontal, view_padding)
                                .padding(.top, view_padding)
                                .chartLegend(.hidden)
-                               //.chartLegend(position: .bottom, alignment: .center, spacing: 10)
                                .chartXScale(domain: [0, game_report.p1_by_inn.count + 1])
                                 .chartXAxis {
                                     AxisMarks(values: .automatic(desiredCount: game_report.p1_by_inn.count + 1)){

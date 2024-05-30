@@ -14,7 +14,6 @@ import TipKit
 struct ArmBarnApp: App {
     
     init() {
-//        try? Tips.resetDatastore()
         try? Tips.configure()
 
         

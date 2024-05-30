@@ -167,7 +167,6 @@ struct HitDetailView: View {
             reset_Count()
         }
         
-        //print_Scoreboard()
     }
     
     func reset_Count() {

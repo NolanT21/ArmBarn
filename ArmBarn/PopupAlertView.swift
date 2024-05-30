@@ -44,8 +44,6 @@ struct PopupAlertView: View {
                 
                 HStack{
                     
-                    //Spacer()
-                    
                     Button {
                         close()
                         leftButtonAction()
@@ -59,7 +57,7 @@ struct PopupAlertView: View {
                                 .foregroundStyle(font_color)
                                 .padding()
                         }
-                        //.padding()
+
                     }
                     
                     Spacer()
@@ -80,11 +78,9 @@ struct PopupAlertView: View {
                                 .foregroundStyle(font_color)
                                 .padding()
                         }
-                        //.padding()
                         
                     }
-                    
-                    //Spacer()
+
                     
                 }
                 .padding()

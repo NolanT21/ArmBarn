@@ -191,7 +191,6 @@ struct OutDetailView: View {
             }
             
             reset_Count()
-            //print_Scoreboard()
         }
     }
     

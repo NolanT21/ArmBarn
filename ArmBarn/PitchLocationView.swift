@@ -27,7 +27,6 @@ struct PitchLocationView: View {
     
     private let selectpitchertip = SelectPitcherTip()
     private let locationinputtip = LocationInputTip()
-//    static let locationInput = Event(id: "locationInput")
     
     @State private var balls: Int = 0
     @State private var strikes: Int = 0
@@ -110,16 +109,9 @@ struct PitchLocationView: View {
                                 cur_pitch_color = .clear
                                 cur_pitch_outline = .clear
                                 
-//                                event.x_cor = location.x
-//                                event.y_cor = location.y
-                                
                                 ptconfig.hidePitchOverlay = false
                                 
                                 locationinputtip.invalidate(reason: .actionPerformed)
-//                                let loc = location
-//                                print("Location", loc)
-//                                print(ptconfig.pitch_x_loc, ptconfig.pitch_y_loc)
-//                                print(ptconfig.ab_pitch_color)
                             }) {
                                 Text("")
                                     .frame(width: 35.0, height: 35.0)
@@ -159,7 +151,6 @@ struct PitchLocationView: View {
                                     Spacer()
                                     
                                     Button(action: {
-                                        //print("Baserunner Out")
                                         record_baserunner_out()
                                     }) {
                                         Text("RUNNER OUT")
@@ -249,7 +240,6 @@ struct PitchLocationView: View {
                                             showPitcherSelect = true
                                             newAtBat = true
                                             selectpitchertip.invalidate(reason: .actionPerformed)
-                                            //pass loc_input
                                             
                                         } label: {
                                             Text("Select Pitcher")
@@ -404,7 +394,6 @@ struct PitchLocationView: View {
                             .foregroundColor(Color.white)
                         
                         ZStack(alignment: .leading){
-                            //Rectangle()
                             RoundedRectangle(cornerRadius: 4) 
                                 .foregroundStyle(
                                     Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
@@ -418,7 +407,6 @@ struct PitchLocationView: View {
                                 if current_pitcher.lastName == "Change Me" {
                                     newAtBat = true
                                     selectpitchertip.invalidate(reason: .actionPerformed)
-                                    //pass loc_input
                                 }
                             }) {
                                 Text(pitcher_lname)
@@ -441,8 +429,6 @@ struct PitchLocationView: View {
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     HStack(spacing: 5){
                         
-                        //Spacer()
-                        
                         Button(action: {
                             showGameReport = true
                         }) {
@@ -460,8 +446,6 @@ struct PitchLocationView: View {
                             }
                         }
                         
-                        //Spacer()
-                        
                         Button(action: {
                             showEndGame = true
                         }) {
@@ -471,8 +455,6 @@ struct PitchLocationView: View {
                                 .frame(width: sbl_width, height: sbl_height)
                                 .foregroundColor(Color.white)
                         }
-                        
-                        //Spacer()
                         
                         Button(action: {
                             showSettingsView = true
@@ -489,7 +471,6 @@ struct PitchLocationView: View {
                         }
                     }
                     .padding(.trailing, -5)
-                    //.shadow(radius: 10)
                 }
             }
         }
@@ -549,7 +530,6 @@ struct PitchLocationView: View {
                     pitch_type = abbr.key
                 }
             }
-            //pitch_type = pitch_abbreviations.filter { $0.value == pitch_type }
             
             if result_detail != "R"{
                 
@@ -764,17 +744,10 @@ struct PitchLocationView: View {
                     }
                 }
                 
-                print(inn_cntr, p1_cntr)
-                
                 game_report.p1_by_inn[inn_cntr - first_inn] = p1_cntr
                 game_report.p2_by_inn[inn_cntr - first_inn] = p2_cntr
                 game_report.p3_by_inn[inn_cntr - first_inn] = p3_cntr
                 game_report.p4_by_inn[inn_cntr - first_inn] = p4_cntr
-                
-                print(game_report.p1_by_inn)
-                print(game_report.p2_by_inn)
-                print(game_report.p3_by_inn)
-                print(game_report.p4_by_inn)
                 
                 game_report.pitches_by_inn = []
                 
@@ -898,10 +871,9 @@ struct PitchLocationView: View {
                 else if evnt.result_detail == "R" {
                     outs += 1
                 }
-                
-                //new inning logic for gamereport
+
                 if outs > 2 {
-                    game_report.inn_pitched += 1
+                    game_report.inn_pitched = round(game_report.inn_pitched) + 1
                     outs = 0
                 }
                 else {
@@ -1048,8 +1020,6 @@ struct PitchLocationView: View {
             game_report.bs_walks_factor = 0.5
         }
         
-        
-        
         let temp_inn_pitches = [game_report.p1_by_inn, game_report.p2_by_inn, game_report.p3_by_inn, game_report.p4_by_inn]
         
         for index in 0..<temp_inn_pitches.count {
@@ -1082,14 +1052,6 @@ struct PitchLocationView: View {
         ptconfig.pitch_y_loc.removeAll()
         ptconfig.ab_pitch_color.removeAll()
         ptconfig.pitch_cur_ab = 0
-        
-//        current_pitcher.lastName = "Change Me"
-//        current_pitcher.firstName = ""
-//        current_pitcher.pitch1 = "None"
-//        current_pitcher.pitch2 = "None"
-//        current_pitcher.pitch3 = "None"
-//        current_pitcher.pitch4 = "None"
-//        current_pitcher.pitch_num = 0
         
         scoreboard.b1light = false
         scoreboard.b2light = false
@@ -1246,12 +1208,8 @@ struct PitchLocationView: View {
         var bl_ab_index = events.count - 2
         let atbat_before_last = events[bl_ab_index] //Before Last event (t - 1)
         
-        //print(prev_event.atbats)
-        //print(atbat_before_last.atbats)
-        
         if event.end_ab_rd.contains(prev_event.result_detail) && (prev_event.balls != 0 || prev_event.strikes != 0){
             while atbat_before_last.atbats == events[bl_ab_index].atbats {
-                //print(atbat_before_last.atbats, events[bl_ab_index].atbats)
                 let prev_evnt = events[bl_ab_index]
                 if prev_evnt.pitch_type != "NP" {
                     ptconfig.pitch_x_loc.insert(prev_evnt.pitch_x_location, at: 0)
@@ -1650,7 +1608,6 @@ struct PitchLocationInput : View {
                                             Task { await LocationInputTip.locationInput.donate() }
                                         }
                                     }) {
-                                        //Text(current_pitcher.arsenal[pt_num])
                                         Text("\(current_pitcher.arsenal[pt_num])")
                                             .textCase(.uppercase)
                                             .fontWeight(.bold)
