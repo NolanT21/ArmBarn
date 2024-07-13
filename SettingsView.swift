@@ -61,6 +61,9 @@ struct SettingsView: View {
                                         .frame(width: 30, height: 30)
                                         .cornerRadius(7)
                                     Image(systemName: "figure.baseball")
+                                        .imageScale(.large)
+                                        .font(.system(size: 17))
+                                        .foregroundColor(Color.white)
                                 }
                                 
                                 Toggle("Batter Stance", isOn: $useBatterStance)
@@ -86,6 +89,9 @@ struct SettingsView: View {
                                         .frame(width: 30, height: 30)
                                         .cornerRadius(7)
                                     Image(systemName: "bolt.fill")
+                                        .imageScale(.large)
+                                        .font(.system(size: 17))
+                                        .foregroundColor(Color.white)
                                 }
                                 Toggle("Strike Type", isOn: $useStrikeType)
                                     .onChange(of: useStrikeType){
@@ -108,6 +114,9 @@ struct SettingsView: View {
                                         .frame(width: 30, height: 30)
                                         .cornerRadius(7)
                                     Image(systemName: "gauge.with.needle")
+                                        .imageScale(.large)
+                                        .font(.system(size: 17))
+                                        .foregroundColor(Color.white)
                                 }
                                 Toggle("Velocity Input", isOn: $useVelocityInput)
                                     .onChange(of: useVelocityInput){
@@ -145,6 +154,9 @@ struct SettingsView: View {
                                         .frame(width: 30, height: 30)
                                         .cornerRadius(7)
                                     Image(systemName: "archivebox.fill")
+                                        .imageScale(.large)
+                                        .font(.system(size: 17))
+                                        .foregroundColor(Color.white)
                                 }
                                 Toggle("Box Score", isOn: $showBoxScore)
                                     .onChange(of: showBoxScore){
@@ -161,6 +173,8 @@ struct SettingsView: View {
                                     Image(systemName: "percent")
                                         .bold()
                                         .imageScale(.medium)
+                                        .font(.system(size: 17))
+                                        .foregroundColor(Color.white)
                                 }
                                 Toggle("Strike Percentages", isOn: $showStrikePer)
                                     .onChange(of: showStrikePer){
@@ -176,6 +190,8 @@ struct SettingsView: View {
                                         .cornerRadius(7)
                                     Image(systemName: "location.fill")
                                         .imageScale(.medium)
+                                        .font(.system(size: 17))
+                                        .foregroundColor(Color.white)
                                 }
                                 Toggle("Pitch Location Map", isOn: $showLocationMap)
                                     .onChange(of: showLocationMap){
@@ -191,6 +207,8 @@ struct SettingsView: View {
                                         .cornerRadius(7)
                                     Image(systemName: "hammer.fill")
                                         .imageScale(.medium)
+                                        .font(.system(size: 17))
+                                        .foregroundColor(Color.white)
                                 }
                                 Toggle("Hit Summary", isOn: $showHitSummary)
                                     .onChange(of: showHitSummary){
@@ -206,6 +224,8 @@ struct SettingsView: View {
                                         .cornerRadius(7)
                                     Image(systemName: "gamecontroller.fill")
                                         .imageScale(.medium)
+                                        .font(.system(size: 17))
+                                        .foregroundColor(Color.white)
                                 }
                                 Toggle("Game Score", isOn: $showGameScore)
                                     .onChange(of: showGameScore){
@@ -220,6 +240,9 @@ struct SettingsView: View {
                                         .frame(width: 30, height: 30)
                                         .cornerRadius(7)
                                     Image(systemName: "chart.xyaxis.line")
+                                        .imageScale(.large)
+                                        .font(.system(size: 17))
+                                        .foregroundColor(Color.white)
                                 }
                                 Toggle("Pitch by Inning Chart", isOn: $showPitByInn)
                                     .onChange(of: showPitByInn){
