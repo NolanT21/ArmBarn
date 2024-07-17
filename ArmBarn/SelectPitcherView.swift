@@ -104,6 +104,7 @@ struct SelectPitcherView: View {
                                 .preferredColorScheme(.dark)
                         }
                     }
+                    .font(.system(size: 17))
                     .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search by Last Name")
                     .toolbar{
                         
@@ -112,7 +113,7 @@ struct SelectPitcherView: View {
                             Button(action: {
                                 dismiss()
                             }, label: {
-                                Image(systemName: "chevron.left")
+                                Image(systemName: "xmark")
                                     .imageScale(.medium)
                                     .font(.system(size: 17))
                                     .frame(width: sbl_width, height: sbl_height)
@@ -124,6 +125,7 @@ struct SelectPitcherView: View {
                         ToolbarItemGroup(placement: .principal) {
                             Text("Select Pitcher")
                                 .foregroundColor(text_color)
+                                .font(.system(size: 17))
                         }
                         
                         ToolbarItemGroup(placement: .topBarTrailing) {
@@ -143,6 +145,11 @@ struct SelectPitcherView: View {
                             }
                         }
                     }
+                }
+            }
+            .onAppear(){
+                if pitchers.count == 0 {
+                    showAddPitcher = true
                 }
             }
     }

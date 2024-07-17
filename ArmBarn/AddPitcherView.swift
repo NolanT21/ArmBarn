@@ -29,6 +29,32 @@ struct AddPitcherView: View {
     
     var body: some View {
         VStack{
+            HStack{
+                
+                Button(action: {
+                    dismiss()
+                }, label: {
+                    Image(systemName: "xmark")
+                        .imageScale(.medium)
+                        .font(.system(size: 17))
+                        .frame(width: sbl_width, height: sbl_height)
+                        .foregroundColor(text_color)
+                        .bold()
+                })
+                
+                Spacer()
+                
+                Text("Add Pitcher")
+                    .font(.system(size: 17))
+                    .foregroundColor(text_color)
+                
+                Spacer()
+                
+                Text("")
+                
+            }
+            .padding(15)
+            
             Form{
                 Section(header: Text("Player Name")){
                     TextField("First Name", text: $firstName)
@@ -61,10 +87,16 @@ struct AddPitcherView: View {
                     context.insert(pitcher)
                     dismiss()
                 }
+                .bold()
                 .foregroundStyle(.white)
+                .listRowBackground(Color("ScoreboardGreen"))
+                .frame(maxWidth: .infinity)
+                .multilineTextAlignment(.center)
+                
             }
+            
+
         }
-        
     }
 }
 
@@ -72,3 +104,4 @@ struct AddPitcherView: View {
     AddPitcherView()
         .environment(currentPitcher())
 }
+
