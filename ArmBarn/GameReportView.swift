@@ -34,8 +34,8 @@ struct GameReportView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var context
     
-    @State private var showGameReceipt = false
     @State private var showPBPLog = false
+    @State private var showExportPR = false
     
     var gradient = Gradient(colors: [Color("PowderBlue"), Color("Gold"), Color("Tangerine")])
     var colorset = [Color("PowderBlue"), Color("Gold"), Color("Tangerine"), Color("Grey")]
@@ -76,7 +76,7 @@ struct GameReportView: View {
                         Button(action: {
                             dismiss()
                         }, label: {
-                            Image(systemName: "chevron.left")
+                            Image(systemName: "xmark")
                                 .imageScale(.medium)
                                 .font(.system(size: 17))
                                 .frame(width: sbl_width, height: sbl_height)
@@ -110,12 +110,14 @@ struct GameReportView: View {
                             .padding(.leading, view_padding/2)
                             
                             if showPBPLog == false {
-                                ShareLink("", item: renderGR(viewSize: viewsize))
+                                
+                                ShareLink("Export", item: renderGR(viewSize: viewsize))
                                     .imageScale(.large)
                                     .font(.system(size: 17))
                                     .foregroundStyle(text_color)
                                     .fontWeight(.bold)
                                     .padding(.leading, view_padding/2)
+                                
                             }
                             else {
                                 ShareLink("", item: renderPBP(viewSize: viewsize))
@@ -129,8 +131,8 @@ struct GameReportView: View {
                         }
                         
                     }
-                    .padding(.top, view_padding)
-                    .padding(.horizontal, view_padding)
+                    .padding(.top, view_padding * 1.5)
+                    .padding(.horizontal, view_padding * 1.5)
                     
                     ZStack {
                         ScrollView{
@@ -150,8 +152,15 @@ struct GameReportView: View {
                     
                 }
                 .background(LinearGradient(gradient: header_gradient, startPoint: .top, endPoint: .bottom))
+                
+                if showExportPR == true{
+                    FileNamePopUpView(action: {})
+                }
+                
             }
+            
         }
+        
     }
     
     var pbplogView: some View {

@@ -221,7 +221,7 @@ struct PitchLocationView: View {
                         }
                         
                         if newAtBat == true  && ASBatterStance == true{
-                            BatterPositionView(isActive: $newAtBat, close_action: {newAtBat = false})
+                            BatterPositionView(isActive: $newAtBat, close_action: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {newAtBat = false}})
                         }
                         
                         if current_pitcher.pitch_num <= 0 {

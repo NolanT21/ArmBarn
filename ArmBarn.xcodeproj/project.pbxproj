@@ -24,6 +24,7 @@
 		D57E62452BD2CD7D003987E1 /* report_variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C6DE1E2BD2C52D00C64555 /* report_variables.swift */; };
 		D57E62462BD2CD7D003987E1 /* SelectPitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C6DE1B2BD2C52D00C64555 /* SelectPitcherView.swift */; };
 		D57E62472BD2CD7D003987E1 /* StrikeoutAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C6DE1F2BD2C52D00C64555 /* StrikeoutAlertView.swift */; };
+		D58DAF152C45D38D003EFB2E /* FileNamePopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58DAF142C45D38D003EFB2E /* FileNamePopUpView.swift */; };
 		D58FE76D2BD717DC004FC234 /* BatterPositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58FE76C2BD717DC004FC234 /* BatterPositionView.swift */; };
 		D5959D9D2BE5381B00FFDA0B /* TipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5959D9C2BE5381B00FFDA0B /* TipView.swift */; };
 		D5DD11232AF52FE80064F1A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5DD11222AF52FE80064F1A5 /* Assets.xcassets */; };
@@ -36,6 +37,7 @@
 		D50E3E8F2B0926A8006699FB /* global_variables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = global_variables.swift; sourceTree = "<group>"; };
 		D50E3E932B0A3D04006699FB /* HitDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitDetailView.swift; sourceTree = "<group>"; };
 		D50E3E952B0A3DE7006699FB /* OutDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutDetailView.swift; sourceTree = "<group>"; };
+		D58DAF142C45D38D003EFB2E /* FileNamePopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileNamePopUpView.swift; sourceTree = SOURCE_ROOT; };
 		D58FE76C2BD717DC004FC234 /* BatterPositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatterPositionView.swift; sourceTree = "<group>"; };
 		D5959D9C2BE5381B00FFDA0B /* TipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipView.swift; sourceTree = "<group>"; };
 		D5A335862AFB0DD0005480DE /* PitchResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchResultView.swift; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 		D5DD111D2AF52FE70064F1A5 /* ArmBarn */ = {
 			isa = PBXGroup;
 			children = (
+				D58DAF142C45D38D003EFB2E /* FileNamePopUpView.swift */,
 				D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */,
 				D50E3E8F2B0926A8006699FB /* global_variables.swift */,
 				D5E103C02B3D122100752E7F /* ScoreboardView.swift */,
@@ -194,6 +197,7 @@
 				D57E623B2BD2CD7D003987E1 /* MainView.swift in Sources */,
 				D57E623C2BD2CD7D003987E1 /* PitchLocationView.swift in Sources */,
 				D5064EEC2BE041BE00F01886 /* SettingsView.swift in Sources */,
+				D58DAF152C45D38D003EFB2E /* FileNamePopUpView.swift in Sources */,
 				D58FE76D2BD717DC004FC234 /* BatterPositionView.swift in Sources */,
 				D57E623E2BD2CD7D003987E1 /* PitchResultView.swift in Sources */,
 				D57E623F2BD2CD7D003987E1 /* OutDetailView.swift in Sources */,
