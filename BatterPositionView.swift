@@ -24,6 +24,7 @@ struct BatterPositionView: View {
     var close_action: () -> ()
 
     var body: some View {
+        
         ZStack{
             
             Color(.black)

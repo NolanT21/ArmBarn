@@ -181,7 +181,10 @@ struct InputChangePopUp: View {
     func close() {
         withAnimation(.spring()) {
             offset = 1000
-            showView = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                showView = false
+            }
+           
         }
     }
 
