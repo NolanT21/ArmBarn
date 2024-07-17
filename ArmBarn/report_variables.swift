@@ -89,6 +89,9 @@ import Observation
     var pbp_event_list: [PBPLog] = []
     var cur_pitcher_id = UUID()
     
+    var game_location: String = "Home"
+    var opponent_name: String = ""
+    
 }
 
 struct PBPLog: Identifiable {
