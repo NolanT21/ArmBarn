@@ -50,7 +50,7 @@ struct EditPitcherTip: Tip {
     }
     
     var message: Text? {
-        Text("Swipe right/left to edit or delete a pitcher")
+        Text("Swipe right on a pitcher to edit their information. Swipe left to delete")
     }
 }
 
