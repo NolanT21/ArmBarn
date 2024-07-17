@@ -250,7 +250,7 @@ struct ScoreboardView: View {
                     }
                     .padding(.top, 10)
                     HStack{
-                        Text("AB")
+                        Text("BF")
                             .font(.system(size: font_size))
                             .fontWeight(.bold)
                         ZStack(alignment: .center){
