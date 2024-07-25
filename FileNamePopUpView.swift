@@ -17,11 +17,15 @@ struct FileNamePopUpView: View {
     
     @State private var showExportPR: Bool = true
     
+    @State var opponentname: String = String()
+    
+    @FocusState private var fieldIsFocused: Bool
+    
     var font_color: Color = .white
     var crnr_radius: CGFloat = 12
     
-    let title: String = "Filename Settings"
-    let buttonTitle: String = "Export"
+    let title: String = "Game Information"
+    let buttonTitle: String = "DONE"
     let action: () -> ()
     
     @State private var offset: CGFloat = 1000
@@ -40,6 +44,14 @@ struct FileNamePopUpView: View {
                         .foregroundStyle(font_color)
                         .padding()
                     
+                    TextField("Enter Opponent Name", text: $opponentname)
+                        .focused($fieldIsFocused)
+                        .submitLabel(.done)
+                        .font(.system(size: 20, weight: .bold))
+                        .textFieldStyle(.roundedBorder)
+                        .multilineTextAlignment(.leading)
+                        .padding(.horizontal, 20)
+                    
                     Picker("", selection: $selected_location) {
                         ForEach(game_location, id: \.self) {
                             Text($0)
@@ -51,11 +63,15 @@ struct FileNamePopUpView: View {
                     .padding()
                     .onChange(of: selected_location){
                         game_report.game_location = selected_location
-                        print(selected_location)
                     }
                     
                     Button {
-                        action()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12){
+                            fieldIsFocused = false
+                            game_report.opponent_name = opponentname
+                            print(game_report.opponent_name)
+                            action()
+                        }
                         close()
                         
                     } label: {
@@ -76,47 +92,48 @@ struct FileNamePopUpView: View {
                 .fixedSize(horizontal: false, vertical: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
                 .padding()
                 .background(Color("DarkGrey"))
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-                .overlay {
-                    VStack{
-
-                        HStack{
-                            
-                            Spacer()
-                            
-                            Button {
-                                close()
-                            } label: {
-                                Image(systemName: "xmark")
-                                    .imageScale(.medium)
-                                    .font(.system(size: 17))
-                                    .foregroundColor(font_color)
-                                    .bold()
-                                    
-                            }
-                            .tint(.black)
-                            
-                        }
-                        
-                        
-                        Spacer()
-                        
-                    }
-                    .padding()
-                   
-                }
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+//                .overlay {
+//                    VStack{
+//
+//                        HStack{
+//                            
+//                            Spacer()
+//                            
+//                            Button {
+//                                close()
+//                            } label: {
+//                                Image(systemName: "xmark")
+//                                    .imageScale(.medium)
+//                                    .font(.system(size: 17))
+//                                    .foregroundColor(font_color)
+//                                    .bold()
+//                                    
+//                            }
+//                            .tint(.black)
+//                            
+//                        }
+//                        
+//                        
+//                        Spacer()
+//                        
+//                    }
+//                    .padding()
+//                   
+//                }
                 .padding(30)
                 .offset(x: 0, y: offset)
                 .onAppear{
                     withAnimation(.spring()) {
-                        offset = 0
+                        offset = -100
                     }
                 }
                 
             }
+            .padding(.top, 45)
             .ignoresSafeArea()
+
         }
-        
         
     }
     
