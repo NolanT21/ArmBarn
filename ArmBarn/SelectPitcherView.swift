@@ -178,6 +178,7 @@ struct SelectPitcherView: View {
     }
     
     func clear_game_report() {
+        
         game_report.batters_faced = 0
         game_report.strikes = 0
         game_report.balls = 0

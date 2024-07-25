@@ -89,7 +89,7 @@ import Observation
     var pbp_event_list: [PBPLog] = []
     var cur_pitcher_id = UUID()
     
-    var game_location: String = "Home"
+    var game_location: String = ""
     var opponent_name: String = ""
     
 }
