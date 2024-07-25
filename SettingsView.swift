@@ -28,6 +28,7 @@ struct SettingsView: View {
     private let changeinputtip = ChangeInputTip()
     
     @State private var showInputChange = false
+    @State private var showFileNameInfo = false
     
     @State private var useBatterStance = false
     @State private var useStrikeType = false
@@ -252,6 +253,18 @@ struct SettingsView: View {
                             .tint(Color("ScoreboardGreen"))
                             
                         }
+                        Section() {
+                            Button {
+                                showFileNameInfo = true
+                            } label: {
+                                Text("Edit Game Info")
+                            }
+                            .bold()
+                            .foregroundStyle(.white)
+                            .listRowBackground(Color("ScoreboardGreen"))
+                            .frame(maxWidth: .infinity)
+                            .multilineTextAlignment(.center)
+                        }
                     }
                     .navigationBarTitleDisplayMode(.large)
                     .navigationBarTitle("Settings")
@@ -283,7 +296,12 @@ struct SettingsView: View {
                     InputChangePopUp()
                 }
                 
+                if showFileNameInfo == true {
+                    FileNamePopUpView(action: {showFileNameInfo = false})
+                }
+                
             }
+            
             
         }
     }
