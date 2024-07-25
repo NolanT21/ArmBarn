@@ -111,28 +111,29 @@ struct GameReportView: View {
                             
                             if showPBPLog == false {
                                 
-                                ShareLink("Export", item: renderGR(viewSize: viewsize))
+                                ShareLink("", item: renderGR(viewSize: viewsize))
                                     .imageScale(.large)
-                                    .font(.system(size: 17))
+                                    .font(.system(size: 16))
                                     .foregroundStyle(text_color)
                                     .fontWeight(.bold)
-                                    .padding(.leading, view_padding/2)
+//                                    .padding(.leading, view_padding/2)
                                 
                             }
                             else {
                                 ShareLink("", item: renderPBP(viewSize: viewsize))
                                     .imageScale(.large)
-                                    .font(.system(size: 17))
+                                    .font(.system(size: 16))
                                     .foregroundStyle(text_color)
                                     .fontWeight(.bold)
-                                    .padding(.leading, view_padding/2)
+//                                    .padding(.leading, view_padding/2)
                             }
                             
                         }
                         
                     }
-                    .padding(.top, view_padding * 1.5)
-                    .padding(.horizontal, view_padding * 1.5)
+                    .padding(.top, view_padding)
+                    .padding(.leading, view_padding * 1.5)
+                    .padding(.trailing, view_padding)
                     
                     ZStack {
                         ScrollView{
@@ -1328,8 +1329,15 @@ struct GameReportView: View {
         dateFormatter.dateFormat = "M.d.yy"
 
         let formattedDate = dateFormatter.string(from: Date())
+        
+        let opponent = game_report.opponent_name.prefix(7)
+        var location = game_report.game_location
+        
+        if location == "" {
+            location = "Home"
+        }
 
-        let path_string = "Pitch-by-Pitch Log " + formattedDate + ".pdf"
+        let path_string = opponent + "-" + location + "-" + formattedDate + ".pdf"
         
         let url = URL.documentsDirectory.appending(path: path_string)
         
@@ -1365,7 +1373,10 @@ struct GameReportView: View {
 
         let formattedDate = dateFormatter.string(from: Date())
         
-        let path_string = current_pitcher.firstName + " " + current_pitcher.lastName + " " + formattedDate + ".pdf"
+        let first_name = current_pitcher.firstName.prefix(1)
+        let last_name = current_pitcher.lastName.prefix(5)
+        
+        let path_string = first_name + "-" + last_name + "-" + formattedDate + ".pdf"
         
         let url = URL.documentsDirectory.appending(path: path_string)
         
