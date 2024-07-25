@@ -144,6 +144,7 @@ struct InputChangePopUp: View {
                         .multilineTextAlignment(.center)
                         
                     Button {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12){}
                         close()
                     } label: {
                         ZStack{
