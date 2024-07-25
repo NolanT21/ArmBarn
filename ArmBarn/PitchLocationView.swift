@@ -37,7 +37,8 @@ struct PitchLocationView: View {
     @State private var showSettingsView = false
     @State private var newAtBat = false
     @State private var showEndGame = false
-    @State private var showNewGame = false
+    @State private var showResumeGame = false
+    @State private var showFileNameInfo = false
     
     @State private var showUndoToast = false
     
@@ -79,13 +80,16 @@ struct PitchLocationView: View {
                             strikes = scoreboard.strikes
                             
                             if events.count > 0 && (scoreboard.balls == 0 && scoreboard.strikes == 0 && scoreboard.pitches == 0 && scoreboard.atbats == 1) {
-                                showNewGame = true
+                                showResumeGame = true
+                            }
+                            else if game_report.game_location == "" && game_report.opponent_name == "" {
+                                showFileNameInfo = true
                             }
                             
                             if event.end_ab_rd.contains(event.result_detail) {
                                 newAtBat = true
                             }
-                            else if balls == 0 && strikes == 0 && scoreboard.pitches > 0{
+                            else if balls == 0 && strikes == 0 && scoreboard.pitches > 0 && current_pitcher.lastName != "Change Me"{
                                 newAtBat = true
                             }
                         }
@@ -238,7 +242,7 @@ struct PitchLocationView: View {
                                     VStack{
                                         Button{
                                             showPitcherSelect = true
-                                            newAtBat = true
+//                                            showFileNameInfo = true
                                             selectpitchertip.invalidate(reason: .actionPerformed)
                                             
                                         } label: {
@@ -296,12 +300,17 @@ struct PitchLocationView: View {
                         }
                         .padding(.top, 50)
                         
-                        if showEndGame == true{
-                            PopupAlertView(isActive: $showEndGame, title: "End Game", message: "This game and its data will not be saved!", leftButtonAction: {new_game_func(); newAtBat = true; showEndGame = false}, rightButtonAction: {showEndGame = false})
+                        //HERE for welcome screen
+                        if showFileNameInfo == true {
+                            FileNamePopUpView(action: {showFileNameInfo = false; newAtBat = true})
                         }
                         
-                        if showNewGame == true {
-                            PopupAlertView(isActive: $showNewGame, title: "Resume Game", message: "A previous game was being recorded. Do you want to continue?", leftButtonAction: {set_pitcher(); load_recent_event(); load_recent_ab_pitches(); showNewGame = false}, rightButtonAction: {new_game_func(); showNewGame = false})
+                        if showEndGame == true{
+                            PopupAlertView(isActive: $showEndGame, title: "End Game", message: "This game and its data will not be saved!", leftButtonAction: {new_game_func(); newAtBat = false; showFileNameInfo = true; showEndGame = false}, rightButtonAction: {showEndGame = false})
+                        }
+                        
+                        if showResumeGame == true {
+                            PopupAlertView(isActive: $showResumeGame, title: "Resume Game", message: "A previous game was being recorded. Do you want to continue?", leftButtonAction: {set_pitcher(); load_recent_event(); load_recent_ab_pitches(); showFileNameInfo = true; showResumeGame = false}, rightButtonAction: {new_game_func(); showFileNameInfo = true; showResumeGame = false})
                         }
                         
                     }
@@ -405,7 +414,6 @@ struct PitchLocationView: View {
                             Button(action: {
                                 showPitcherSelect = true
                                 if current_pitcher.lastName == "Change Me" {
-                                    newAtBat = true
                                     selectpitchertip.invalidate(reason: .actionPerformed)
                                 }
                             }) {
@@ -1039,6 +1047,9 @@ struct PitchLocationView: View {
             print("Failed to delete all events.")
         }
         
+        game_report.game_location = ""
+        game_report.opponent_name = ""
+        
         scoreboard.balls = 0
         scoreboard.strikes = 0
         scoreboard.outs = 0
@@ -1068,6 +1079,7 @@ struct PitchLocationView: View {
     }
     
     func clear_game_report() {
+        
         game_report.batters_faced = 0
         game_report.strikes = 0
         game_report.balls = 0
