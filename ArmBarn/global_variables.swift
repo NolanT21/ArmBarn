@@ -73,6 +73,7 @@ import Observation
     var arsenal_colors: [Color] = [Color("PowderBlue"), Color("Gold"), Color("Tangerine"), Color("Grey")]
     var hidePitchOverlay: Bool = false
     var loadPitchOverlay: Bool = false
+    var pitchclockviolation = false
 }
 
 @Model class Event{
