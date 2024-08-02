@@ -13,7 +13,7 @@ struct AddPitcherView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(currentPitcher.self) var current_pitcher
     
-    let pitch_types = ["None", "Fastball", "Curveball", "Slider", "Change-Up", "Splitter", "Cutter", "Sinker", "Other"]
+    let pitch_types = ["None", "Fastball", "Curveball", "Slider", "Change-Up", "Splitter", "Cutter", "Sinker", "Sweeper", "Other"]
     
     @State private var firstName = ""
     @State private var lastName = ""
