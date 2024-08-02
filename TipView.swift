@@ -19,7 +19,7 @@ struct SelectPitcherTip: Tip {
     }
     
     var message: Text? {
-        Text("Tap on the current pitcher's last name to change pitcher.")
+        Text("Tap here to change or add pitchers.")
     }
     
     var image: Image? {
@@ -114,4 +114,19 @@ struct ScoreboardInfoTip: Tip {
     var image: Image? {
         Image(systemName: "info.circle")
     }
+}
+
+struct WelcomeTip: Tip {
+    var title: Text {
+        Text("Welcome To ArmBarn!")
+    }
+    
+    var message: Text? {
+        Text("To get started, enter the opposing team's name and game location")
+    }
+    
+    var image: Image? {
+        Image("ElToro")
+    }
+    
 }
