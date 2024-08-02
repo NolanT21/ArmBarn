@@ -227,7 +227,7 @@ struct ScoreboardView: View {
                                 .foregroundStyle(
                                     Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
                                 )
-                                .frame(width: 40, height: 30)
+                                .frame(width: 45, height: 30)
                             
                             if hidepitchnum == true {
                                 VStack{
@@ -258,7 +258,7 @@ struct ScoreboardView: View {
                                 .foregroundStyle(
                                     Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
                                 )
-                                .frame(width: 30, height: 30)
+                                .frame(width: 40, height: 30)
                             
                             if hideatbats == true {
                                 ZStack{
