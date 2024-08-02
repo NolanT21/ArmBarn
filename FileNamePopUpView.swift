@@ -6,11 +6,14 @@
 //
 
 import SwiftUI
+import TipKit
 
 struct FileNamePopUpView: View {
     
     @Environment(GameReport.self) var game_report
     @Environment(\.dismiss) var dismiss
+    
+    var welcometip = WelcomeTip()
     
     var game_location: [String] = ["Home", "Away"]
     @State private var selected_location = "Home"
@@ -38,96 +41,91 @@ struct FileNamePopUpView: View {
                 Color(.black)
                     .opacity(0.2)
                 
-                VStack{
-                    Text(title)
-                        .font(.system(size: 22, weight: .bold))
-                        .foregroundStyle(font_color)
-                        .padding()
+                ZStack {
                     
-                    TextField("Enter Opponent Name", text: $opponentname)
-                        .focused($fieldIsFocused)
-                        .submitLabel(.done)
-                        .font(.system(size: 20, weight: .bold))
-                        .textFieldStyle(.roundedBorder)
-                        .multilineTextAlignment(.leading)
-                        .padding(.horizontal, 20)
-                    
-                    Picker("", selection: $selected_location) {
-                        ForEach(game_location, id: \.self) {
-                            Text($0)
+                    VStack{
+                        
+                        Text(title)
+                            .font(.system(size: 22, weight: .bold))
+                            .foregroundStyle(font_color)
+                            .padding()
+                        
+                        TextField("Enter Opponent Name", text: $opponentname)
+                            .focused($fieldIsFocused)
+                            .submitLabel(.done)
+                            .font(.system(size: 20, weight: .bold))
+                            .textFieldStyle(.roundedBorder)
+                            .multilineTextAlignment(.leading)
+                            .padding(.horizontal, 20)
+                        
+                        Picker("", selection: $selected_location) {
+                            ForEach(game_location, id: \.self) {
+                                Text($0)
 
+                            }
                         }
-                    }
-                    .pickerStyle(.segmented)
-                    .preferredColorScheme(/*@START_MENU_TOKEN@*/.dark/*@END_MENU_TOKEN@*/)
-                    .padding()
-                    .onChange(of: selected_location){
-                        game_report.game_location = selected_location
-                    }
-                    
-                    Button {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12){
-                            fieldIsFocused = false
-                            game_report.opponent_name = opponentname
-                            print(game_report.opponent_name)
-                            action()
-                        }
-                        close()
-                        
-                    } label: {
-                        ZStack{
-                            RoundedRectangle(cornerRadius: crnr_radius)
-                                .foregroundColor(Color("ScoreboardGreen"))
-                            
-                            Text(buttonTitle)
-                                .font(.system(size: 20, weight: .bold))
-                                .foregroundStyle(font_color)
-                                .padding()
-                        }
+                        .pickerStyle(.segmented)
+                        .preferredColorScheme(/*@START_MENU_TOKEN@*/.dark/*@END_MENU_TOKEN@*/)
                         .padding()
+                        .onChange(of: selected_location){
+                            game_report.game_location = selected_location
+                        }
+                        
+                        Button {
+                            if opponentname != "" {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.12){
+                                    fieldIsFocused = false
+                                    game_report.opponent_name = opponentname
+                                    print(game_report.opponent_name)
+                                    action()
+                                }
+                                close()
+                                
+                                welcometip.invalidate(reason: .actionPerformed)
+                            }
+                            
+                        } label: {
+                            ZStack{
+                                RoundedRectangle(cornerRadius: crnr_radius)
+                                    .foregroundColor(Color("ScoreboardGreen"))
+                                
+                                Text(buttonTitle)
+                                    .font(.system(size: 20, weight: .bold))
+                                    .foregroundStyle(font_color)
+                                    .padding()
+                            }
+                            .padding()
+                            
+                        }
+                        
+                    }
+                    .fixedSize(horizontal: false, vertical: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
+                    .padding()
+                    .background(Color("DarkGrey"))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .padding(30)
+                    .offset(x: 0, y: offset)
+                    .onAppear{
+                        withAnimation(.spring()) {
+                            offset = -100
+                        }
+                    }
+                    
+                    VStack{
+                        
+                        TipView(welcometip)
+                            .tipBackground(Color("DarkGrey"))
+                            .tint(Color("ScoreboardGreen"))
+                            .padding(.horizontal, 20)
+                            .preferredColorScheme(.dark)
+                        
+                        Spacer()
                         
                     }
                     
                 }
-                .fixedSize(horizontal: false, vertical: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
-                .padding()
-                .background(Color("DarkGrey"))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-//                .overlay {
-//                    VStack{
-//
-//                        HStack{
-//                            
-//                            Spacer()
-//                            
-//                            Button {
-//                                close()
-//                            } label: {
-//                                Image(systemName: "xmark")
-//                                    .imageScale(.medium)
-//                                    .font(.system(size: 17))
-//                                    .foregroundColor(font_color)
-//                                    .bold()
-//                                    
-//                            }
-//                            .tint(.black)
-//                            
-//                        }
-//                        
-//                        
-//                        Spacer()
-//                        
-//                    }
-//                    .padding()
-//                   
-//                }
-                .padding(30)
-                .offset(x: 0, y: offset)
-                .onAppear{
-                    withAnimation(.spring()) {
-                        offset = -100
-                    }
-                }
+                
+                
                 
             }
             .padding(.top, 45)
