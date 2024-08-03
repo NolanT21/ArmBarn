@@ -10,6 +10,7 @@ import TipKit
 
 struct FileNamePopUpView: View {
     
+    @Environment(Scoreboard.self) var scoreboard
     @Environment(GameReport.self) var game_report
     @Environment(\.dismiss) var dismiss
     
@@ -76,7 +77,6 @@ struct FileNamePopUpView: View {
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.12){
                                     fieldIsFocused = false
                                     game_report.opponent_name = opponentname
-                                    print(game_report.opponent_name)
                                     action()
                                 }
                                 close()
@@ -127,6 +127,9 @@ struct FileNamePopUpView: View {
                 
                 
                 
+            }
+            .onAppear{
+                scoreboard.enable_bottom_row = false
             }
             .padding(.top, 45)
             .ignoresSafeArea()

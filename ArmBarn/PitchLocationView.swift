@@ -302,15 +302,15 @@ struct PitchLocationView: View {
                         
                         //HERE for welcome screen
                         if showFileNameInfo == true {
-                            FileNamePopUpView(action: {showFileNameInfo = false; newAtBat = true})
+                            FileNamePopUpView(action: {showFileNameInfo = false; newAtBat = true; scoreboard.enable_bottom_row = true})
                         }
                         
                         if showEndGame == true{
-                            PopupAlertView(isActive: $showEndGame, title: "End Game", message: "This game and its data will not be saved!", leftButtonAction: {new_game_func(); newAtBat = false; showFileNameInfo = true; showEndGame = false}, rightButtonAction: {showEndGame = false})
+                            PopupAlertView(isActive: $showEndGame, title: "End Game", message: "This game and its data will not be saved!", leftButtonAction: {new_game_func(); newAtBat = false; showFileNameInfo = true; showEndGame = false; scoreboard.enable_bottom_row = true}, rightButtonAction: {showEndGame = false; scoreboard.enable_bottom_row = true})
                         }
                         
                         if showResumeGame == true {
-                            PopupAlertView(isActive: $showResumeGame, title: "Resume Game", message: "A previous game was being recorded. Do you want to continue?", leftButtonAction: {set_pitcher(); load_recent_event(); load_recent_ab_pitches(); showFileNameInfo = true; showResumeGame = false}, rightButtonAction: {new_game_func(); showFileNameInfo = true; showResumeGame = false})
+                            PopupAlertView(isActive: $showResumeGame, title: "Resume Game", message: "A previous game was being recorded. Do you want to continue?", leftButtonAction: {set_pitcher(); load_recent_event(); load_recent_ab_pitches(); showFileNameInfo = true; showResumeGame = false; scoreboard.enable_bottom_row = true}, rightButtonAction: {new_game_func(); showFileNameInfo = true; showResumeGame = false; scoreboard.enable_bottom_row = true})
                         }
                         
                     }
@@ -335,36 +335,38 @@ struct PitchLocationView: View {
                 ToolbarItemGroup(placement: .topBarLeading) {
                     
                     Button(action: {
-                        if ptconfig.hidePitchOverlay == true {
-                            cur_pitch_color = .clear
-                            cur_pitch_outline = .clear
-                        }
-                        else if events.count > 0 {
-                            
-                            showUndoToast = true
-                            
-                            if events.count != 1 {
-                                load_previous_event()
-                                load_previous_ab_pitches()
-                                context.delete(events[events.count - 1])
+                        if scoreboard.enable_bottom_row == true {
+                            if ptconfig.hidePitchOverlay == true {
+                                cur_pitch_color = .clear
+                                cur_pitch_outline = .clear
                             }
-                            else {
-                                if scoreboard.pitches > 0 {
-                                    scoreboard.pitches -= 1
+                            else if events.count > 0 {
+                                
+                                showUndoToast = true
+                                
+                                if events.count != 1 {
+                                    load_previous_event()
+                                    load_previous_ab_pitches()
+                                    context.delete(events[events.count - 1])
                                 }
-                                newAtBat = true
-                                new_game_func()
-                                do {
-                                    try context.delete(model: Event.self)
-                                } catch {
-                                    print("Did not clear event data")
+                                else {
+                                    if scoreboard.pitches > 0 {
+                                        scoreboard.pitches -= 1
+                                    }
+                                    newAtBat = true
+                                    new_game_func()
+                                    do {
+                                        try context.delete(model: Event.self)
+                                    } catch {
+                                        print("Did not clear event data")
+                                    }
+                                    
                                 }
                                 
                             }
-                            
+                            ptconfig.hidePitchOverlay = false
+                            ptconfig.ptcolor = .clear
                         }
-                        ptconfig.hidePitchOverlay = false
-                        ptconfig.ptcolor = .clear
                         
                     }) {
                         if ptconfig.hidePitchOverlay == true{
@@ -413,9 +415,11 @@ struct PitchLocationView: View {
                             let pitcher_lname = String(current_pitcher.lastName.prefix(10))
 
                             Button(action: {
-                                showPitcherSelect = true
-                                if current_pitcher.lastName == "Change Me" {
-                                    selectpitchertip.invalidate(reason: .actionPerformed)
+                                if scoreboard.enable_bottom_row == true {
+                                    showPitcherSelect = true
+                                    if current_pitcher.lastName == "Change Me" {
+                                        selectpitchertip.invalidate(reason: .actionPerformed)
+                                    }
                                 }
                             }) {
                                 Text(pitcher_lname)
@@ -437,7 +441,9 @@ struct PitchLocationView: View {
                     HStack(/*spacing: 5*/){
                         
                         Button(action: {
-                            showGameReport = true
+                            if scoreboard.enable_bottom_row == true {
+                                showGameReport = true
+                            }
                         }) {
                             Image(systemName: "chart.bar.xaxis")
                                 .imageScale(.large)
@@ -454,7 +460,9 @@ struct PitchLocationView: View {
                         }
                         
                         Button(action: {
-                            showEndGame = true
+                            if scoreboard.enable_bottom_row == true {
+                                showEndGame = true
+                            }
                         }) {
                             Image(systemName: "flag.checkered")
                                 .imageScale(.large)
@@ -464,7 +472,9 @@ struct PitchLocationView: View {
                         }
                         
                         Button(action: {
-                            showSettingsView = true
+                            if scoreboard.enable_bottom_row == true {
+                                showSettingsView = true
+                            }
                         }) {
                             Image(systemName: "gearshape.fill")
                                 .imageScale(.large)
@@ -479,6 +489,7 @@ struct PitchLocationView: View {
                     }
                     .padding(.trailing, -5)
                 }
+                
             }
         }
     }

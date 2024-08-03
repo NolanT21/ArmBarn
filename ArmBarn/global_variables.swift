@@ -30,6 +30,7 @@ import Observation
     var o2light: Bool = false
     
     var update_scoreboard: Bool = true
+    var enable_bottom_row: Bool = true
 }
 
 @Observable class Event_String{

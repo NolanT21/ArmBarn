@@ -9,6 +9,8 @@ import SwiftUI
 
 struct PopupAlertView: View {
     
+    @Environment(Scoreboard.self) var scoreboard
+    
     @State private var offset: CGFloat = 1000
     
     var font_color: Color = .white
@@ -78,13 +80,9 @@ struct PopupAlertView: View {
                                 .foregroundStyle(font_color)
                                 .padding()
                         }
-                        
                     }
-
-                    
                 }
                 .padding()
-                
             }
             .fixedSize(horizontal: false, vertical: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
             .padding()
@@ -98,6 +96,9 @@ struct PopupAlertView: View {
                     offset = -100
                 }
             }
+        }
+        .onAppear{
+            scoreboard.enable_bottom_row = false
         }
         .padding(.top, 45)
         .ignoresSafeArea()
