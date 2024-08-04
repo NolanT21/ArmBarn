@@ -115,7 +115,6 @@ struct VelocityInputView: View {
             .padding(.top, 45)
             .ignoresSafeArea()
             .onAppear{
-                scoreboard.enable_bottom_row = false
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
                     fieldIsFocused = true
                 }
