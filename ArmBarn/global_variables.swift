@@ -77,6 +77,27 @@ import Observation
     var pitchclockviolation = false
 }
 
+@Observable class BullpenConfig{
+    var expected_target: String = ""
+    var actual_target: String = ""
+    var pitch_type: String = ""
+}
+
+@Model class BullpenEvent{
+    var pitcher_id = UUID()
+    var expected_target: String
+    var actual_target: String
+    var pitch_type: String
+    
+    init(pitcher_id: UUID, expected_target: String, actual_target: String, pitch_type: String) {
+        self.pitcher_id = pitcher_id
+        self.expected_target = expected_target
+        self.actual_target = actual_target
+        self.pitch_type = pitch_type
+    }
+    
+}
+
 @Model class Event{
     
     var pitcher_id = UUID()
