@@ -1983,10 +1983,10 @@ struct SaveEventView : View {
 }
         
 
-#Preview {
-    PitchLocationView()
-        .environment(Scoreboard())
-        .environment(Event_String())
-        .environment(PitchTypeConfig())
-}
+//#Preview {
+//    PitchLocationView()
+//        .environment(Scoreboard())
+//        .environment(Event_String())
+//        .environment(PitchTypeConfig())
+//}
 

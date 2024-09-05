@@ -14,8 +14,6 @@ struct MainContainerView: View {
     @Environment(Event_String.self) var event
     
     @Query var events: [Event]
-    
-
       
     var body: some View {
         VStack{
@@ -27,11 +25,7 @@ struct MainContainerView: View {
             }
         }
     }
-    
-   
 }
-    
-    
 
 #Preview {
     MainContainerView()

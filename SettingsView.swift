@@ -297,7 +297,7 @@ struct SettingsView: View {
                 }
                 
                 if showFileNameInfo == true {
-                    FileNamePopUpView(action: {showFileNameInfo = false})
+                    FileNamePopUpView(action: {showFileNameInfo = false; scoreboard.enable_bottom_row = true})
                 }
                 
             }

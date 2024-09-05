@@ -1483,6 +1483,6 @@ struct GameReportView: View {
     
 }
 
-#Preview {
-    GameReportView()
-}
+//#Preview {
+//    GameReportView()
+//}
