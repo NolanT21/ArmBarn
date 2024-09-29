@@ -297,6 +297,11 @@ struct EditPitcherView: View {
                 Button("Save") {
                     dismiss()
                 }
+                .bold()
+                .foregroundStyle(.white)
+                .listRowBackground(Color("ScoreboardGreen"))
+                .frame(maxWidth: .infinity)
+                .multilineTextAlignment(.center)
             }
 //            .foregroundColor(.black)
 //            .background(.green)
