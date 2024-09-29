@@ -2,28 +2,14 @@
 //  MainContainerView.swift
 //  ArmBarn
 //
-//  Created by Nolan Thompson on 1/15/24.
+//  Created by Nolan Thompson on 9/26/24.
 //
 
 import SwiftUI
-import SwiftData
-import Observation
 
 struct MainContainerView: View {
-    
-    @Environment(Event_String.self) var event
-    
-    @Query var events: [Event]
-      
     var body: some View {
-        VStack{
-            NavigationStack{
-                ZStack{
-                    PitchLocationView()
-                        .preferredColorScheme(.dark)
-                }
-            }
-        }
+        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
 }
 

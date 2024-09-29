@@ -13,21 +13,35 @@ import Observation
 
 struct MainView: View {
     
+    @AppStorage("BullpenMode") var ASBullpenMode : Bool?
+    
+    @Environment(Event_String.self) var event
+    
+    @State private var showBullpenMode : Bool = false
+    
     var body: some View {
         
-        VStack{
-            
-            ScoreboardView()
-            
-            ZStack{
-               
-                MainContainerView()
-                    .preferredColorScheme(.dark)
+        if !(ASBullpenMode ?? false) {
 
+            VStack{
+                //Move to when game charting is active
+                ScoreboardView()
+                ZStack{
+                    MainContainerView()
+                        .preferredColorScheme(.dark)
+                }
             }
-            
+            .background(Color("ScoreboardGreen"))
+        
         }
-        .background(Color("ScoreboardGreen"))
+        else {
+            VStack{
+                BullpenMainView().task{
+                    event.recordEvent = false
+                }
+            }
+        }
+        
     }
 }
 
