@@ -26,7 +26,8 @@ struct ArmBarnApp: App {
             "Location" : true,
             "HitSummary" : true,
             "GameScore" : true,
-            "PitByInn" : true
+            "PitByInn" : true,
+            "BullpenMode" : false,
             ])
         
       }

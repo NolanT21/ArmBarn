@@ -20,7 +20,7 @@
 		D57E62402BD2CD7D003987E1 /* HitDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50E3E932B0A3D04006699FB /* HitDetailView.swift */; };
 		D57E62412BD2CD7D003987E1 /* AddPitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5FAD8192B28BADC00E9EB91 /* AddPitcherView.swift */; };
 		D57E62422BD2CD7D003987E1 /* GameReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C6DE192BD2C52D00C64555 /* GameReportView.swift */; };
-		D57E62432BD2CD7D003987E1 /* MainContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C6DE202BD2C52D00C64555 /* MainContainerView.swift */; };
+		D57E62432BD2CD7D003987E1 /* GameContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C6DE202BD2C52D00C64555 /* GameContainerView.swift */; };
 		D57E62442BD2CD7D003987E1 /* PopupAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C6DE1C2BD2C52D00C64555 /* PopupAlertView.swift */; };
 		D57E62452BD2CD7D003987E1 /* report_variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C6DE1E2BD2C52D00C64555 /* report_variables.swift */; };
 		D57E62462BD2CD7D003987E1 /* SelectPitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C6DE1B2BD2C52D00C64555 /* SelectPitcherView.swift */; };
@@ -48,7 +48,7 @@
 		D5C6DE1C2BD2C52D00C64555 /* PopupAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupAlertView.swift; sourceTree = "<group>"; };
 		D5C6DE1E2BD2C52D00C64555 /* report_variables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = report_variables.swift; sourceTree = "<group>"; };
 		D5C6DE1F2BD2C52D00C64555 /* StrikeoutAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrikeoutAlertView.swift; sourceTree = "<group>"; };
-		D5C6DE202BD2C52D00C64555 /* MainContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainContainerView.swift; sourceTree = "<group>"; };
+		D5C6DE202BD2C52D00C64555 /* GameContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameContainerView.swift; sourceTree = "<group>"; };
 		D5DD111B2AF52FE60064F1A5 /* ArmBarn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArmBarn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArmBarnApp.swift; sourceTree = "<group>"; };
 		D5DD11202AF52FE70064F1A5 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -105,7 +105,7 @@
 				D5FAD8192B28BADC00E9EB91 /* AddPitcherView.swift */,
 				D5C6DE192BD2C52D00C64555 /* GameReportView.swift */,
 				D575388C2C776ABE00B7EBF7 /* BullpenMainView.swift */,
-				D5C6DE202BD2C52D00C64555 /* MainContainerView.swift */,
+				D5C6DE202BD2C52D00C64555 /* GameContainerView.swift */,
 				D5C6DE1C2BD2C52D00C64555 /* PopupAlertView.swift */,
 				D5C6DE1E2BD2C52D00C64555 /* report_variables.swift */,
 				D5C6DE1B2BD2C52D00C64555 /* SelectPitcherView.swift */,
@@ -208,7 +208,7 @@
 				D57E62412BD2CD7D003987E1 /* AddPitcherView.swift in Sources */,
 				D575388D2C776ABE00B7EBF7 /* BullpenMainView.swift in Sources */,
 				D57E62422BD2CD7D003987E1 /* GameReportView.swift in Sources */,
-				D57E62432BD2CD7D003987E1 /* MainContainerView.swift in Sources */,
+				D57E62432BD2CD7D003987E1 /* GameContainerView.swift in Sources */,
 				D5959D9D2BE5381B00FFDA0B /* TipView.swift in Sources */,
 				D5064EEA2BDF180400F01886 /* VelocityInputView.swift in Sources */,
 				D57E62442BD2CD7D003987E1 /* PopupAlertView.swift in Sources */,
