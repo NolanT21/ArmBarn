@@ -12,6 +12,7 @@ import TipKit
 struct PitchLocationView: View {
     
     @AppStorage("BatterStance") var ASBatterStance: Bool?
+    @AppStorage("BullpenMode") var ASBullpenMode : Bool?
     
     @Environment(Scoreboard.self) var scoreboard
     @Environment(PitchTypeConfig.self) var ptconfig
@@ -65,44 +66,45 @@ struct PitchLocationView: View {
     var body: some View {
         
         NavigationStack{
-            VStack{
                 
-                ZStack{
+                VStack{
                     
                     ZStack{
                         
-                        SaveEventView().task{
-                            add_prev_event_string()
-                            event.recordEvent = true
-                            scoreboard.update_scoreboard = true
+                        ZStack{
                             
-                            balls = scoreboard.balls
-                            strikes = scoreboard.strikes
+                            SaveEventView().task{
+                                add_prev_event_string()
+                                event.recordEvent = true
+                                scoreboard.update_scoreboard = true
+                                
+                                balls = scoreboard.balls
+                                strikes = scoreboard.strikes
+                                
+                                if events.count > 0 && (scoreboard.balls == 0 && scoreboard.strikes == 0 && scoreboard.pitches == 0 && scoreboard.atbats == 1) {
+                                    showResumeGame = true
+                                }
+                                else if game_report.game_location == "" && game_report.opponent_name == "" {
+                                    showFileNameInfo = true
+                                }
+                                
+                                if event.end_ab_rd.contains(event.result_detail) {
+                                    newAtBat = true
+                                }
+                                else if balls == 0 && strikes == 0 && scoreboard.pitches > 0 && current_pitcher.lastName != "Change Me"{
+                                    newAtBat = true
+                                }
+                            }
                             
-                            if events.count > 0 && (scoreboard.balls == 0 && scoreboard.strikes == 0 && scoreboard.pitches == 0 && scoreboard.atbats == 1) {
-                                showResumeGame = true
-                            }
-                            else if game_report.game_location == "" && game_report.opponent_name == "" {
-                                showFileNameInfo = true
-                            }
+                            Image("PLI_Background")
+                                .resizable()
+                                .gesture(tap)
                             
-                            if event.end_ab_rd.contains(event.result_detail) {
-                                newAtBat = true
-                            }
-                            else if balls == 0 && strikes == 0 && scoreboard.pitches > 0 && current_pitcher.lastName != "Change Me"{
-                                newAtBat = true
-                            }
-                        }
-                        
-                        Image("PLI_Background")
-                            .resizable()
-                            .gesture(tap)
-                        
-                        Circle()
-                            .stroke(cur_pitch_outline, lineWidth: 8)
-                            .frame(width: 35.0, height: 35.0, alignment: .center)
-                            .position(location)
-                        
+                            Circle()
+                                .stroke(cur_pitch_outline, lineWidth: 8)
+                                .frame(width: 35.0, height: 35.0, alignment: .center)
+                                .position(location)
+                            
                             NavigationLink(destination: PitchResultView().navigationBarBackButtonHidden(true).preferredColorScheme(.dark).task {
                                 ptconfig.pitch_x_loc.append(location.x)
                                 event.x_cor = Double(location.x)
@@ -124,378 +126,379 @@ struct PitchLocationView: View {
                             .foregroundColor(.white)
                             .cornerRadius(90.0)
                             .position(location)
-                        
-                    }
-                        
-                        
-                    ZStack{
-                        if current_pitcher.pitch_num > 0{
-                            PitchLocationInput()
-                        }
-                        
-                        VStack{
-                            TipView(locationinputtip)
-                                .tipBackground(Color("DarkGrey"))
-                                .tint(Color("ScoreboardGreen"))
-                                .padding(.horizontal, 10)
-                                .padding(.top, 60)
-                                .preferredColorScheme(.dark)
-                            
-                            Spacer()
                             
                         }
                         
                         
-                        if scoreboard.baserunners > 0 && ptconfig.hidePitchOverlay == false{
-                            VStack {
+                        ZStack{
+                            if current_pitcher.pitch_num > 0{
+                                PitchLocationInput()
+                            }
+                            
+                            VStack{
+                                TipView(locationinputtip)
+                                    .tipBackground(Color("DarkGrey"))
+                                    .tint(Color("ScoreboardGreen"))
+                                    .padding(.horizontal, 10)
+                                    .padding(.top, 60)
+                                    .preferredColorScheme(.dark)
+                                
                                 Spacer()
-                                    .frame(height: 50)
-                                HStack {
-                                    
+                                
+                            }
+                            
+                            
+                            if scoreboard.baserunners > 0 && ptconfig.hidePitchOverlay == false{
+                                VStack {
                                     Spacer()
-                                    
-                                    Button(action: {
-                                        record_baserunner_out()
-                                    }) {
-                                        Text("RUNNER OUT")
-                                            .font(.system(size: 16))
-                                            .fontWeight(.black)
-                                            .padding(.vertical, 8.0)
-                                            .padding(.horizontal, 5.0)
+                                        .frame(height: 50)
+                                    HStack {
+                                        
+                                        Spacer()
+                                        
+                                        Button(action: {
+                                            record_baserunner_out()
+                                        }) {
+                                            Text("RUNNER OUT")
+                                                .font(.system(size: 16))
+                                                .fontWeight(.black)
+                                                .padding(.vertical, 8.0)
+                                                .padding(.horizontal, 5.0)
+                                        }
+                                        .foregroundColor(Color.white)
+                                        .background(Color("ScoreboardGreen"))
+                                        .cornerRadius(8.0)
+                                        .padding(.trailing, 5)
                                     }
-                                    .foregroundColor(Color.white)
-                                    .background(Color("ScoreboardGreen"))
-                                    .cornerRadius(8.0)
-                                    .padding(.trailing, 5)
+                                    Spacer()
                                 }
-                                Spacer()
                             }
-                        }
-                        
-                        VStack{
                             
-                            if ASBatterStance == true{
-                                Button {
-                                    newAtBat = true
-                                    
-                                } label: {
-                                    HStack(alignment: .center){
+                            VStack{
+                                
+                                if ASBatterStance == true{
+                                    Button {
+                                        newAtBat = true
                                         
-                                        Spacer()
-                                        
-                                        if event.batter_stance == "R" {
-                                            Image(systemName: "chevron.left")
-                                                .imageScale(.small)
+                                    } label: {
+                                        HStack(alignment: .center){
+                                            
+                                            Spacer()
+                                            
+                                            if event.batter_stance == "R" {
+                                                Image(systemName: "chevron.left")
+                                                    .imageScale(.small)
+                                                    .foregroundStyle(.white)
+                                                    .padding(.trailing, -5)
+                                            }
+                                            else {
+                                                Image(systemName: "chevron.left")
+                                                    .imageScale(.small)
+                                                    .foregroundStyle(.clear)
+                                                    .padding(.trailing, -5)
+                                            }
+                                            
+                                            Text("Batter Stance")
+                                                .font(.system(size: 16))
                                                 .foregroundStyle(.white)
-                                                .padding(.trailing, -5)
+                                            
+                                            if event.batter_stance == "L" {
+                                                Image(systemName: "chevron.right")
+                                                    .imageScale(.small)
+                                                    .foregroundStyle(.white)
+                                                    .padding(.leading, -5)
+                                            }
+                                            else {
+                                                Image(systemName: "chevron.right")
+                                                    .imageScale(.small)
+                                                    .foregroundStyle(.clear)
+                                                    .padding(.leading, -5)
+                                            }
+                                            
+                                            Spacer()
+                                            
                                         }
-                                        else {
-                                            Image(systemName: "chevron.left")
-                                                .imageScale(.small)
-                                                .foregroundStyle(.clear)
-                                                .padding(.trailing, -5)
-                                        }
-                                        
-                                        Text("Batter Stance")
-                                            .font(.system(size: 16))
-                                            .foregroundStyle(.white)
-                                        
-                                        if event.batter_stance == "L" {
-                                            Image(systemName: "chevron.right")
-                                                .imageScale(.small)
-                                                .foregroundStyle(.white)
-                                                .padding(.leading, -5)
-                                        }
-                                        else {
-                                            Image(systemName: "chevron.right")
-                                                .imageScale(.small)
-                                                .foregroundStyle(.clear)
-                                                .padding(.leading, -5)
-                                        }
-
-                                        Spacer()
                                         
                                     }
-                                    
+                                    .padding(.top, 58)
                                 }
-                                .padding(.top, 58)
-                            }
-
-                            Spacer()
-                        }
-                        
-                        if newAtBat == true  && ASBatterStance == true{
-                            BatterPositionView(isActive: $newAtBat, close_action: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {newAtBat = false}})
-                        }
-                        
-                        if current_pitcher.pitch_num <= 0 {
-                            ZStack {
-                                Color(.black)
-                                    .opacity(0.2)
                                 
                                 Spacer()
-                                
-                                VStack{
+                            }
+                            
+                            if newAtBat == true  && ASBatterStance == true{
+                                BatterPositionView(isActive: $newAtBat, close_action: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {newAtBat = false}})
+                            }
+                            
+                            if current_pitcher.pitch_num <= 0 {
+                                ZStack {
+                                    Color(.black)
+                                        .opacity(0.2)
                                     
                                     Spacer()
                                     
                                     VStack{
-                                        Button{
-                                            showPitcherSelect = true
-//                                            showFileNameInfo = true
-                                            selectpitchertip.invalidate(reason: .actionPerformed)
+                                        
+                                        Spacer()
+                                        
+                                        VStack{
+                                            Button{
+                                                showPitcherSelect = true
+                                                //                                            showFileNameInfo = true
+                                                selectpitchertip.invalidate(reason: .actionPerformed)
+                                                
+                                            } label: {
+                                                Text("Select Pitcher")
+                                                    .textCase(.uppercase)
+                                                    .fontWeight(.black)
+                                                    .font(.system(size: 22))
+                                                    .frame(maxWidth: .infinity)
+                                                    .padding(.vertical, ver_padding)
+                                            }
+                                            .background(Color("ScoreboardGreen"))
+                                            .foregroundColor(Color.white)
+                                            .cornerRadius(8.0)
                                             
-                                        } label: {
-                                            Text("Select Pitcher")
-                                                .textCase(.uppercase)
-                                                .fontWeight(.black)
-                                                .font(.system(size: 22))
-                                                .frame(maxWidth: .infinity)
-                                                .padding(.vertical, ver_padding)
                                         }
-                                        .background(Color("ScoreboardGreen"))
-                                        .foregroundColor(Color.white)
-                                        .cornerRadius(8.0)
+                                        .padding(50)
+                                        .background(Color.black.opacity(0.8))
+                                        .foregroundColor(.white)
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
                                         
                                     }
-                                    .padding(50)
-                                    .background(Color.black.opacity(0.8))
-                                    .foregroundColor(.white)
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                                    
                                 }
                             }
-                        }
-                        
-                        if showUndoToast == true {
-                            VStack{
-                                ZStack{
+                            
+                            if showUndoToast == true {
+                                VStack{
+                                    ZStack{
+                                        
+                                        RoundedRectangle(cornerRadius: 20)
+                                            .foregroundColor(Color.black)
+                                            .frame(width: 175, height: 32)
+                                        
+                                        Text("Previous Event Removed")
+                                            .font(.system(size: 13))
+                                            .bold()
+                                        
+                                    }
                                     
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .foregroundColor(Color.black)
-                                        .frame(width: 175, height: 32)
-                                    
-                                    Text("Previous Event Removed")
-                                        .font(.system(size: 13))
-                                        .bold()
+                                    Spacer()
                                     
                                 }
+                                .padding(.top, 50)
+                            }
+                            
+                            VStack{
+                                
+                                TipView(selectpitchertip, arrowEdge: .top)
+                                    .tipBackground(Color("DarkGrey"))
+                                    .tint(Color("ScoreboardGreen"))
+                                    .padding(.horizontal, 20)
+                                    .preferredColorScheme(.dark)
                                 
                                 Spacer()
                                 
                             }
                             .padding(.top, 50)
-                        }
-                        
-                        VStack{
                             
-                            TipView(selectpitchertip, arrowEdge: .top)
-                                .tipBackground(Color("DarkGrey"))
-                                .tint(Color("ScoreboardGreen"))
-                                .padding(.horizontal, 20)
-                                .preferredColorScheme(.dark)
-                            
-                            Spacer()
-                            
-                        }
-                        .padding(.top, 50)
-                        
-                        //HERE for welcome screen
-                        if showFileNameInfo == true {
-                            FileNamePopUpView(action: {showFileNameInfo = false; newAtBat = true; scoreboard.enable_bottom_row = true})
-                        }
-                        
-                        if showEndGame == true{
-                            PopupAlertView(isActive: $showEndGame, title: "End Game", message: "This game and its data will not be saved!", leftButtonAction: {new_game_func(); newAtBat = false; showFileNameInfo = true; showEndGame = false; scoreboard.enable_bottom_row = true}, rightButtonAction: {showEndGame = false; scoreboard.enable_bottom_row = true})
-                        }
-                        
-                        if showResumeGame == true {
-                            PopupAlertView(isActive: $showResumeGame, title: "Resume Game", message: "A previous game was being recorded. Do you want to continue?", leftButtonAction: {set_pitcher(); load_recent_event(); load_recent_ab_pitches(); showFileNameInfo = true; showResumeGame = false; scoreboard.enable_bottom_row = true}, rightButtonAction: {new_game_func(); showFileNameInfo = true; showResumeGame = false; scoreboard.enable_bottom_row = true})
-                        }
-                        
-                    }
-                }
-                .ignoresSafeArea()
-                .background(backgroundcolor)
-                .onChange(of: showUndoToast) {
-                    if showUndoToast == true {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            withAnimation{
-                                showUndoToast = false
+                            //HERE for welcome screen
+                            if showFileNameInfo == true {
+                                FileNamePopUpView(action: {showFileNameInfo = false; newAtBat = true; scoreboard.enable_bottom_row = true})
                             }
+                            
+                            if showEndGame == true{
+                                PopupAlertView(isActive: $showEndGame, title: "End Game", message: "This game and its data will not be saved!", leftButtonAction: {new_game_func(); newAtBat = false; showFileNameInfo = true; showEndGame = false; scoreboard.enable_bottom_row = true}, rightButtonAction: {showEndGame = false; scoreboard.enable_bottom_row = true})
+                            }
+                            
+                            if showResumeGame == true {
+                                PopupAlertView(isActive: $showResumeGame, title: "Resume Game", message: "A previous game was being recorded. Do you want to continue?", leftButtonAction: {set_pitcher(); load_recent_event(); load_recent_ab_pitches(); showFileNameInfo = true; showResumeGame = false; scoreboard.enable_bottom_row = true}, rightButtonAction: {new_game_func(); showFileNameInfo = true; showResumeGame = false; scoreboard.enable_bottom_row = true})
+                            }
+                            
                         }
                     }
-                }
-            }
-            .navigationTitle("")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(Color("ScoreboardGreen"))
-            .toolbar {
-                ToolbarItemGroup(placement: .topBarLeading) {
-                    
-                    Button(action: {
-                        if scoreboard.enable_bottom_row == true {
-                            if ptconfig.hidePitchOverlay == true {
-                                cur_pitch_color = .clear
-                                cur_pitch_outline = .clear
-                            }
-                            else if events.count > 0 {
-                                
-                                showUndoToast = true
-                                
-                                if events.count != 1 {
-                                    load_previous_event()
-                                    load_previous_ab_pitches()
-                                    context.delete(events[events.count - 1])
+                    .ignoresSafeArea()
+                    .background(backgroundcolor)
+                    .onChange(of: showUndoToast) {
+                        if showUndoToast == true {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                withAnimation{
+                                    showUndoToast = false
                                 }
-                                else {
-                                    if scoreboard.pitches > 0 {
-                                        scoreboard.pitches -= 1
+                            }
+                        }
+                    }
+                }
+                .navigationTitle("")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbarBackground(.visible, for: .navigationBar)
+                .toolbarBackground(Color("ScoreboardGreen"))
+                .toolbar {
+                    ToolbarItemGroup(placement: .topBarLeading) {
+                        
+                        Button(action: {
+                            if scoreboard.enable_bottom_row == true {
+                                if ptconfig.hidePitchOverlay == true {
+                                    cur_pitch_color = .clear
+                                    cur_pitch_outline = .clear
+                                }
+                                else if events.count > 0 {
+                                    
+                                    showUndoToast = true
+                                    
+                                    if events.count != 1 {
+                                        load_previous_event()
+                                        load_previous_ab_pitches()
+                                        context.delete(events[events.count - 1])
                                     }
-                                    newAtBat = true
-                                    new_game_func()
-                                    do {
-                                        try context.delete(model: Event.self)
-                                    } catch {
-                                        print("Did not clear event data")
+                                    else {
+                                        if scoreboard.pitches > 0 {
+                                            scoreboard.pitches -= 1
+                                        }
+                                        newAtBat = true
+                                        new_game_func()
+                                        do {
+                                            try context.delete(model: Event.self)
+                                        } catch {
+                                            print("Did not clear event data")
+                                        }
+                                        
                                     }
                                     
                                 }
-                                
+                                ptconfig.hidePitchOverlay = false
+                                ptconfig.ptcolor = .clear
                             }
-                            ptconfig.hidePitchOverlay = false
-                            ptconfig.ptcolor = .clear
+                            
+                        }) {
+                            if ptconfig.hidePitchOverlay == true{
+                                Image(systemName: "chevron.left")
+                                    .imageScale(.medium)
+                                    .foregroundColor(.white)
+                                    .bold()
+                                Text("BACK")
+                                    .font(.system(size: 17))
+                                    .fontWeight(.heavy)
+                                    .foregroundColor(.white)
+                                    .padding(.leading, -5)
+                            }
+                            else {
+                                Image(systemName: "arrow.counterclockwise")
+                                    .imageScale(.medium)
+                                    .font(.system(size: 17))
+                                    .foregroundColor(.white)
+                                    .padding(.leading, -5)
+                                    .bold()
+                                Text("UNDO")
+                                    .font(.system(size: 17))
+                                    .fontWeight(.heavy)
+                                    .foregroundColor(.white)
+                                    .padding(.leading, -5)
+                            }
                         }
-                        
-                    }) {
-                        if ptconfig.hidePitchOverlay == true{
-                            Image(systemName: "chevron.left")
-                                .imageScale(.medium)
-                                .foregroundColor(.white)
-                                .bold()
-                            Text("BACK")
-                                .font(.system(size: 17))
-                                .fontWeight(.heavy)
-                                .foregroundColor(.white)
-                                .padding(.leading, -5)
-                        }
-                        else {
-                            Image(systemName: "arrow.counterclockwise")
-                                .imageScale(.medium)
-                                .font(.system(size: 17))
-                                .foregroundColor(.white)
-                                .padding(.leading, -5)
-                                .bold()
-                            Text("UNDO")
-                                .font(.system(size: 17))
-                                .fontWeight(.heavy)
-                                .foregroundColor(.white)
-                                .padding(.leading, -5)
+                        .padding(.leading, -5)
+                    }
+                    
+                    ToolbarItemGroup(placement: .principal) {
+                        HStack(alignment: .center){
+                            Text("P")
+                                .font(.system(size: 20))
+                                .fontWeight(.bold)
+                                .foregroundColor(Color.white)
+                                .padding(.leading, -7)
+                            
+                            ZStack(alignment: .leading){
+                                RoundedRectangle(cornerRadius: 4)
+                                    .foregroundStyle(
+                                        Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
+                                    )
+                                    .frame(width: 160, height: 30)
+                                
+                                let pitcher_lname = String(current_pitcher.lastName.prefix(10))
+                                
+                                Button(action: {
+                                    if scoreboard.enable_bottom_row == true {
+                                        showPitcherSelect = true
+                                        if current_pitcher.lastName == "Change Me" {
+                                            selectpitchertip.invalidate(reason: .actionPerformed)
+                                        }
+                                    }
+                                }) {
+                                    Text(pitcher_lname)
+                                        .textCase(.uppercase)
+                                        .font(.system(size: 20))
+                                        .fontWeight(.black)
+                                        .foregroundColor(.white)
+                                        .padding(.leading, -3)
+                                }
+                                .popover(isPresented: $showPitcherSelect) {
+                                    SelectPitcherView()
+                                        .preferredColorScheme(.dark)
+                                }
+                            }
                         }
                     }
-                    .padding(.leading, -5)
-                }
-                
-                ToolbarItemGroup(placement: .principal) {
-                    HStack(alignment: .center){
-                        Text("P")
-                            .font(.system(size: 20))
-                            .fontWeight(.bold)
-                            .foregroundColor(Color.white)
-                            .padding(.leading, -7)
-                        
-                        ZStack(alignment: .leading){
-                            RoundedRectangle(cornerRadius: 4) 
-                                .foregroundStyle(
-                                    Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
-                                )
-                                .frame(width: 160, height: 30)
+                    
+                    ToolbarItemGroup(placement: .topBarTrailing) {
+                        HStack(/*spacing: 5*/){
                             
-                            let pitcher_lname = String(current_pitcher.lastName.prefix(10))
-
                             Button(action: {
                                 if scoreboard.enable_bottom_row == true {
-                                    showPitcherSelect = true
-                                    if current_pitcher.lastName == "Change Me" {
-                                        selectpitchertip.invalidate(reason: .actionPerformed)
-                                    }
+                                    showGameReport = true
                                 }
                             }) {
-                                Text(pitcher_lname)
-                                    .textCase(.uppercase)
-                                    .font(.system(size: 20))
-                                    .fontWeight(.black)
-                                    .foregroundColor(.white)
-                                    .padding(.leading, -3)
+                                Image(systemName: "chart.bar.xaxis")
+                                    .imageScale(.large)
+                                    .font(.system(size: 17))
+                                    .frame(width: sbl_width, height: sbl_height)
+                                    .foregroundColor(Color.white)
+                                    .bold()
                             }
-                            .popover(isPresented: $showPitcherSelect) {
-                                SelectPitcherView()
+                            .popover(isPresented: $showGameReport) {
+                                GameReportView().preferredColorScheme(.dark).task{
+                                    generate_game_report()
+                                    generate_pbp_array()
+                                }
+                            }
+                            
+                            Button(action: {
+                                if scoreboard.enable_bottom_row == true {
+                                    showEndGame = true
+                                }
+                            }) {
+                                Image(systemName: "flag.checkered")
+                                    .imageScale(.large)
+                                    .font(.system(size: 17))
+                                    .frame(width: sbl_width, height: sbl_height)
+                                    .foregroundColor(Color.white)
+                            }
+                            
+                            Button(action: {
+                                if scoreboard.enable_bottom_row == true {
+                                    showSettingsView = true
+                                }
+                            }) {
+                                Image(systemName: "gearshape.fill")
+                                    .imageScale(.large)
+                                    .font(.system(size: 17))
+                                    .frame(width: sbl_width, height: sbl_height)
+                                    .foregroundColor(Color.white)
+                            }
+                            .popover(isPresented: $showSettingsView) {
+                                SettingsView()
                                     .preferredColorScheme(.dark)
                             }
                         }
+                        .padding(.trailing, -5)
                     }
+                    
                 }
-                
-                ToolbarItemGroup(placement: .topBarTrailing) {
-                    HStack(/*spacing: 5*/){
-                        
-                        Button(action: {
-                            if scoreboard.enable_bottom_row == true {
-                                showGameReport = true
-                            }
-                        }) {
-                            Image(systemName: "chart.bar.xaxis")
-                                .imageScale(.large)
-                                .font(.system(size: 17))
-                                .frame(width: sbl_width, height: sbl_height)
-                                .foregroundColor(Color.white)
-                                .bold()
-                        }
-                        .popover(isPresented: $showGameReport) {
-                            GameReportView().preferredColorScheme(.dark).task{
-                                generate_game_report()
-                                generate_pbp_array()
-                            }
-                        }
-                        
-                        Button(action: {
-                            if scoreboard.enable_bottom_row == true {
-                                showEndGame = true
-                            }
-                        }) {
-                            Image(systemName: "flag.checkered")
-                                .imageScale(.large)
-                                .font(.system(size: 17))
-                                .frame(width: sbl_width, height: sbl_height)
-                                .foregroundColor(Color.white)
-                        }
-                        
-                        Button(action: {
-                            if scoreboard.enable_bottom_row == true {
-                                showSettingsView = true
-                            }
-                        }) {
-                            Image(systemName: "gearshape.fill")
-                                .imageScale(.large)
-                                .font(.system(size: 17))
-                                .frame(width: sbl_width, height: sbl_height)
-                                .foregroundColor(Color.white)
-                        }
-                        .popover(isPresented: $showSettingsView) {
-                            SettingsView()
-                                .preferredColorScheme(.dark)
-                        }
-                    }
-                    .padding(.trailing, -5)
-                }
-                
-            }
+            
         }
     }
     func generate_pbp_array(){
         var pitch_num = 0
-        let pitch_abbreviations = ["FB" : "Fastball", "CU" : "Curveball", "SL" : "Slider", "CH" : "Change-Up", "FS" : "Splitter", "FC" : "Cutter", "SI" : "Sinker", "OT" : "Other"]
+        let pitch_abbreviations = ["FB" : "Fastball", "CU" : "Curveball", "SL" : "Slider", "CH" : "Change-Up", "FS" : "Splitter", "FC" : "Cutter", "SI" : "Sinker", "OT" : "Other", "ST" : "Sweeper"]
         game_report.pbp_event_list = []
         for evnt in events {
             
