@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 import TipKit
 
 struct SettingsView: View {
@@ -22,10 +23,13 @@ struct SettingsView: View {
     @AppStorage("GameScore") var ASGameScore : Bool?
     @AppStorage("PitByInn") var ASPitByInn : Bool?
     
+    @AppStorage("BullpenMode") var ASBullpenMode : Bool?
+    
     @Environment(Scoreboard.self) var scoreboard
     @Environment(Event_String.self) var event
+    @Environment(\.dismiss) var dismiss
     
-    private let changeinputtip = ChangeInputTip()
+    @State private var changeinputtip = ChangeInputTip()
     
     @State private var showInputChange = false
     @State private var showFileNameInfo = false
@@ -52,6 +56,22 @@ struct SettingsView: View {
                     List{
                         Section() {
                             TipView(changeinputtip)
+                        }
+                        
+                        Section() {
+
+                            Button(action: {
+                                dismiss()
+                                ASBullpenMode = true
+                                print("DISMISS")
+                            }, label: {
+                                Text("Bullpen Mode")
+                            })
+                            .bold()
+                            .foregroundStyle(.white)
+                            .listRowBackground(Color("ScoreboardGreen"))
+                            .frame(maxWidth: .infinity)
+                            .multilineTextAlignment(.center)
                         }
                         
                         Section(header: Text("Input Options")){
@@ -288,7 +308,6 @@ struct SettingsView: View {
                     ASHitSummary = showHitSummary
                     ASGameScore = showGameScore
                     ASPitByInn = showPitByInn
-                    
                     
                 }
                 
