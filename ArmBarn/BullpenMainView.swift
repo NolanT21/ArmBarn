@@ -9,6 +9,15 @@ import SwiftUI
 
 struct BullpenMainView: View {
     
+    @AppStorage("BullpenMode") var ASBullpenMode : Bool?
+    
+    @Environment(Scoreboard.self) var scoreboard
+    @Environment(Event_String.self) var event
+    @Environment(currentPitcher.self) var current_pitcher
+    @Environment(\.dismiss) var dismiss
+    
+    @State private var showPitcherSelect = false
+    
     @State private var expected_target: String?
     @State private var actual_target: String?
     @State private var expected_location: Bool = false
@@ -79,27 +88,85 @@ struct BullpenMainView: View {
                 .toolbarBackground(Color("ScoreboardGreen"))
                 .toolbar {
                     ToolbarItemGroup(placement: .topBarLeading) {
-                        Button(action: {
-        //                    dismiss()
-                        }, label: {
+                        
+                        Button {
+                            event.recordEvent = false
+                            scoreboard.update_scoreboard = false
+                            ASBullpenMode = false
+                            dismiss()
+                        } label: {
                             Image(systemName: "xmark")
                                 .imageScale(.medium)
                                 .font(.system(size: 17))
                                 .frame(width: 17, height: 17)
                                 .foregroundColor(text_color)
                                 .bold()
-                        })
+                        }
+                        
+//                        NavigationLink{
+//                            MainContainerView().navigationBarBackButtonHidden(true).task{
+//                                dismiss()
+//                                event.recordEvent = false
+//                                scoreboard.update_scoreboard = false
+//                                ASBullpenMode = false
+//                            }
+//                        } label: {
+//                            Image(systemName: "xmark")
+//                                .imageScale(.medium)
+//                                .font(.system(size: 17))
+//                                .frame(width: 17, height: 17)
+//                                .foregroundColor(text_color)
+//                                .bold()
+//                        }
                     }
+                    
+                    ToolbarItemGroup(placement: .principal) {
+                        HStack(alignment: .center){
+                            Text("P")
+                                .font(.system(size: 20))
+                                .fontWeight(.bold)
+                                .foregroundColor(Color.white)
+                                .padding(.leading, -7)
+                            
+                            ZStack(alignment: .leading){
+                                RoundedRectangle(cornerRadius: 4)
+                                    .foregroundStyle(
+                                        Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
+                                    )
+                                    .frame(width: 160, height: 30)
+                                
+                                let pitcher_lname = String(current_pitcher.lastName.prefix(10))
+                                
+                                Button(action: {
+                                    if scoreboard.enable_bottom_row == true {
+                                        showPitcherSelect = true
+//                                        if current_pitcher.lastName == "Change Me" {
+//                                            selectpitchertip.invalidate(reason: .actionPerformed)
+//                                        }
+                                    }
+                                }) {
+                                    Text(pitcher_lname)
+                                        .textCase(.uppercase)
+                                        .font(.system(size: 20))
+                                        .fontWeight(.black)
+                                        .foregroundColor(.white)
+                                        .padding(.leading, -3)
+                                }
+                                .popover(isPresented: $showPitcherSelect) {
+                                    SelectPitcherView()
+                                        .preferredColorScheme(.dark)
+                                }
+                            }
+                        }
+                    }
+                    
                 }
                 
                 if expected_location == true && actual_location == true {
                     BPPitchTypePopUp(dismiss_action: {showPitchType = false; reset_zone()})
                     //reset zone
                 }
-                
             }
-            
-
         }
     }
     
@@ -527,6 +594,10 @@ struct BullpenMainView: View {
 
 struct BPPitchTypePopUp: View {
     
+    @Environment(PitchTypeConfig.self) var ptconfig
+    @Environment(currentPitcher.self) var current_pitcher
+    @Environment(Event_String.self) var event
+    
     @State private var offset: CGFloat = 1000
     
     var crnr_radius: CGFloat = 12
@@ -547,14 +618,27 @@ struct BPPitchTypePopUp: View {
                     .padding()
                 
                 VStack{
-                    Button(action: {
-                        close()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {dismiss_action()}
-                    }) {
-                        Text("Fastball")
+                    ForEach(0..<current_pitcher.pitch_num,  id: \.self) { pt_num in
+                        Button(action: {
+                            event.pitch_type = "P\(pt_num + 1)"
+                            ptconfig.ptcolor = ptconfig.arsenal_colors[pt_num]
+                            close()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {dismiss_action()}
+                            }) {
+                                Text("\(current_pitcher.arsenal[pt_num])")
+                                    .textCase(.uppercase)
+                                    .fontWeight(.bold)
+                                    .font(.system(size: 15))
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 20)
+                            }
+                            .background(ptconfig.arsenal_colors[pt_num])
+                            .foregroundColor(Color.white)
+                            .cornerRadius(8.0)
+                            .padding(.vertical, 10)
+                            .padding(.horizontal, 30)
+                        }
                     }
-                }
-                
             }
             .fixedSize(horizontal: false, vertical: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
             .padding()
@@ -565,7 +649,7 @@ struct BPPitchTypePopUp: View {
             .offset(x: 0, y: offset)
             .onAppear{
                 withAnimation(.spring()) {
-                    offset = -120
+                    offset = 0
                 }
             }
             
