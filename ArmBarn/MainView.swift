@@ -16,32 +16,32 @@ struct MainView: View {
     @AppStorage("BullpenMode") var ASBullpenMode : Bool?
     
     @Environment(Event_String.self) var event
-    
-    @State private var showBullpenMode : Bool = false
+    @Environment(BullpenConfig.self) var bullpen
     
     var body: some View {
         
-        if !(ASBullpenMode ?? false) {
+        ZStack{
+            if !(ASBullpenMode ?? false) {
 
-            VStack{
-                //Move to when game charting is active
-                ScoreboardView()
-                ZStack{
-                    MainContainerView()
-                        .preferredColorScheme(.dark)
+                VStack{
+                    //Move to when game charting is active
+                    ScoreboardView()
+                    ZStack{
+                        MainContainerView()
+                            .preferredColorScheme(.dark)
+                    }
+                }
+                .background(Color("ScoreboardGreen"))
+            
+            }
+            else {
+                VStack{
+                    BullpenMainView().preferredColorScheme(.dark).task{
+                        event.recordEvent = false
+                    }
                 }
             }
-            .background(Color("ScoreboardGreen"))
-        
         }
-        else {
-            VStack{
-                BullpenMainView().task{
-                    event.recordEvent = false
-                }
-            }
-        }
-        
     }
 }
 
@@ -51,4 +51,6 @@ struct MainView: View {
         .environment(Event_String())
         .environment(currentPitcher())
         .environment(PitchTypeConfig())
+        .environment(GameReport())
+        .environment(BullpenConfig())
 }
