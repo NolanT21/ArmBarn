@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		D5064EEA2BDF180400F01886 /* VelocityInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5064EE92BDF180400F01886 /* VelocityInputView.swift */; };
 		D5064EEC2BE041BE00F01886 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5064EEB2BE041BE00F01886 /* SettingsView.swift */; };
+		D53C50042CB182550073BE9F /* BullpenReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53C50032CB182550073BE9F /* BullpenReportView.swift */; };
 		D575388D2C776ABE00B7EBF7 /* BullpenMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D575388C2C776ABE00B7EBF7 /* BullpenMainView.swift */; };
 		D57E62382BD2CD7D003987E1 /* ArmBarnApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */; };
 		D57E62392BD2CD7D003987E1 /* global_variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50E3E8F2B0926A8006699FB /* global_variables.swift */; };
@@ -38,6 +39,7 @@
 		D50E3E8F2B0926A8006699FB /* global_variables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = global_variables.swift; sourceTree = "<group>"; };
 		D50E3E932B0A3D04006699FB /* HitDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitDetailView.swift; sourceTree = "<group>"; };
 		D50E3E952B0A3DE7006699FB /* OutDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutDetailView.swift; sourceTree = "<group>"; };
+		D53C50032CB182550073BE9F /* BullpenReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BullpenReportView.swift; sourceTree = "<group>"; };
 		D575388C2C776ABE00B7EBF7 /* BullpenMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BullpenMainView.swift; sourceTree = "<group>"; };
 		D58DAF142C45D38D003EFB2E /* FileNamePopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileNamePopUpView.swift; sourceTree = SOURCE_ROOT; };
 		D58FE76C2BD717DC004FC234 /* BatterPositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatterPositionView.swift; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 		D5DD11122AF52FE60064F1A5 = {
 			isa = PBXGroup;
 			children = (
+				D53C50032CB182550073BE9F /* BullpenReportView.swift */,
 				D5959D9C2BE5381B00FFDA0B /* TipView.swift */,
 				D5064EEB2BE041BE00F01886 /* SettingsView.swift */,
 				D5064EE92BDF180400F01886 /* VelocityInputView.swift */,
@@ -211,6 +214,7 @@
 				D57E62432BD2CD7D003987E1 /* GameContainerView.swift in Sources */,
 				D5959D9D2BE5381B00FFDA0B /* TipView.swift in Sources */,
 				D5064EEA2BDF180400F01886 /* VelocityInputView.swift in Sources */,
+				D53C50042CB182550073BE9F /* BullpenReportView.swift in Sources */,
 				D57E62442BD2CD7D003987E1 /* PopupAlertView.swift in Sources */,
 				D57E62452BD2CD7D003987E1 /* report_variables.swift in Sources */,
 				D57E62462BD2CD7D003987E1 /* SelectPitcherView.swift in Sources */,
