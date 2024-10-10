@@ -1512,6 +1512,7 @@ struct PitchLocationView: View {
     func print_Event_String() {
         print(current_pitcher.idcode, event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats, event.batter_stance, event.velocity, event.x_cor, event.y_cor)
     }
+    
     func record_baserunner_out() {
         event.pitch_result = "O"
         event.pitch_type = "NP"
