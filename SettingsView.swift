@@ -27,7 +27,9 @@ struct SettingsView: View {
     
     @Environment(Scoreboard.self) var scoreboard
     @Environment(Event_String.self) var event
-    @Environment(\.dismiss) var dismiss
+    @Environment(BullpenConfig.self) var bullpen
+    
+    @Environment(\.dismiss) private var dismiss
     
     @State private var changeinputtip = ChangeInputTip()
     
@@ -62,8 +64,9 @@ struct SettingsView: View {
 
                             Button(action: {
                                 dismiss()
-                                ASBullpenMode = true
-                                print("DISMISS")
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    ASBullpenMode = true
+                                }
                             }, label: {
                                 Text("Bullpen Mode")
                             })
@@ -318,10 +321,7 @@ struct SettingsView: View {
                 if showFileNameInfo == true {
                     FileNamePopUpView(action: {showFileNameInfo = false; scoreboard.enable_bottom_row = true})
                 }
-                
             }
-            
-            
         }
     }
     
