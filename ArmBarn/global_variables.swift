@@ -81,13 +81,17 @@ import Observation
     var expected_target: String = ""
     var actual_target: String = ""
     var pitch_type: String = ""
+    var pp_number: Int = 0
+    var pp_pitchtype: String = "-"
+    var pp_spot_detail: Image = Image(systemName: "minus")
+    var pp_spot_color: Color = .white
 }
 
 @Model class BullpenEvent{
     var pitcher_id = UUID()
-    var expected_target: String
-    var actual_target: String
-    var pitch_type: String
+    var expected_target: String = ""
+    var actual_target: String = ""
+    var pitch_type: String = ""
     
     init(pitcher_id: UUID, expected_target: String, actual_target: String, pitch_type: String) {
         self.pitcher_id = pitcher_id

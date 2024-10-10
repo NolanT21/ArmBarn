@@ -9,6 +9,28 @@ import SwiftUI
 import SwiftData
 import Observation
 
+@Observable class BullpenReport{
+    var pitches: Int = 0
+    var spots_hit: Int = 0
+    
+    var p1_pitches: Int = 0
+    var p1_spots_hit: Int = 0
+    var p2_pitches: Int = 0
+    var p2_spots_hit: Int = 0
+    var p3_pitches: Int = 0
+    var p3_spots_hit: Int = 0
+    var p4_pitches: Int = 0
+    var p4_spots_hit: Int = 0
+    
+    var spots_by_pitch_list: [SpotsByPitchType] = []
+}
+
+struct SpotsByPitchType: Identifiable {
+    let id = UUID()
+    var pitch_type: String
+    var pitch_num: Int
+    var spots_hit: Int
+}
 
 @Observable class GameReport{
     var inn_pitched: Double = 0.0
