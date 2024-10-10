@@ -17,8 +17,6 @@ struct ArmBarnApp: App {
         
 //        try? Tips.resetDatastore()
         try? Tips.configure()
-
-
         
         UserDefaults.standard.register(defaults: [
             "BoxScore" : true,
@@ -40,6 +38,8 @@ struct ArmBarnApp: App {
                 .environment(currentPitcher())
                 .environment(PitchTypeConfig())
                 .environment(GameReport())
+                .environment(BullpenConfig())
+                .environment(BullpenReport())
         }
         .modelContainer(for: [Event.self, Pitcher.self, BullpenEvent.self])
     }
