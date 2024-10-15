@@ -29,6 +29,8 @@ struct BullpenMainView: View {
     
     @State private var showPitcherSelect = false
     @State private var showBullpenReport: Bool = false
+    @State private var endBullpen: Bool = false
+    @State private var resumeBullpen: Bool = false
     
     @State private var expected_target: String = ""
     @State private var actual_target: String = ""
@@ -102,11 +104,7 @@ struct BullpenMainView: View {
                     ToolbarItemGroup(placement: .topBarLeading) {
                         
                         Button {
-                            event.recordEvent = false
-                            scoreboard.update_scoreboard = false
-                            ASBullpenMode = false
-                            clear_bullpen_report()
-                            dismiss()
+                            endBullpen = true
                         } label: {
                             Image(systemName: "xmark")
                                 .imageScale(.medium)
@@ -161,15 +159,11 @@ struct BullpenMainView: View {
                                 //Undo function: remove previous bullpen event
                                 if bullpen_events.count > 1 {
                                     context.delete(bullpen_events[bullpen_events.count - 1])
-                                    reset_previous_pitch_variables()
+                                    update_previous_pitch_variables()
                                 }
                                 else {
                                     clear_previous_pitch_variables()
-                                    do {
-                                        try context.delete(model: BullpenEvent.self)
-                                    } catch {
-                                        print("Did not clear bullpen event data")
-                                    }
+                                    clear_bullpen_events()
                                 }
                                // print(bullpen_events.count)
 
@@ -217,9 +211,21 @@ struct BullpenMainView: View {
                 
                 if expected_location == true && actual_location == true {
                     BPPitchTypePopUp(dismiss_action: {showPitchType = false; reset_zone()})
-                    //reset zone
                 }
                 
+                if endBullpen == true{
+                    PopupAlertView(isActive: $endBullpen, title: "End Bullpen", message: "This bullpen session and its data will be saved!", leftButtonAction: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {event.recordEvent = false
+                        scoreboard.update_scoreboard = false
+                        ASBullpenMode = false
+                        clear_bullpen_events()
+                        clear_bullpen_report()
+                        dismiss()}}, rightButtonAction: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {dismiss(); endBullpen = false}})
+                }
+                if bullpen_events.count > 0 && bullpen.pp_number == 0 && bullpen.pp_pitchtype == "-" {
+                    PopupAlertView(isActive: $resumeBullpen, title: "Resume Bullpen", message: "A previous bullpen was being recorded. Do you want to continue?", leftButtonAction: {/*new set previous pitch function*/
+                        dismiss()}, rightButtonAction: {clear_bullpen_events()
+                        dismiss()})
+                }
             }
         }
     }
@@ -704,13 +710,23 @@ struct BullpenMainView: View {
         bpr.p4_spots_hit = 0
         
         bpr.spots_by_pitch_list = []
+        bpr.bp_pbp_list = []
+        
+        var pbp_pitch_num: Int = 0
+        var pbp_pitch_type: String = ""
+        var pbp_expected_target: String = ""
+        var pbp_actual_target: String = ""
         
         for bpevnt in bullpen_events {
             if bpevnt.pitcher_id == current_pitcher.idcode {
                 bpr.pitches += 1
+                pbp_pitch_num += 1
+                pbp_expected_target = bpevnt.expected_target
+                pbp_actual_target = bpevnt.actual_target
                 
                 if bpevnt.pitch_type == "P1" {
                     bpr.p1_pitches += 1
+                    pbp_pitch_type = current_pitcher.pitch1
                     if bpevnt.expected_target == bpevnt.actual_target {
                         bpr.spots_hit += 1
                         bpr.p1_spots_hit += 1
@@ -718,6 +734,7 @@ struct BullpenMainView: View {
                 }
                 else if bpevnt.pitch_type == "P2" {
                     bpr.p2_pitches += 1
+                    pbp_pitch_type = current_pitcher.pitch2
                     if bpevnt.expected_target == bpevnt.actual_target {
                         bpr.spots_hit += 1
                         bpr.p2_spots_hit += 1
@@ -725,6 +742,7 @@ struct BullpenMainView: View {
                 }
                 else if bpevnt.pitch_type == "P3" {
                     bpr.p3_pitches += 1
+                    pbp_pitch_type = current_pitcher.pitch3
                     if bpevnt.expected_target == bpevnt.actual_target {
                         bpr.spots_hit += 1
                         bpr.p3_spots_hit += 1
@@ -732,16 +750,17 @@ struct BullpenMainView: View {
                 }
                 else if bpevnt.pitch_type == "P4" {
                     bpr.p4_pitches += 1
+                    pbp_pitch_type = current_pitcher.pitch4
                     if bpevnt.expected_target == bpevnt.actual_target {
                         bpr.spots_hit += 1
                         bpr.p4_spots_hit += 1
                     }
                 }
                 
+                bpr.bp_pbp_list.append(BP_PBPLog(pitch_num: pbp_pitch_num, pitch_type: pbp_pitch_type, expected_spot: pbp_expected_target, actual_spot: pbp_actual_target))
             }
-            
-            //Add to spotsbypitchtype struct
-            }
+        }
+        
             
         if bpr.p1_pitches >= 1 {
             bpr.spots_by_pitch_list.append(SpotsByPitchType(pitch_type: current_pitcher.pitch1, pitch_num: bpr.p1_pitches, spots_hit: bpr.p1_spots_hit))
@@ -776,6 +795,14 @@ struct BullpenMainView: View {
         
         bpr.spots_by_pitch_list = []
         
+    }
+    
+    func clear_bullpen_events() {
+        do {
+            try context.delete(model: BullpenEvent.self)
+        } catch {
+            print("Did not clear bullpen event data")
+        }
     }
     
     func reset_zone() {
@@ -861,7 +888,7 @@ struct BullpenMainView: View {
         e5_expected = false
     }
     
-    func reset_previous_pitch_variables() {
+    func update_previous_pitch_variables() {
         
         let previous_bullpen_event = bullpen_events[bullpen_events.count - 2]
         
