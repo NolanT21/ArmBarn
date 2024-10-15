@@ -23,6 +23,8 @@ import Observation
     var p4_spots_hit: Int = 0
     
     var spots_by_pitch_list: [SpotsByPitchType] = []
+    
+    var bp_pbp_list: [BP_PBPLog] = []
 }
 
 struct SpotsByPitchType: Identifiable {
@@ -30,6 +32,14 @@ struct SpotsByPitchType: Identifiable {
     var pitch_type: String
     var pitch_num: Int
     var spots_hit: Int
+}
+
+struct BP_PBPLog: Identifiable {
+    let id = UUID()
+    var pitch_num: Int
+    var pitch_type: String
+    var expected_spot: String
+    var actual_spot: String
 }
 
 @Observable class GameReport{
