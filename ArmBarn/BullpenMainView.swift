@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import TipKit
 
 struct BullpenMainView: View {
     
@@ -21,6 +22,7 @@ struct BullpenMainView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var context
     
+    @Query(sort: \Pitcher.lastName) var pitchers: [Pitcher]
     @Query var bullpen_events: [BullpenEvent]
     
     @State private var pitch_num: Int = 0
@@ -72,6 +74,9 @@ struct BullpenMainView: View {
     @State var e5_actual: Bool = false
     
     @State private var showPitchType: Bool = false
+    
+    private let welcomebullpentip = WelcomeBullpenTip()
+    private let bullpenreporttip = BullpenReportTip()
     
     var middle_y_cor: [String] = ["B", "C", "D"]
     
@@ -210,7 +215,20 @@ struct BullpenMainView: View {
                 }
                 
                 if expected_location == true && actual_location == true {
-                    BPPitchTypePopUp(dismiss_action: {showPitchType = false; reset_zone()})
+                    BPPitchTypePopUp(dismiss_action: {showPitchType = false; reset_zone(); /*bullpenreporttip.invalidate(reason: .actionPerformed)*/})
+                }
+                
+                if bullpen_events.count > 0 && bullpen.pp_number == 0 && bullpen.pp_pitchtype == "-" {
+                    PopupAlertView(isActive: $resumeBullpen, title: "Resume Bullpen", message: "A previous bullpen was being recorded. Do you want to continue?", leftButtonAction: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){/*new set previous pitch function*/
+                        resumeBullpen = false
+                        scoreboard.enable_bottom_row = true
+                        set_pitcher()
+                        load_cur_bullpen_event()
+                        dismiss()}}, rightButtonAction: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+                            clear_bullpen_events()
+                            resumeBullpen = false
+                            scoreboard.enable_bottom_row = true
+                            dismiss()}})
                 }
                 
                 if endBullpen == true{
@@ -219,12 +237,9 @@ struct BullpenMainView: View {
                         ASBullpenMode = false
                         clear_bullpen_events()
                         clear_bullpen_report()
-                        dismiss()}}, rightButtonAction: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {dismiss(); endBullpen = false}})
-                }
-                if bullpen_events.count > 0 && bullpen.pp_number == 0 && bullpen.pp_pitchtype == "-" {
-                    PopupAlertView(isActive: $resumeBullpen, title: "Resume Bullpen", message: "A previous bullpen was being recorded. Do you want to continue?", leftButtonAction: {/*new set previous pitch function*/
-                        dismiss()}, rightButtonAction: {clear_bullpen_events()
-                        dismiss()})
+                        clear_previous_pitch_variables()
+                        scoreboard.enable_bottom_row = true
+                        dismiss()}}, rightButtonAction: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {dismiss(); endBullpen = false; scoreboard.enable_bottom_row = true}})
                 }
             }
         }
@@ -232,79 +247,95 @@ struct BullpenMainView: View {
     
     var prev_pitch_summary: some View {
         
-        VStack{
-            Spacer()
-            HStack{
+        GeometryReader{ geometry in
+            
+            VStack{
                 Spacer()
-                ZStack{
-                    HStack(){
-                        HStack{
-                            Spacer()
-                            if bullpen.pp_number == 0 {
-                                Image(systemName: "minus")
-                                    .foregroundColor(.white)
-                                    .font(.system(size: 9))
-                                    .bold()
+                HStack{
+                    Spacer()
+                    ZStack{
+                        HStack(){
+                            HStack{
+                                Spacer()
+                                if bullpen.pp_number == 0 {
+                                    Image(systemName: "minus")
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 12))
+                                        .bold()
+                                }
+                                else {
+                                    Text(String(bullpen.pp_number)) //Pitch number
+                                        .font(.system(size: 20))
+                                        .bold()
+                                }
+                                Spacer()
+                                Divider()
+                                Spacer()
+                                if bullpen.pp_pitchtype == "-" {
+                                    Image(systemName: "minus")
+                                        .foregroundColor(.white)
+                                        .font(.system(size: 12))
+                                        .bold()
+                                }
+                                else {
+                                    Text(bullpen.pp_pitchtype) //Pitch Type
+                                        .font(.system(size: 20))
+                                        .bold()
+                                }
+                                Spacer()
+                                Divider()
+                                Spacer()
+                                ZStack{
+                                    
+                                    if bullpen.pp_spot_color != .white {
+                                        Image(systemName: "circle.fill")
+                                            .foregroundColor(bullpen.pp_spot_color)
+                                            .font(.system(size: 30))
+                                            .bold()
+                                    }
+                                    
+                                    bullpen.pp_spot_detail //Spot hit or missed
+                                        .font(bullpen.pp_spot_color == .white ? .system(size: 12) : .system(size: 30))
+                                        .bold()
+                                        .foregroundColor(.white)
+                                }
+                                Spacer()
                             }
-                            else {
-                                Text(String(bullpen.pp_number)) //Pitch number
-                                    .bold()
+                            .padding(.vertical, 10)
+                            //Spacer()
+                            HStack{
+                                Button(action: {
+                                    if bullpen_events.count > 0 {
+                                        //show Bullpen Report
+                                        showBullpenReport = true
+                                        generate_bullpen_report()
+                                    }
+                                }, label: {
+                                    Image(systemName: "chart.bar.xaxis")
+                                        .imageScale(.medium)
+                                        .font(.system(size: 38))
+                                        .foregroundColor(.white)
+                                        .bold()
+                                })
+                                .frame(width: 75, height: 75) //Change for screen size
+                                .background(Color("ScoreboardGreen"))
+                                .cornerRadius(10)
+                                .popover(isPresented: $showBullpenReport) {
+                                    BullpenReportView().preferredColorScheme(.dark)
+                                }
                             }
-                            Spacer()
-                            Divider()
-                            Spacer()
-                            if bullpen.pp_pitchtype == "-" {
-                                Image(systemName: "minus")
-                                    .foregroundColor(.white)
-                                    .font(.system(size: 9))
-                                    .bold()
-                            }
-                            else {
-                                Text(bullpen.pp_pitchtype) //Pitch Type
-                                    .bold()
-                            }
-                            Spacer()
-                            Divider()
-                            Spacer()
-                            bullpen.pp_spot_detail //Spot hit or missed
-                                .font(bullpen.pp_spot_color == .white ? .system(size: 9) : .system(size: 25))
-                                .bold()
-                                .foregroundColor(bullpen.pp_spot_color)
-                            Spacer()
                         }
-                        .padding(.vertical, 10)
-                        //Spacer()
-                        HStack{
-                            Button(action: {
-                                //show Bullpen Report
-                                showBullpenReport = true
-                                generate_bullpen_report()
-                            }, label: {
-                                Image(systemName: "chart.bar.xaxis")
-                                    .imageScale(.medium)
-                                    .font(.system(size: 30))
-                                    .foregroundColor(.white)
-                                    .bold()
-                            })
-                            .frame(width: 50, height: 50)
-                            .background(Color("ScoreboardGreen"))
-                            .cornerRadius(10)
-                            .popover(isPresented: $showBullpenReport) {
-                                BullpenReportView().preferredColorScheme(.dark)
-                            }
-                        }
+                        .frame(height: 75) //Change for screen size
+                        .background(Color("DarkGrey"))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
-                    .frame(height: 50)
-                    .background(Color("DarkGrey"))
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    Spacer()
                 }
+                //.frame(maxWidth: .infinity)
                 Spacer()
             }
-            //.frame(maxWidth: .infinity)
             
-            Spacer()
         }
-        
     }
     
     var bullpenPitchArea: some View {
@@ -314,11 +345,22 @@ struct BullpenMainView: View {
             VStack{
                 VStack{
                     //Spacer()
-                    prev_pitch_summary
+                    ZStack{
+                        
+                        prev_pitch_summary
+                        
+                        TipView(welcomebullpentip)
+                            .tipBackground(Color("DarkGrey"))
+                            .tint(Color("ScoreboardGreen"))
+                            .padding(.horizontal, 8)    
+                            .preferredColorScheme(.dark)
+
+                    }
                     Spacer()
                 }
                 VStack{
                     Button(action: {
+                        welcomebullpentip.invalidate(reason: .actionPerformed)
                         //print("HI")
                         if expected_location == false && actual_location == false {
                             expected_target = "HI"
@@ -349,6 +391,7 @@ struct BullpenMainView: View {
                         Spacer()
                         VStack{
                             Button(action: {
+                                welcomebullpentip.invalidate(reason: .actionPerformed)
                                 //print("OL")
                                 if expected_location == false && actual_location == false {
                                     expected_target = "OL"
@@ -379,6 +422,7 @@ struct BullpenMainView: View {
                             
                             HStack{
                                 Button(action: {
+                                    welcomebullpentip.invalidate(reason: .actionPerformed)
                                     //print("A1")
                                     if expected_location == false && actual_location == false {
                                         expected_target = "A1"
@@ -408,6 +452,7 @@ struct BullpenMainView: View {
                                 
                                 ForEach(0..<3, id: \.self) { number in
                                     Button(action: {
+                                        welcomebullpentip.invalidate(reason: .actionPerformed)
                                         //print("A" + String(number + 2))
                                         if expected_location == false && actual_location == false {
                                             expected_target = "A" + String(number + 2)
@@ -435,6 +480,7 @@ struct BullpenMainView: View {
                                 }
                                 
                                 Button(action: {
+                                    welcomebullpentip.invalidate(reason: .actionPerformed)
                                     //print("A5")
                                     if expected_location == false && actual_location == false {
                                         expected_target = "A5"
@@ -466,6 +512,7 @@ struct BullpenMainView: View {
                                 HStack{
                                     
                                     Button(action: {
+                                        welcomebullpentip.invalidate(reason: .actionPerformed)
                                         //print(row + "1")
                                         if expected_location == false && actual_location == false {
                                             expected_target = row + "1"
@@ -494,6 +541,7 @@ struct BullpenMainView: View {
                                     
                                     ForEach(0..<3) { number in
                                         Button(action: {
+                                            welcomebullpentip.invalidate(reason: .actionPerformed)
                                             //print(row + String(number + 2))
                                             if expected_location == false && actual_location == false {
                                                 expected_target = row + String(number + 2)
@@ -521,6 +569,7 @@ struct BullpenMainView: View {
                                     }
                                     
                                     Button(action: {
+                                        welcomebullpentip.invalidate(reason: .actionPerformed)
                                         //print(row + "5")
                                         if expected_location == false && actual_location == false {
                                             expected_target = row + "5"
@@ -553,6 +602,7 @@ struct BullpenMainView: View {
                             
                             HStack{
                                 Button(action: {
+                                    welcomebullpentip.invalidate(reason: .actionPerformed)
                                     //print("E1")
                                     if expected_location == false && actual_location == false {
                                         expected_target = "E1"
@@ -581,6 +631,7 @@ struct BullpenMainView: View {
                                 
                                 ForEach(0..<3) { number in
                                     Button(action: {
+                                        welcomebullpentip.invalidate(reason: .actionPerformed)
                                         //print("E" + String(number + 2))
                                         if expected_location == false && actual_location == false {
                                             expected_target = "E" + String(number + 2)
@@ -608,6 +659,7 @@ struct BullpenMainView: View {
                                 }
                                 
                                 Button(action: {
+                                    welcomebullpentip.invalidate(reason: .actionPerformed)
                                     //print("E5")
                                     if expected_location == false && actual_location == false {
                                         expected_target = "E5"
@@ -638,6 +690,7 @@ struct BullpenMainView: View {
                         
                         VStack{
                             Button(action: {
+                                welcomebullpentip.invalidate(reason: .actionPerformed)
                                 //print("OR")
                                 if expected_location == false && actual_location == false {
                                     expected_target = "OR"
@@ -666,6 +719,7 @@ struct BullpenMainView: View {
                         Spacer()
                     }
                     Button(action: {
+                        welcomebullpentip.invalidate(reason: .actionPerformed)
                         //print("LO")
                         if expected_location == false && actual_location == false {
                             expected_target = "LO"
@@ -886,6 +940,71 @@ struct BullpenMainView: View {
         e1_expected = false
         e_row_expected = false
         e5_expected = false
+    }
+    func load_cur_bullpen_event() {
+        let current_bullpen_event = bullpen_events[bullpen_events.count - 1]
+        let current_pitch_type = current_bullpen_event.pitch_type
+        let current_expected_target = current_bullpen_event.expected_target
+        let current_actual_target = current_bullpen_event.actual_target
+        bullpen.pp_number = bullpen_events.count
+        //set current pitcher
+        if current_pitch_type == "P1" {
+            bullpen.pp_pitchtype = current_pitcher.pitch1
+        }
+        else if current_pitch_type == "P2" {
+            bullpen.pp_pitchtype = current_pitcher.pitch2
+        }
+        else if current_pitch_type == "P3" {
+            bullpen.pp_pitchtype = current_pitcher.pitch3
+        }
+        else if current_pitch_type == "P4" {
+            bullpen.pp_pitchtype = current_pitcher.pitch4
+        }
+        
+        if current_expected_target == current_actual_target {
+            bullpen.pp_spot_detail = Image(systemName: "checkmark.circle")
+            bullpen.pp_spot_color = Color("ScoreboardGreen")
+        }
+        else {
+            bullpen.pp_spot_detail = Image(systemName: "xmark.circle")
+            bullpen.pp_spot_color = .red
+        }
+    }
+    
+    func set_pitcher() {
+        let pitcher_id = bullpen_events[bullpen_events.count - 1].pitcher_id
+        for pitcher in pitchers {
+            if pitcher.id == pitcher_id {
+                current_pitcher.pitch_num = 0
+                current_pitcher.firstName = pitcher.firstName
+                current_pitcher.lastName = pitcher.lastName
+                current_pitcher.pitch1 = pitcher.pitch1
+                current_pitcher.idcode = pitcher.id
+                if current_pitcher.pitch1 != "None" {
+                    current_pitcher.pitch_num += 1
+                    current_pitcher.arsenal[0] = pitcher.pitch1
+                }
+                
+                current_pitcher.pitch2 = pitcher.pitch2
+                if current_pitcher.pitch2 != "None" {
+                    current_pitcher.pitch_num += 1
+                    current_pitcher.arsenal[1] = pitcher.pitch2
+                }
+                
+                current_pitcher.pitch3 = pitcher.pitch3
+                if current_pitcher.pitch3 != "None" {
+                    current_pitcher.pitch_num += 1
+                    current_pitcher.arsenal[2] = pitcher.pitch3
+                }
+                
+                current_pitcher.pitch4 = pitcher.pitch4
+                if current_pitcher.pitch4 != "None" {
+                    current_pitcher.pitch_num += 1
+                    current_pitcher.arsenal[3] = pitcher.pitch4
+                }
+                break
+            }
+        }
     }
     
     func update_previous_pitch_variables() {
