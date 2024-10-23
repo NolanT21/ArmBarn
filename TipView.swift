@@ -130,3 +130,33 @@ struct WelcomeTip: Tip {
     }
     
 }
+
+struct WelcomeBullpenTip: Tip {
+    var title: Text {
+        Text("Bullpen Charting")
+    }
+    
+    var message: Text? {
+        Text("After choosing a pitcher, first select the spot of the pitch, then the actual pitch location. A prompt will then ask for the pitch type")
+    }
+    
+    var image: Image? {
+        Image("ElToro")
+    }
+    
+}
+
+struct BullpenReportTip: Tip {
+    var title: Text {
+        Text("View Results")
+    }
+    
+    var message: Text? {
+        Text("This area gives a description of the previous pitch. Reports can be accessed by the green button on the right")
+    }
+    
+    var image: Image? {
+        Image(systemName: "list.bullet.clipboard")
+    }
+    
+}
