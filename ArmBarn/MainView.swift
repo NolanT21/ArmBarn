@@ -17,6 +17,7 @@ struct MainView: View {
     
     @Environment(Event_String.self) var event
     @Environment(BullpenConfig.self) var bullpen
+    @Environment(GameReport.self) var game_report
     
     var body: some View {
         
