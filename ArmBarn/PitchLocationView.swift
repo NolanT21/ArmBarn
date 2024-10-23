@@ -13,6 +13,8 @@ struct PitchLocationView: View {
     
     @AppStorage("BatterStance") var ASBatterStance: Bool?
     @AppStorage("BullpenMode") var ASBullpenMode : Bool?
+    @AppStorage("CurrentOpponentName") var ASCurOpponentName : String?
+    @AppStorage("GameLocation") var ASGameLocation : String?
     
     @Environment(Scoreboard.self) var scoreboard
     @Environment(PitchTypeConfig.self) var ptconfig
@@ -84,7 +86,7 @@ struct PitchLocationView: View {
                                 if events.count > 0 && (scoreboard.balls == 0 && scoreboard.strikes == 0 && scoreboard.pitches == 0 && scoreboard.atbats == 1) {
                                     showResumeGame = true
                                 }
-                                else if game_report.game_location == "" && game_report.opponent_name == "" {
+                                else if game_report.game_location == "" && game_report.opponent_name == ""{
                                     showFileNameInfo = true
                                 }
                                 
@@ -174,16 +176,16 @@ struct PitchLocationView: View {
                                 }
                             }
                             
-                            VStack{
+                            VStack(alignment: .center){
                                 
                                 if ASBatterStance == true{
                                     Button {
                                         newAtBat = true
                                         
                                     } label: {
-                                        HStack(alignment: .center){
+                                        HStack{
                                             
-                                            Spacer()
+                                            //Spacer()
                                             
                                             if event.batter_stance == "R" {
                                                 Image(systemName: "chevron.left")
@@ -215,7 +217,7 @@ struct PitchLocationView: View {
                                                     .padding(.leading, -5)
                                             }
                                             
-                                            Spacer()
+                                            //Spacer()
                                             
                                         }
                                         
@@ -244,7 +246,6 @@ struct PitchLocationView: View {
                                         VStack{
                                             Button{
                                                 showPitcherSelect = true
-                                                //                                            showFileNameInfo = true
                                                 selectpitchertip.invalidate(reason: .actionPerformed)
                                                 
                                             } label: {
@@ -312,7 +313,7 @@ struct PitchLocationView: View {
                             }
                             
                             if showResumeGame == true {
-                                PopupAlertView(isActive: $showResumeGame, title: "Resume Game", message: "A previous game was being recorded. Do you want to continue?", leftButtonAction: {set_pitcher(); load_recent_event(); load_recent_ab_pitches(); showFileNameInfo = true; showResumeGame = false; scoreboard.enable_bottom_row = true}, rightButtonAction: {new_game_func(); showFileNameInfo = true; showResumeGame = false; scoreboard.enable_bottom_row = true})
+                                PopupAlertView(isActive: $showResumeGame, title: "Resume Game", message: "A previous game was being recorded. Do you want to continue?", leftButtonAction: {set_pitcher(); load_recent_event(); load_recent_ab_pitches(); showResumeGame = false; scoreboard.enable_bottom_row = true}, rightButtonAction: {new_game_func(); showFileNameInfo = true; showResumeGame = false; scoreboard.enable_bottom_row = true})
                             }
                             
                         }
@@ -474,9 +475,7 @@ struct PitchLocationView: View {
                             }
                             
                             Button(action: {
-                                if scoreboard.enable_bottom_row == true {
-                                    showSettingsView = true
-                                }
+                                showSettingsView = true
                             }) {
                                 Image(systemName: "gearshape.fill")
                                     .imageScale(.large)
@@ -514,12 +513,26 @@ struct PitchLocationView: View {
             var pitcher_name = ""
             let velo = evnt.velocity
             
+            var pitch_type = evnt.pitch_type
+            
             for pitcher in pitchers {
                 if pitcher.id == pitcher_id {
                     pitcher_name = pitcher.firstName + " " + pitcher.lastName
                     if pitcher_id != game_report.cur_pitcher_id {
                         game_report.cur_pitcher_id = pitcher_id
                         pitch_num = 0
+                    }
+                    if pitch_type == "P1" {
+                        pitch_type = pitcher.pitch1
+                    }
+                    else if pitch_type == "P2" {
+                        pitch_type = pitcher.pitch2
+                    }
+                    else if pitch_type == "P3" {
+                        pitch_type = pitcher.pitch3
+                    }
+                    else if pitch_type == "P4" {
+                        pitch_type = pitcher.pitch4
                     }
                 }
             }
@@ -530,21 +543,6 @@ struct PitchLocationView: View {
             else {
                 outs_label = "Out"
             }
-
-            var pitch_type = evnt.pitch_type
-            
-            if pitch_type == "P1" {
-                pitch_type = current_pitcher.pitch1
-            }
-            else if pitch_type == "P2" {
-                pitch_type = current_pitcher.pitch2
-            }
-            else if pitch_type == "P3" {
-                pitch_type = current_pitcher.pitch3
-            }
-            else if pitch_type == "P4" {
-                pitch_type = current_pitcher.pitch4
-            }
             
             for abbr in pitch_abbreviations {
                 if abbr.value == pitch_type {
@@ -552,7 +550,7 @@ struct PitchLocationView: View {
                 }
             }
             
-            if result_detail != "R" && pitch_result != "VA" && pitch_result != "VZ"{
+            if result_detail != "R" && result_detail != "RE" && pitch_result != "VA" && pitch_result != "VZ" && pitch_result != "IW"{
                 
                 pitch_num += 1
                 
@@ -631,6 +629,9 @@ struct PitchLocationView: View {
                 else if result_detail == "K" {
                     result = "PCVSTRIKEOUT"
                 }
+            }
+            else if pitch_result == "IW" {
+                result = "IW"
             }
             else {
                 result = "RUNNER OUT"
@@ -788,7 +789,7 @@ struct PitchLocationView: View {
                 
                 game_report.pl_outline = .clear
                 
-                if evnt.result_detail != "R" && evnt.pitch_result != "VA" && evnt.pitch_result != "VZ"{
+                if evnt.result_detail != "R" && evnt.result_detail != "RE" && evnt.pitch_result != "IW" && evnt.pitch_result != "VA" && evnt.pitch_result != "VZ"{
                     game_report.pitches += 1
                     
                     if evnt.pitch_result != "A" && evnt.result_detail != "B"{
@@ -916,7 +917,7 @@ struct PitchLocationView: View {
                         outs += 1
                     }
                 }
-                else if evnt.result_detail == "R" {
+                else if evnt.result_detail == "R" || evnt.result_detail == "RE" {
                     outs += 1
                 }
 
@@ -928,7 +929,8 @@ struct PitchLocationView: View {
                     game_report.inn_pitched = round(game_report.inn_pitched) + (Double(outs) * 0.1)
                 }
                 
-                if (evnt.balls == 0 && evnt.strikes == 0 && evnt.result_detail != "R")  || game_report.pitches == 1{
+                if (evnt.balls == 0 && evnt.strikes == 0 && evnt.result_detail != "R" && evnt.result_detail != "RE" && evnt.pitch_result != "IW")  /*|| (game_report.pitches == 1 && (evnt.pitch_result != "VA" && evnt.pitch_result != "VZ"))*/{
+                    
                     game_report.batters_faced += 1
                     
                     if evnt.batter_stance == "L" {
@@ -940,10 +942,13 @@ struct PitchLocationView: View {
                     
                 }
                 
-                game_report.x_coordinate_list.append(evnt.pitch_x_location)
-                game_report.y_coordinate_list.append(evnt.pitch_y_location)
-                game_report.pl_color_list.append(game_report.pl_color)
-                game_report.pl_outline_list.append(game_report.pl_outline)
+                if evnt.pitch_result != "VA" &&  evnt.pitch_result != "VZ"  &&  evnt.pitch_result != "IW" && evnt.result_detail != "RE" && evnt.result_detail != "R"{
+                    game_report.x_coordinate_list.append(evnt.pitch_x_location)
+                    game_report.y_coordinate_list.append(evnt.pitch_y_location)
+                    game_report.pl_color_list.append(game_report.pl_color)
+                    game_report.pl_outline_list.append(game_report.pl_outline)
+                }
+
             }
         }
         
@@ -1069,12 +1074,18 @@ struct PitchLocationView: View {
         }
         
         
-        if game_report.p1_by_inn.first == 0 && game_report.p2_by_inn.first == 0 && game_report.p3_by_inn.first == 0 && game_report.p4_by_inn.first == 0 {
-            game_report.p1_by_inn.remove(at: 0)
-            game_report.p2_by_inn.remove(at: 0)
-            game_report.p3_by_inn.remove(at: 0)
-            game_report.p4_by_inn.remove(at: 0)
+        if game_report.p1_by_inn.last == 0 && game_report.p2_by_inn.last == 0 && game_report.p3_by_inn.last == 0 && game_report.p4_by_inn.last == 0 {
+            game_report.p1_by_inn.removeLast()
+            game_report.p2_by_inn.removeLast()
+            game_report.p3_by_inn.removeLast()
+            game_report.p4_by_inn.removeLast()
         }
+        
+        print(game_report.p1_by_inn)
+        print(game_report.p2_by_inn)
+        print(game_report.p3_by_inn)
+        print(game_report.p4_by_inn)
+        
         
         let temp_inn_pitches = [game_report.p1_by_inn, game_report.p2_by_inn, game_report.p3_by_inn, game_report.p4_by_inn]
         
@@ -1121,6 +1132,8 @@ struct PitchLocationView: View {
         
         scoreboard.o1light = false
         scoreboard.o2light = false
+        
+        ASCurOpponentName = ""
         
         clear_game_report()
         
@@ -1258,8 +1271,13 @@ struct PitchLocationView: View {
         if previous_event.result_detail != "R" && scoreboard.pitches > 0 {
             scoreboard.pitches -= 1
         }
-        else if previous_event.result_detail == "R" {
+        else if previous_event.result_detail == "R" || previous_event.result_detail == "RE" {
             scoreboard.baserunners += 1
+        }
+        else if previous_event.pitch_result == "H" || previous_event.result_detail == "W" || previous_event.result_detail == "C" {
+            if scoreboard.baserunners > 0 {
+                scoreboard.baserunners -= 1
+            }
         }
     }
     
@@ -1303,9 +1321,9 @@ struct PitchLocationView: View {
     
     func change_cur_ab_stance() {
         if events.count >= 2 {
-            var cur_event = events[events.count - 1]
+            let cur_event = events[events.count - 1]
             var prev_ab_index = events.count - 2
-            var prev_event = events[prev_ab_index]
+            let prev_event = events[prev_ab_index]
             while (cur_event.batter_stance != prev_event.batter_stance) && (cur_event.atbats == prev_event.atbats) {
                 events[prev_ab_index].batter_stance = cur_event.batter_stance
                 
@@ -1358,7 +1376,10 @@ struct PitchLocationView: View {
     func load_recent_event() {
         let recent_event = events[events.count - 1]
         let end_ab_br = ["S", "D", "T", "H", "E", "B", "C", "W"]
-        let end_ab_out = ["F", "G", "L", "P", "Y", "K", "M", "R"]
+        let end_ab_out = ["F", "G", "L", "P", "Y", "K", "M", "R", "RE"]
+        
+        game_report.opponent_name = ASCurOpponentName ?? ""
+        game_report.game_location = ASGameLocation ?? ""
         
         scoreboard.balls = recent_event.balls
         scoreboard.strikes = recent_event.strikes
@@ -1430,9 +1451,11 @@ struct PitchLocationView: View {
             }
         }
 
+        var inning_index = 1
+        
         for evnt in events{
             
-            if evnt.result_detail != "R" && evnt.pitch_result != "VA" && evnt.pitch_result != "VZ"{
+            if evnt.result_detail != "R" && evnt.result_detail != "RE" && evnt.pitch_result != "IW" && evnt.pitch_result != "VA" && evnt.pitch_result != "VZ"{
                 if current_pitcher.idcode == evnt.pitcher_id{
                     scoreboard.pitches += 1
                     if (evnt.balls == 0 && evnt.strikes == 0) || scoreboard.pitches == 1{
@@ -1461,15 +1484,24 @@ struct PitchLocationView: View {
                     scoreboard.baserunners = 0
                 }
             }
+            if recent_event.inning > inning_index {
+                inning_index += 1
+                scoreboard.baserunners = 0
+            }
         }
+        
+        if recent_event.inning < scoreboard.inning {
+            scoreboard.baserunners = 0
+        }
+        
     }
     
     func load_recent_ab_pitches() {
         var cur_ab_index = events.count - 1
         let cur_event = events[events.count - 1] //Previous event (t)
         
-        if !event.end_ab_rd.contains(cur_event.result_detail) {
-            while !event.end_ab_rd.contains(events[cur_ab_index].result_detail) {
+        if !event.end_ab_rd.contains(cur_event.result_detail){
+            while !event.end_ab_rd.contains(events[cur_ab_index].result_detail){
                 let prev_evnt = events[cur_ab_index]
                 if prev_evnt.pitch_type != "NP" {
                     ptconfig.pitch_x_loc.insert(prev_evnt.pitch_x_location, at: 0)
@@ -1536,6 +1568,7 @@ struct PitchLocationView: View {
         }
         
         if scoreboard.outs == 3 {
+            event.result_detail = "RE"
             scoreboard.outs = 0
             scoreboard.inning += 1
             scoreboard.baserunners = 0
@@ -1591,7 +1624,7 @@ struct PitchClockViolation: View {
                     
                     Button {
                         withAnimation{
-                            ptconfig.pitchclockviolation = false
+                            ptconfig.non_pitch_event = false
                         }
                     } label: {
                             
@@ -1622,16 +1655,15 @@ struct PitchClockViolation: View {
                 
                 
                 VStack{
+                    
                     Button{
                         withAnimation{
-                            //Write Violation to Event
-                            //Add logic to pbp log
-                            ptconfig.pitchclockviolation = false
-                            add_Ball()
-                            add_pitch_clock_violation()
+                            ptconfig.non_pitch_event = false
+                            add_Intentional_Walk()
+                            add_non_pitch_event()
                         }
                     } label: {
-                        Text("VIOLATION - BALL")
+                        Text("INTENTIONAL WALK")
                             .fontWeight(.bold)
                             .font(.system(size: 17))
                             .frame(maxWidth: .infinity)
@@ -1646,9 +1678,29 @@ struct PitchClockViolation: View {
                         withAnimation{
                             //Write Violation to Event
                             //Add logic to pbp log
-                            ptconfig.pitchclockviolation = false
+                            ptconfig.non_pitch_event = false
+                            add_Ball()
+                            add_non_pitch_event()
+                        }
+                    } label: {
+                        Text("VIOLATION - BALL")
+                            .fontWeight(.bold)
+                            .font(.system(size: 17))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, ver_padding / 2)
+                    }
+                    .foregroundColor(Color.white)
+                    .background(Color.red)
+                    .cornerRadius(8.0)
+                    .padding(.horizontal, 20)
+                    
+                    Button{
+                        withAnimation{
+                            //Write Violation to Event
+                            //Add logic to pbp log
+                            ptconfig.non_pitch_event = false
                             add_Strike()
-                            add_pitch_clock_violation()
+                            add_non_pitch_event()
                         }
                     } label: {
                         Text("VIOLATION - STRIKE")
@@ -1658,7 +1710,7 @@ struct PitchClockViolation: View {
                             .padding(.vertical, ver_padding / 2)
                     }
                     .foregroundColor(Color.white)
-                    .background(Color("ScoreboardGreen"))
+                    .background(Color.red)
                     .cornerRadius(8.0)
                     .padding(.horizontal, 20)
                     
@@ -1674,14 +1726,33 @@ struct PitchClockViolation: View {
         }
     }
     
-    func add_pitch_clock_violation() {
-        let violation = Event(pitcher_id: current_pitcher.idcode, pitch_result: event.pitch_result, pitch_type: "NP", result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, atbats: event.atbats, pitch_x_location: 0, pitch_y_location: 0, batter_stance: event.batter_stance, velocity: 0)
-        context.insert(violation)
+    func add_non_pitch_event() {
+        let npe = Event(pitcher_id: current_pitcher.idcode, pitch_result: event.pitch_result, pitch_type: "NP", result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, atbats: event.atbats, pitch_x_location: 0, pitch_y_location: 0, batter_stance: event.batter_stance, velocity: 0)
+        context.insert(npe)
         print_Event_String()
     }
 
     func print_Event_String() {
         print(current_pitcher.idcode, event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats, event.batter_stance, event.velocity, event.x_cor, event.y_cor)
+    }
+    
+    func add_Intentional_Walk() {
+        
+        event.pitch_result = "IW"
+        event.result_detail = "W"
+        event.pitch_type = "NP"
+        event.balls = scoreboard.balls
+        event.strikes = scoreboard.strikes
+        event.outs = scoreboard.outs
+        event.inning = scoreboard.inning
+        event.atbats = scoreboard.atbats
+        
+        if scoreboard.baserunners < 3 {
+            scoreboard.baserunners += 1
+        }
+        
+        reset_Count()
+        
     }
     
     func add_Strike() {
@@ -1825,7 +1896,7 @@ struct PitchLocationInput : View {
                     .fill(Color.black.opacity(0.01))
             }
             
-            if !ptconfig.pitchclockviolation {
+            if !ptconfig.non_pitch_event {
                 VStack{
                     
                     Spacer()
@@ -1834,12 +1905,12 @@ struct PitchLocationInput : View {
                         
                         Button {
                             withAnimation{
-                                ptconfig.pitchclockviolation = true
+                                ptconfig.non_pitch_event = true
                             }
                         } label: {
                                 
                             HStack{
-                                Text("PITCH CLOCK")
+                                Text("NON-PITCH")
                                     .font(.system(size: 15))
                                     .fontWeight(.black)
                                     .padding(.vertical, 8.0)

@@ -520,6 +520,7 @@ struct PitchResultView: View {
         if scoreboard.update_scoreboard {
             scoreboard.pitches += 1
             scoreboard.atbats += 1
+            scoreboard.baserunners += 1
             reset_Count()
         }
     }
