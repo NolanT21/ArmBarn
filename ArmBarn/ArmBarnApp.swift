@@ -15,7 +15,7 @@ struct ArmBarnApp: App {
     
     init() {
         
-//        try? Tips.resetDatastore()
+        //try? Tips.resetDatastore()
         try? Tips.configure()
         
         UserDefaults.standard.register(defaults: [
@@ -27,12 +27,11 @@ struct ArmBarnApp: App {
             "PitByInn" : true,
             "BullpenMode" : false,
             ])
-        
       }
     
     var body: some Scene {
         WindowGroup {
-            MainView()
+            MainView().task{UserDefaults.standard.set(false, forKey: "BullpenMode")}
                 .environment(Scoreboard())
                 .environment(Event_String())
                 .environment(currentPitcher())

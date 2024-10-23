@@ -10,6 +10,9 @@ import TipKit
 
 struct FileNamePopUpView: View {
     
+    @AppStorage("CurrentOpponentName") var ASCurOpponentName : String?
+    @AppStorage("GameLocation") var ASGameLocation : String?
+    
     @Environment(Scoreboard.self) var scoreboard
     @Environment(GameReport.self) var game_report
     @Environment(\.dismiss) var dismiss
@@ -70,6 +73,7 @@ struct FileNamePopUpView: View {
                         .padding()
                         .onChange(of: selected_location){
                             game_report.game_location = selected_location
+                            ASGameLocation = selected_location
                         }
                         
                         Button {
@@ -77,6 +81,7 @@ struct FileNamePopUpView: View {
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.12){
                                     fieldIsFocused = false
                                     game_report.opponent_name = opponentname
+                                    ASCurOpponentName = opponentname
                                     action()
                                 }
                                 close()
