@@ -47,7 +47,7 @@ import Observation
     var batter_stance: String = ""
     var velocity: Double = 0
     
-    var end_ab_rd: [String] = ["S", "D", "T", "H", "E", "B", "F", "G", "L", "P", "Y", "W", "K", "C", "M"]
+    var end_ab_rd: [String] = ["S", "D", "T", "H", "E", "B", "F", "G", "L", "P", "Y", "W", "K", "C", "M", "RE"]
     var newAtBat: Bool = false
     
     var recordEvent: Bool = false
@@ -74,7 +74,7 @@ import Observation
     var arsenal_colors: [Color] = [Color("PowderBlue"), Color("Gold"), Color("Tangerine"), Color("Grey")]
     var hidePitchOverlay: Bool = false
     var loadPitchOverlay: Bool = false
-    var pitchclockviolation = false
+    var non_pitch_event = false
 }
 
 @Observable class BullpenConfig{
