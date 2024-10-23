@@ -205,8 +205,8 @@ struct GameReportView: View {
                                                 }
                                                 
                                                 Divider()
+                                                    .frame(height: 1)
                                                     .background(Color.black)
-                                                    .frame(height: 10)
                                                     .padding(.bottom, -4)
                                             }
                                         }
@@ -247,6 +247,7 @@ struct GameReportView: View {
                                                .background(Color.red.opacity(0.1))
                                                
                                                Divider()
+                                                   .frame(height: 1)
                                                    .background((event.end_ab_rd.contains(evnt.result_detail)) ? Color.black : Color.clear)
                                                
                                            }
@@ -268,6 +269,7 @@ struct GameReportView: View {
                                                 .background(Color.yellow.opacity(0.07))
                                                 
                                                 Divider()
+                                                    .frame(height: 1)
                                                     .background((event.end_ab_rd.contains(evnt.result_detail)) ? Color.black : Color.clear)
                                                 
                                             }
@@ -288,6 +290,7 @@ struct GameReportView: View {
                                                 .background(Color.yellow.opacity(0.07))
                                                 
                                                 Divider()
+                                                    .frame(height: 1)
                                                     .background((event.end_ab_rd.contains(evnt.result_detail)) ? Color.black : Color.clear)
                                                 
                                             }
@@ -308,6 +311,7 @@ struct GameReportView: View {
                                                 .background(Color.yellow.opacity(0.07))
                                                 
                                                 Divider()
+                                                    .frame(height: 1)
                                                     .background((event.end_ab_rd.contains(evnt.result_detail)) ? Color.black : Color.clear)
                                                 
                                             }
@@ -328,7 +332,29 @@ struct GameReportView: View {
                                                 .background(Color.yellow.opacity(0.07))
                                                 
                                                 Divider()
+                                                    .frame(height: 1)
                                                     .background((event.end_ab_rd.contains(evnt.result_detail)) ? Color.black : Color.clear)
+                                                
+                                            }
+                                             
+                                         }
+                                        .gridCellColumns((ASVeloInput == true) ? 6 : 5)
+                                    }
+                                    else if evnt.result == "IW" {
+                                        GridRow{
+                                            VStack{
+                                                HStack{
+                                                    Spacer()
+                                                    Text("Intentional Walk")
+                                                        .padding(.vertical, 5)
+                                                        .foregroundStyle(Color.yellow.opacity(2))
+                                                    Spacer()
+                                                }
+                                                .background(Color.yellow.opacity(0.07))
+                                                
+                                                Divider()
+                                                    .frame(height: 1)
+                                                    .background(Color.black)
                                                 
                                             }
                                              
@@ -353,6 +379,7 @@ struct GameReportView: View {
                                         }
                                         
                                         Divider()
+                                            .frame(height: 1)
                                             .background((event.end_ab_rd.contains(evnt.result_detail)) ? Color.black : Color.clear)
                                     }
                                 }
@@ -388,7 +415,7 @@ struct GameReportView: View {
                         
                     }
                         
-                    }
+                }
                 
                 Spacer()
                 

@@ -27,7 +27,7 @@ struct BullpenReportView: View {
     var view_padding: CGFloat = 10
     var text_color: Color = .white
     var view_crnr_radius: CGFloat = 12
-    
+
     var box_color: Color = .gray
     
     let header_gradient = Gradient(colors: [Color("ScoreboardGreen"), Color("ScoreboardGreen"), Color("ScoreboardGreen"), .black])
@@ -39,8 +39,9 @@ struct BullpenReportView: View {
             GeometryReader { proxy in
                 
                 let viewsize = proxy.size
-             
+
                 VStack{
+                    
                     HStack(alignment: .center){
                         
                         Button(action: {
@@ -63,9 +64,9 @@ struct BullpenReportView: View {
                             .fontWeight(.bold)
                         
                     }
-                    .padding(.top, view_padding * 2)
+                    .padding(.top, view_padding)
                     .padding(.leading, view_padding * 1.5)
-                    .padding(.bottom, view_padding)
+                    //.padding(.bottom, view_padding)
                     
                     ZStack{
                         ScrollView{
@@ -77,286 +78,358 @@ struct BullpenReportView: View {
                     
                 }
                 .background(LinearGradient(gradient: header_gradient, startPoint: .top, endPoint: .bottom))
-                
             }
-            
-            
         }
-//        .onAppear{
-//            for pitch in bullpen_events {
-//                print(pitch.pitch_type, pitch.expected_target, pitch.actual_target)
-//            }
-//        }
     }
         
     
     var reportView: some View {
         HStack{
             
-            Spacer()
-            
-            VStack{
-                HStack{
-                    VStack (alignment: .leading){
-                        Text(current_pitcher.firstName + " " + current_pitcher.lastName)
-                            .font(.system(size: title_size))
-                            .bold()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .foregroundStyle(text_color)
-                        
-                        Text(Date().formatted(.dateTime.day().month().year()))
-                            .font(.system(size: subheadline_size))
-                            .foregroundStyle(text_color)
-                    }
-                }
-                .padding(.horizontal, view_padding)
-                .padding(.top, view_padding)
+            GeometryReader { proxy in
+                
+                let viewsize = proxy.size
+                let szb_width = viewsize.width * 0.019
+                let szb_height = szb_width * 1.43
+                let outside_height = szb_height * 5.4
+                let hi_lo_width = szb_width * 5.5
                 
                 HStack{
                     
+                    Spacer()
+                    
                     VStack{
-                        
-    //                    HStack{
-    //                        Text("")
-    //                            .font(.system(size: subheadline_size))
-    //                            .foregroundStyle(text_color)
-    //                        Spacer()
-    //                    }
-                        
                         HStack{
-                            Spacer()
-                            VStack{
-                                Text("Pitches")
-                                Text("\(bpr.pitches)")
-                            }
-                            Spacer()
-                            Divider()
+                            VStack (alignment: .leading){
+                                Text(current_pitcher.firstName + " " + current_pitcher.lastName)
+                                    .font(.system(size: title_size))
+                                    .bold()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .foregroundStyle(text_color)
                                 
-                            Spacer()
-                            VStack{
-                                Text("Spots Hit")
-                                Text("\(bpr.spots_hit)")
+                                Text(Date().formatted(.dateTime.day().month().year()))
+                                    .font(.system(size: subheadline_size))
+                                    .foregroundStyle(text_color)
                             }
-                            Spacer()
                         }
-                        .font(.system(size: _default))
-                        .foregroundStyle(text_color)
-                        
-                    }
-                    .padding(view_padding)
-                    .frame(maxWidth: .infinity)
-                    .background(Color("DarkGrey"))
-                    .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
-                    
-                }
-                .padding(.horizontal, view_padding)
-                .padding(.bottom, view_padding)
-                
-                HStack{
-                    
-                    VStack{
+                        .padding(.horizontal, view_padding)
+                        .padding(.top, view_padding)
                         
                         HStack{
-                            Text("Pitch Type Summary")
-                                .font(.system(size: subheadline_size))
-                                .foregroundStyle(text_color)
-                            Spacer()
-                        }
-                        .padding(.bottom, 5)
-                        
-                        HStack{
-                            Grid(alignment: .center) {
-                                ForEach(Array(bpr.spots_by_pitch_list.enumerated()), id: \.offset){ index, pitch in
-                                    if index > 0 {
-                                        Divider()
+                            
+                            VStack{
+                                
+                                HStack{
+                                    Spacer()
+                                    VStack{
+                                        Text("Pitches")
+                                        Text("\(bpr.pitches)")
                                     }
-                                    else {
-                                        GridRow(){
+                                    Spacer()
+                                    Divider()
+                                    
+                                    Spacer()
+                                    VStack{
+                                        Text("Spots Hit")
+                                        Text("\(bpr.spots_hit)")
+                                    }
+                                    Spacer()
+                                }
+                                .font(.system(size: _default))
+                                .foregroundStyle(text_color)
+                                
+                            }
+                            .padding(view_padding)
+                            .frame(maxWidth: .infinity)
+                            .background(Color("DarkGrey"))
+                            .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
+                            
+                        }
+                        .padding(.horizontal, view_padding)
+                        .padding(.bottom, view_padding)
+                        
+                        HStack{
+                            
+                            VStack{
+                                
+                                HStack{
+                                    Text("Pitch Type Summary")
+                                        .font(.system(size: subheadline_size))
+                                        .foregroundStyle(text_color)
+                                    Spacer()
+                                }
+                                .padding(.bottom, 5)
+                                
+                                HStack{
+                                    Grid(alignment: .center) {
+                                        ForEach(Array(bpr.spots_by_pitch_list.enumerated()), id: \.offset){ index, pitch in
+                                            if index > 0 {
+                                                Divider()
+                                            }
+                                            else {
+                                                GridRow(){
+                                                    
+                                                    //Spacer()
+                                                    
+                                                    Text("")
+                                                        .font(.system(size: caption_size))
+                                                    
+                                                    HStack{
+                                                        Text("")
+                                                            .font(.system(size: caption_size))
+                                                    }
+                                                    
+                                                    
+                                                    Text("Pitches")
+                                                        .font(.system(size: caption_size))
+                                                        .gridColumnAlignment(.center)
+                                                    
+                                                    
+                                                    HStack{
+                                                        Text("")
+                                                            .font(.system(size: caption_size))
+                                                    }
+                                                    
+                                                    
+                                                    Text("Spots Hit")
+                                                        .font(.system(size: caption_size))
+                                                        .gridColumnAlignment(.center)
+                                                    
+                                                    
+                                                }
+                                                
+                                                Divider()
+                                                //.padding(.bottom, view_padding)
+                                            }
+                                            GridRow{
+                                                
+                                                //Spacer()
+                                                
+                                                Text(pitch.pitch_type)
+                                                    .font(.system(size: _default))
+                                                    .gridColumnAlignment(.trailing)
+                                                
+                                                HStack{
+                                                    Divider()
+                                                }
+                                                
+                                                Text("\(pitch.pitch_num)")
+                                                    .font(.system(size: _default))
+                                                
+                                                HStack{
+                                                    Divider()
+                                                }
+                                                
+                                                Text("\(pitch.spots_hit)")
+                                                    .font(.system(size: _default))
+                                                
+                                            }
+                                        }
+                                    }
+                                }
+                                .padding(.horizontal, 10)
+                                .frame(maxWidth: .infinity)
+                            }
+                            .foregroundStyle(text_color)
+                            .padding(view_padding)
+                            .frame(maxWidth: .infinity)
+                            .background(Color("DarkGrey"))
+                            .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
+                            
+                        }
+                        .padding(.horizontal, view_padding)
+                        .padding(.bottom, view_padding)
+                        
+                        HStack{
+                            
+                            VStack{
+                                
+                                HStack{
+                                    Text("Pitch Log")
+                                        .font(.system(size: subheadline_size))
+                                        .foregroundStyle(text_color)
+                                    Spacer()
+                                }
+                                
+                                Grid() {
+                                    ForEach(Array(bpr.bp_pbp_list.enumerated()), id: \.offset){ index, bpevnt in
+                                        
+                                        let exp_y_target = convert_y_location(location: String(bpevnt.expected_spot.prefix(1)))
+                                        let exp_x_target = convert_x_location(location: String(bpevnt.expected_spot.suffix(1)))
+                                        let act_y_target = convert_y_location(location: String(bpevnt.actual_spot.prefix(1)))
+                                        let act_x_target = convert_x_location(location: String(bpevnt.actual_spot.suffix(1)))
+                                        
+                                        if index != 0 {
+                                            Divider()
+                                        }
+                                        GridRow {
                                             
                                             //Spacer()
                                             
-                                            Text("")
-                                                .font(.system(size: caption_size))
+                                            Text("\(bpevnt.pitch_num)")
+                                            
+                                            //                                HStack{
+                                            //                                    Divider()
+                                            //                                }
                                             
                                             Spacer()
                                             
-                                            HStack{
-                                                Text("")
-                                                    .font(.system(size: caption_size))
+                                            Text(bpevnt.pitch_type)
+                                            
+                                            //                                HStack{
+                                            //                                    Divider()
+                                            //                                }
+                                            
+                                            Spacer()
+                                            
+                                            if bpevnt.actual_spot == bpevnt.expected_spot {
+                                                ZStack{
+                                                    Image(systemName: "circle.fill")
+                                                        .foregroundColor(Color("ScoreboardGreen"))
+                                                        .font(.system(size: 25))
+                                                        .bold()
+                                                    Image(systemName: "checkmark.circle")
+                                                        .foregroundColor(.white)
+                                                        .font(.system(size: 25))
+                                                        .bold()
+                                                }
+                                            }
+                                            else {
+                                                ZStack{
+                                                    Image(systemName: "circle.fill")
+                                                        .foregroundColor(.red)
+                                                        .font(.system(size: 25))
+                                                        .bold()
+                                                    Image(systemName: "xmark.circle")
+                                                        .foregroundColor(.white)
+                                                        .font(.system(size: 25))
+                                                        .bold()
+                                                }
                                             }
                                             
                                             Spacer()
                                             
-                                            Text("Pitches")
-                                                .font(.system(size: caption_size))
-                                            
-                                            Spacer()
-                                            
-                                            HStack{
-                                                Text("")
-                                                    .font(.system(size: caption_size))
-                                            }
-                                            
-                                            Spacer()
-                                            
-                                            Text("Spots Hit")
-                                                .font(.system(size: caption_size))
-                                            
-                                            Spacer()
-                                            
-                                        }
-                                        //.padding(.bottom, view_padding)
-                                    }
-                                    GridRow{
-                                        
-                                        //Spacer()
-                                        
-                                        Text(pitch.pitch_type)
-                                            .font(.system(size: _default))
-                                            .gridColumnAlignment(.trailing)
-                                        
-                                        Spacer()
-                                        
-                                        HStack{
-                                            Divider()
-                                        }
-                                        
-                                        Spacer()
-                                        
-                                        Text("\(pitch.pitch_num)")
-                                            .font(.system(size: _default))
-                                        
-                                        Spacer()
-                                        
-                                        HStack{
-                                            Divider()
-                                        }
-                                        
-                                        Spacer()
-                                        
-                                        Text("\(pitch.spots_hit)")
-                                            .font(.system(size: _default))
-                                        
-                                        Spacer()
-                                        
-                                    }
-                                }
-                            }
-                        }
-                        .padding(.leading, 10)
-                    }
-                    .foregroundStyle(text_color)
-                    .padding(view_padding)
-                    .frame(maxWidth: .infinity)
-                    .background(Color("DarkGrey"))
-                    .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
-                    
-                }
-                .padding(.horizontal, view_padding)
-                .padding(.bottom, view_padding)
-                
-                HStack{
-                    
-                    VStack{
-                        
-                        HStack{
-                            Text("Pitch Log")
-                                .font(.system(size: subheadline_size))
-                                .foregroundStyle(text_color)
-                            Spacer()
-                        }
-                        
-                        Grid() {
-                            ForEach(Array(bpr.bp_pbp_list.enumerated()), id: \.offset){ index, bpevnt in
-                                
-                                let exp_y_target = convert_y_location(location: String(bpevnt.expected_spot.prefix(1)))
-                                let exp_x_target = convert_x_location(location: String(bpevnt.expected_spot.suffix(1)))
-                                let act_y_target = convert_y_location(location: String(bpevnt.actual_spot.prefix(1)))
-                                let act_x_target = convert_x_location(location: String(bpevnt.actual_spot.suffix(1)))
-                                
-                                if index != 0 {
-                                    Divider()
-                                }
-                                GridRow {
-                                    
-                                    //Spacer()
-                                    
-                                    Text("\(bpevnt.pitch_num)")
-                                    
-    //                                HStack{
-    //                                    Divider()
-    //                                }
-                                    
-                                    Spacer()
-                                    
-                                    Text(bpevnt.pitch_type)
-                                    
-    //                                HStack{
-    //                                    Divider()
-    //                                }
-                                    
-                                    Spacer()
-                                    
-                                    VStack(alignment: .center){
-                                        Grid(horizontalSpacing: 1, verticalSpacing: 1){
-                                            ForEach(0..<5, id: \.self) { ynumber in
-                                                GridRow{
-                                                    ForEach(0..<5, id: \.self) { xnumber in
-                                                        if xnumber == act_x_target && ynumber == act_y_target {
-                                                            Rectangle()
-                                                                .fill(Color("Gold"))
-                                                                .frame(width: 7, height: 10)
-                                                                .border(xnumber == exp_x_target && ynumber == exp_y_target ? Color("ScoreboardGreen") : .clear, width: 1.5)
+                                            VStack(alignment: .center, spacing: 2){
+                                                HStack{
+                                                    if bpevnt.actual_spot == "HI" {
+                                                        Rectangle()
+                                                            .frame(width: hi_lo_width, height: szb_width)
+                                                            .foregroundStyle(Color("Gold"))
+                                                            .border(bpevnt.expected_spot == "HI" ? Color("ScoreboardGreen") : .clear, width: 1.5)
+                                                    }
+                                                    else {
+                                                        Rectangle()
+                                                            .frame(width: hi_lo_width, height: szb_width)
+                                                            .foregroundStyle(Color.gray.opacity(0.4))
+                                                            .border(bpevnt.expected_spot == "HI" ? Color("ScoreboardGreen") : .clear, width: 1.5)
+                                                    }
+                                                }
+                                                HStack(spacing: 2){
+                                                    if bpevnt.actual_spot == "OL" {
+                                                        Rectangle()
+                                                            .frame(width: szb_width, height: outside_height)
+                                                            .foregroundStyle(Color("Gold"))
+                                                            .border(bpevnt.expected_spot == "OL" ? Color("ScoreboardGreen") : .clear, width: 1.5)
+                                                    }
+                                                    else {
+                                                        Rectangle()
+                                                            .frame(width: szb_width, height: outside_height)
+                                                            .foregroundStyle(Color.gray.opacity(0.4))
+                                                            .border(bpevnt.expected_spot == "OL" ? Color("ScoreboardGreen") : .clear, width: 1.5)
+                                                    }
+                                                    
+                                                    HStack{
+                                                        Grid(horizontalSpacing: 1, verticalSpacing: 1){
+                                                            ForEach(0..<5, id: \.self) { ynumber in
+                                                                GridRow{
+                                                                    ForEach(0..<5, id: \.self) { xnumber in
+                                                                        if xnumber == act_x_target && ynumber == act_y_target {
+                                                                            Rectangle()
+                                                                                .fill(Color("Gold"))
+                                                                                .frame(width: szb_width, height: szb_height)
+                                                                                .border(xnumber == exp_x_target && ynumber == exp_y_target ? Color("ScoreboardGreen") : .clear, width: 1.5)
+                                                                        }
+                                                                        else if (ynumber > 0 && ynumber < 4) && (xnumber > 0 && xnumber < 4) {
+                                                                            Rectangle()
+                                                                                .fill(.white)
+                                                                                .frame(width: szb_width, height: szb_height)
+                                                                                .border(xnumber == exp_x_target && ynumber == exp_y_target ? Color("ScoreboardGreen") : .clear, width: 1.5)
+                                                                        }
+                                                                        else {
+                                                                            Rectangle()
+                                                                                .fill(.gray)
+                                                                                .frame(width: szb_width, height: szb_height)
+                                                                                .border(xnumber == exp_x_target && ynumber == exp_y_target ? Color("ScoreboardGreen") : .clear, width: 1.5)
+                                                                        }
+                                                                        
+                                                                    }
+                                                                }
+                                                            }
                                                         }
-                                                        else if (ynumber > 0 && ynumber < 4) && (xnumber > 0 && xnumber < 4) {
-                                                            Rectangle()
-                                                                .fill(.white)
-                                                                .frame(width: 7, height: 10)
-                                                                .border(xnumber == exp_x_target && ynumber == exp_y_target ? Color("ScoreboardGreen") : .clear, width: 1.5)
-                                                        }
-                                                        else {
-                                                            Rectangle()
-                                                                .fill(.gray)
-                                                                .frame(width: 7, height: 10)
-                                                                .border(xnumber == exp_x_target && ynumber == exp_y_target ? Color("ScoreboardGreen") : .clear, width: 1.5)
-                                                        }
-                                                       
+                                                    }
+                                                    if bpevnt.actual_spot == "OR" {
+                                                        Rectangle()
+                                                            .frame(width: szb_width, height: outside_height)
+                                                            .foregroundStyle(Color("Gold"))
+                                                            .border(bpevnt.expected_spot == "OR" ? Color("ScoreboardGreen") : .clear, width: 1.5)
+                                                    }
+                                                    else {
+                                                        Rectangle()
+                                                            .frame(width: szb_width, height: outside_height)
+                                                            .foregroundStyle(Color.gray.opacity(0.4))
+                                                            .border(bpevnt.expected_spot == "OR" ? Color("ScoreboardGreen") : .clear, width: 1.5)
+                                                    }
+                                                }
+                                                
+                                                HStack{
+                                                    if bpevnt.actual_spot == "LO" {
+                                                        Rectangle()
+                                                            .frame(width: hi_lo_width, height: szb_width)
+                                                            .foregroundStyle(Color("Gold"))
+                                                            .border(bpevnt.expected_spot == "LO" ? Color("ScoreboardGreen") : .clear, width: 1.5)
+                                                    }
+                                                    else {
+                                                        Rectangle()
+                                                            .frame(width: hi_lo_width, height: szb_width)
+                                                            .foregroundStyle(Color.gray.opacity(0.4))
+                                                            .border(bpevnt.expected_spot == "LO" ? Color("ScoreboardGreen") : .clear, width: 1.5)
                                                     }
                                                 }
                                             }
+                                            .gridColumnAlignment(.center)
+                                            
                                         }
                                     }
-                                    .gridColumnAlignment(.center)
-                                    
-                                    //Spacer()
-                                    
                                 }
+                                .padding(.horizontal, view_padding)
                             }
+                            .font(.system(size: _default))
+                            .foregroundStyle(text_color)
+                            .padding(view_padding)
+                            .frame(maxWidth: .infinity)
+                            .background(Color("DarkGrey"))
+                            .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
+                            
                         }
-                        .padding(.horizontal, view_padding * 2)
+                        .padding(.horizontal, view_padding)
+                        .padding(.bottom, view_padding)
+                        
+                        
                     }
-                    .font(.system(size: _default))
-                    .foregroundStyle(text_color)
-                    .padding(view_padding)
-                    .frame(maxWidth: .infinity)
-                    .background(Color("DarkGrey"))
-                    .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
+                    
+                    Spacer()
                     
                 }
-                .padding(.horizontal, view_padding)
-                .padding(.bottom, view_padding)
-                
-                
+                .background(LinearGradient(gradient: background_gradient, startPoint: .top, endPoint: .bottom))
             }
-            
-            Spacer()
+                
         }
         .frame(maxWidth: .infinity)
-        .background(LinearGradient(gradient: background_gradient, startPoint: .top, endPoint: .bottom))
+        
     }
     
     func convert_y_location(location: String) -> Int {
-        let location_list = ["A", "B", "C", "D", "E"]
+        let location_list = ["A", "B", "C", "D", "E", "H", "L", "O"]
         var num_location = 0
         var index = 0
         
@@ -373,7 +446,7 @@ struct BullpenReportView: View {
     }
     
     func convert_x_location(location: String) -> Int {
-        let location_list = ["1", "2", "3", "4", "5"]
+        let location_list = ["1", "2", "3", "4", "5", "I", "L", "O", "R"]
         var num_location = 0
         var index = 0
         

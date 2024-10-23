@@ -114,8 +114,6 @@ struct BatterPositionView: View {
                     
                     HStack{
                         
-                        Spacer()
-                        
                         Button{
                             close()
                             close_action()
@@ -123,6 +121,8 @@ struct BatterPositionView: View {
                             Image(systemName: "xmark")
                                 .foregroundStyle(.white)
                         }
+                        
+                        Spacer()
                         
                     }
                     
