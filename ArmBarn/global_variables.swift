@@ -31,6 +31,15 @@ import Observation
     
     var update_scoreboard: Bool = true
     var enable_bottom_row: Bool = true
+    
+    var pitchers_appearance_list: [PitchersAppeared] = []
+}
+
+struct PitchersAppeared: Identifiable {
+    let id = UUID()
+    var pitcher_id: UUID
+    var pitches: Int
+    var batters_faced: Int
 }
 
 @Observable class Event_String{
