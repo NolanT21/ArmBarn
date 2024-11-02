@@ -55,6 +55,7 @@ struct SelectPitcherView: View {
                         
                         ForEach(filteredPitchers, id:\.id) { p_er in
                             Button(p_er.firstName + " " + p_er.lastName) {
+                                store_pitcher_appearance()
                                 clear_game_report()
                                 current_pitcher.pitch_num = 0
                                 current_pitcher.firstName = p_er.firstName
@@ -167,7 +168,7 @@ struct SelectPitcherView: View {
         
         for evnt in events {
             if evnt.pitcher_id == pitcher_id {
-                if evnt.result_detail != "R" {
+                if evnt.result_detail != "R" && event.result_detail != "RE" && evnt.pitch_result != "VZ" && evnt.pitch_result != "VA" && evnt.pitch_result != "IW"{
                     scoreboard.pitches += 1
                 }
                 if event.end_ab_rd.contains(evnt.result_detail) {
@@ -175,6 +176,20 @@ struct SelectPitcherView: View {
                 }
             }
         }
+    }
+    
+    func store_pitcher_appearance() {
+        //Store appearance on click
+        var not_appeared = true
+        for pitcher in scoreboard.pitchers_appearance_list {
+            if pitcher.id == current_pitcher.idcode {
+                not_appeared = false
+            }
+        }
+        if not_appeared == true {
+            scoreboard.pitchers_appearance_list.append(PitchersAppeared(pitcher_id: current_pitcher.idcode, pitches: scoreboard.pitches, batters_faced: scoreboard.atbats))
+        }
+        
     }
     
     func clear_game_report() {
