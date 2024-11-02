@@ -150,7 +150,7 @@ struct PitchLocationView: View {
                             }
                             
                             
-                            if scoreboard.baserunners > 0 && ptconfig.hidePitchOverlay == false{
+                            if (scoreboard.baserunners > 0 || (scoreboard.inning > 9 && scoreboard.balls == 0 && scoreboard.strikes == 0 && scoreboard.outs == 0 && scoreboard.baserunners == 0)) && ptconfig.hidePitchOverlay == false{
                                 VStack {
                                     Spacer()
                                         .frame(height: 50)
@@ -353,7 +353,7 @@ struct PitchLocationView: View {
                                         context.delete(events[events.count - 1])
                                     }
                                     else {
-                                        if scoreboard.pitches > 0 {
+                                        if scoreboard.pitches > 0 && event.result_detail != "R" && event.result_detail != "RE" && event.pitch_result != "IW" && event.pitch_result != "VZ" && event.pitch_result != "VA"{ //Non pitch event (pitch not thrown)
                                             scoreboard.pitches -= 1
                                         }
                                         newAtBat = true
@@ -1106,6 +1106,8 @@ struct PitchLocationView: View {
             print("Failed to delete all events.")
         }
         
+        scoreboard.pitchers_appearance_list.removeAll()
+        
         game_report.game_location = ""
         game_report.opponent_name = ""
         
@@ -1214,6 +1216,8 @@ struct PitchLocationView: View {
     func load_previous_event() {
         let previous_event = events[events.count - 1]
         
+        //print(previous_event.atbats)
+        
         scoreboard.balls = previous_event.balls
         scoreboard.strikes = previous_event.strikes
         scoreboard.outs = previous_event.outs
@@ -1268,7 +1272,7 @@ struct PitchLocationView: View {
             }
         }
         
-        if previous_event.result_detail != "R" && scoreboard.pitches > 0 {
+        if previous_event.result_detail != "R" && previous_event.result_detail != "RE" && scoreboard.pitches > 0 {
             scoreboard.pitches -= 1
         }
         else if previous_event.result_detail == "R" || previous_event.result_detail == "RE" {
@@ -1279,6 +1283,7 @@ struct PitchLocationView: View {
                 scoreboard.baserunners -= 1
             }
         }
+        print(scoreboard.baserunners)
     }
     
     func load_previous_ab_pitches() {
@@ -1484,13 +1489,14 @@ struct PitchLocationView: View {
                     scoreboard.baserunners = 0
                 }
             }
-            if recent_event.inning > inning_index {
+            if evnt.inning > inning_index {
                 inning_index += 1
                 scoreboard.baserunners = 0
             }
+            //print(scoreboard.baserunners)
         }
         
-        if recent_event.inning < scoreboard.inning {
+        if inning_index < scoreboard.inning {
             scoreboard.baserunners = 0
         }
         
