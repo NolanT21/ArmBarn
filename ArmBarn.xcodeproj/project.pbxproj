@@ -29,6 +29,7 @@
 		D58DAF152C45D38D003EFB2E /* FileNamePopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58DAF142C45D38D003EFB2E /* FileNamePopUpView.swift */; };
 		D58FE76D2BD717DC004FC234 /* BatterPositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58FE76C2BD717DC004FC234 /* BatterPositionView.swift */; };
 		D5959D9D2BE5381B00FFDA0B /* TipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5959D9C2BE5381B00FFDA0B /* TipView.swift */; };
+		D5DA2BF32CE28BA10098539A /* AtBatReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DA2BF22CE28BA10098539A /* AtBatReportView.swift */; };
 		D5DD11232AF52FE80064F1A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5DD11222AF52FE80064F1A5 /* Assets.xcassets */; };
 		D5DD11262AF52FE80064F1A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5DD11252AF52FE80064F1A5 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -51,6 +52,7 @@
 		D5C6DE1E2BD2C52D00C64555 /* report_variables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = report_variables.swift; sourceTree = "<group>"; };
 		D5C6DE1F2BD2C52D00C64555 /* StrikeoutAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrikeoutAlertView.swift; sourceTree = "<group>"; };
 		D5C6DE202BD2C52D00C64555 /* GameContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameContainerView.swift; sourceTree = "<group>"; };
+		D5DA2BF22CE28BA10098539A /* AtBatReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtBatReportView.swift; sourceTree = "<group>"; };
 		D5DD111B2AF52FE60064F1A5 /* ArmBarn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArmBarn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArmBarnApp.swift; sourceTree = "<group>"; };
 		D5DD11202AF52FE70064F1A5 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 		D5DD11122AF52FE60064F1A5 = {
 			isa = PBXGroup;
 			children = (
+				D5DA2BF22CE28BA10098539A /* AtBatReportView.swift */,
 				D53C50032CB182550073BE9F /* BullpenReportView.swift */,
 				D5959D9C2BE5381B00FFDA0B /* TipView.swift */,
 				D5064EEB2BE041BE00F01886 /* SettingsView.swift */,
@@ -207,6 +210,7 @@
 				D58FE76D2BD717DC004FC234 /* BatterPositionView.swift in Sources */,
 				D57E623E2BD2CD7D003987E1 /* PitchResultView.swift in Sources */,
 				D57E623F2BD2CD7D003987E1 /* OutDetailView.swift in Sources */,
+				D5DA2BF32CE28BA10098539A /* AtBatReportView.swift in Sources */,
 				D57E62402BD2CD7D003987E1 /* HitDetailView.swift in Sources */,
 				D57E62412BD2CD7D003987E1 /* AddPitcherView.swift in Sources */,
 				D575388D2C776ABE00B7EBF7 /* BullpenMainView.swift in Sources */,
