@@ -9,39 +9,6 @@ import SwiftUI
 import SwiftData
 import Observation
 
-@Observable class BullpenReport{
-    var pitches: Int = 0
-    var spots_hit: Int = 0
-    
-    var p1_pitches: Int = 0
-    var p1_spots_hit: Int = 0
-    var p2_pitches: Int = 0
-    var p2_spots_hit: Int = 0
-    var p3_pitches: Int = 0
-    var p3_spots_hit: Int = 0
-    var p4_pitches: Int = 0
-    var p4_spots_hit: Int = 0
-    
-    var spots_by_pitch_list: [SpotsByPitchType] = []
-    
-    var bp_pbp_list: [BP_PBPLog] = []
-}
-
-struct SpotsByPitchType: Identifiable {
-    let id = UUID()
-    var pitch_type: String
-    var pitch_num: Int
-    var spots_hit: Int
-}
-
-struct BP_PBPLog: Identifiable {
-    let id = UUID()
-    var pitch_num: Int
-    var pitch_type: String
-    var expected_spot: String
-    var actual_spot: String
-}
-
 @Observable class GameReport{
     var inn_pitched: Double = 0.0
     var pitches: Int = 0
@@ -126,6 +93,32 @@ struct BP_PBPLog: Identifiable {
     
 }
 
+@Observable class AtBatBreakdown {
+    
+    var at_bat_list: [AtBatDT] = []
+        
+}
+
+struct AtBatDT {
+    //var result: String = ""
+    var outs: Int = 0
+    var inning: Int = 0
+    var pitch_list: [pitch_info_ab] = []
+    var x_coor_list: [Double] = []
+    var y_coor_list: [Double] = []
+    var pitch_color_list: [Color] = []
+}
+
+struct pitch_info_ab {
+    var result: String = ""
+    var result_color: Color
+    var pitch_type: String = ""
+    var velocity: Double = 0
+    var balls: Int = 0
+    var strikes: Int = 0
+    var units: String = ""
+}
+
 struct PBPLog: Identifiable {
     let id = UUID()
     var pitch_num : Int
@@ -157,6 +150,39 @@ struct PitchTypeDataset: Identifiable {
     let dataset: [Int]
 }
 
+
+@Observable class BullpenReport{
+    var pitches: Int = 0
+    var spots_hit: Int = 0
+    
+    var p1_pitches: Int = 0
+    var p1_spots_hit: Int = 0
+    var p2_pitches: Int = 0
+    var p2_spots_hit: Int = 0
+    var p3_pitches: Int = 0
+    var p3_spots_hit: Int = 0
+    var p4_pitches: Int = 0
+    var p4_spots_hit: Int = 0
+    
+    var spots_by_pitch_list: [SpotsByPitchType] = []
+    
+    var bp_pbp_list: [BP_PBPLog] = []
+}
+
+struct SpotsByPitchType: Identifiable {
+    let id = UUID()
+    var pitch_type: String
+    var pitch_num: Int
+    var spots_hit: Int
+}
+
+struct BP_PBPLog: Identifiable {
+    let id = UUID()
+    var pitch_num: Int
+    var pitch_type: String
+    var expected_spot: String
+    var actual_spot: String
+}
 
 //Pitch Type Amount by Inning Line Chart Data Structure
 struct Inning: Identifiable {
