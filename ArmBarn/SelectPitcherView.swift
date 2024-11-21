@@ -55,38 +55,39 @@ struct SelectPitcherView: View {
                         
                         ForEach(filteredPitchers, id:\.id) { p_er in
                             Button(p_er.firstName + " " + p_er.lastName) {
-                                store_pitcher_appearance()
-                                clear_game_report()
-                                current_pitcher.pitch_num = 0
-                                current_pitcher.firstName = p_er.firstName
-                                current_pitcher.lastName = p_er.lastName
-                                current_pitcher.pitch1 = p_er.pitch1
-                                current_pitcher.idcode = p_er.id
-                                if current_pitcher.pitch1 != "None" {
-                                    current_pitcher.pitch_num += 1
-                                    current_pitcher.arsenal[0] = p_er.pitch1
+                                if p_er.id != current_pitcher.idcode {
+                                    store_pitcher_appearance()
+                                    clear_game_report()
+                                    current_pitcher.pitch_num = 0
+                                    current_pitcher.firstName = p_er.firstName
+                                    current_pitcher.lastName = p_er.lastName
+                                    current_pitcher.pitch1 = p_er.pitch1
+                                    current_pitcher.idcode = p_er.id
+                                    if current_pitcher.pitch1 != "None" {
+                                        current_pitcher.pitch_num += 1
+                                        current_pitcher.arsenal[0] = p_er.pitch1
+                                    }
+                                    current_pitcher.pitch2 = p_er.pitch2
+                                    
+                                    if current_pitcher.pitch2 != "None" {
+                                        current_pitcher.pitch_num += 1
+                                        current_pitcher.arsenal[1] = p_er.pitch2
+                                    }
+                                    current_pitcher.pitch3 = p_er.pitch3
+                                    
+                                    if current_pitcher.pitch3 != "None" {
+                                        current_pitcher.pitch_num += 1
+                                        current_pitcher.arsenal[2] = p_er.pitch3
+                                    }
+                                    current_pitcher.pitch4 = p_er.pitch4
+                                    
+                                    if current_pitcher.pitch4 != "None" {
+                                        current_pitcher.pitch_num += 1
+                                        current_pitcher.arsenal[3] = p_er.pitch4
+                                    }
+                                    
+                                    fetch_pitches_and_abs(pitcher_id: current_pitcher.idcode)
                                 }
-                                
-                                current_pitcher.pitch2 = p_er.pitch2
-                                if current_pitcher.pitch2 != "None" {
-                                    current_pitcher.pitch_num += 1
-                                    current_pitcher.arsenal[1] = p_er.pitch2
-                                }
-                                
-                                current_pitcher.pitch3 = p_er.pitch3
-                                if current_pitcher.pitch3 != "None" {
-                                    current_pitcher.pitch_num += 1
-                                    current_pitcher.arsenal[2] = p_er.pitch3
-                                }
-                                
-                                current_pitcher.pitch4 = p_er.pitch4
-                                if current_pitcher.pitch4 != "None" {
-                                    current_pitcher.pitch_num += 1
-                                    current_pitcher.arsenal[3] = p_er.pitch4
-                                }
-                                
-                                generate_pitches_and_abs(pitcher_id: current_pitcher.idcode)
-                                
                                 dismiss()
                             }
                             .foregroundColor(text_color)
@@ -161,29 +162,56 @@ struct SelectPitcherView: View {
         }
     }
     
-    func generate_pitches_and_abs(pitcher_id: UUID) {
+    func fetch_pitches_and_abs(pitcher_id: UUID) {
         
-        scoreboard.pitches = 0
-        scoreboard.atbats = 1
+        //Redo to match pitcher ids
+        //Reset pitch number and batters faced
+        var appeared = false
         
-        for evnt in events {
-            if evnt.pitcher_id == pitcher_id {
-                if evnt.result_detail != "R" && event.result_detail != "RE" && evnt.pitch_result != "VZ" && evnt.pitch_result != "VA" && evnt.pitch_result != "IW"{
-                    scoreboard.pitches += 1
-                }
-                if event.end_ab_rd.contains(evnt.result_detail) {
-                    scoreboard.atbats += 1
-                }
+        print(scoreboard.pitchers_appearance_list)
+        
+        for pitchers in scoreboard.pitchers_appearance_list {
+            //print(pitcher_id)
+            if pitchers.pitcher_id == pitcher_id{
+                //print("Entered Fetch Pitches and BFs")
+                appeared = true
+                scoreboard.pitches = pitchers.pitches
+                scoreboard.atbats = pitchers.batters_faced
+                break
             }
         }
+        
+        if appeared == false {
+            scoreboard.pitches = 0
+            scoreboard.atbats = 1
+        }
+        
+        
+//        scoreboard.pitches = 0
+//        scoreboard.atbats = 1
+//        
+//        for evnt in events {
+//            if pitcher_id == evnt.pitcher_id  {
+//                if evnt.result_detail != "R" && evnt.result_detail != "RE" && evnt.pitch_result != "VZ" && evnt.pitch_result != "VA" && evnt.pitch_result != "IW"{
+//                    scoreboard.pitches += 1
+//                }
+//                if event.end_ab_rd.contains(evnt.result_detail) {
+//                    scoreboard.atbats += 1
+//                }
+//            }
+//        }
     }
     
     func store_pitcher_appearance() {
         //Store appearance on click
         var not_appeared = true
         for pitcher in scoreboard.pitchers_appearance_list {
-            if pitcher.id == current_pitcher.idcode {
+            if pitcher.pitcher_id == current_pitcher.idcode {
+                //print("Entered Store Appearance")
                 not_appeared = false
+                scoreboard.pitches = pitcher.pitches
+                scoreboard.atbats = pitcher.batters_faced
+                break
             }
         }
         if not_appeared == true {
