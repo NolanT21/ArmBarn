@@ -39,6 +39,7 @@ struct ArmBarnApp: App {
                 .environment(GameReport())
                 .environment(BullpenConfig())
                 .environment(BullpenReport())
+                .environment(AtBatBreakdown())
         }
         .modelContainer(for: [Event.self, Pitcher.self, BullpenEvent.self])
     }
