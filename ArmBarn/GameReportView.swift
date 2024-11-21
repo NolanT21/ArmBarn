@@ -34,7 +34,10 @@ struct GameReportView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var context
     
+    @State private var showGameSummary = true
+    @State private var showAtBatBreakdown = false
     @State private var showPBPLog = false
+
     @State private var showExportPR = false
     
     var gradient = Gradient(colors: [Color("PowderBlue"), Color("Gold"), Color("Tangerine")])
@@ -86,40 +89,72 @@ struct GameReportView: View {
                         
                         Spacer()
                         
-                        HStack(alignment: .center){
+                        HStack(alignment: .center, spacing: 10){
                             
-                            Button(action: {
-                                showPBPLog.toggle()
-                            }) {
-                                if showPBPLog == false {
-                                    Image(systemName: "note.text")
-                                        .imageScale(.large)
-                                        .font(.system(size: 17))
-                                        .frame(width: sbl_width, height: sbl_height)
-                                        .foregroundColor(Color.white)
-                                }
-                                else {
+                            if showGameSummary != true {
+                                Button(action: {
+                                    showGameSummary = true
+                                    showAtBatBreakdown = false
+                                    showPBPLog = false
+                                }) {
                                     Image(systemName: "chart.bar.xaxis")
                                         .imageScale(.large)
                                         .font(.system(size: 17))
                                         .frame(width: sbl_width, height: sbl_height)
                                         .foregroundColor(Color.white)
                                 }
-                                
+                                .padding(.trailing, view_padding/2)
                             }
-                            .padding(.leading, view_padding/2)
                             
-                            if showPBPLog == false {
-                                
+                            if showAtBatBreakdown != true {
+                                Button(action: {
+                                    showAtBatBreakdown = true
+                                    showGameSummary = false
+                                    showPBPLog = false
+                                }) {
+                                    Image(systemName: "figure.baseball")
+                                        .imageScale(.large)
+                                        .font(.system(size: 17))
+                                        .frame(width: sbl_width, height: sbl_height)
+                                        .foregroundColor(Color.white)
+                                        .bold()
+                                }
+                                //.padding(.leading, view_padding/2)
+                            }
+        
+                            if showPBPLog != true {
+                                Button(action: {
+                                    showPBPLog = true
+                                    showGameSummary = false
+                                    showAtBatBreakdown = false
+                                }) {
+                                    Image(systemName: "note.text")
+                                        .imageScale(.large)
+                                        .font(.system(size: 17))
+                                        .frame(width: sbl_width, height: sbl_height)
+                                        .foregroundColor(Color.white)
+                                }
+                                //.padding(.leading, view_padding/2)
+                            }
+                            
+                            
+                            if showGameSummary == true {
                                 ShareLink("", item: renderGR(viewSize: viewsize))
                                     .imageScale(.large)
                                     .font(.system(size: 16))
                                     .foregroundStyle(text_color)
                                     .fontWeight(.bold)
 //                                    .padding(.leading, view_padding/2)
-                                
                             }
-                            else {
+                            else if showAtBatBreakdown == true {
+                                //ShareLink for At Bat Breakdown
+                                ShareLink("", item: renderPBP(viewSize: viewsize))
+                                    .imageScale(.large)
+                                    .font(.system(size: 16))
+                                    .foregroundStyle(text_color)
+                                    .fontWeight(.bold)
+                            }
+                            else if showPBPLog == true {
                                 ShareLink("", item: renderPBP(viewSize: viewsize))
                                     .imageScale(.large)
                                     .font(.system(size: 16))
@@ -137,11 +172,20 @@ struct GameReportView: View {
                     
                     ZStack {
                         ScrollView{
-                            if showPBPLog == false {
+                            if showGameSummary == true {
                                 reportView
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                             }
-                            else {
+                            else if showAtBatBreakdown == true {
+                                VStack{
+                                    AtBatReportView()
+                                        .preferredColorScheme(.dark)
+                                        .frame(height: 200)
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                }
+                                
+                            }
+                            else if showPBPLog == true {
                                 pbplogView
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                             }
@@ -1495,6 +1539,44 @@ struct GameReportView: View {
             }
             
             pdf.beginPDFPage(nil)
+            
+            context(pdf)
+            
+            pdf.endPDFPage()
+            pdf.closePDF()
+        }
+        
+        return url
+        
+    }
+    
+    @MainActor
+    func renderABB(viewSize: CGSize) -> URL {
+        
+        let abb_renderer = ImageRenderer(content: AtBatReportView().frame(width: viewSize.width))
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "M.d.yy"
+
+        //let formattedDate = dateFormatter.string(from: Date())
+        
+        //let first_name = current_pitcher.firstName.prefix(1)
+        //let last_name = current_pitcher.lastName.prefix(5)
+        
+        let path_string = "AtBatBreakdown"
+        let url = URL.documentsDirectory.appending(path: path_string)
+        
+        abb_renderer.render { size, context in
+            var box = CGRect(x: 0, y: 0, width: viewSize.width, height: size.height)
+            
+            guard let pdf = CGContext(url as CFURL, mediaBox: &box, nil) else {
+                //pdf.autoScales = true
+                return
+            }
+            
+            pdf.beginPDFPage(nil)
+            
+            //pdf.translateBy(x: box.size.width / 2 - size.width / 2, y: box.size.height / 2 - size.height / 2)
             
             context(pdf)
             
