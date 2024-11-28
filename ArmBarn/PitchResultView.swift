@@ -101,15 +101,15 @@ struct PitchResultView: View {
                                     } label: {
                                         HStack{
                                             Text("K")
-                                                .rotationEffect(.degrees(-180))
+                                                //.rotationEffect(.degrees(-180))
                                                 .font(.system(size: 22))
                                                 .fontWeight(.black)
                                             
-                                             Text("- LOOKING")
+                                             Text("- CALLED")
                                                 .font(.system(size: 22))
                                                 .fontWeight(.black)
                                         }
-                                        .padding(.horizontal, 10.0)
+                                        .padding(.horizontal, 18.0)
                                         .padding(.vertical, 15.0)
                                     }
                                     .foregroundColor(Color.white)
