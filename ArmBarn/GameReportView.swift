@@ -28,6 +28,7 @@ struct GameReportView: View {
     @Environment(Scoreboard.self) var scoreboard
     @Environment(PitchTypeConfig.self) var ptconfig
     @Environment(Event_String.self) var event
+    @Environment(AtBatBreakdown.self) var at_bat_brkdwn
     
     @Query var events: [Event]
     
@@ -63,7 +64,16 @@ struct GameReportView: View {
     var legend_color: Color = .gray
     
     let background_gradient = Gradient(colors: [Color("ScoreboardGreen"), .black, .black, .black, .black, .black])
-    let header_gradient = Gradient(colors: [Color("ScoreboardGreen"), Color("ScoreboardGreen"), Color("ScoreboardGreen"), .black])
+    
+    let header_gradient = LinearGradient(stops: [
+        .init(color: Color("ScoreboardGreen"), location: 0.30),
+        .init(color: .black, location: 0.31),
+    ], startPoint: .top, endPoint: .bottom)
+    
+    let pbp_gradient = LinearGradient(stops: [
+        .init(color: Color("ScoreboardGreen"), location: 0.30),
+        .init(color: .white, location: 0.31),
+    ], startPoint: .top, endPoint: .bottom)
     
     var body: some View {
         
@@ -89,54 +99,79 @@ struct GameReportView: View {
                         
                         Spacer()
                         
-                        HStack(alignment: .center, spacing: 10){
+                        HStack(alignment: .center, spacing: 5){
                             
-                            if showGameSummary != true {
                                 Button(action: {
                                     showGameSummary = true
                                     showAtBatBreakdown = false
                                     showPBPLog = false
                                 }) {
-                                    Image(systemName: "chart.bar.xaxis")
-                                        .imageScale(.large)
-                                        .font(.system(size: 17))
-                                        .frame(width: sbl_width, height: sbl_height)
-                                        .foregroundColor(Color.white)
+                                    ZStack{
+                                        
+                                        RoundedRectangle(cornerRadius: 4)
+                                            .foregroundStyle(showGameSummary == true ?
+                                                             Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1)) : Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0), radius: 0, x: 0, y: 0))
+                                            )
+                                            .frame(width: 30, height: 30)
+                                        
+                                        
+                                        Image(systemName: "chart.bar.xaxis")
+                                            .imageScale(.large)
+                                            .font(.system(size: 17))
+                                            .frame(width: sbl_width, height: sbl_height)
+                                            .foregroundColor(Color.white)
+                                        
+                                    }
+                                    
                                 }
-                                .padding(.trailing, view_padding/2)
-                            }
-                            
-                            if showAtBatBreakdown != true {
+                                //.padding(.trailing, view_padding/2)
+                                
                                 Button(action: {
                                     showAtBatBreakdown = true
                                     showGameSummary = false
                                     showPBPLog = false
                                 }) {
-                                    Image(systemName: "figure.baseball")
-                                        .imageScale(.large)
-                                        .font(.system(size: 17))
-                                        .frame(width: sbl_width, height: sbl_height)
-                                        .foregroundColor(Color.white)
-                                        .bold()
+                                    
+                                    ZStack{
+                                        
+                                        RoundedRectangle(cornerRadius: 4)
+                                            .foregroundStyle(showAtBatBreakdown == true ?
+                                                             Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1)) : Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0), radius: 0, x: 0, y: 0))
+                                            )
+                                            .frame(width: 30, height: 30)
+                                        
+                                        Image(systemName: "figure.baseball")
+                                            .imageScale(.large)
+                                            .font(.system(size: 15))
+                                            .frame(width: sbl_width, height: sbl_height)
+                                            .foregroundColor(Color.white)
+                                            .bold()
+                                    }
                                 }
                                 //.padding(.leading, view_padding/2)
-                            }
-        
-                            if showPBPLog != true {
+
                                 Button(action: {
                                     showPBPLog = true
                                     showGameSummary = false
                                     showAtBatBreakdown = false
                                 }) {
-                                    Image(systemName: "note.text")
-                                        .imageScale(.large)
-                                        .font(.system(size: 17))
-                                        .frame(width: sbl_width, height: sbl_height)
-                                        .foregroundColor(Color.white)
+                                    
+                                    ZStack{
+                                        
+                                        RoundedRectangle(cornerRadius: 4)
+                                            .foregroundStyle(showPBPLog == true ?
+                                                             Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1)) : Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0), radius: 0, x: 0, y: 0))
+                                            )
+                                            .frame(width: 30, height: 30)
+                                        
+                                        Image(systemName: "note.text")
+                                            .imageScale(.large)
+                                            .font(.system(size: 17))
+                                            .frame(width: sbl_width, height: sbl_height)
+                                            .foregroundColor(Color.white)
+                                    }
                                 }
                                 //.padding(.leading, view_padding/2)
-                            }
-                            
                             
                             if showGameSummary == true {
                                 ShareLink("", item: renderGR(viewSize: viewsize))
@@ -148,7 +183,7 @@ struct GameReportView: View {
                             }
                             else if showAtBatBreakdown == true {
                                 //ShareLink for At Bat Breakdown
-                                ShareLink("", item: renderPBP(viewSize: viewsize))
+                                ShareLink("", item: renderABB(viewSize: viewsize))
                                     .imageScale(.large)
                                     .font(.system(size: 16))
                                     .foregroundStyle(text_color)
@@ -177,12 +212,10 @@ struct GameReportView: View {
                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                             }
                             else if showAtBatBreakdown == true {
-                                VStack{
-                                    AtBatReportView()
-                                        .preferredColorScheme(.dark)
-                                        .frame(height: 200)
-                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                }
+                                atbatbreakdownView
+                                    //.preferredColorScheme(.dark)
+                                    //.frame(height: 200)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 
                             }
                             else if showPBPLog == true {
@@ -196,39 +229,668 @@ struct GameReportView: View {
                     }
                     
                 }
-                .background(LinearGradient(gradient: header_gradient, startPoint: .top, endPoint: .bottom))
+                .background(showPBPLog == true ? pbp_gradient : header_gradient)
                 
                 if showExportPR == true{
                     FileNamePopUpView(action: {})
                 }
+            }
+        }
+    }
+    
+    var atbatbreakdownView: some View {
+        VStack{
+            
+            HStack{
+                VStack (alignment: .leading){
+                    Text(current_pitcher.firstName + " " + current_pitcher.lastName)
+                        .font(.system(size: title_size))
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundStyle(text_color)
+                    
+                    Text(game_report.opponent_name + ", " + game_report.game_location)
+                        .font(.system(size: headbody_size))
+                        .foregroundStyle(text_color)
+                        .bold()
+                    
+                    Text(Date().formatted(.dateTime.day().month().year()))
+                        .font(.system(size: subheadline_size))
+                        .foregroundStyle(text_color)
+                }
+            }
+            .padding(.horizontal, view_padding)
+            .padding(.top, view_padding)
+            
+            let screenSize = UIScreen.main.bounds.size
+            
+            if at_bat_brkdwn.at_bat_list.count > 0 {
+                
+                ForEach(Array(at_bat_brkdwn.at_bat_list.enumerated()), id: \.offset){ index, atbat in
+                    VStack{
+                        
+                        Spacer()
+                        
+                        VStack{
+                            HStack{/*"Header" Description*/
+                                Text("INN \(atbat.inning)")
+                                    .font(.system(size: 14))
+                                    .bold()
+                                Spacer()
+                                Text("\(atbat.outs) Out(s)")
+                                    .font(.system(size: 14))
+                                    .bold()
+                            }
+                            HStack{
+                                ZStack{
+                                    VStack{/*Strikezone w/ Pitch Overlays*/
+                                        Image("PLO_Background")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .clipShape(RoundedRectangle(cornerRadius: 6))
+                                            .clipped()
+                                            .frame(alignment: .top)
+                                            .overlay{
+                                                ForEach(atbat.x_coor_list.indices, id: \.self) { index in
+                                                    // coor * (ratio/dimension) + b
+                                                    let x_coor = atbat.x_coor_list[index] * 0.267 + (screenSize.width * 0.085)/*(100/screenSize.width) + 31*/
+                                                    let height_ratio = (screenSize.width * 2.16) * 0.244
+                                                    let y_coor = atbat.y_coor_list[index] * (height_ratio/screenSize.height) + (screenSize.height * 0.026)/*/ 0.155 (400 / screenSize.height) * 850 + 24(195/screenSize.height) + 22*/
+                                                    let point = CGPoint(x: x_coor, y: y_coor)
+                                                    
+                                                    let pitch_color = atbat.pitch_color_list[index]
+                                                    let plot = atbat.plot_pitch_list[index]
+                                                    let pitch_num = atbat.pitch_num_list[index]
+                                                    
+                                                    if plot != 0 {
+                                                        let pitch_index = pitch_num
+                                                        Circle()
+                                                            .fill(pitch_color)
+                                                            .stroke(.white, lineWidth: 2)
+                                                            .frame(width: 15, height: 15, alignment: .center)
+                                                            .overlay {
+                                                                Text("\(pitch_index)")
+                                                                    .font(.system(size: 8))
+                                                                    .bold()
+                                                            }
+                                                            .position(point)
+                                                    }
+                                                }
+                                            }
+                                        Spacer()
+                                        
+                                    }
+                                    
+                                    //Batter here
+                                    if ASBatterStance == true {
+                                        if atbat.batter_hand == "R" {
+                                            
+                                            VStack{
+                                                
+                                                Spacer()
+                                                
+                                                HStack{
+                                                    Image(systemName: "figure.baseball")
+                                                        .scaleEffect(x: 1, y: 2)
+                                                        .rotation3DEffect(.degrees(50), axis: (x: 0, y: 1, z: 0))
+                                                        //.scaleEffect(x: 0.9, y: 1)
+                                                        //.imageScale(.large)
+                                                        .font(.system(size: 50))
+                                                        .foregroundColor(.white.opacity(0.5))
+                                                        //.position(batter_figure_position_right)
+                                                    
+                                                    Spacer()
+                                                    
+                                                }
+                                                
+                                                Spacer()
+                                                
+                                            }
+                                            
+                                        }
+                                        else if atbat.batter_hand == "L" {
+                                            
+                                            VStack{
+                                                
+                                                Spacer()
+                                                
+                                                HStack{
+                                                    
+                                                    Spacer()
+                                                    
+                                                    Image(systemName: "figure.baseball")
+                                                        .scaleEffect(x: -1, y: 2)
+                                                        .rotation3DEffect(.degrees(-50), axis: (x: 0, y: 1, z: 0))
+                                                        //.scaleEffect(x: 0.9, y: 1)
+                                                        //.imageScale(.large)
+                                                        .font(.system(size: 50))
+                                                        .foregroundColor(.white.opacity(0.5))
+                                                        //.position(batter_figure_position_right)
+                                                    
+                                                }
+                                                
+                                                Spacer()
+                                                
+                                            }
+                                            
+                                            
+                                        }
+                                    }
+                                    
+                                }
+                                
+                                
+                                Spacer()
+                                
+                                ScrollView{
+                                    VStack(alignment: .leading){
+                                    /*Pitch Descriptions*/
+                                    let pitch_list = atbat.pitch_list
+                                    let pitch_num_list = atbat.pitch_num_list
+                                    let color_list = atbat.pitch_color_list
+                                    Grid(alignment: .leading){
+                                        ForEach(Array(pitch_list.enumerated()), id: \.offset) {pitch in
+                                            if pitch.offset > 1 {
+                                                Divider()
+                                            }
+                                            if pitch.element.pitch_type == "NPE" {
+                                                GridRow{
+                                                    VStack{
+                                                        HStack{
+                                                            
+                                                            Spacer()
+                                                            
+                                                            Text(pitch.element.result)
+                                                                .foregroundStyle(color_list[pitch.offset].opacity(2))
+                                                                .font(.system(size: 14))
+                                                                .bold()
+                                                                .padding(.vertical, 7)
+                                                            
+                                                            Spacer()
+                                                            
+                                                        }
+                                                        .background(color_list[pitch.offset].opacity(0.07))
+                                                    }
+                                                    .gridCellColumns(3)
+                                                }
+                                            }
+                                            else {
+                                                GridRow{
+                                                    VStack(alignment: .leading){
+                                                        Circle()
+                                                            .fill(pitch.element.result_color)
+                                                            .stroke(.white, lineWidth: 2)
+                                                            .frame(width: 20, height: 20, alignment: .center)
+                                                            .overlay {
+                                                                Text("\(pitch_num_list[pitch.offset])")
+                                                                    .font(.system(size: 12))
+                                                                    .bold()
+                                                            }
+                                                    }
+                                                    .gridColumnAlignment(.center)
+                                                    
+                                                    VStack(alignment: .leading){
+                                                        Text("\(pitch.element.result)")
+                                                            .font(.system(size: 14))
+                                                        HStack(spacing: 2){
+                                                            if pitch.element.velocity != 0 {
+                                                                Text("\(pitch.element.velocity, specifier: "%.1f") mph")
+                                                            }
+                                                            
+                                                            Text("\(pitch.element.pitch_type)")
+                                                        }
+                                                        .font(.system(size: 10))
+                                                    }
+                                                    VStack{
+                                                        Text("\(pitch.element.balls)-\(pitch.element.strikes)")
+                                                            .font(.system(size: 14))
+                                                    }
+                                                    .gridColumnAlignment(.center)
+                                                }
+                                            }
+                                            if pitch.offset == 0 {
+                                                Divider()
+                                            }
+                                        }
+                                    }
+                                    
+                                    Spacer()
+                                }
+                                }
+                                //.frame(height: 200)
+                                
+                            }
+                        }
+                        .padding(view_padding)
+                        .frame(maxWidth: .infinity)
+                        .background(Color("DarkGrey"))
+                        .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
+                        
+                        Spacer()
+                    }
+                    //.fixedSize(horizontal: false, vertical: false)
+                    //.frame(height: 260)
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, view_padding)
+                    .padding(.bottom, view_padding/2)
+                }
                 
             }
-            
+            else {
+                VStack{
+                    
+                    Spacer()
+                    
+                    VStack{
+                        HStack{/*"Header" Description*/
+                            Text("INN 1")
+                                .font(.system(size: 14))
+                                .bold()
+                            Spacer()
+                            Text("0 Out(s)")
+                                .font(.system(size: 14))
+                                .bold()
+                        }
+                        HStack{
+                            ZStack{
+                                VStack{/*Strikezone w/ Pitch Overlays*/
+                                    Image("PLO_Background")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                                        .clipped()
+                                        .frame(alignment: .top)
+
+                                    Spacer()
+                                    
+                                }
+                                
+                            }
+                            
+                            Spacer()
+
+                            VStack(alignment: .center){
+
+                                Grid(alignment: .center){
+                                    
+                                    Text("No Pitches Recorded")
+                                    .font(.system(size: 14))
+                                    .bold()
+                                    .padding(.vertical, 7)
+                                    
+                                    Divider()
+                                    
+                                }
+                                
+                                Spacer()
+                            }
+                        }
+                    }
+                    .padding(view_padding)
+                    .frame(maxWidth: .infinity)
+                    .background(Color("DarkGrey"))
+                    .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
+                    
+                    Spacer()
+                }
+                .padding(.horizontal, view_padding)
+            }
         }
-        
+        .frame(maxWidth: .infinity)
+        //.padding(view_padding)
+        .foregroundStyle(Color.white)
+        .background(LinearGradient(gradient: background_gradient, startPoint: .top, endPoint: .bottom))
+    }
+    
+    var ABBPDFView: some View {
+        VStack{
+            
+            HStack{
+                VStack (alignment: .leading){
+                    Text(current_pitcher.firstName + " " + current_pitcher.lastName)
+                        .font(.system(size: title_size))
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundStyle(text_color)
+                    
+                    Text(game_report.opponent_name + ", " + game_report.game_location)
+                        .font(.system(size: headbody_size))
+                        .foregroundStyle(text_color)
+                        .bold()
+                    
+                    Text(Date().formatted(.dateTime.day().month().year()))
+                        .font(.system(size: subheadline_size))
+                        .foregroundStyle(text_color)
+                }
+            }
+            .padding(.horizontal, view_padding)
+            .padding(.top, view_padding)
+            
+            let screenSize = UIScreen.main.bounds.size
+            
+            if at_bat_brkdwn.at_bat_list.count > 0 {
+                
+                ForEach(Array(at_bat_brkdwn.at_bat_list.enumerated()), id: \.offset){ index, atbat in
+                    VStack{
+                        
+                        Spacer()
+                        
+                        VStack{
+                            HStack{/*"Header" Description*/
+                                Text("INN \(atbat.inning)")
+                                    .font(.system(size: 14))
+                                    .bold()
+                                Spacer()
+                                Text("\(atbat.outs) Out(s)")
+                                    .font(.system(size: 14))
+                                    .bold()
+                            }
+                            HStack{
+                                ZStack{
+                                    VStack{/*Strikezone w/ Pitch Overlays*/
+                                        Image("PLO_Background")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .clipShape(RoundedRectangle(cornerRadius: 6))
+                                            .clipped()
+                                            .frame(alignment: .top)
+                                            .overlay{
+                                                ForEach(atbat.x_coor_list.indices, id: \.self) { index in
+                                                    // coor * (ratio/dimension) + b
+                                                    let x_coor = atbat.x_coor_list[index] * 0.267 + (screenSize.width * 0.085)/*(100/screenSize.width) + 31*/
+                                                    let height_ratio = (screenSize.width * 2.16) * 0.244
+                                                    let y_coor = atbat.y_coor_list[index] * (height_ratio/screenSize.height) + (screenSize.height * 0.026)/*/ 0.155 (400 / screenSize.height) * 850 + 24(195/screenSize.height) + 22*/
+                                                    let point = CGPoint(x: x_coor, y: y_coor)
+                                                    
+                                                    let pitch_color = atbat.pitch_color_list[index]
+                                                    let plot = atbat.plot_pitch_list[index]
+                                                    let pitch_num = atbat.pitch_num_list[index]
+                                                    
+                                                    if plot != 0 {
+                                                        let pitch_index = pitch_num
+                                                        Circle()
+                                                            .fill(pitch_color)
+                                                            .stroke(.white, lineWidth: 2)
+                                                            .frame(width: 15, height: 15, alignment: .center)
+                                                            .overlay {
+                                                                Text("\(pitch_index)")
+                                                                    .font(.system(size: 8))
+                                                                    .bold()
+                                                            }
+                                                            .position(point)
+                                                    }
+                                                }
+                                            }
+                                        Spacer()
+                                        
+                                    }
+                                    
+                                    //Batter here
+                                    if ASBatterStance == true {
+                                        if atbat.batter_hand == "R" {
+                                            
+                                            VStack{
+                                                
+                                                Spacer()
+                                                
+                                                HStack{
+                                                    Image(systemName: "figure.baseball")
+                                                        .scaleEffect(x: 1, y: 2)
+                                                        .rotation3DEffect(.degrees(50), axis: (x: 0, y: 1, z: 0))
+                                                        //.scaleEffect(x: 0.9, y: 1)
+                                                        //.imageScale(.large)
+                                                        .font(.system(size: 50))
+                                                        .foregroundColor(.white.opacity(0.5))
+                                                        //.position(batter_figure_position_right)
+                                                    
+                                                    Spacer()
+                                                    
+                                                }
+                                                
+                                                Spacer()
+                                                
+                                            }
+                                            
+                                        }
+                                        else if atbat.batter_hand == "L" {
+                                            
+                                            VStack{
+                                                
+                                                Spacer()
+                                                
+                                                HStack{
+                                                    
+                                                    Spacer()
+                                                    
+                                                    Image(systemName: "figure.baseball")
+                                                        .scaleEffect(x: -1, y: 2)
+                                                        .rotation3DEffect(.degrees(-50), axis: (x: 0, y: 1, z: 0))
+                                                        //.scaleEffect(x: 0.9, y: 1)
+                                                        //.imageScale(.large)
+                                                        .font(.system(size: 50))
+                                                        .foregroundColor(.white.opacity(0.5))
+                                                        //.position(batter_figure_position_right)
+                                                    
+                                                }
+                                                
+                                                Spacer()
+                                                
+                                            }
+                                            
+                                            
+                                        }
+                                    }
+                                    
+                                }
+                                
+                                
+                                Spacer()
+                                
+                                //ScrollView{
+                                VStack(alignment: .leading){
+                                    /*Pitch Descriptions*/
+                                    let pitch_list = atbat.pitch_list
+                                    let pitch_num_list = atbat.pitch_num_list
+                                    let color_list = atbat.pitch_color_list
+                                    Grid(alignment: .leading){
+                                        ForEach(Array(pitch_list.enumerated()), id: \.offset) {pitch in
+                                            if pitch.offset > 1 {
+                                                Divider()
+                                            }
+                                            if pitch.element.pitch_type == "NPE" {
+                                                GridRow{
+                                                    VStack{
+                                                        HStack{
+                                                            
+                                                            Spacer()
+                                                            
+                                                            Text(pitch.element.result)
+                                                                .foregroundStyle(color_list[pitch.offset].opacity(2))
+                                                                .font(.system(size: 14))
+                                                                .bold()
+                                                                .padding(.vertical, 7)
+                                                            
+                                                            Spacer()
+                                                            
+                                                        }
+                                                        .background(color_list[pitch.offset].opacity(0.07))
+                                                    }
+                                                    .gridCellColumns(3)
+                                                }
+                                            }
+                                            else {
+                                                GridRow{
+                                                    VStack(alignment: .leading){
+                                                        Circle()
+                                                            .fill(pitch.element.result_color)
+                                                            .stroke(.white, lineWidth: 2)
+                                                            .frame(width: 20, height: 20, alignment: .center)
+                                                            .overlay {
+                                                                Text("\(pitch_num_list[pitch.offset])")
+                                                                    .font(.system(size: 12))
+                                                                    .bold()
+                                                            }
+                                                    }
+                                                    .gridColumnAlignment(.center)
+                                                    
+                                                    VStack(alignment: .leading){
+                                                        Text("\(pitch.element.result)")
+                                                            .font(.system(size: 14))
+                                                        HStack(spacing: 2){
+                                                            if pitch.element.velocity != 0 {
+                                                                Text("\(pitch.element.velocity, specifier: "%.1f") mph")
+                                                            }
+                                                            
+                                                            Text("\(pitch.element.pitch_type)")
+                                                        }
+                                                        .font(.system(size: 10))
+                                                    }
+                                                    VStack{
+                                                        Text("\(pitch.element.balls)-\(pitch.element.strikes)")
+                                                            .font(.system(size: 14))
+                                                    }
+                                                    .gridColumnAlignment(.center)
+                                                }
+                                            }
+                                            if pitch.offset == 0 {
+                                                Divider()
+                                            }
+                                        }
+                                    }
+                                    
+                                    Spacer()
+                                }
+                                //}
+                                //.frame(height: 200)
+                                
+                            }
+                        }
+                        .padding(view_padding)
+                        .frame(maxWidth: .infinity)
+                        .background(Color("DarkGrey"))
+                        .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
+                        
+                        Spacer()
+                    }
+                    //.fixedSize(horizontal: false, vertical: false)
+                    //.frame(height: 260)
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, view_padding)
+                    .padding(.bottom, view_padding/2)
+                }
+                
+            }
+            else {
+                VStack{
+                    
+                    Spacer()
+                    
+                    VStack{
+                        HStack{/*"Header" Description*/
+                            Text("INN 1")
+                                .font(.system(size: 14))
+                                .bold()
+                            Spacer()
+                            Text("0 Out(s)")
+                                .font(.system(size: 14))
+                                .bold()
+                        }
+                        HStack{
+                            ZStack{
+                                VStack{/*Strikezone w/ Pitch Overlays*/
+                                    Image("PLO_Background")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                                        .clipped()
+                                        .frame(alignment: .top)
+
+                                    Spacer()
+                                    
+                                }
+                                
+                            }
+                            
+                            Spacer()
+
+                            VStack(alignment: .center){
+
+                                Grid(alignment: .center){
+                                    
+                                    Text("No Pitches Recorded")
+                                    .font(.system(size: 14))
+                                    .bold()
+                                    .padding(.vertical, 7)
+                                    
+                                    Divider()
+                                    
+                                }
+                                
+                                Spacer()
+                            }
+                        }
+                    }
+                    .padding(view_padding)
+                    .frame(maxWidth: .infinity)
+                    .background(Color("DarkGrey"))
+                    .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
+                    
+                    Spacer()
+                }
+                .padding(.horizontal, view_padding)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        //.padding(view_padding)
+        .foregroundStyle(Color.white)
+        .background(LinearGradient(gradient: background_gradient, startPoint: .top, endPoint: .bottom))
     }
     
     var pbplogView: some View {
             
             HStack{
                 
+                let screenSize = UIScreen.main.bounds.size
+                
                 Spacer()
                 
                 VStack(alignment: .center){
                     
-                    HStack{
+                    HStack(spacing: 1){
+                        Text("Opponent: "/*+ ", " + game_report.game_location*/)
+                            .font(.system(size: caption_size))
+                            .bold()
+                            //.padding(.top, view_padding)
+                        if game_report.game_location == "Away" {
+                            Text("@" + game_report.opponent_name)
+                                .font(.system(size: caption_size))
+                        }
+                        else {
+                            Text(game_report.opponent_name)
+                                .font(.system(size: caption_size))
+                        }
+                        
+                        
                         Spacer()
+                        
+                        Text("Date: ")
+                            .font(.system(size: caption_size))
+                            .bold()
+                            //.padding(.top, view_padding)
+                        Text(Date().formatted(.dateTime.day().month().year()))
+                            .font(.system(size: caption_size))
+                    }
+                    
+                    VStack{
                         
                         Text("Pitch-by-Pitch Log")
                             .font(.system(size: headbody_size))
                             .bold()
-                            .padding(.top, 10)
+                            .padding(.top, view_padding)
                         
-                        Spacer()
                     }
                     
                     if game_report.pbp_event_list.count > 0 {
-                        let screenSize = UIScreen.main.bounds.size
                         
                         Grid(horizontalSpacing: (ASVeloInput == true) ? screenSize.width * 0.048 : screenSize.width * 0.085){
                                 ForEach(Array(game_report.pbp_event_list.enumerated()), id: \.offset){ index, evnt in
@@ -439,7 +1101,7 @@ struct GameReportView: View {
                         
                         VStack {
                             
-                            Spacer()
+                            //Spacer()
                             
                             HStack{
                                 
@@ -447,6 +1109,7 @@ struct GameReportView: View {
                                 
                                 Text("No Pitches Recorded")
                                     .font(.system(size: headbody_size))
+                                    .padding(view_padding)
                                 
                                 Spacer()
                                 
@@ -454,7 +1117,7 @@ struct GameReportView: View {
                             
                             Spacer()
                         }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .frame(minHeight: 400)
                         .background(Color.white)
                         
                     }
@@ -466,6 +1129,7 @@ struct GameReportView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(view_padding)
+            .padding(.bottom, 20)
             .background(Color.white)
             .foregroundStyle(Color.black)
 
@@ -481,6 +1145,11 @@ struct GameReportView: View {
                         .bold()
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .foregroundStyle(text_color)
+                    
+                    Text(game_report.opponent_name + ", " + game_report.game_location)
+                        .font(.system(size: headbody_size))
+                        .foregroundStyle(text_color)
+                        .bold()
                     
                     Text(Date().formatted(.dateTime.day().month().year()))
                         .font(.system(size: subheadline_size))
@@ -1553,7 +2222,7 @@ struct GameReportView: View {
     @MainActor
     func renderABB(viewSize: CGSize) -> URL {
         
-        let abb_renderer = ImageRenderer(content: AtBatReportView().frame(width: viewSize.width))
+        let abb_renderer = ImageRenderer(content: ABBPDFView.frame(width: viewSize.width))
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "M.d.yy"
@@ -1563,7 +2232,7 @@ struct GameReportView: View {
         //let first_name = current_pitcher.firstName.prefix(1)
         //let last_name = current_pitcher.lastName.prefix(5)
         
-        let path_string = "AtBatBreakdown"
+        let path_string = "AtBatBreakdown.pdf"
         let url = URL.documentsDirectory.appending(path: path_string)
         
         abb_renderer.render { size, context in
