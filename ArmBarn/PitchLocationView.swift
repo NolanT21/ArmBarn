@@ -15,6 +15,7 @@ struct PitchLocationView: View {
     @AppStorage("BullpenMode") var ASBullpenMode : Bool?
     @AppStorage("CurrentOpponentName") var ASCurOpponentName : String?
     @AppStorage("GameLocation") var ASGameLocation : String?
+    @AppStorage("StrikeType") var ASStrikeType : Bool?
     
     @Environment(Scoreboard.self) var scoreboard
     @Environment(PitchTypeConfig.self) var ptconfig
@@ -513,12 +514,16 @@ struct PitchLocationView: View {
         var x_coor_list: [Double] = []
         var y_coor_list: [Double] = []
         var color_list: [Color] = []
+        var plot_list: [Int] = []
+        var num_list: [Int] = []
+        var num = 0
+        var prev_batter_stance = ""
+        var prev_outs = 0
+        var prev_inning = 1
         at_bat_brkdwn.at_bat_list.removeAll()
         
         for evnt in events {
             if evnt.pitcher_id == current_pitcher.idcode {
-                
-                //print("Entered")
                 
                 var result = "" //Set based on logic for description
                 var color: Color = .clear
@@ -530,6 +535,8 @@ struct PitchLocationView: View {
                 let outs = evnt.outs
                 let x_coor = evnt.pitch_x_location
                 let y_coor = evnt.pitch_y_location
+                let batter_hand = evnt.batter_stance
+                var plot = 1
                 //sync unit variable
                 
                 if evnt.pitch_type == "P1" {
@@ -545,24 +552,22 @@ struct PitchLocationView: View {
                     pitch_type = current_pitcher.pitch4
                 }
                 
-                //Non pitch event exception logic needed
                 if evnt.atbats > cur_at_bat {
-                    //record at-bat
-                    //reset variables
+                    
                     cur_at_bat = evnt.atbats
-                    at_bat_brkdwn.at_bat_list.append(AtBatDT(outs: outs, inning: inning, pitch_list: pitches_this_ab, x_coor_list: x_coor_list, y_coor_list: y_coor_list, pitch_color_list: color_list))
+                    at_bat_brkdwn.at_bat_list.append(AtBatDT(outs: prev_outs, inning: prev_inning, batter_hand: prev_batter_stance, pitch_list: pitches_this_ab, x_coor_list: x_coor_list, y_coor_list: y_coor_list, pitch_color_list: color_list, plot_pitch_list: plot_list, pitch_num_list: num_list))
                     pitches_this_ab.removeAll()
                     x_coor_list.removeAll()
                     y_coor_list.removeAll()
                     color_list.removeAll()
+                    plot_list.removeAll()
+                    num_list.removeAll()
+                    num = 0
                     result = ""
                 }
                 
-                //Exception Logic for Non Pitch Events
-                x_coor_list.append(x_coor)
-                y_coor_list.append(y_coor)
-                
                 if evnt.pitch_result == "A" {
+                    num += 1
                     color = Color("PowderBlue")
                     
                     if evnt.result_detail == "N" {
@@ -574,20 +579,39 @@ struct PitchLocationView: View {
                     }
                 }
                 else if evnt.pitch_result == "Z" || evnt.pitch_result == "L"{
+                    num += 1
                     color = Color("Gold")
-                    if evnt.result_detail == "N" {
+                    if evnt.result_detail == "N" && ASStrikeType == false{
                         result = "Strike"
+                    }
+                    else{
+                        if evnt.pitch_result == "L" {
+                            result = "K - Called"
+                        }
+                        else if evnt.pitch_result == "Z" {
+                            result = "K - Swinging"
+                        }
                     }
                     if evnt.result_detail == "K" || evnt.result_detail == "C" || evnt.result_detail == "M"{
                         color = Color("Grey")
                         result = "Strikeout"
+                        if ASStrikeType == true {
+                            if evnt.result_detail == "M" {
+                                result = "Strikeout - ꓘ"
+                            }
+                            if evnt.result_detail == "K" {
+                                result = "Strikeout - K"
+                            }
+                        }
                     }
                 }
                 else if evnt.pitch_result == "T" {
+                    num += 1
                     color = Color("Gold")
                     result = "Foul Ball"
                 }
                 else if evnt.pitch_result == "O" {
+                    num += 1
                     color = Color("Grey")
                     if evnt.result_detail == "F" {
                         result = "Flyout"
@@ -608,8 +632,16 @@ struct PitchLocationView: View {
                     else if evnt.result_detail == "O" {
                         result = "Out"
                     }
+                    else if evnt.result_detail == "R" {
+                        num -= 1
+                        plot = 0
+                        color = Color(.red)
+                        pitch_type = "NPE"
+                        result = "BASERUNNER OUT"
+                    }
                 }
                 else if evnt.pitch_result == "H"{
+                    num += 1
                     color = Color("Tangerine")
                     if evnt.result_detail == "S" {
                         result = "Single"
@@ -630,16 +662,48 @@ struct PitchLocationView: View {
                         result = "Error"
                     }
                 }
+                else if evnt.pitch_result == "VA" {
+                    plot = 0
+                    color = Color(.yellow)
+                    pitch_type = "NPE"
+                    result = "VIOLATION - BALL"
+                    if evnt.result_detail == "W" {
+                        result = "VIOLATION - WALK"
+                    }
+                }
+                else if evnt.pitch_result == "VZ" {
+                    plot = 0
+                    color = Color(.yellow)
+                    pitch_type = "NPE"
+                    result = "VIOLATION - STRIKE"
+                    if evnt.result_detail == "K" {
+                        result = "VIOLATION - STRIKEOUT"
+                    }
+                }
+                else if evnt.pitch_result == "IW" {
+                    plot = 0
+                    color = Color(.yellow)
+                    pitch_type = "NPE"
+                    result = "INTENTIONAL WALK"
+                }
                 
+                x_coor_list.append(x_coor)
+                y_coor_list.append(y_coor)
                 color_list.append(color)
-                
-                //Add logic for pitch clock violations and intentional walks
+                plot_list.append(plot)
+                num_list.append(num)
                 
                 pitches_this_ab.append(pitch_info_ab(result: result, result_color: color, pitch_type: pitch_type, velocity: velocity, balls: balls, strikes: strikes, units: "mph"))
                 
+                prev_batter_stance = batter_hand
+                prev_outs = outs
+                prev_inning = inning
+                
                 if evnt == events.last {
-                    at_bat_brkdwn.at_bat_list.append(AtBatDT(outs: outs, inning: inning, pitch_list: pitches_this_ab, x_coor_list: x_coor_list, y_coor_list: y_coor_list, pitch_color_list: color_list))
+                    at_bat_brkdwn.at_bat_list.append(AtBatDT(outs: prev_outs, inning: prev_inning, batter_hand: prev_batter_stance, pitch_list: pitches_this_ab, x_coor_list: x_coor_list, y_coor_list: y_coor_list, pitch_color_list: color_list, plot_pitch_list: plot_list, pitch_num_list: num_list))
                 }
+                
+                
                 
             }
         }
@@ -1260,6 +1324,8 @@ struct PitchLocationView: View {
         } catch {
             print("Failed to delete all events.")
         }
+        
+        ptconfig.hidePitchOverlay = false
         
         scoreboard.pitchers_appearance_list.removeAll()
         
