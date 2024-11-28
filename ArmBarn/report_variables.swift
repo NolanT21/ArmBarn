@@ -103,10 +103,13 @@ struct AtBatDT {
     //var result: String = ""
     var outs: Int = 0
     var inning: Int = 0
+    var batter_hand: String = ""
     var pitch_list: [pitch_info_ab] = []
     var x_coor_list: [Double] = []
     var y_coor_list: [Double] = []
     var pitch_color_list: [Color] = []
+    var plot_pitch_list: [Int] = []
+    var pitch_num_list: [Int] = []
 }
 
 struct pitch_info_ab {
