@@ -135,6 +135,7 @@ struct FileNamePopUpView: View {
             }
             .onAppear{
                 scoreboard.enable_bottom_row = false
+                game_report.game_location = "Home"
             }
             .padding(.top, 45)
             .ignoresSafeArea()
