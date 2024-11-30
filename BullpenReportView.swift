@@ -30,7 +30,11 @@ struct BullpenReportView: View {
 
     var box_color: Color = .gray
     
-    let header_gradient = Gradient(colors: [Color("ScoreboardGreen"), Color("ScoreboardGreen"), Color("ScoreboardGreen"), .black])
+    let header_gradient = LinearGradient(stops: [
+        .init(color: Color("ScoreboardGreen"), location: 0.30),
+        .init(color: .black, location: 0.31),
+    ], startPoint: .top, endPoint: .bottom)
+    
     let background_gradient = Gradient(colors: [Color("ScoreboardGreen"), .black, .black, .black, .black, .black])
     
     var body: some View {
@@ -57,14 +61,8 @@ struct BullpenReportView: View {
                         
                         Spacer()
                         
-                        ShareLink("", item: renderBPR(viewSize: viewsize))
-                            .imageScale(.large)
-                            .font(.system(size: 16))
-                            .foregroundStyle(text_color)
-                            .fontWeight(.bold)
-                        
                     }
-                    .padding(.top, view_padding)
+                    .padding(.top, view_padding * 1.5)
                     .padding(.leading, view_padding * 1.5)
                     //.padding(.bottom, view_padding)
                     
@@ -77,7 +75,7 @@ struct BullpenReportView: View {
                     }
                     
                 }
-                .background(LinearGradient(gradient: header_gradient, startPoint: .top, endPoint: .bottom))
+                .background(header_gradient)
             }
         }
     }
@@ -86,9 +84,9 @@ struct BullpenReportView: View {
     var reportView: some View {
         HStack{
             
-            GeometryReader { proxy in
+            GeometryReader { spacer in
                 
-                let viewsize = proxy.size
+                let viewsize = spacer.size
                 let szb_width = viewsize.width * 0.019
                 let szb_height = szb_width * 1.43
                 let outside_height = szb_height * 5.4
@@ -424,7 +422,7 @@ struct BullpenReportView: View {
             }
                 
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         
     }
     
@@ -458,45 +456,6 @@ struct BullpenReportView: View {
         }
         
         return num_location
-        
-    }
-    
-    @MainActor
-    func renderBPR(viewSize: CGSize) -> URL {
-        
-        let bpr_renderer = ImageRenderer(content: reportView.frame(width: viewSize.width))
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "M.d.yy"
-
-        let formattedDate = dateFormatter.string(from: Date())
-        
-        let first_name = current_pitcher.firstName.prefix(1)
-        let last_name = current_pitcher.lastName.prefix(5)
-        
-        let path_string = first_name + "-" + last_name + "-Bullpen-" + formattedDate + ".pdf"
-        
-        let url = URL.documentsDirectory.appending(path: path_string)
-        
-        bpr_renderer.render { size, context in
-            var box = CGRect(x: 0, y: 0, width: viewSize.width, height: size.height)
-            
-            guard let pdf = CGContext(url as CFURL, mediaBox: &box, nil) else {
-                //pdf.autoScales = true
-                return
-            }
-            
-            pdf.beginPDFPage(nil)
-            
-            //pdf.translateBy(x: box.size.width / 2 - size.width / 2, y: box.size.height / 2 - size.height / 2)
-            
-            context(pdf)
-            
-            pdf.endPDFPage()
-            pdf.closePDF()
-        }
-        
-        return url
         
     }
     
