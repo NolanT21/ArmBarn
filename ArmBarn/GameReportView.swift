@@ -15,6 +15,7 @@ struct GameReportView: View {
     @AppStorage("BatterStance") var ASBatterStance : Bool?
     @AppStorage("VelocityInput") var ASVeloInput : Bool?
     @AppStorage("StrikeType") var ASStrikeType : Bool?
+    @AppStorage("VelocityUnits") var ASVeloUnits : String?
     
     @AppStorage("BoxScore") var ASBoxScore : Bool?
     @AppStorage("StrikePer") var ASStrikePer : Bool?
@@ -388,6 +389,7 @@ struct GameReportView: View {
                                     let pitch_list = atbat.pitch_list
                                     let pitch_num_list = atbat.pitch_num_list
                                     let color_list = atbat.pitch_color_list
+                                    let velo_unit = ASVeloUnits ?? "mph"
                                     Grid(alignment: .leading){
                                         ForEach(Array(pitch_list.enumerated()), id: \.offset) {pitch in
                                             if pitch.offset > 1 {
@@ -433,8 +435,13 @@ struct GameReportView: View {
                                                         Text("\(pitch.element.result)")
                                                             .font(.system(size: 14))
                                                         HStack(spacing: 2){
+                                                            //let velo_units = ASVeloUnits ?? "mph"
                                                             if pitch.element.velocity != 0 {
-                                                                Text("\(pitch.element.velocity, specifier: "%.1f") mph")
+                
+                                                                Text("\(pitch.element.velocity, specifier: "%.1f")") +
+                                                                
+                                                                Text(velo_unit.lowercased())
+                                                                
                                                             }
                                                             
                                                             Text("\(pitch.element.pitch_type)")
@@ -1425,7 +1432,8 @@ struct GameReportView: View {
                     VStack{
                         
                         HStack{
-                            Text("Pitch Velocity")
+                            let velo_units = ASVeloUnits ?? "mph"
+                            Text("Pitch Velocity (" + velo_units.lowercased() + ")")
                                 .font(.system(size: subheadline_size))
                                 .foregroundStyle(text_color)
                             Spacer()
