@@ -203,21 +203,19 @@ struct SelectPitcherView: View {
     }
     
     func store_pitcher_appearance() {
-        //Store appearance on click
-        var not_appeared = true
+        //Store appearance on change
+        //Removes old data if reselected
+        
         for pitcher in scoreboard.pitchers_appearance_list {
             if pitcher.pitcher_id == current_pitcher.idcode {
-                //print("Entered Store Appearance")
-                not_appeared = false
-                scoreboard.pitches = pitcher.pitches
-                scoreboard.atbats = pitcher.batters_faced
+                
+                scoreboard.pitchers_appearance_list = scoreboard.pitchers_appearance_list.filter(){ _ in pitcher.pitcher_id != current_pitcher.idcode}
                 break
+                
             }
         }
-        if not_appeared == true {
-            scoreboard.pitchers_appearance_list.append(PitchersAppeared(pitcher_id: current_pitcher.idcode, pitches: scoreboard.pitches, batters_faced: scoreboard.atbats))
-        }
         
+        scoreboard.pitchers_appearance_list.append(PitchersAppeared(pitcher_id: current_pitcher.idcode, pitches: scoreboard.pitches, batters_faced: scoreboard.atbats))
     }
     
     func clear_game_report() {
