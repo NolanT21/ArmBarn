@@ -320,7 +320,7 @@ struct PitchLocationView: View {
                             }
                             
                             if showResumeGame == true {
-                                PopupAlertView(isActive: $showResumeGame, title: "Resume Game", message: "A previous game was being recorded. Do you want to continue?", leftButtonAction: {set_pitcher(); load_pitcher_appearance_list(); load_recent_event(); load_recent_ab_pitches();  showResumeGame = false; scoreboard.enable_bottom_row = true}, rightButtonAction: {new_game_func(); showFileNameInfo = true; showResumeGame = false; scoreboard.enable_bottom_row = true})
+                                PopupAlertView(isActive: $showResumeGame, title: "Resume Game", message: "A previous game was being recorded. Do you want to continue?", leftButtonAction: {set_pitcher(); load_pitcher_appearance_list(); load_recent_event(); load_recent_ab_pitches(); load_game_location();  showResumeGame = false; scoreboard.enable_bottom_row = true;}, rightButtonAction: {new_game_func(); showFileNameInfo = true; showResumeGame = false; scoreboard.enable_bottom_row = true})
                             }
                             
                         }
@@ -370,6 +370,8 @@ struct PitchLocationView: View {
                                         } catch {
                                             print("Did not clear event data")
                                         }
+                                        game_report.game_location = ASGameLocation ?? ""
+                                        game_report.opponent_name = ASCurOpponentName ?? ""
                                         
                                     }
                                     
@@ -1329,9 +1331,6 @@ struct PitchLocationView: View {
         
         scoreboard.pitchers_appearance_list.removeAll()
         
-        game_report.game_location = ""
-        game_report.opponent_name = ""
-        
         scoreboard.balls = 0
         scoreboard.strikes = 0
         scoreboard.outs = 0
@@ -1356,8 +1355,6 @@ struct PitchLocationView: View {
         scoreboard.o1light = false
         scoreboard.o2light = false
         
-        ASCurOpponentName = ""
-        
         clear_game_report()
         
     }
@@ -1370,6 +1367,9 @@ struct PitchLocationView: View {
         game_report.hits = 0
         game_report.strikeouts = 0
         game_report.walks = 0
+        
+        game_report.game_location = ""
+        game_report.opponent_name = ""
         
         game_report.first_pitch_strike = 0
         game_report.first_pitch_ball = 0
@@ -1446,9 +1446,9 @@ struct PitchLocationView: View {
         event.batter_stance = previous_event.batter_stance
         
         scoreboard.atbats = previous_event.atbats
-        if event.end_ab_rd.contains(previous_event.result_detail) {
-            scoreboard.atbats += 1
-        }
+//        if event.end_ab_rd.contains(previous_event.result_detail) {
+//            scoreboard.atbats += 1
+//        }
         
         
         if ptconfig.pitch_x_loc.count > 0 && previous_event.result_detail != "R"{
@@ -1815,6 +1815,11 @@ struct PitchLocationView: View {
             }
             
         }
+    }
+    
+    func load_game_location() {
+        let prev_location = ASGameLocation ?? "Home"
+        game_report.game_location = prev_location
     }
         
     func add_prev_event_string() {
