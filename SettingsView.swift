@@ -311,6 +311,7 @@ struct SettingsView: View {
                     ASHitSummary = showHitSummary
                     ASGameScore = showGameScore
                     ASPitByInn = showPitByInn
+                    ASVeloUnits = selected_velo_units
                     
                 }
                 
