@@ -23,7 +23,7 @@ struct BullpenMainView: View {
     @Environment(\.modelContext) var context
     
     @Query(sort: \Pitcher.lastName) var pitchers: [Pitcher]
-    @Query var bullpen_events: [BullpenEvent]
+    @Query(sort: \BullpenEvent.event_number) var bullpen_events: [BullpenEvent]
     
     @State private var pitch_num: Int = 0
     @State private var prev_pitch: String = ""
@@ -160,17 +160,24 @@ struct BullpenMainView: View {
                     ToolbarItemGroup(placement: .topBarTrailing) {
                         
                         Button(action: {
+                            let impact = UIImpactFeedbackGenerator(style: .medium)
+                            impact.impactOccurred()
                             if expected_location == false {
                                 //Undo function: remove previous bullpen event
                                 if bullpen_events.count > 1 {
                                     context.delete(bullpen_events[bullpen_events.count - 1])
                                     update_previous_pitch_variables()
                                 }
+                                else if bullpen_events.count == 1 {
+                                    context.delete(bullpen_events[bullpen_events.count - 1])
+                                    clear_previous_pitch_variables()
+                                }
                                 else {
                                     clear_previous_pitch_variables()
                                     clear_bullpen_events()
+                                    print("clear")
                                 }
-                               // print(bullpen_events.count)
+                                print(bullpen_events.count)
 
                             }
                             else if expected_location == true && actual_location == false {
@@ -218,28 +225,30 @@ struct BullpenMainView: View {
                     BPPitchTypePopUp(dismiss_action: {showPitchType = false; reset_zone(); /*bullpenreporttip.invalidate(reason: .actionPerformed)*/})
                 }
                 
-                if bullpen_events.count > 0 && bullpen.pp_number == 0 && bullpen.pp_pitchtype == "-" {
-                    PopupAlertView(isActive: $resumeBullpen, title: "Resume Bullpen", message: "A previous bullpen was being recorded. Do you want to continue?", leftButtonAction: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){/*new set previous pitch function*/
-                        resumeBullpen = false
-                        scoreboard.enable_bottom_row = true
-                        set_pitcher()
-                        load_cur_bullpen_event()
-                        dismiss()}}, rightButtonAction: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
-                            clear_bullpen_events()
-                            resumeBullpen = false
-                            scoreboard.enable_bottom_row = true
-                            dismiss()}})
-                }
+//                if bullpen_events.count > 0 && bullpen.pp_number == 0 && bullpen.pp_pitchtype == "-" {
+//                    PopupAlertView(isActive: $resumeBullpen, title: "Resume Bullpen", message: "A previous bullpen was being recorded. Do you want to continue?", leftButtonAction: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){/*new set previous pitch function*/
+//                        resumeBullpen = false
+//                        scoreboard.enable_bottom_row = true
+//                        set_pitcher()
+//                        load_cur_bullpen_event()
+//                        dismiss();}}, rightButtonAction: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+//                            dismiss();
+//                            resumeBullpen = false;
+//                            scoreboard.enable_bottom_row = true;
+//                            clear_bullpen_events();
+//                            }})
+//                }
                 
                 if endBullpen == true{
-                    PopupAlertView(isActive: $endBullpen, title: "End Bullpen", message: "This bullpen session and its data will be saved!", leftButtonAction: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {event.recordEvent = false
-                        scoreboard.update_scoreboard = false
-                        ASBullpenMode = false
-                        clear_bullpen_events()
-                        clear_bullpen_report()
-                        clear_previous_pitch_variables()
-                        scoreboard.enable_bottom_row = true
-                        dismiss()}}, rightButtonAction: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {dismiss(); endBullpen = false; scoreboard.enable_bottom_row = true}})
+                    PopupAlertView(isActive: $endBullpen, title: "End Bullpen", message: "This bullpen session and its data will be saved!", leftButtonAction: { clear_bullpen_events();
+                        clear_bullpen_report();
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        clear_previous_pitch_variables();
+                        event.recordEvent = false;
+                        scoreboard.update_scoreboard = false;
+                        ASBullpenMode = false;
+                        scoreboard.enable_bottom_row = true;
+                        dismiss();}}, rightButtonAction: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {dismiss(); endBullpen = false; scoreboard.enable_bottom_row = true}})
                 }
             }
         }
@@ -835,6 +844,7 @@ struct BullpenMainView: View {
     }
     
     func clear_bullpen_report() {
+        bullpen.event_number = 0
         bpr.pitches = 0
         bpr.spots_hit = 0
         
@@ -854,6 +864,7 @@ struct BullpenMainView: View {
     func clear_bullpen_events() {
         do {
             try context.delete(model: BullpenEvent.self)
+            print("Cleared Bullpen Events")
         } catch {
             print("Did not clear bullpen event data")
         }
@@ -947,6 +958,7 @@ struct BullpenMainView: View {
         let current_expected_target = current_bullpen_event.expected_target
         let current_actual_target = current_bullpen_event.actual_target
         bullpen.pp_number = bullpen_events.count
+        bullpen.event_number = current_bullpen_event.event_number
         //set current pitcher
         if current_pitch_type == "P1" {
             bullpen.pp_pitchtype = current_pitcher.pitch1
@@ -1017,6 +1029,7 @@ struct BullpenMainView: View {
        // print(previous_pitchtype)
         
         bullpen.pp_number -= 1
+        bullpen.event_number -= 1
         
         if previous_pitchtype == "P1" {
             bullpen.pp_pitchtype = current_pitcher.pitch1
@@ -1088,6 +1101,7 @@ struct BPPitchTypePopUp: View {
 //                            ptconfig.ptcolor = ptconfig.arsenal_colors[pt_num]
                             add_bullpen_event()
                             previous_pitch_detail()
+                            bullpen.event_number += 1
                             close()
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {dismiss_action()}
                             }) {
@@ -1151,14 +1165,14 @@ struct BPPitchTypePopUp: View {
     }
     
     func add_bullpen_event() {
-        let bullpen_event = BullpenEvent(pitcher_id: current_pitcher.idcode, expected_target: bullpen.expected_target, actual_target: bullpen.actual_target, pitch_type: bullpen.pitch_type)
+        let bullpen_event = BullpenEvent(pitcher_id: current_pitcher.idcode, expected_target: bullpen.expected_target, actual_target: bullpen.actual_target, pitch_type: bullpen.pitch_type, event_number: bullpen.event_number)
         context.insert(bullpen_event)
         print_bullpen_event()
 
     }
 
     func print_bullpen_event() {
-        print(current_pitcher.idcode, bullpen.expected_target, bullpen.actual_target, bullpen.pitch_type)
+        print(bullpen.event_number, current_pitcher.idcode, bullpen.expected_target, bullpen.actual_target, bullpen.pitch_type)
     }
     
     func close() {
