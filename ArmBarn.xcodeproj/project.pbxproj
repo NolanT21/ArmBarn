@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		D5064EEA2BDF180400F01886 /* VelocityInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5064EE92BDF180400F01886 /* VelocityInputView.swift */; };
 		D5064EEC2BE041BE00F01886 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5064EEB2BE041BE00F01886 /* SettingsView.swift */; };
+		D51E9E402CFE19D000173322 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D51E9E3F2CFE19D000173322 /* Assets.xcassets */; };
 		D53C50042CB182550073BE9F /* BullpenReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53C50032CB182550073BE9F /* BullpenReportView.swift */; };
 		D575388D2C776ABE00B7EBF7 /* BullpenMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D575388C2C776ABE00B7EBF7 /* BullpenMainView.swift */; };
 		D57E62382BD2CD7D003987E1 /* ArmBarnApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */; };
@@ -29,7 +30,6 @@
 		D58DAF152C45D38D003EFB2E /* FileNamePopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58DAF142C45D38D003EFB2E /* FileNamePopUpView.swift */; };
 		D58FE76D2BD717DC004FC234 /* BatterPositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58FE76C2BD717DC004FC234 /* BatterPositionView.swift */; };
 		D5959D9D2BE5381B00FFDA0B /* TipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5959D9C2BE5381B00FFDA0B /* TipView.swift */; };
-		D5DD11232AF52FE80064F1A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5DD11222AF52FE80064F1A5 /* Assets.xcassets */; };
 		D5DD11262AF52FE80064F1A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5DD11252AF52FE80064F1A5 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +39,7 @@
 		D50E3E8F2B0926A8006699FB /* global_variables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = global_variables.swift; sourceTree = "<group>"; };
 		D50E3E932B0A3D04006699FB /* HitDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitDetailView.swift; sourceTree = "<group>"; };
 		D50E3E952B0A3DE7006699FB /* OutDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutDetailView.swift; sourceTree = "<group>"; };
+		D51E9E3F2CFE19D000173322 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D53C50032CB182550073BE9F /* BullpenReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BullpenReportView.swift; sourceTree = "<group>"; };
 		D575388C2C776ABE00B7EBF7 /* BullpenMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BullpenMainView.swift; sourceTree = "<group>"; };
 		D58DAF142C45D38D003EFB2E /* FileNamePopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileNamePopUpView.swift; sourceTree = SOURCE_ROOT; };
@@ -54,7 +55,6 @@
 		D5DD111B2AF52FE60064F1A5 /* ArmBarn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArmBarn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArmBarnApp.swift; sourceTree = "<group>"; };
 		D5DD11202AF52FE70064F1A5 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
-		D5DD11222AF52FE80064F1A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D5DD11252AF52FE80064F1A5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D5E103BE2B2F6D4A00752E7F /* PitchLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchLocationView.swift; sourceTree = "<group>"; };
 		D5E103C02B3D122100752E7F /* ScoreboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreboardView.swift; sourceTree = "<group>"; };
@@ -103,6 +103,7 @@
 				D5DD11202AF52FE70064F1A5 /* MainView.swift */,
 				D5E103BE2B2F6D4A00752E7F /* PitchLocationView.swift */,
 				D5A335862AFB0DD0005480DE /* PitchResultView.swift */,
+				D51E9E3F2CFE19D000173322 /* Assets.xcassets */,
 				D50E3E952B0A3DE7006699FB /* OutDetailView.swift */,
 				D50E3E932B0A3D04006699FB /* HitDetailView.swift */,
 				D5FAD8192B28BADC00E9EB91 /* AddPitcherView.swift */,
@@ -113,7 +114,6 @@
 				D5C6DE1E2BD2C52D00C64555 /* report_variables.swift */,
 				D5C6DE1B2BD2C52D00C64555 /* SelectPitcherView.swift */,
 				D5C6DE1F2BD2C52D00C64555 /* StrikeoutAlertView.swift */,
-				D5DD11222AF52FE80064F1A5 /* Assets.xcassets */,
 				D5DD11242AF52FE80064F1A5 /* Preview Content */,
 			);
 			path = ArmBarn;
@@ -185,8 +185,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D51E9E402CFE19D000173322 /* Assets.xcassets in Resources */,
 				D5DD11262AF52FE80064F1A5 /* Preview Assets.xcassets in Resources */,
-				D5DD11232AF52FE80064F1A5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
