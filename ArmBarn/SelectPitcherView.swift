@@ -20,7 +20,7 @@ struct SelectPitcherView: View {
     @Environment(\.modelContext) private var context
     
     @Query(sort: \Pitcher.lastName) var pitchers: [Pitcher]
-    @Query var events: [Event]
+    @Query(sort: \Event.event_number) var events: [Event]
     
     @State private var edit_pitcher: Pitcher?
     

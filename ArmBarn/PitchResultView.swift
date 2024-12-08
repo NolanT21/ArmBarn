@@ -20,7 +20,7 @@ struct PitchResultView: View {
     @Environment(currentPitcher.self) var current_pitcher
     @Query(sort: \Pitcher.lastName) var pitchers: [Pitcher]
     
-    @Query var events: [Event]
+    @Query(sort: \Event.event_number) var events: [Event]
     
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) var dismiss
@@ -65,6 +65,11 @@ struct PitchResultView: View {
                     }
                 }
                 .blur(radius: 20, opaque: false)
+                .onAppear{
+                    let date = Date.now
+                    let formattedTime = date.formatted(.dateTime.hour().minute().second().secondFraction(.fractional(3)))
+                    print("Pitch Overlay Finished: " + formattedTime)
+                }
                 
                 if showPitchResult == true {
                     HStack{
@@ -160,15 +165,15 @@ struct PitchResultView: View {
                                     }) {
                                         HStack{
                                             Text("K")
-                                                .rotationEffect(.degrees(-180))
+                                                //.rotationEffect(.degrees(-180))
                                                 .font(.system(size: 22))
                                                 .fontWeight(.black)
                                             
-                                             Text("- LOOKING")
+                                             Text("- CALLED")
                                                 .font(.system(size: 22))
                                                 .fontWeight(.black)
                                         }
-                                        .padding(.horizontal, 10.0)
+                                        .padding(.horizontal, 18.0)
                                         .padding(.vertical, 15.0)
                                     }
                                     .background(Color("ScoreboardGreen"))
@@ -315,6 +320,8 @@ struct PitchResultView: View {
 
             }
             .background(.black)
+            .navigationTitle("")
+            .navigationBarTitleDisplayMode(.inline)
             .ignoresSafeArea()
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarBackground(Color("ScoreboardGreen"))
@@ -324,6 +331,8 @@ struct PitchResultView: View {
                     HStack{
 
                         Button(action: {
+                            let impact = UIImpactFeedbackGenerator(style: .medium)
+                            impact.impactOccurred()
                             event.pitch_result = "NONE"
                             if showHitResult == true {
                                 withAnimation{
@@ -385,13 +394,15 @@ struct PitchResultView: View {
                                 .foregroundColor(.white)
                                 .padding(.leading,  4)
                         }
-                        
                     }
                 }
-            
             }
         }
-        
+        .onAppear{
+            let date = Date.now
+            let formattedTime = date.formatted(.dateTime.hour().minute().second().secondFraction(.fractional(3)))
+            print("Detail Entry Beginning: " + formattedTime)
+        }
     }
     
     func back_func() {

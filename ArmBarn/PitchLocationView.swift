@@ -25,7 +25,7 @@ struct PitchLocationView: View {
     @Environment(GameReport.self) var game_report
     @Environment(AtBatBreakdown.self) var at_bat_brkdwn
     
-    @Query var events: [Event]
+    @Query(sort: \Event.event_number) var events: [Event]
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var context
@@ -78,6 +78,12 @@ struct PitchLocationView: View {
                         ZStack{
                             
                             SaveEventView().task{
+                                
+                                let date = Date.now
+                                let formattedTime = date.formatted(.dateTime.hour().minute().second().secondFraction(.fractional(3)))
+                                print("New Entry Beginning: " + formattedTime)
+                                
+                                
                                 add_prev_event_string()
                                 event.recordEvent = true
                                 scoreboard.update_scoreboard = true
@@ -345,6 +351,8 @@ struct PitchLocationView: View {
                     ToolbarItemGroup(placement: .topBarLeading) {
                         
                         Button(action: {
+                            let impact = UIImpactFeedbackGenerator(style: .medium)
+                            impact.impactOccurred()
                             if scoreboard.enable_bottom_row == true {
                                 if ptconfig.hidePitchOverlay == true {
                                     cur_pitch_color = .clear
@@ -363,13 +371,16 @@ struct PitchLocationView: View {
                                         if scoreboard.pitches > 0 && event.result_detail != "R" && event.result_detail != "RE" && event.pitch_result != "IW" && event.pitch_result != "VZ" && event.pitch_result != "VA"{ //Non pitch event (pitch not thrown)
                                             scoreboard.pitches -= 1
                                         }
+                                        
                                         newAtBat = true
                                         new_game_func()
+                                        
                                         do {
                                             try context.delete(model: Event.self)
                                         } catch {
                                             print("Did not clear event data")
                                         }
+                                        
                                         game_report.game_location = ASGameLocation ?? ""
                                         game_report.opponent_name = ASCurOpponentName ?? ""
                                         
@@ -554,8 +565,7 @@ struct PitchLocationView: View {
                     pitch_type = current_pitcher.pitch4
                 }
                 
-                if evnt.atbats > cur_at_bat {
-                    
+                if (evnt.atbats > cur_at_bat && evnt.result_detail != "RE")/* || (evnt.atbats == cur_at_bat && ) */{
                     cur_at_bat = evnt.atbats
                     at_bat_brkdwn.at_bat_list.append(AtBatDT(outs: prev_outs, inning: prev_inning, batter_hand: prev_batter_stance, pitch_list: pitches_this_ab, x_coor_list: x_coor_list, y_coor_list: y_coor_list, pitch_color_list: color_list, plot_pitch_list: plot_list, pitch_num_list: num_list))
                     pitches_this_ab.removeAll()
@@ -604,6 +614,9 @@ struct PitchLocationView: View {
                             if evnt.result_detail == "K" {
                                 result = "Strikeout - K"
                             }
+                            if evnt.result_detail == "C" {
+                                color = Color("Tangerine")
+                            }
                         }
                     }
                 }
@@ -634,7 +647,7 @@ struct PitchLocationView: View {
                     else if evnt.result_detail == "O" {
                         result = "Out"
                     }
-                    else if evnt.result_detail == "R" {
+                    else if evnt.result_detail == "R" || evnt.result_detail == "RE"{
                         num -= 1
                         plot = 0
                         color = Color(.red)
@@ -704,9 +717,6 @@ struct PitchLocationView: View {
                 if evnt == events.last {
                     at_bat_brkdwn.at_bat_list.append(AtBatDT(outs: prev_outs, inning: prev_inning, batter_hand: prev_batter_stance, pitch_list: pitches_this_ab, x_coor_list: x_coor_list, y_coor_list: y_coor_list, pitch_color_list: color_list, plot_pitch_list: plot_list, pitch_num_list: num_list))
                 }
-                
-                
-                
             }
         }
         
@@ -718,7 +728,7 @@ struct PitchLocationView: View {
         var pitch_num = 0
         let pitch_abbreviations = ["FB" : "Fastball", "CU" : "Curveball", "SL" : "Slider", "CH" : "Change-Up", "FS" : "Splitter", "FC" : "Cutter", "SI" : "Sinker", "OT" : "Other", "ST" : "Sweeper"]
         game_report.pbp_event_list = []
-        for evnt in events {
+        for (index, evnt) in events.enumerated() {
             
             //if evnt.pitcher_id == current_pitcher.idcode {
             
@@ -735,6 +745,8 @@ struct PitchLocationView: View {
             let velo = evnt.velocity
             
             var pitch_type = evnt.pitch_type
+            
+            print("\(evnt.event_number) " + evnt.pitch_type + " \(evnt.balls)" + " - " + "\(evnt.strikes)")
             
             for pitcher in pitchers {
                 if pitcher.id == pitcher_id {
@@ -857,6 +869,8 @@ struct PitchLocationView: View {
             else {
                 result = "RUNNER OUT"
             }
+            
+            //print("\(pitch_num)" + " \(balls)" + " - " + "\(strikes)")
             
             game_report.pbp_event_list.append(PBPLog(pitch_num: pitch_num, pitch_type: pitch_type, result: result, balls: balls, strikes: strikes, outs: outs, out_label: outs_label, velo: velo, inning: inning, result_detail: result_detail, pitcher: pitcher_name))
             
@@ -1150,7 +1164,19 @@ struct PitchLocationView: View {
                     game_report.inn_pitched = round(game_report.inn_pitched) + (Double(outs) * 0.1)
                 }
                 
-                if (evnt.balls == 0 && evnt.strikes == 0 && evnt.result_detail != "R" && evnt.result_detail != "RE" && evnt.pitch_result != "IW")  /*|| (game_report.pitches == 1 && (evnt.pitch_result != "VA" && evnt.pitch_result != "VZ"))*/{
+                if (evnt.balls == 0 && evnt.strikes == 0 && evnt.result_detail != "R" && evnt.result_detail != "RE" && evnt.pitch_result != "IW") {
+                    
+                    game_report.batters_faced += 1
+                    
+                    if evnt.batter_stance == "L" {
+                        game_report.lh_batters_faced += 1
+                    }
+                    else if evnt.batter_stance == "R" {
+                        game_report.rh_batters_faced += 1
+                    }
+                    
+                }
+                else if game_report.pitches == 1 && game_report.batters_faced == 0 && evnt.result_detail != "R" && evnt.result_detail != "RE" && evnt.pitch_result != "IW"{
                     
                     game_report.batters_faced += 1
                     
@@ -1339,6 +1365,7 @@ struct PitchLocationView: View {
         scoreboard.inning = 1
         scoreboard.baserunners = 0
         event.batter_stance = ""
+        event.event_number = 0
         
         ptconfig.pitch_x_loc.removeAll()
         ptconfig.pitch_y_loc.removeAll()
@@ -1449,7 +1476,7 @@ struct PitchLocationView: View {
 //        if event.end_ab_rd.contains(previous_event.result_detail) {
 //            scoreboard.atbats += 1
 //        }
-        
+        event.event_number -= 1
         
         if ptconfig.pitch_x_loc.count > 0 && previous_event.result_detail != "R"{
             ptconfig.pitch_x_loc.removeLast()
@@ -1513,7 +1540,7 @@ struct PitchLocationView: View {
                 scoreboard.pitches += 1
             }
         }
-        print(scoreboard.baserunners)
+        //print(scoreboard.baserunners)
     }
     
     func load_previous_ab_pitches() {
@@ -1658,6 +1685,8 @@ struct PitchLocationView: View {
         scoreboard.atbats = 0
         scoreboard.inning = recent_event.inning
         event.batter_stance = recent_event.batter_stance
+        event.event_number = recent_event.event_number + 1
+//        print("Event number: \(event.event_number)")
         
         if end_ab_br.contains(recent_event.result_detail) {
             scoreboard.balls = 0
@@ -1776,7 +1805,7 @@ struct PitchLocationView: View {
                 break
             }
         }
-        print(scoreboard.pitchers_appearance_list)
+        //print(scoreboard.pitchers_appearance_list)
         
     }
     
@@ -1824,8 +1853,11 @@ struct PitchLocationView: View {
         
     func add_prev_event_string() {
         if event.recordEvent{
-            let new_event = Event(pitcher_id: current_pitcher.idcode, pitch_result: event.pitch_result, pitch_type: event.pitch_type, result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, atbats: event.atbats, pitch_x_location: event.x_cor, pitch_y_location: event.y_cor, batter_stance: event.batter_stance, velocity: event.velocity)
+            let new_event = Event(pitcher_id: current_pitcher.idcode, pitch_result: event.pitch_result, pitch_type: event.pitch_type, result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, atbats: event.atbats, pitch_x_location: event.x_cor, pitch_y_location: event.y_cor, batter_stance: event.batter_stance, velocity: event.velocity, event_number: event.event_number)
+            
             context.insert(new_event)
+            
+            event.event_number += 1
             print_Event_String()
         }
     }
@@ -2016,8 +2048,12 @@ struct PitchClockViolation: View {
     }
     
     func add_non_pitch_event() {
-        let npe = Event(pitcher_id: current_pitcher.idcode, pitch_result: event.pitch_result, pitch_type: "NP", result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, atbats: event.atbats, pitch_x_location: 0, pitch_y_location: 0, batter_stance: event.batter_stance, velocity: 0)
+        
+        let npe = Event(pitcher_id: current_pitcher.idcode, pitch_result: event.pitch_result, pitch_type: "NP", result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, atbats: event.atbats, pitch_x_location: 0, pitch_y_location: 0, batter_stance: event.batter_stance, velocity: 0, event_number: event.event_number)
+        
         context.insert(npe)
+        
+        event.event_number += 1
         print_Event_String()
     }
 

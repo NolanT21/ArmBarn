@@ -31,7 +31,7 @@ struct GameReportView: View {
     @Environment(Event_String.self) var event
     @Environment(AtBatBreakdown.self) var at_bat_brkdwn
     
-    @Query var events: [Event]
+    @Query(sort: \Event.event_number) var events: [Event]
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var context
@@ -464,7 +464,7 @@ struct GameReportView: View {
                                     Spacer()
                                 }
                                 }
-                                //.frame(height: 200)
+                                .frame(height: 200)
                                 
                             }
                         }
@@ -638,7 +638,7 @@ struct GameReportView: View {
                                             
                                             VStack{
                                                 
-                                                Spacer()
+                                                //Spacer()
                                                 
                                                 HStack{
                                                     Image(systemName: "figure.baseball")
@@ -648,6 +648,7 @@ struct GameReportView: View {
                                                         //.imageScale(.large)
                                                         .font(.system(size: 50))
                                                         .foregroundColor(.white.opacity(0.5))
+                                                        .padding(.top, 90)
                                                         //.position(batter_figure_position_right)
                                                     
                                                     Spacer()
@@ -663,7 +664,7 @@ struct GameReportView: View {
                                             
                                             VStack{
                                                 
-                                                Spacer()
+                                                //Spacer()
                                                 
                                                 HStack{
                                                     
@@ -676,6 +677,7 @@ struct GameReportView: View {
                                                         //.imageScale(.large)
                                                         .font(.system(size: 50))
                                                         .foregroundColor(.white.opacity(0.5))
+                                                        .padding(.top, 90)
                                                         //.position(batter_figure_position_right)
                                                     
                                                 }
@@ -900,9 +902,11 @@ struct GameReportView: View {
                     if game_report.pbp_event_list.count > 0 {
                         
                         Grid(horizontalSpacing: (ASVeloInput == true) ? screenSize.width * 0.048 : screenSize.width * 0.085){
-                                ForEach(Array(game_report.pbp_event_list.enumerated()), id: \.offset){ index, evnt in
+                            ForEach(Array(game_report.pbp_event_list.enumerated()), id: \.offset){ index, evnt in
                                     
-                                    if index == 0 || game_report.pbp_event_list[index].inning > game_report.pbp_event_list[index - 1].inning{
+                                    //Text("\(evnt.balls)" + "\(evnt.strikes)" + " Index: " + "\(index)")
+                                    
+                                if index == 0 || game_report.pbp_event_list[index].inning > game_report.pbp_event_list[index - 1].inning{
                                         GridRow {
                                             VStack{
                                                 HStack{
@@ -927,7 +931,7 @@ struct GameReportView: View {
                                         
                                     }
                                     
-                                    if index == 0 || game_report.pbp_event_list[index].pitcher != game_report.pbp_event_list[index - 1].pitcher{
+                                if index == 0 || game_report.pbp_event_list[index].pitcher != game_report.pbp_event_list[index - 1].pitcher{
                                         GridRow{
                                             VStack{
                                                 HStack{
@@ -1130,7 +1134,7 @@ struct GameReportView: View {
                     }
                         
                 }
-                
+                               
                 Spacer()
                 
             }

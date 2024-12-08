@@ -16,7 +16,7 @@ struct MainContainerView: View {
     @Environment(Event_String.self) var event
     @Environment(\.dismiss) var dismiss
     
-    @Query var events: [Event]
+    @Query(sort: \Event.event_number) var events: [Event]
     
     @State private var showBullpenMode : Bool = false
       
