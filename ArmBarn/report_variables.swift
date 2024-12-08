@@ -122,8 +122,8 @@ struct pitch_info_ab {
     var units: String = ""
 }
 
-struct PBPLog: Identifiable {
-    let id = UUID()
+struct PBPLog{
+    //let id = UUID()
     var pitch_num : Int
     var pitch_type : String
     var result : String
