@@ -55,6 +55,7 @@ struct PitchersAppeared: Identifiable {
     var y_cor: Double = 0
     var batter_stance: String = ""
     var velocity: Double = 0
+    var event_number: Int = 0
     
     var end_ab_rd: [String] = ["S", "D", "T", "H", "E", "B", "F", "G", "L", "P", "Y", "W", "K", "C", "M", "RE"]
     var newAtBat: Bool = false
@@ -94,6 +95,7 @@ struct PitchersAppeared: Identifiable {
     var pp_pitchtype: String = "-"
     var pp_spot_detail: Image = Image(systemName: "minus")
     var pp_spot_color: Color = .white
+    var event_number: Int = 0
 }
 
 @Model class BullpenEvent{
@@ -101,12 +103,14 @@ struct PitchersAppeared: Identifiable {
     var expected_target: String = ""
     var actual_target: String = ""
     var pitch_type: String = ""
+    var event_number: Int = 0
     
-    init(pitcher_id: UUID, expected_target: String, actual_target: String, pitch_type: String) {
+    init(pitcher_id: UUID, expected_target: String, actual_target: String, pitch_type: String, event_number: Int) {
         self.pitcher_id = pitcher_id
         self.expected_target = expected_target
         self.actual_target = actual_target
         self.pitch_type = pitch_type
+        self.event_number = event_number
     }
     
 }
@@ -127,8 +131,9 @@ struct PitchersAppeared: Identifiable {
     var pitch_y_location: Double = 0
     var batter_stance: String = ""
     var velocity: Double = 0
+    var event_number: Int = 0
     
-    init(pitcher_id: UUID, pitch_result: String, pitch_type: String, result_detail: String, balls: Int, strikes: Int, outs: Int, inning: Int, atbats: Int, pitch_x_location: Double, pitch_y_location: Double, batter_stance: String, velocity: Double) {
+    init(pitcher_id: UUID, pitch_result: String, pitch_type: String, result_detail: String, balls: Int, strikes: Int, outs: Int, inning: Int, atbats: Int, pitch_x_location: Double, pitch_y_location: Double, batter_stance: String, velocity: Double, event_number: Int) {
         self.pitcher_id = pitcher_id
         self.pitch_result = pitch_result
         self.pitch_type = pitch_type
@@ -142,6 +147,7 @@ struct PitchersAppeared: Identifiable {
         self.pitch_y_location = pitch_y_location
         self.batter_stance = batter_stance
         self.velocity = velocity
+        self.event_number = event_number
     }
 }
 
