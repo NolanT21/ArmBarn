@@ -14,7 +14,7 @@ struct BullpenReportView: View {
     @Environment(currentPitcher.self) var current_pitcher
     @Environment(\.dismiss) var dismiss
     
-    @Query var bullpen_events: [BullpenEvent]
+    @Query(sort: \BullpenEvent.event_number) var bullpen_events: [BullpenEvent]
     
     @State var sbl_width: Double = 17.0
     @State var sbl_height: Double = 13.0
