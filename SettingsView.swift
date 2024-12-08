@@ -55,6 +55,9 @@ struct SettingsView: View {
             
             ZStack{
                 VStack{
+                    
+                    let impact = UIImpactFeedbackGenerator(style: .medium)
+                    
                     List{
                         Section() {
                             TipView(changeinputtip)
@@ -92,6 +95,7 @@ struct SettingsView: View {
                                 
                                 Toggle("Batter Stance", isOn: $useBatterStance)
                                     .onChange(of: useBatterStance){
+                                        impact.impactOccurred()
                                         let showpopup = allow_input_change()
 
                                         if showpopup == true {
@@ -119,6 +123,7 @@ struct SettingsView: View {
                                 }
                                 Toggle("Strike Type", isOn: $useStrikeType)
                                     .onChange(of: useStrikeType){
+                                        impact.impactOccurred()
                                         let showpopup = allow_input_change()
 
                                         if showpopup == true {
@@ -144,6 +149,7 @@ struct SettingsView: View {
                                 }
                                 Toggle("Velocity Input", isOn: $useVelocityInput)
                                     .onChange(of: useVelocityInput){
+                                        impact.impactOccurred()
                                         let showpopup = allow_input_change()
                                         
                                         if showpopup == true {
@@ -166,6 +172,7 @@ struct SettingsView: View {
                             }
                             .pickerStyle(.segmented)
                             .onChange(of: selected_velo_units){
+                                impact.impactOccurred()
                                 ASVeloUnits = selected_velo_units
                                 print(selected_velo_units)
                             }
@@ -184,6 +191,7 @@ struct SettingsView: View {
                                 }
                                 Toggle("Box Score", isOn: $showBoxScore)
                                     .onChange(of: showBoxScore){
+                                        impact.impactOccurred()
                                         ASBoxScore = showBoxScore
                                     }
                             }
@@ -202,6 +210,7 @@ struct SettingsView: View {
                                 }
                                 Toggle("Strike Percentages", isOn: $showStrikePer)
                                     .onChange(of: showStrikePer){
+                                        impact.impactOccurred()
                                         ASStrikePer = showStrikePer
                                     }
                             }
@@ -219,6 +228,7 @@ struct SettingsView: View {
                                 }
                                 Toggle("Pitch Location Map", isOn: $showLocationMap)
                                     .onChange(of: showLocationMap){
+                                        impact.impactOccurred()
                                         ASLocation = showLocationMap
                                     }
                             }
@@ -236,6 +246,7 @@ struct SettingsView: View {
                                 }
                                 Toggle("Hit Summary", isOn: $showHitSummary)
                                     .onChange(of: showHitSummary){
+                                        impact.impactOccurred()
                                         ASHitSummary = showHitSummary
                                     }
                             }
@@ -253,6 +264,7 @@ struct SettingsView: View {
                                 }
                                 Toggle("Game Score", isOn: $showGameScore)
                                     .onChange(of: showGameScore){
+                                        impact.impactOccurred()
                                         ASGameScore = showGameScore
                                     }
                             }
@@ -270,6 +282,7 @@ struct SettingsView: View {
                                 }
                                 Toggle("Pitch by Inning Chart", isOn: $showPitByInn)
                                     .onChange(of: showPitByInn){
+                                        impact.impactOccurred()
                                         ASPitByInn = showPitByInn
                                     }
                             }
