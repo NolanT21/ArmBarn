@@ -101,10 +101,11 @@ struct SelectPitcherView: View {
                             }
                         }
                         .onDelete(perform: removePitcher)
-                        .sheet(item: $edit_pitcher) { edit in
-                            EditPitcherView(edit_pitcher: edit)
-                                .preferredColorScheme(.dark)
-                        }
+                        
+                    }
+                    .sheet(item: $edit_pitcher) { edit in
+                        EditPitcherView(edit_pitcher: edit)
+                            .preferredColorScheme(.dark)
                     }
                     .font(.system(size: 17))
                     .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search by Last Name")
@@ -168,7 +169,7 @@ struct SelectPitcherView: View {
         //Reset pitch number and batters faced
         var appeared = false
         
-        print(scoreboard.pitchers_appearance_list)
+        //print(scoreboard.pitchers_appearance_list)
         
         for pitchers in scoreboard.pitchers_appearance_list {
             //print(pitcher_id)
@@ -185,7 +186,7 @@ struct SelectPitcherView: View {
             scoreboard.pitches = 0
             scoreboard.atbats = 1
         }
-        
+        print(appeared)
         
 //        scoreboard.pitches = 0
 //        scoreboard.atbats = 1
@@ -209,8 +210,8 @@ struct SelectPitcherView: View {
         for pitcher in scoreboard.pitchers_appearance_list {
             if pitcher.pitcher_id == current_pitcher.idcode {
                 
-                scoreboard.pitchers_appearance_list = scoreboard.pitchers_appearance_list.filter(){ _ in pitcher.pitcher_id != current_pitcher.idcode}
-                break
+                scoreboard.pitchers_appearance_list = scoreboard.pitchers_appearance_list.filter(){ $0.pitcher_id != current_pitcher.idcode}
+                //break
                 
             }
         }
