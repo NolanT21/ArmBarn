@@ -63,22 +63,24 @@ struct SettingsView: View {
                             TipView(changeinputtip)
                         }
                         
-                        Section() {
-
-                            Button(action: {
-                                dismiss()
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                    ASBullpenMode = true
-                                }
-                            }, label: {
-                                Text("Bullpen Mode")
-                            })
-                            .bold()
-                            .foregroundStyle(.white)
-                            .listRowBackground(Color("ScoreboardGreen"))
-                            .frame(maxWidth: .infinity)
-                            .multilineTextAlignment(.center)
-                        }
+//                        Bullpen Mode Button
+                        
+//                        Section() {
+//
+//                            Button(action: {
+//                                dismiss()
+//                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+//                                    ASBullpenMode = true
+//                                }
+//                            }, label: {
+//                                Text("Bullpen Mode")
+//                            })
+//                            .bold()
+//                            .foregroundStyle(.white)
+//                            .listRowBackground(Color("ScoreboardGreen"))
+//                            .frame(maxWidth: .infinity)
+//                            .multilineTextAlignment(.center)
+//                        }
                         
                         Section(header: Text("Input Options")){
                             HStack{

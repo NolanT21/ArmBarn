@@ -240,15 +240,16 @@ struct BullpenMainView: View {
 //                }
                 
                 if endBullpen == true{
-                    PopupAlertView(isActive: $endBullpen, title: "End Bullpen", message: "This bullpen session and its data will be saved!", leftButtonAction: { clear_bullpen_events();
-                        clear_bullpen_report();
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        clear_previous_pitch_variables();
-                        event.recordEvent = false;
-                        scoreboard.update_scoreboard = false;
-                        ASBullpenMode = false;
-                        scoreboard.enable_bottom_row = true;
-                        dismiss();}}, rightButtonAction: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {dismiss(); endBullpen = false; scoreboard.enable_bottom_row = true}})
+                    PopupAlertView(isActive: $endBullpen, title: "End Bullpen", message: "This bullpen session and its data will be saved!", leftButtonAction: {
+                        /*DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {*/
+                            clear_previous_pitch_variables();
+                            clear_bullpen_events();
+                            clear_bullpen_report();
+                            event.recordEvent = false;
+                            scoreboard.update_scoreboard = false;
+                            ASBullpenMode = false;
+                            scoreboard.enable_bottom_row = true;
+                        dismiss();/*}*/}, rightButtonAction: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {dismiss(); endBullpen = false; scoreboard.enable_bottom_row = true}})
                 }
             }
         }
