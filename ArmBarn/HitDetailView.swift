@@ -23,23 +23,23 @@ struct HitDetailView: View {
                     Image("PLI_Background")
                         .resizable()
                     
-                    ForEach(ptconfig.pitch_x_loc.indices, id: \.self){ index in
-                        let xloc = ptconfig.pitch_x_loc[index]
-                        let yloc = ptconfig.pitch_y_loc[index]
-                        let point = CGPoint(x: xloc, y: yloc)
-                        let pitch_color = ptconfig.ab_pitch_color[index]
-                        Circle()
-                            .fill(pitch_color)
-                            .stroke(.white, lineWidth: 4)
-                            .frame(width: 40, height: 40, alignment: .center)
-                            .position(point)
-                            .overlay {
-                                Text("\(index + 1)")
-                                    .foregroundColor(.white)
-                                    .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
-                                    .position(point)
-                            }
-                    }
+//                    ForEach(ptconfig.pitch_x_loc.indices, id: \.self){ index in
+//                        let xloc = ptconfig.pitch_x_loc[index]
+//                        let yloc = ptconfig.pitch_y_loc[index]
+//                        let point = CGPoint(x: xloc, y: yloc)
+//                        let pitch_color = ptconfig.ab_pitch_color[index]
+//                        Circle()
+//                            .fill(pitch_color)
+//                            .stroke(.white, lineWidth: 4)
+//                            .frame(width: 40, height: 40, alignment: .center)
+//                            .position(point)
+//                            .overlay {
+//                                Text("\(index + 1)")
+//                                    .foregroundColor(.white)
+//                                    .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+//                                    .position(point)
+//                            }
+//                    }
                 }
                 .blur(radius: 20, opaque: false)
                 
