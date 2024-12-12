@@ -79,9 +79,9 @@ struct PitchLocationView: View {
                             
                             SaveEventView().task{
                                 
-                                let date = Date.now
-                                let formattedTime = date.formatted(.dateTime.hour().minute().second().secondFraction(.fractional(3)))
-                                print("New Entry Beginning: " + formattedTime)
+                                //let date = Date.now
+                                //let formattedTime = date.formatted(.dateTime.hour().minute().second().secondFraction(.fractional(3)))
+                                //print("New Entry Beginning: " + formattedTime)
                                 
                                 
                                 add_prev_event_string()
@@ -746,7 +746,7 @@ struct PitchLocationView: View {
             
             var pitch_type = evnt.pitch_type
             
-            print("\(evnt.event_number) " + evnt.pitch_type + " \(evnt.balls)" + " - " + "\(evnt.strikes)")
+            //print("\(evnt.event_number) " + evnt.pitch_type + " \(evnt.balls)" + " - " + "\(evnt.strikes)")
             
             for pitcher in pitchers {
                 if pitcher.id == pitcher_id {
@@ -1638,12 +1638,12 @@ struct PitchLocationView: View {
     func load_pitcher_appearance_list() {
         //load pitcher appearance list
         
-        //for pitcher in scoreboard.pitchers_appearance_list {
         var pitcher_id_list: [UUID] = []
         
         for evnt in events {
             if !pitcher_id_list.contains(evnt.pitcher_id) {
                 pitcher_id_list.append(evnt.pitcher_id)
+                //print(evnt.pitcher_id)
             }
         }
         
@@ -1651,16 +1651,18 @@ struct PitchLocationView: View {
         
         for pitcher in pitcher_id_list {
             //print(pitcher)
-            var p_at_bats = 1
+            var p_at_bats = 0
             var p_pitch_num = 0
             
             for vent in events {
+                //print(vent.pitcher_id)
                 if vent.pitcher_id == pitcher {
                     if vent.result_detail != "R" && vent.result_detail != "RE" && vent.pitch_result != "VZ" && vent.pitch_result != "VA" && vent.pitch_result != "IW"{
                         p_pitch_num += 1
                     }
-                    if event.end_ab_rd.contains(vent.result_detail) {
+                    if event.end_ab_rd.contains(vent.result_detail) || (p_pitch_num == 1 && p_at_bats == 0){
                         p_at_bats += 1
+                        //print("Batters Faced: \(p_at_bats)")
                     }
                 }
             }
@@ -1668,6 +1670,8 @@ struct PitchLocationView: View {
             scoreboard.pitchers_appearance_list.append(PitchersAppeared(pitcher_id: pitcher, pitches: p_pitch_num, batters_faced: p_at_bats))
             
         }
+        
+        //print(scoreboard.pitchers_appearance_list)
         
     }
     
@@ -1686,7 +1690,7 @@ struct PitchLocationView: View {
         scoreboard.inning = recent_event.inning
         event.batter_stance = recent_event.batter_stance
         event.event_number = recent_event.event_number + 1
-//        print("Event number: \(event.event_number)")
+        //print("Event number: \(event.event_number)")
         
         if end_ab_br.contains(recent_event.result_detail) {
             scoreboard.balls = 0
@@ -1760,6 +1764,7 @@ struct PitchLocationView: View {
                     scoreboard.pitches += 1
                     if (evnt.balls == 0 && evnt.strikes == 0) || scoreboard.pitches == 1{
                         scoreboard.atbats += 1
+                        //print("Batters Faced: \(scoreboard.atbats)")
                     }
                 }
             }
@@ -1806,6 +1811,7 @@ struct PitchLocationView: View {
             }
         }
         //print(scoreboard.pitchers_appearance_list)
+        
         
     }
     
