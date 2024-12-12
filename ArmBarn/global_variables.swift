@@ -35,8 +35,7 @@ import Observation
     var pitchers_appearance_list: [PitchersAppeared] = []
 }
 
-struct PitchersAppeared: Identifiable {
-    let id = UUID()
+struct PitchersAppeared {
     var pitcher_id: UUID
     var pitches: Int
     var batters_faced: Int
@@ -117,7 +116,7 @@ struct PitchersAppeared: Identifiable {
 
 @Model class Event{
     
-    var pitcher_id = UUID()
+    @Attribute(.externalStorage) var pitcher_id = UUID()
     
     var pitch_result: String
     var pitch_type: String
@@ -127,8 +126,8 @@ struct PitchersAppeared: Identifiable {
     var outs: Int
     var inning: Int
     var atbats: Int
-    var pitch_x_location: Double = 0
-    var pitch_y_location: Double = 0
+    @Attribute(.externalStorage) var pitch_x_location: Double = 0
+    @Attribute(.externalStorage) var pitch_y_location: Double = 0
     var batter_stance: String = ""
     var velocity: Double = 0
     var event_number: Int = 0
