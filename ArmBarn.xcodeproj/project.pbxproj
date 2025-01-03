@@ -8,9 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D5064EEA2BDF180400F01886 /* VelocityInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5064EE92BDF180400F01886 /* VelocityInputView.swift */; };
-		D5064EEC2BE041BE00F01886 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5064EEB2BE041BE00F01886 /* SettingsView.swift */; };
 		D51E9E402CFE19D000173322 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D51E9E3F2CFE19D000173322 /* Assets.xcassets */; };
-		D53C50042CB182550073BE9F /* BullpenReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53C50032CB182550073BE9F /* BullpenReportView.swift */; };
 		D575388D2C776ABE00B7EBF7 /* BullpenMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D575388C2C776ABE00B7EBF7 /* BullpenMainView.swift */; };
 		D57E62382BD2CD7D003987E1 /* ArmBarnApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */; };
 		D57E62392BD2CD7D003987E1 /* global_variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50E3E8F2B0926A8006699FB /* global_variables.swift */; };
@@ -31,34 +29,36 @@
 		D58FE76D2BD717DC004FC234 /* BatterPositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58FE76C2BD717DC004FC234 /* BatterPositionView.swift */; };
 		D5959D9D2BE5381B00FFDA0B /* TipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5959D9C2BE5381B00FFDA0B /* TipView.swift */; };
 		D5DD11262AF52FE80064F1A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5DD11252AF52FE80064F1A5 /* Preview Assets.xcassets */; };
+		D5EE0C482D11CFBE00374749 /* BullpenReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5EE0C472D11CFBE00374749 /* BullpenReportView.swift */; };
+		D5EE0C4A2D11CFD500374749 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5EE0C492D11CFD500374749 /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D5064EE92BDF180400F01886 /* VelocityInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VelocityInputView.swift; sourceTree = "<group>"; };
-		D5064EEB2BE041BE00F01886 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		D5064EE92BDF180400F01886 /* VelocityInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = VelocityInputView.swift; path = ../../../VelocityInputView.swift; sourceTree = "<group>"; };
 		D50E3E8F2B0926A8006699FB /* global_variables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = global_variables.swift; sourceTree = "<group>"; };
-		D50E3E932B0A3D04006699FB /* HitDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitDetailView.swift; sourceTree = "<group>"; };
-		D50E3E952B0A3DE7006699FB /* OutDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutDetailView.swift; sourceTree = "<group>"; };
+		D50E3E932B0A3D04006699FB /* HitDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HitDetailView.swift; path = ../../HitDetailView.swift; sourceTree = "<group>"; };
+		D50E3E952B0A3DE7006699FB /* OutDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OutDetailView.swift; path = ../../OutDetailView.swift; sourceTree = "<group>"; };
 		D51E9E3F2CFE19D000173322 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		D53C50032CB182550073BE9F /* BullpenReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BullpenReportView.swift; sourceTree = "<group>"; };
-		D575388C2C776ABE00B7EBF7 /* BullpenMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BullpenMainView.swift; sourceTree = "<group>"; };
+		D575388C2C776ABE00B7EBF7 /* BullpenMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BullpenMainView.swift; path = ../../BullpenMainView.swift; sourceTree = "<group>"; };
 		D58DAF142C45D38D003EFB2E /* FileNamePopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileNamePopUpView.swift; sourceTree = SOURCE_ROOT; };
-		D58FE76C2BD717DC004FC234 /* BatterPositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatterPositionView.swift; sourceTree = "<group>"; };
-		D5959D9C2BE5381B00FFDA0B /* TipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipView.swift; sourceTree = "<group>"; };
-		D5A335862AFB0DD0005480DE /* PitchResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchResultView.swift; sourceTree = "<group>"; };
-		D5C6DE192BD2C52D00C64555 /* GameReportView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameReportView.swift; sourceTree = "<group>"; };
-		D5C6DE1B2BD2C52D00C64555 /* SelectPitcherView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectPitcherView.swift; sourceTree = "<group>"; };
-		D5C6DE1C2BD2C52D00C64555 /* PopupAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupAlertView.swift; sourceTree = "<group>"; };
+		D58FE76C2BD717DC004FC234 /* BatterPositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BatterPositionView.swift; path = ../../../BatterPositionView.swift; sourceTree = "<group>"; };
+		D5959D9C2BE5381B00FFDA0B /* TipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TipView.swift; path = ../TipView.swift; sourceTree = "<group>"; };
+		D5A335862AFB0DD0005480DE /* PitchResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PitchResultView.swift; path = ../../PitchResultView.swift; sourceTree = "<group>"; };
+		D5C6DE192BD2C52D00C64555 /* GameReportView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameReportView.swift; path = ../../GameReportView.swift; sourceTree = "<group>"; };
+		D5C6DE1B2BD2C52D00C64555 /* SelectPitcherView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectPitcherView.swift; path = ../../SelectPitcherView.swift; sourceTree = "<group>"; };
+		D5C6DE1C2BD2C52D00C64555 /* PopupAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupAlertView.swift; path = ../../../PopupAlertView.swift; sourceTree = "<group>"; };
 		D5C6DE1E2BD2C52D00C64555 /* report_variables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = report_variables.swift; sourceTree = "<group>"; };
-		D5C6DE1F2BD2C52D00C64555 /* StrikeoutAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrikeoutAlertView.swift; sourceTree = "<group>"; };
+		D5C6DE1F2BD2C52D00C64555 /* StrikeoutAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StrikeoutAlertView.swift; path = ../../../StrikeoutAlertView.swift; sourceTree = "<group>"; };
 		D5C6DE202BD2C52D00C64555 /* GameContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameContainerView.swift; sourceTree = "<group>"; };
 		D5DD111B2AF52FE60064F1A5 /* ArmBarn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArmBarn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArmBarnApp.swift; sourceTree = "<group>"; };
 		D5DD11202AF52FE70064F1A5 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		D5DD11252AF52FE80064F1A5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		D5E103BE2B2F6D4A00752E7F /* PitchLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchLocationView.swift; sourceTree = "<group>"; };
-		D5E103C02B3D122100752E7F /* ScoreboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreboardView.swift; sourceTree = "<group>"; };
-		D5FAD8192B28BADC00E9EB91 /* AddPitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPitcherView.swift; sourceTree = "<group>"; };
+		D5E103BE2B2F6D4A00752E7F /* PitchLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PitchLocationView.swift; path = ../../PitchLocationView.swift; sourceTree = "<group>"; };
+		D5E103C02B3D122100752E7F /* ScoreboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ScoreboardView.swift; path = ../../ScoreboardView.swift; sourceTree = "<group>"; };
+		D5EE0C472D11CFBE00374749 /* BullpenReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BullpenReportView.swift; path = ../../BullpenReportView.swift; sourceTree = "<group>"; };
+		D5EE0C492D11CFD500374749 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = ../../SettingsView.swift; sourceTree = "<group>"; };
+		D5FAD8192B28BADC00E9EB91 /* AddPitcherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddPitcherView.swift; path = ../../AddPitcherView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,11 +75,6 @@
 		D5DD11122AF52FE60064F1A5 = {
 			isa = PBXGroup;
 			children = (
-				D53C50032CB182550073BE9F /* BullpenReportView.swift */,
-				D5959D9C2BE5381B00FFDA0B /* TipView.swift */,
-				D5064EEB2BE041BE00F01886 /* SettingsView.swift */,
-				D5064EE92BDF180400F01886 /* VelocityInputView.swift */,
-				D58FE76C2BD717DC004FC234 /* BatterPositionView.swift */,
 				D5DD111D2AF52FE70064F1A5 /* ArmBarn */,
 				D5DD111C2AF52FE60064F1A5 /* Products */,
 			);
@@ -96,24 +91,11 @@
 		D5DD111D2AF52FE70064F1A5 /* ArmBarn */ = {
 			isa = PBXGroup;
 			children = (
-				D58DAF142C45D38D003EFB2E /* FileNamePopUpView.swift */,
 				D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */,
-				D50E3E8F2B0926A8006699FB /* global_variables.swift */,
-				D5E103C02B3D122100752E7F /* ScoreboardView.swift */,
-				D5DD11202AF52FE70064F1A5 /* MainView.swift */,
-				D5E103BE2B2F6D4A00752E7F /* PitchLocationView.swift */,
-				D5A335862AFB0DD0005480DE /* PitchResultView.swift */,
 				D51E9E3F2CFE19D000173322 /* Assets.xcassets */,
-				D50E3E952B0A3DE7006699FB /* OutDetailView.swift */,
-				D50E3E932B0A3D04006699FB /* HitDetailView.swift */,
-				D5FAD8192B28BADC00E9EB91 /* AddPitcherView.swift */,
-				D5C6DE192BD2C52D00C64555 /* GameReportView.swift */,
-				D575388C2C776ABE00B7EBF7 /* BullpenMainView.swift */,
-				D5C6DE202BD2C52D00C64555 /* GameContainerView.swift */,
-				D5C6DE1C2BD2C52D00C64555 /* PopupAlertView.swift */,
-				D5C6DE1E2BD2C52D00C64555 /* report_variables.swift */,
-				D5C6DE1B2BD2C52D00C64555 /* SelectPitcherView.swift */,
-				D5C6DE1F2BD2C52D00C64555 /* StrikeoutAlertView.swift */,
+				D5EE0C512D11D36200374749 /* Data */,
+				D5EE0C502D11D2A400374749 /* Controllers */,
+				D5EE0C4F2D11D29000374749 /* Application */,
 				D5DD11242AF52FE80064F1A5 /* Preview Content */,
 			);
 			path = ArmBarn;
@@ -125,6 +107,80 @@
 				D5DD11252AF52FE80064F1A5 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		D5EE0C4F2D11D29000374749 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				D5EE0C522D11D4E600374749 /* Data Entry */,
+				D5EE0C542D11D54200374749 /* Reporting */,
+				D5EE0C572D11D5CA00374749 /* Bullpen Mode */,
+				D5959D9C2BE5381B00FFDA0B /* TipView.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
+		D5EE0C502D11D2A400374749 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				D5DD11202AF52FE70064F1A5 /* MainView.swift */,
+				D5C6DE202BD2C52D00C64555 /* GameContainerView.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		D5EE0C512D11D36200374749 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				D50E3E8F2B0926A8006699FB /* global_variables.swift */,
+				D5C6DE1E2BD2C52D00C64555 /* report_variables.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		D5EE0C522D11D4E600374749 /* Data Entry */ = {
+			isa = PBXGroup;
+			children = (
+				D5EE0C552D11D57A00374749 /* Pop-Up Views */,
+				D5E103BE2B2F6D4A00752E7F /* PitchLocationView.swift */,
+				D5A335862AFB0DD0005480DE /* PitchResultView.swift */,
+				D50E3E952B0A3DE7006699FB /* OutDetailView.swift */,
+				D50E3E932B0A3D04006699FB /* HitDetailView.swift */,
+				D5FAD8192B28BADC00E9EB91 /* AddPitcherView.swift */,
+				D5C6DE1B2BD2C52D00C64555 /* SelectPitcherView.swift */,
+			);
+			path = "Data Entry";
+			sourceTree = "<group>";
+		};
+		D5EE0C542D11D54200374749 /* Reporting */ = {
+			isa = PBXGroup;
+			children = (
+				D5E103C02B3D122100752E7F /* ScoreboardView.swift */,
+				D5C6DE192BD2C52D00C64555 /* GameReportView.swift */,
+				D5EE0C492D11CFD500374749 /* SettingsView.swift */,
+			);
+			path = Reporting;
+			sourceTree = "<group>";
+		};
+		D5EE0C552D11D57A00374749 /* Pop-Up Views */ = {
+			isa = PBXGroup;
+			children = (
+				D5064EE92BDF180400F01886 /* VelocityInputView.swift */,
+				D58FE76C2BD717DC004FC234 /* BatterPositionView.swift */,
+				D58DAF142C45D38D003EFB2E /* FileNamePopUpView.swift */,
+				D5C6DE1C2BD2C52D00C64555 /* PopupAlertView.swift */,
+				D5C6DE1F2BD2C52D00C64555 /* StrikeoutAlertView.swift */,
+			);
+			path = "Pop-Up Views";
+			sourceTree = "<group>";
+		};
+		D5EE0C572D11D5CA00374749 /* Bullpen Mode */ = {
+			isa = PBXGroup;
+			children = (
+				D5EE0C472D11CFBE00374749 /* BullpenReportView.swift */,
+				D575388C2C776ABE00B7EBF7 /* BullpenMainView.swift */,
+			);
+			path = "Bullpen Mode";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -198,13 +254,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				D57E62382BD2CD7D003987E1 /* ArmBarnApp.swift in Sources */,
+				D5EE0C482D11CFBE00374749 /* BullpenReportView.swift in Sources */,
 				D57E62392BD2CD7D003987E1 /* global_variables.swift in Sources */,
 				D57E623A2BD2CD7D003987E1 /* ScoreboardView.swift in Sources */,
 				D57E623B2BD2CD7D003987E1 /* MainView.swift in Sources */,
 				D57E623C2BD2CD7D003987E1 /* PitchLocationView.swift in Sources */,
-				D5064EEC2BE041BE00F01886 /* SettingsView.swift in Sources */,
 				D58DAF152C45D38D003EFB2E /* FileNamePopUpView.swift in Sources */,
 				D58FE76D2BD717DC004FC234 /* BatterPositionView.swift in Sources */,
+				D5EE0C4A2D11CFD500374749 /* SettingsView.swift in Sources */,
 				D57E623E2BD2CD7D003987E1 /* PitchResultView.swift in Sources */,
 				D57E623F2BD2CD7D003987E1 /* OutDetailView.swift in Sources */,
 				D57E62402BD2CD7D003987E1 /* HitDetailView.swift in Sources */,
@@ -214,7 +271,6 @@
 				D57E62432BD2CD7D003987E1 /* GameContainerView.swift in Sources */,
 				D5959D9D2BE5381B00FFDA0B /* TipView.swift in Sources */,
 				D5064EEA2BDF180400F01886 /* VelocityInputView.swift in Sources */,
-				D53C50042CB182550073BE9F /* BullpenReportView.swift in Sources */,
 				D57E62442BD2CD7D003987E1 /* PopupAlertView.swift in Sources */,
 				D57E62452BD2CD7D003987E1 /* report_variables.swift in Sources */,
 				D57E62462BD2CD7D003987E1 /* SelectPitcherView.swift in Sources */,
@@ -364,7 +420,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "LGT-Productions.ArmBarn";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -393,7 +449,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "LGT-Productions.ArmBarn";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
