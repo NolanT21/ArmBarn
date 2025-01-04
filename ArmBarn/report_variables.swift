@@ -103,13 +103,7 @@ struct AtBatDT {
     //var result: String = ""
     var outs: Int = 0
     var inning: Int = 0
-    var batter_hand: String = ""
     var pitch_list: [pitch_info_ab] = []
-    var x_coor_list: [Double] = []
-    var y_coor_list: [Double] = []
-    var pitch_color_list: [Color] = []
-    var plot_pitch_list: [Int] = []
-    var pitch_num_list: [Int] = []
 }
 
 struct pitch_info_ab {
@@ -122,8 +116,8 @@ struct pitch_info_ab {
     var units: String = ""
 }
 
-struct PBPLog{
-    //let id = UUID()
+struct PBPLog: Identifiable {
+    let id = UUID()
     var pitch_num : Int
     var pitch_type : String
     var result : String
