@@ -123,7 +123,7 @@ struct PitchersAppeared {
     @Attribute(.externalStorage) var pitch_type: String
     @Attribute(.externalStorage) var result_detail: String
     @Attribute(.externalStorage) var balls: Int
-    @Attribute(.externalStorage) var strikes: Int
+    @Attribute(.externalStorage) var strikes: Int 
     @Attribute(.externalStorage) var outs: Int
     @Attribute(.externalStorage) var inning: Int
     @Attribute(.externalStorage) var atbats: Int
