@@ -99,6 +99,7 @@ struct PitchLocationView: View {
                                 }
                                 
                                 if event.end_ab_rd.contains(event.result_detail) {
+                                    print(event.result_detail)
                                     newAtBat = true
                                 }
                                 else if balls == 0 && strikes == 0 && scoreboard.pitches > 0 && current_pitcher.lastName != "Change Me"{
@@ -146,8 +147,63 @@ struct PitchLocationView: View {
                         
                         
                         ZStack{
+                            
                             if current_pitcher.pitch_num > 0{
                                 PitchLocationInput()
+                            }
+                            
+                            VStack(alignment: .center){
+                                
+                                if ASBatterStance == true {
+                                    Button {
+                                        if ptconfig.npe_EOAB != true {
+                                            newAtBat = true
+                                        }
+                                        
+                                    } label: {
+                                        HStack{
+                                            
+                                            //Spacer()
+                                            
+                                            if event.batter_stance == "R" {
+                                                Image(systemName: "chevron.left")
+                                                    .imageScale(.small)
+                                                    .foregroundStyle(ptconfig.npe_EOAB ? Color.white.opacity(0.7) : Color.white)
+                                                    .padding(.trailing, -5)
+                                            }
+                                            else {
+                                                Image(systemName: "chevron.left")
+                                                    .imageScale(.small)
+                                                    .foregroundStyle(.clear)
+                                                    .padding(.trailing, -5)
+                                            }
+                                            
+                                            Text("Batter Stance")
+                                                .font(.system(size: 16))
+                                                .foregroundStyle(ptconfig.npe_EOAB ? Color.white.opacity(0.7) : Color.white)
+                                            
+                                            if event.batter_stance == "L" {
+                                                Image(systemName: "chevron.right")
+                                                    .imageScale(.small)
+                                                    .foregroundStyle(ptconfig.npe_EOAB ? Color.white.opacity(0.7) : Color.white)
+                                                    .padding(.leading, -5)
+                                            }
+                                            else {
+                                                Image(systemName: "chevron.right")
+                                                    .imageScale(.small)
+                                                    .foregroundStyle(.clear)
+                                                    .padding(.leading, -5)
+                                            }
+                                            
+                                            //Spacer()
+                                            
+                                        }
+                                        
+                                    }
+                                    .padding(.top, 58)
+                                }
+                                
+                                Spacer()
                             }
                             
                             VStack{
@@ -162,7 +218,10 @@ struct PitchLocationView: View {
                                 
                             }
                             
-                            
+                            if newAtBat == true  && ASBatterStance == true{
+                                BatterPositionView(isActive: $newAtBat, close_action: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {newAtBat = false}})
+                            }
+
                             if scoreboard.baserunners > 0 && ptconfig.hidePitchOverlay == false{
                                 VStack {
                                     Spacer()
@@ -187,62 +246,6 @@ struct PitchLocationView: View {
                                     }
                                     Spacer()
                                 }
-                            }
-                            
-                            VStack(alignment: .center){
-                                
-                                if ASBatterStance == true{
-                                    Button {
-                                        newAtBat = true
-                                        
-                                    } label: {
-                                        HStack{
-                                            
-                                            //Spacer()
-                                            
-                                            if event.batter_stance == "R" {
-                                                Image(systemName: "chevron.left")
-                                                    .imageScale(.small)
-                                                    .foregroundStyle(.white)
-                                                    .padding(.trailing, -5)
-                                            }
-                                            else {
-                                                Image(systemName: "chevron.left")
-                                                    .imageScale(.small)
-                                                    .foregroundStyle(.clear)
-                                                    .padding(.trailing, -5)
-                                            }
-                                            
-                                            Text("Batter Stance")
-                                                .font(.system(size: 16))
-                                                .foregroundStyle(.white)
-                                            
-                                            if event.batter_stance == "L" {
-                                                Image(systemName: "chevron.right")
-                                                    .imageScale(.small)
-                                                    .foregroundStyle(.white)
-                                                    .padding(.leading, -5)
-                                            }
-                                            else {
-                                                Image(systemName: "chevron.right")
-                                                    .imageScale(.small)
-                                                    .foregroundStyle(.clear)
-                                                    .padding(.leading, -5)
-                                            }
-                                            
-                                            //Spacer()
-                                            
-                                        }
-                                        
-                                    }
-                                    .padding(.top, 58)
-                                }
-                                
-                                Spacer()
-                            }
-                            
-                            if newAtBat == true  && ASBatterStance == true{
-                                BatterPositionView(isActive: $newAtBat, close_action: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {newAtBat = false}})
                             }
                             
                             if current_pitcher.pitch_num <= 0 {
@@ -531,7 +534,7 @@ struct PitchLocationView: View {
         var num_list: [Int] = []
         var num = 0
         var prev_batter_stance = ""
-        var prev_outs = 0
+        var outs = 99
         var prev_inning = 1
         at_bat_brkdwn.at_bat_list.removeAll()
         
@@ -545,12 +548,16 @@ struct PitchLocationView: View {
                 let balls = evnt.balls
                 let strikes = evnt.strikes
                 let inning = evnt.inning
-                let outs = evnt.outs
+                //var outs = evnt.outs
                 let x_coor = evnt.pitch_x_location
                 let y_coor = evnt.pitch_y_location
                 let batter_hand = evnt.batter_stance
                 var plot = 1
                 //sync unit variable
+                
+                if outs == 99 {
+                    outs = evnt.outs
+                }
                 
                 if evnt.pitch_type == "P1" {
                     pitch_type = current_pitcher.pitch1
@@ -565,15 +572,16 @@ struct PitchLocationView: View {
                     pitch_type = current_pitcher.pitch4
                 }
                 
-                if (evnt.atbats > cur_at_bat && evnt.result_detail != "RE")/* || (evnt.atbats == cur_at_bat && ) */{
+                if (evnt.atbats > cur_at_bat && evnt.result_detail != "RE" && evnt.result_detail != "R") {
                     cur_at_bat = evnt.atbats
-                    at_bat_brkdwn.at_bat_list.append(AtBatDT(outs: prev_outs, inning: prev_inning, batter_hand: prev_batter_stance, pitch_list: pitches_this_ab, x_coor_list: x_coor_list, y_coor_list: y_coor_list, pitch_color_list: color_list, plot_pitch_list: plot_list, pitch_num_list: num_list))
+                    at_bat_brkdwn.at_bat_list.append(AtBatDT(outs: outs, inning: prev_inning, batter_hand: prev_batter_stance, pitch_list: pitches_this_ab, x_coor_list: x_coor_list, y_coor_list: y_coor_list, pitch_color_list: color_list, plot_pitch_list: plot_list, pitch_num_list: num_list))
                     pitches_this_ab.removeAll()
                     x_coor_list.removeAll()
                     y_coor_list.removeAll()
                     color_list.removeAll()
                     plot_list.removeAll()
                     num_list.removeAll()
+                    outs = evnt.outs
                     num = 0
                     result = ""
                 }
@@ -648,6 +656,9 @@ struct PitchLocationView: View {
                         result = "Out"
                     }
                     else if evnt.result_detail == "R" || evnt.result_detail == "RE"{
+//                        if outs > 0 {
+//                            outs -= 1
+//                        }
                         num -= 1
                         plot = 0
                         color = Color(.red)
@@ -711,12 +722,17 @@ struct PitchLocationView: View {
                 pitches_this_ab.append(pitch_info_ab(result: result, result_color: color, pitch_type: pitch_type, velocity: velocity, balls: balls, strikes: strikes, units: "mph"))
                 
                 prev_batter_stance = batter_hand
-                prev_outs = outs
+                //prev_outs = outs
                 prev_inning = inning
                 
                 if evnt == events.last {
-                    at_bat_brkdwn.at_bat_list.append(AtBatDT(outs: prev_outs, inning: prev_inning, batter_hand: prev_batter_stance, pitch_list: pitches_this_ab, x_coor_list: x_coor_list, y_coor_list: y_coor_list, pitch_color_list: color_list, plot_pitch_list: plot_list, pitch_num_list: num_list))
+                    at_bat_brkdwn.at_bat_list.append(AtBatDT(outs: outs, inning: prev_inning, batter_hand: prev_batter_stance, pitch_list: pitches_this_ab, x_coor_list: x_coor_list, y_coor_list: y_coor_list, pitch_color_list: color_list, plot_pitch_list: plot_list, pitch_num_list: num_list))
                 }
+            }
+            else if pitches_this_ab.count > 0 {
+                //print(pitches_this_ab.count)
+                at_bat_brkdwn.at_bat_list.append(AtBatDT(outs: outs, inning: prev_inning, batter_hand: prev_batter_stance, pitch_list: pitches_this_ab, x_coor_list: x_coor_list, y_coor_list: y_coor_list, pitch_color_list: color_list, plot_pitch_list: plot_list, pitch_num_list: num_list))
+                pitches_this_ab.removeAll()
             }
         }
         
@@ -1943,113 +1959,117 @@ struct PitchClockViolation: View {
     
     var body: some View {
         VStack{
+
             VStack{
-                
-                Spacer()
-                
-                HStack{
-                    
-                    Button {
-                        withAnimation{
-                            ptconfig.non_pitch_event = false
-                        }
-                    } label: {
-                            
-                        HStack(spacing: 1){
-                            Image(systemName: "baseball.fill")
-                                .imageScale(.medium)
-                                .font(.system(size: 17))
-                                .frame(width: sbl_width, height: sbl_height)
-                                .foregroundColor(Color.white)
-                            
-                            Text("PITCHES")
-                                .font(.system(size: 15))
-                                .fontWeight(.black)
-                                .padding(.vertical, 8.0)
-                                .padding(.horizontal, 5.0)
-                        }
-                        .padding(.leading, 7)
-                        
-                    }
-                    .foregroundColor(Color.white)
-                    .background(Color("ScoreboardGreen"))
-                    .cornerRadius(8.0)
-                    .padding(.leading, 15)
                     
                     Spacer()
                     
+                    HStack{
+                        
+                        Button {
+                            withAnimation{
+                                ptconfig.non_pitch_event = false
+                            }
+                        } label: {
+                                
+                            HStack(spacing: 1){
+                                Image(systemName: "baseball.fill")
+                                    .imageScale(.medium)
+                                    .font(.system(size: 17))
+                                    .frame(width: sbl_width, height: sbl_height)
+                                    .foregroundColor(Color.white)
+                                
+                                Text("PITCHES")
+                                    .font(.system(size: 15))
+                                    .fontWeight(.black)
+                                    .padding(.vertical, 8.0)
+                                    .padding(.horizontal, 5.0)
+                            }
+                            .padding(.leading, 7)
+                            
+                        }
+                        .foregroundColor(Color.white)
+                        .background(Color("ScoreboardGreen"))
+                        .cornerRadius(8.0)
+                        .padding(.leading, 15)
+                        
+                        Spacer()
+                        
+                    }
+                    
+                    VStack{
+                        
+                        Button{
+                            withAnimation{
+                                ptconfig.non_pitch_event = false
+                                ptconfig.npe_EOAB = true
+                                add_Intentional_Walk()
+                                add_non_pitch_event()
+                                //newAtBat = true
+                            }
+                            
+                        } label: {
+                            Text("INTENTIONAL WALK")
+                                .fontWeight(.bold)
+                                .font(.system(size: 17))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, ver_padding / 2)
+                        }
+                        .foregroundColor(Color.white)
+                        .background(Color("ScoreboardGreen"))
+                        .cornerRadius(8.0)
+                        .padding(.horizontal, 20)
+                        
+                        Button{
+                            withAnimation{
+                                //Write Violation to Event
+                                //Add logic to pbp log
+                                ptconfig.non_pitch_event = false
+                                add_Ball()
+                                add_non_pitch_event()
+                            }
+                        } label: {
+                            Text("VIOLATION - BALL")
+                                .fontWeight(.bold)
+                                .font(.system(size: 17))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, ver_padding / 2)
+                        }
+                        .foregroundColor(Color.white)
+                        .background(Color.red)
+                        .cornerRadius(8.0)
+                        .padding(.horizontal, 20)
+                        
+                        Button{
+                            withAnimation{
+                                //Write Violation to Event
+                                //Add logic to pbp log
+                                ptconfig.non_pitch_event = false
+                                add_Strike()
+                                add_non_pitch_event()
+                            }
+                        } label: {
+                            Text("VIOLATION - STRIKE")
+                                .fontWeight(.bold)
+                                .font(.system(size: 17))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, ver_padding / 2)
+                        }
+                        .foregroundColor(Color.white)
+                        .background(Color.red)
+                        .cornerRadius(8.0)
+                        .padding(.horizontal, 20)
+                        
+                    }
+                    .padding(.vertical, 25.0)
+                    .padding(.horizontal, 20.0)
+                    .background(Color.black.opacity(0.8))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                        
                 }
-                
-                
-                VStack{
-                    
-                    Button{
-                        withAnimation{
-                            ptconfig.non_pitch_event = false
-                            add_Intentional_Walk()
-                            add_non_pitch_event()
-                        }
-                    } label: {
-                        Text("INTENTIONAL WALK")
-                            .fontWeight(.bold)
-                            .font(.system(size: 17))
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, ver_padding / 2)
-                    }
-                    .foregroundColor(Color.white)
-                    .background(Color("ScoreboardGreen"))
-                    .cornerRadius(8.0)
-                    .padding(.horizontal, 20)
-                    
-                    Button{
-                        withAnimation{
-                            //Write Violation to Event
-                            //Add logic to pbp log
-                            ptconfig.non_pitch_event = false
-                            add_Ball()
-                            add_non_pitch_event()
-                        }
-                    } label: {
-                        Text("VIOLATION - BALL")
-                            .fontWeight(.bold)
-                            .font(.system(size: 17))
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, ver_padding / 2)
-                    }
-                    .foregroundColor(Color.white)
-                    .background(Color.red)
-                    .cornerRadius(8.0)
-                    .padding(.horizontal, 20)
-                    
-                    Button{
-                        withAnimation{
-                            //Write Violation to Event
-                            //Add logic to pbp log
-                            ptconfig.non_pitch_event = false
-                            add_Strike()
-                            add_non_pitch_event()
-                        }
-                    } label: {
-                        Text("VIOLATION - STRIKE")
-                            .fontWeight(.bold)
-                            .font(.system(size: 17))
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, ver_padding / 2)
-                    }
-                    .foregroundColor(Color.white)
-                    .background(Color.red)
-                    .cornerRadius(8.0)
-                    .padding(.horizontal, 20)
-                    
-                }
-                .padding(.vertical, 25.0)
-                .padding(.horizontal, 20.0)
-                .background(Color.black.opacity(0.8))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                    
-            }
-            .transition(.move(edge: .bottom))
-            .ignoresSafeArea()
+                .transition(.move(edge: .bottom))
+                .ignoresSafeArea()
+            
         }
     }
     
@@ -2064,7 +2084,7 @@ struct PitchClockViolation: View {
     }
 
     func print_Event_String() {
-        print(current_pitcher.idcode, event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats, event.batter_stance, event.velocity, event.x_cor, event.y_cor)
+        print(current_pitcher.idcode, event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats, event.batter_stance, event.velocity, 0, 0)
     }
     
     func add_Intentional_Walk() {
@@ -2200,6 +2220,8 @@ struct PitchLocationInput : View {
     
     @Environment(\.modelContext) var context
     
+    @State private var newAtBat: Bool = false
+    
     @State var location: CGPoint = .zero
     @State var cur_pitch_color = Color.clear
     @State var cur_pitch_outline = Color.clear
@@ -2219,138 +2241,154 @@ struct PitchLocationInput : View {
              }
     }
     var body: some View {
-        if !ptconfig.hidePitchOverlay{
+        ZStack{
             
-            ZStack{
+            if !ptconfig.hidePitchOverlay{
                 
-                PitchOverlayPrevPitches()
-                    .transition(.opacity)
+                ZStack{
+                    
+                    PitchOverlayPrevPitches()
+                        .transition(.opacity)
+                    
+                    Rectangle()
+                        .fill(Color.black.opacity(0.01))
+                }
                 
-                Rectangle()
-                    .fill(Color.black.opacity(0.01))
-            }
-            
-            if !ptconfig.non_pitch_event {
-                VStack{
-                    
-                    Spacer()
-                    
-                    HStack{
-                        
-                        Button {
-                            withAnimation{
-                                ptconfig.non_pitch_event = true
-                            }
-                        } label: {
-                                
-                            HStack{
-                                Text("NON-PITCH")
-                                    .font(.system(size: 15))
-                                    .fontWeight(.black)
-                                    .padding(.vertical, 8.0)
-                                    .padding(.horizontal, 5.0)
-                            }
-                            
-                            
-                        }
-                        .foregroundColor(Color.white)
-                        .background(Color("ScoreboardGreen"))
-                        .cornerRadius(8.0)
-                        .padding(.leading, 15)
+                if !ptconfig.non_pitch_event {
+                    VStack{
                         
                         Spacer()
                         
-                    }
-                    
-                    
-                    VStack{
-                        if current_pitcher.pitch_num < 4 {
-                            HStack{
-                                ForEach(0..<current_pitcher.pitch_num,  id: \.self) { pt_num in
-                                    Button(action: {
-                                        withAnimation{
-                                            ptconfig.hidePitchOverlay.toggle()
-                                            event.pitch_type = "P\(pt_num + 1)"
-                                            ptconfig.ptcolor = ptconfig.arsenal_colors[pt_num]
-                                            Task { await LocationInputTip.locationInput.donate() }
-                                            }
-                                        }) {
-                                            Text("\(current_pitcher.arsenal[pt_num])")
-                                                .textCase(.uppercase)
-                                                .fontWeight(.bold)
-                                                .font(.system(size: 15))
-                                                .frame(maxWidth: .infinity)
-                                                .padding(.vertical, ver_padding)
-                                        }
-                                    .background(ptconfig.arsenal_colors[pt_num])
-                                    .foregroundColor(Color.white)
-                                    .cornerRadius(8.0)
-                                    }
-                                }
-                            }
+                        HStack{
                             
-                        else if current_pitcher.pitch_num == 4 {
+                            Button {
+                                withAnimation{
+                                    ptconfig.non_pitch_event = true
+                                }
+                            } label: {
+                                    
                                 HStack{
-                                    ForEach(0..<2,  id: \.self) { pt_num in
+                                    Text("NON-PITCH")
+                                        .font(.system(size: 15))
+                                        .fontWeight(.black)
+                                        .padding(.vertical, 8.0)
+                                        .padding(.horizontal, 5.0)
+                                }
+                                
+                                
+                            }
+                            .foregroundColor(Color.white)
+                            .background(Color("ScoreboardGreen"))
+                            .cornerRadius(8.0)
+                            .padding(.leading, 15)
+                            
+                            Spacer()
+                            
+                        }
+                        
+                        
+                        VStack{
+                            if current_pitcher.pitch_num < 4 {
+                                HStack{
+                                    ForEach(0..<current_pitcher.pitch_num,  id: \.self) { pt_num in
                                         Button(action: {
                                             withAnimation{
                                                 ptconfig.hidePitchOverlay.toggle()
                                                 event.pitch_type = "P\(pt_num + 1)"
                                                 ptconfig.ptcolor = ptconfig.arsenal_colors[pt_num]
                                                 Task { await LocationInputTip.locationInput.donate() }
+                                                }
+                                            }) {
+                                                Text("\(current_pitcher.arsenal[pt_num])")
+                                                    .textCase(.uppercase)
+                                                    .fontWeight(.bold)
+                                                    .font(.system(size: 15))
+                                                    .frame(maxWidth: .infinity)
+                                                    .padding(.vertical, ver_padding)
                                             }
-                                        }) {
+                                        .background(ptconfig.arsenal_colors[pt_num])
+                                        .foregroundColor(Color.white)
+                                        .cornerRadius(8.0)
+                                        }
+                                    }
+                                }
+                                
+                            else if current_pitcher.pitch_num == 4 {
+                                    HStack{
+                                        ForEach(0..<2,  id: \.self) { pt_num in
+                                            Button(action: {
+                                                withAnimation{
+                                                    ptconfig.hidePitchOverlay.toggle()
+                                                    event.pitch_type = "P\(pt_num + 1)"
+                                                    ptconfig.ptcolor = ptconfig.arsenal_colors[pt_num]
+                                                    Task { await LocationInputTip.locationInput.donate() }
+                                                }
+                                            }) {
+                                                    Text("\(current_pitcher.arsenal[pt_num])")
+                                                        .textCase(.uppercase)
+                                                        .fontWeight(.bold)
+                                                        .font(.system(size: 17))
+                                                        .frame(maxWidth: .infinity)
+                                                        .padding(.vertical, ver_padding / 2)
+                                            }
+                                            .background(ptconfig.arsenal_colors[pt_num])
+                                            .foregroundColor(Color.white)
+                                            .cornerRadius(8.0)
+                                        }
+                                    }
+                                    
+                                    HStack{
+                                        ForEach(2..<4,  id: \.self) { pt_num in
+                                            Button(action: {
+                                                withAnimation{
+                                                    ptconfig.hidePitchOverlay.toggle()
+                                                    event.pitch_type = "P\(pt_num + 1)"
+                                                    ptconfig.ptcolor = ptconfig.arsenal_colors[pt_num]
+                                                    Task { await LocationInputTip.locationInput.donate() }
+                                                }
+                                            }) {
                                                 Text("\(current_pitcher.arsenal[pt_num])")
                                                     .textCase(.uppercase)
                                                     .fontWeight(.bold)
                                                     .font(.system(size: 17))
                                                     .frame(maxWidth: .infinity)
                                                     .padding(.vertical, ver_padding / 2)
-                                        }
-                                        .background(ptconfig.arsenal_colors[pt_num])
-                                        .foregroundColor(Color.white)
-                                        .cornerRadius(8.0)
-                                    }
-                                }
-                                
-                                HStack{
-                                    ForEach(2..<4,  id: \.self) { pt_num in
-                                        Button(action: {
-                                            withAnimation{
-                                                ptconfig.hidePitchOverlay.toggle()
-                                                event.pitch_type = "P\(pt_num + 1)"
-                                                ptconfig.ptcolor = ptconfig.arsenal_colors[pt_num]
-                                                Task { await LocationInputTip.locationInput.donate() }
                                             }
-                                        }) {
-                                            Text("\(current_pitcher.arsenal[pt_num])")
-                                                .textCase(.uppercase)
-                                                .fontWeight(.bold)
-                                                .font(.system(size: 17))
-                                                .frame(maxWidth: .infinity)
-                                                .padding(.vertical, ver_padding / 2)
-                                        }
-                                        .background(ptconfig.arsenal_colors[pt_num])
-                                        .foregroundColor(Color.white)
-                                        .cornerRadius(8.0)
+                                            .background(ptconfig.arsenal_colors[pt_num])
+                                            .foregroundColor(Color.white)
+                                            .cornerRadius(8.0)
+                                    }
                                 }
                             }
                         }
+                        .padding(.vertical, 25.0)
+                        .padding(.horizontal, 20.0)
+                        .background(Color.black.opacity(0.8))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                            
                     }
-                    .padding(.vertical, 25.0)
-                    .padding(.horizontal, 20.0)
-                    .background(Color.black.opacity(0.8))
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                        
-                }
-                .transition(.move(edge: .bottom))
-                .ignoresSafeArea()
-            }
-            else {
-                PitchClockViolation()
                     .transition(.move(edge: .bottom))
                     .ignoresSafeArea()
+                }
+                else {
+                    PitchClockViolation()
+                        .onDisappear{
+                            if event.pitch_result == "IW" || (event.pitch_result == "VA" && event.result_detail == "W") || (event.pitch_result == "VZ" && event.result_detail == "K") {
+                                newAtBat = true
+                                ptconfig.npe_EOAB = true
+                            }
+                        }
+                        .transition(.move(edge: .bottom))
+                        .ignoresSafeArea()
+                }
             }
+            
+            if newAtBat == true{
+                BatterPositionView(isActive: $newAtBat, close_action: {DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {newAtBat = false; ptconfig.npe_EOAB = false}})
+            }
+            
+            //Batter Position PopUp Here
+            
         }
     }
 }
