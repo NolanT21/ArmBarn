@@ -119,19 +119,19 @@ struct PitchersAppeared {
     
     @Attribute(.externalStorage) var pitcher_id = UUID()
     
-    @Attribute(.externalStorage) var pitch_result: String
-    @Attribute(.externalStorage) var pitch_type: String
-    @Attribute(.externalStorage) var result_detail: String
-    @Attribute(.externalStorage) var balls: Int
-    @Attribute(.externalStorage) var strikes: Int 
-    @Attribute(.externalStorage) var outs: Int
-    @Attribute(.externalStorage) var inning: Int
-    @Attribute(.externalStorage) var atbats: Int
+    var pitch_result: String
+    var pitch_type: String
+    var result_detail: String
+    var balls: Int
+    var strikes: Int
+    var outs: Int
+    var inning: Int
+    var atbats: Int
     @Attribute(.externalStorage) var pitch_x_location: Double = 0
     @Attribute(.externalStorage) var pitch_y_location: Double = 0
-    @Attribute(.externalStorage) var batter_stance: String = ""
-    @Attribute(.externalStorage) var velocity: Double = 0
-    @Attribute(.externalStorage) var event_number: Int = 0
+    var batter_stance: String = ""
+    var velocity: Double = 0
+    var event_number: Int = 0
     
     init(pitcher_id: UUID, pitch_result: String, pitch_type: String, result_detail: String, balls: Int, strikes: Int, outs: Int, inning: Int, atbats: Int, pitch_x_location: Double, pitch_y_location: Double, batter_stance: String, velocity: Double, event_number: Int) {
         self.pitcher_id = pitcher_id
