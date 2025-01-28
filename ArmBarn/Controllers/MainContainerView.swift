@@ -11,20 +11,18 @@ import Observation
 
 struct MainContainerView: View {
     
-    @AppStorage("BullpenMode") var ASBullpenMode : Bool?
+    //@AppStorage("BullpenMode") var ASBullpenMode : Bool?
     
-    @Environment(Event_String.self) var event
-    @Environment(\.dismiss) var dismiss
+    //@Environment(Event_String.self) var event
+    //@Environment(\.dismiss) var dismiss
     
-    @Query(sort: \Event.event_number) var events: [Event]
+    //@Query(sort: \Event.event_number) var events: [Event]
     
-    @State private var showBullpenMode : Bool = false
+    //@State private var showBullpenMode : Bool = false
       
     var body: some View {
         VStack{
-            NavigationStack{
-                ZStack{
-//                    if !(ASBullpenMode ?? false) {
+//          if !(ASBullpenMode ?? false) {
 //                        PitchLocationView()
 //                            .preferredColorScheme(.dark)
 //                            .ignoresSafeArea()
@@ -36,11 +34,9 @@ struct MainContainerView: View {
 //                            }
 //                        }
 //                    }
-                    PitchLocationView()
-                        .preferredColorScheme(.dark)
-                        .ignoresSafeArea()
-                }
-            }
+            PitchLocationView()
+                .preferredColorScheme(.dark)
+                .ignoresSafeArea()
         }
     }
     
