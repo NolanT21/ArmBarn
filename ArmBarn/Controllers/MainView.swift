@@ -28,8 +28,9 @@ struct MainView: View {
                     //Move to when game charting is active
                     ScoreboardView()
                     ZStack{
-                        MainContainerView()
+                        PitchLocationView()
                             .preferredColorScheme(.dark)
+                            .ignoresSafeArea()
                     }
                 }
                 .background(Color("ScoreboardGreen"))
