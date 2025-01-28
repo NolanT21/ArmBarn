@@ -341,6 +341,9 @@ struct PitchResultView: View {
                                     showPitchResult = true
                                 }
                             }
+                            else if showOutRecorded == true {
+                                showOutRecorded = false
+                            }
                             else if showVeloInput == false{
                                 showVeloInput = true
                             }
