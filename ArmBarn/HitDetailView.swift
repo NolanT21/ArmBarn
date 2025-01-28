@@ -10,12 +10,19 @@ import SwiftData
 
 struct HitDetailView: View {
     
+    @Binding var path: [Int]
+    
     @Environment(Scoreboard.self) var scoreboard
     @Environment(Event_String.self) var event
     @Environment(PitchTypeConfig.self) var ptconfig
+    @Environment(currentPitcher.self) var current_pitcher
+    
+    @Environment(\.dismiss) var dismiss
+    
+    @State var sbl_width: Double = 17.0
+    @State var sbl_height: Double = 13.0
     
     var body: some View {
-        NavigationStack{
             
             ZStack{
                 
@@ -23,23 +30,23 @@ struct HitDetailView: View {
                     Image("PLI_Background")
                         .resizable()
                     
-//                    ForEach(ptconfig.pitch_x_loc.indices, id: \.self){ index in
-//                        let xloc = ptconfig.pitch_x_loc[index]
-//                        let yloc = ptconfig.pitch_y_loc[index]
-//                        let point = CGPoint(x: xloc, y: yloc)
-//                        let pitch_color = ptconfig.ab_pitch_color[index]
-//                        Circle()
-//                            .fill(pitch_color)
-//                            .stroke(.white, lineWidth: 4)
-//                            .frame(width: 40, height: 40, alignment: .center)
-//                            .position(point)
-//                            .overlay {
-//                                Text("\(index + 1)")
-//                                    .foregroundColor(.white)
-//                                    .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
-//                                    .position(point)
-//                            }
-//                    }
+                    ForEach(ptconfig.pitch_x_loc.indices, id: \.self){ index in
+                        let xloc = ptconfig.pitch_x_loc[index]
+                        let yloc = ptconfig.pitch_y_loc[index]
+                        let point = CGPoint(x: xloc, y: yloc)
+                        let pitch_color = ptconfig.ab_pitch_color[index]
+                        Circle()
+                            .fill(pitch_color)
+                            .stroke(.white, lineWidth: 4)
+                            .frame(width: 40, height: 40, alignment: .center)
+                            .position(point)
+                            .overlay {
+                                Text("\(index + 1)")
+                                    .foregroundColor(.white)
+                                    .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                                    .position(point)
+                            }
+                    }
                 }
                 .blur(radius: 20, opaque: false)
                 
@@ -51,11 +58,12 @@ struct HitDetailView: View {
                         
                         Spacer()
                         
-                        NavigationLink{
-                            MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                                event.result_detail = "S"
-                                record_Hit()
-                            }
+                        Button {
+                            event.result_detail = "S"
+                            record_Hit()
+                            
+                            path.removeAll()
+                            
                         } label: {
                             Text("SINGLE")
                                 .font(.system(size: 22))
@@ -67,11 +75,12 @@ struct HitDetailView: View {
                         .foregroundColor(Color.white)
                         .cornerRadius(8.0)
                     
-                        NavigationLink{
-                            MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                                event.result_detail = "D"
-                                record_Hit()
-                            }
+                        Button{
+                            event.result_detail = "D"
+                            record_Hit()
+                            
+                            path.removeAll()
+                                
                         } label: {
                             Text("DOUBLE")
                                 .font(.system(size: 22))
@@ -83,11 +92,12 @@ struct HitDetailView: View {
                         .foregroundColor(Color.white)
                         .cornerRadius(8.0)
                         
-                        NavigationLink{
-                            MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                                event.result_detail = "T"
-                                record_Hit()
-                            }
+                        Button{
+                            event.result_detail = "T"
+                            record_Hit()
+                            
+                            path.removeAll()
+                                
                         } label: {
                             Text("TRIPLE")
                                 .font(.system(size: 22))
@@ -99,11 +109,12 @@ struct HitDetailView: View {
                         .foregroundColor(Color.white)
                         .cornerRadius(8.0)
                         
-                        NavigationLink{
-                            MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                                event.result_detail = "H"
-                                record_Hit()
-                            }
+                        Button {
+                            event.result_detail = "H"
+                            record_Hit()
+                            
+                            path.removeAll()
+                                
                         } label: {
                             Text("HOMERUN")
                                 .font(.system(size: 22))
@@ -115,11 +126,12 @@ struct HitDetailView: View {
                         .foregroundColor(Color.white)
                         .cornerRadius(8.0)
                         
-                        NavigationLink{
-                            MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                                event.result_detail = "E"
-                                record_Hit()
-                            }
+                        Button{
+                            event.result_detail = "E"
+                            record_Hit()
+                            
+                            path.removeAll()
+
                         } label: {
                             Text("ERROR")
                                 .font(.system(size: 22))
@@ -142,8 +154,65 @@ struct HitDetailView: View {
                 
             }
             .background(.black)
+            .navigationTitle("")
+            .navigationBarTitleDisplayMode(.inline)
             .ignoresSafeArea()
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(Color("ScoreboardGreen"))
+            .toolbar {
+                ToolbarItemGroup(placement: .topBarLeading) {
+                    
+                    HStack{
+
+                        Button(action: {
+                            let impact = UIImpactFeedbackGenerator(style: .medium)
+                            impact.impactOccurred()
+                            dismiss()
+                            
+                        }) {
+                            Image(systemName: "chevron.left")
+                                .imageScale(.medium)
+                                .font(.system(size: 17))
+                                .frame(width: sbl_width, height: sbl_height)
+                                .foregroundColor(.white)
+                                .bold()
+                            Text("BACK")
+                                .font(.system(size: 17))
+                                .fontWeight(.heavy)
+                                .foregroundColor(.white)
+                                .padding(.leading, -5)
+                        }
+                        .padding(.leading, -5)
+                    }
+                }
+                
+                ToolbarItemGroup(placement: .principal) {
+                    HStack(alignment: .center){
+                        Text("P")
+                            .font(.system(size: 20))
+                            .fontWeight(.bold)
+                            .foregroundColor(Color.white)
+                        
+                        ZStack(alignment: .leading){
+                            RoundedRectangle(cornerRadius: 4)
+                                .foregroundStyle(
+                                    Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
+                                )
+                                .frame(width: 170, height: 30)
+                            
+                            let pitcher_lname = String(current_pitcher.lastName.prefix(11))
+
+                            Text(pitcher_lname)
+                                .textCase(.uppercase)
+                                .font(.system(size: 20))
+                                .fontWeight(.black)
+                                .foregroundColor(.white)
+                                .padding(.leading,  4)
+                        }
+                    }
+                }
             }
+            
         }
     func record_Hit() {
         event.pitch_result = "H"
@@ -195,9 +264,9 @@ struct HitDetailView: View {
     
 }
 
-#Preview {
-    HitDetailView()
-        .environment(Scoreboard())
-        .environment(Event_String())
-        .environment(PitchTypeConfig())
-}
+//#Preview {
+//    HitDetailView()
+//        .environment(Scoreboard())
+//        .environment(Event_String())
+//        .environment(PitchTypeConfig())
+//}

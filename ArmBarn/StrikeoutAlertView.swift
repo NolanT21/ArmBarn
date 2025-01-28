@@ -9,6 +9,8 @@ import SwiftUI
 
 struct StrikeoutAlertView: View {
     
+    @Binding var path: [Int]
+    
     @Environment(Scoreboard.self) var scoreboard
     @Environment(Event_String.self) var event
     @Environment(PitchTypeConfig.self) var ptconfig
@@ -40,34 +42,41 @@ struct StrikeoutAlertView: View {
                 
                 HStack{
                     
-                    NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                            event.result_detail = result_detail
-                            add_Strike()
-                        }){
-                            ZStack{
-                                RoundedRectangle(cornerRadius: crnr_radius)
-                                    .foregroundColor(Color("ScoreboardGreen"))
+                    Button {
+                        event.result_detail = result_detail
+                        add_Strike()
+                        
+                        path.removeAll()
+                        
+                    } label: {
+                        ZStack{
+                            RoundedRectangle(cornerRadius: crnr_radius)
+                                .foregroundColor(Color("ScoreboardGreen"))
 
-                                Text("YES")
-                                    .font(.system(size: 20, weight: .bold))
-                                    .foregroundStyle(font_color)
-                                    .padding()
-                            }
+                            Text("YES")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundStyle(font_color)
+                                .padding()
                         }
-                    NavigationLink(destination: MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                            event.result_detail = "C"
-                            reset_Count()
-                        }){
-                            ZStack{
-                                RoundedRectangle(cornerRadius: crnr_radius)
-                                    .foregroundColor(Color("ScoreboardGreen"))
+                    }
+                    
+                    Button {
+                        event.result_detail = "C"
+                        reset_Count()
+                        
+                        path.removeAll()
+                        
+                    } label: {
+                        ZStack{
+                            RoundedRectangle(cornerRadius: crnr_radius)
+                                .foregroundColor(Color("ScoreboardGreen"))
 
-                                Text("NO")
-                                    .font(.system(size: 20, weight: .bold))
-                                    .foregroundStyle(font_color)
-                                    .padding()
-                            }
+                            Text("NO")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundStyle(font_color)
+                                .padding()
                         }
+                    }
                 }
                 .padding()
             }
@@ -163,6 +172,6 @@ struct StrikeoutAlertView: View {
     
 }
 
-#Preview {
-    StrikeoutAlertView(isActive: .constant(true), result_detail: "")
-}
+//#Preview {
+//    StrikeoutAlertView(isActive: .constant(true), result_detail: "")
+//}

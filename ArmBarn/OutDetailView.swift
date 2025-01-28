@@ -10,158 +10,225 @@ import SwiftData
 
 struct OutDetailView: View {
     
+    @Binding var path: [Int]
+    
     @Environment(Scoreboard.self) var scoreboard
     @Environment(Event_String.self) var event
     @Environment(PitchTypeConfig.self) var ptconfig
+    @Environment(currentPitcher.self) var current_pitcher
+    
+    @Environment(\.dismiss) var dismiss
+    
+    @State var sbl_width: Double = 17.0
+    @State var sbl_height: Double = 13.0
     
     var body: some View {
-        NavigationStack{
+        ZStack{
+            
             ZStack{
+                Image("PLI_Background")
+                    .resizable()
                 
-                ZStack{
-                    Image("PLI_Background")
-                        .resizable()
+                    ForEach(ptconfig.pitch_x_loc.indices, id: \.self){ index in
+                        let xloc = ptconfig.pitch_x_loc[index]
+                        let yloc = ptconfig.pitch_y_loc[index]
+                        let point = CGPoint(x: xloc, y: yloc)
+                        let pitch_color = ptconfig.ab_pitch_color[index]
+                        Circle()
+                            .fill(pitch_color)
+                            .stroke(.white, lineWidth: 4)
+                            .frame(width: 40, height: 40, alignment: .center)
+                            .position(point)
+                            .overlay {
+                                Text("\(index + 1)")
+                                    .foregroundColor(.white)
+                                    .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                                    .position(point)
+                            }
+                    }
+            }
+            .blur(radius: 20, opaque: false)
+            
+            HStack{
+                
+                Spacer()
+                
+                VStack{
                     
-//                    ForEach(ptconfig.pitch_x_loc.indices, id: \.self){ index in
-//                        let xloc = ptconfig.pitch_x_loc[index]
-//                        let yloc = ptconfig.pitch_y_loc[index]
-//                        let point = CGPoint(x: xloc, y: yloc)
-//                        let pitch_color = ptconfig.ab_pitch_color[index]
-//                        Circle()
-//                            .fill(pitch_color)
-//                            .stroke(.white, lineWidth: 4)
-//                            .frame(width: 40, height: 40, alignment: .center)
-//                            .position(point)
-//                            .overlay {
-//                                Text("\(index + 1)")
-//                                    .foregroundColor(.white)
-//                                    .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
-//                                    .position(point)
-//                            }
-//                    }
+                    Spacer()
+                    
+                    Button {
+                        event.result_detail = "F"
+                        record_Out()
+                        
+                        path.removeAll()
+                            
+                    } label: {
+                        Text("FLYOUT")
+                            .font(.system(size: 22))
+                            .fontWeight(.black)
+                            .padding(.horizontal, 45.0)
+                            .padding(.vertical, 15.0)
+                    }
+                    .background(Color("ScoreboardGreen"))
+                    .foregroundColor(Color.white)
+                    .cornerRadius(8.0)
+                
+                    Button {
+                        event.result_detail = "G"
+                        record_Out()
+                        
+                        path.removeAll()
+                        
+                    } label: {
+                        Text("GROUNDOUT")
+                            .font(.system(size: 22))
+                            .fontWeight(.black)
+                            .padding(.horizontal, 15.0)
+                            .padding(.vertical, 15.0)
+                    }
+                    .background(Color("ScoreboardGreen"))
+                    .foregroundColor(Color.white)
+                    .cornerRadius(8.0)
+                    
+                    Button {
+                        event.result_detail = "L"
+                        record_Out()
+                        
+                        path.removeAll()
+                        
+                    } label: {
+                        Text("LINEOUT")
+                            .font(.system(size: 22))
+                            .fontWeight(.black)
+                            .padding(.horizontal, 38.0)
+                            .padding(.vertical, 15.0)
+                    }
+                    .background(Color("ScoreboardGreen"))
+                    .foregroundColor(Color.white)
+                    .cornerRadius(8.0)
+                    
+                    Button {
+                        event.result_detail = "P"
+                        record_Out()
+                        
+                        path.removeAll()
+                        
+                    } label: {
+                        Text("POPOUT")
+                        
+                            .font(.system(size: 22))
+                            .fontWeight(.black)
+                            .padding(.horizontal, 40.0)
+                            .padding(.vertical, 15.0)
+                    }
+                    .background(Color("ScoreboardGreen"))
+                    .foregroundColor(Color.white)
+                    .cornerRadius(8.0)
+                    
+                    Button {
+                            event.result_detail = "Y"
+                            record_Out()
+                            
+                            path.removeAll()
+                    } label: {
+                        Text("SAC BUNT")
+                            .font(.system(size: 22))
+                            .fontWeight(.black)
+                            .padding(.horizontal, 30.0)
+                            .padding(.vertical, 15.0)
+                    }
+                    .background(Color("ScoreboardGreen"))
+                    .foregroundColor(Color.white)
+                    .cornerRadius(8.0)
+                    
+                    Button {
+                            event.result_detail = "O"
+                            record_Out()
+                            
+                            path.removeAll()
+                    } label: {
+                        Text("OTHER")
+                            .font(.system(size: 22))
+                            .fontWeight(.black)
+                            .padding(.horizontal, 49.0)
+                            .padding(.vertical, 15.0)
+                    }
+                    .background(Color("ScoreboardGreen"))
+                    .foregroundColor(Color.white)
+                    .cornerRadius(8.0)
+                    
+                    Spacer()
+                    
                 }
-                .blur(radius: 20, opaque: false)
+                
+                Spacer()
+                
+            }
+            
+        }
+        .background(.black)
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
+        .ignoresSafeArea()
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(Color("ScoreboardGreen"))
+        .toolbar {
+            ToolbarItemGroup(placement: .topBarLeading) {
                 
                 HStack{
-                    
-                    Spacer()
-                    
-                    VStack{
+
+                    Button(action: {
+                        let impact = UIImpactFeedbackGenerator(style: .medium)
+                        impact.impactOccurred()
+                        dismiss()
                         
-                        Spacer()
-                        
-                        NavigationLink{
-                            MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                                event.result_detail = "F"
-                                record_Out()
-                            }
-                        } label: {
-                            Text("FLYOUT")
-                                .font(.system(size: 22))
-                                .fontWeight(.black)
-                                .padding(.horizontal, 45.0)
-                                .padding(.vertical, 15.0)
-                        }
-                        .background(Color("ScoreboardGreen"))
-                        .foregroundColor(Color.white)
-                        .cornerRadius(8.0)
-                    
-                        NavigationLink{
-                            MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                                event.result_detail = "G"
-                                record_Out()
-                            }
-                        } label: {
-                            Text("GROUNDOUT")
-                                .font(.system(size: 22))
-                                .fontWeight(.black)
-                                .padding(.horizontal, 15.0)
-                                .padding(.vertical, 15.0)
-                        }
-                        .background(Color("ScoreboardGreen"))
-                        .foregroundColor(Color.white)
-                        .cornerRadius(8.0)
-                        
-                        NavigationLink{
-                            MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                                event.result_detail = "L"
-                                record_Out()
-                            }
-                        } label: {
-                            Text("LINEOUT")
-                                .font(.system(size: 22))
-                                .fontWeight(.black)
-                                .padding(.horizontal, 38.0)
-                                .padding(.vertical, 15.0)
-                        }
-                        .background(Color("ScoreboardGreen"))
-                        .foregroundColor(Color.white)
-                        .cornerRadius(8.0)
-                        
-                        NavigationLink{
-                            MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                                event.result_detail = "P"
-                                record_Out()
-                            }
-                        } label: {
-                            Text("POPOUT")
-                            
-                                .font(.system(size: 22))
-                                .fontWeight(.black)
-                                .padding(.horizontal, 40.0)
-                                .padding(.vertical, 15.0)
-                        }
-                        .background(Color("ScoreboardGreen"))
-                        .foregroundColor(Color.white)
-                        .cornerRadius(8.0)
-                        
-                        NavigationLink{
-                            MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                                event.result_detail = "Y"
-                                record_Out()
-                            }
-                        } label: {
-                            Text("SAC BUNT")
-                                .font(.system(size: 22))
-                                .fontWeight(.black)
-                                .padding(.horizontal, 30.0)
-                                .padding(.vertical, 15.0)
-                        }
-                        .background(Color("ScoreboardGreen"))
-                        .foregroundColor(Color.white)
-                        .cornerRadius(8.0)
-                        
-                        NavigationLink{
-                            MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                                event.result_detail = "O"
-                                record_Out()
-                            }
-                        } label: {
-                            Text("OTHER")
-                                .font(.system(size: 22))
-                                .fontWeight(.black)
-                                .padding(.horizontal, 49.0)
-                                .padding(.vertical, 15.0)
-                        }
-                        .background(Color("ScoreboardGreen"))
-                        .foregroundColor(Color.white)
-                        .cornerRadius(8.0)
-                        
-                        Spacer()
-                        
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .imageScale(.medium)
+                            .font(.system(size: 17))
+                            .frame(width: sbl_width, height: sbl_height)
+                            .foregroundColor(.white)
+                            .bold()
+                        Text("BACK")
+                            .font(.system(size: 17))
+                            .fontWeight(.heavy)
+                            .foregroundColor(.white)
+                            .padding(.leading, -5)
                     }
-                    
-                    Spacer()
-                    
+                    .padding(.leading, -5)
                 }
-                
             }
-            .background(.black)
-            .ignoresSafeArea()
-                
-                
+            
+            ToolbarItemGroup(placement: .principal) {
+                HStack(alignment: .center){
+                    Text("P")
+                        .font(.system(size: 20))
+                        .fontWeight(.bold)
+                        .foregroundColor(Color.white)
+                    
+                    ZStack(alignment: .leading){
+                        RoundedRectangle(cornerRadius: 4)
+                            .foregroundStyle(
+                                Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
+                            )
+                            .frame(width: 170, height: 30)
+                        
+                        let pitcher_lname = String(current_pitcher.lastName.prefix(11))
+
+                        Text(pitcher_lname)
+                            .textCase(.uppercase)
+                            .font(.system(size: 20))
+                            .fontWeight(.black)
+                            .foregroundColor(.white)
+                            .padding(.leading,  4)
+                    }
+                }
             }
         }
+
+    }
+    
     func record_Out() {
         event.pitch_result = "O"
         event.balls = scoreboard.balls
@@ -216,9 +283,9 @@ struct OutDetailView: View {
     }
 }
 
-#Preview {
-    OutDetailView()
-        .environment(Scoreboard())
-        .environment(Event_String())
-        .environment(PitchTypeConfig())
-}
+//#Preview {
+//    OutDetailView()
+//        .environment(Scoreboard())
+//        .environment(Event_String())
+//        .environment(PitchTypeConfig())
+//}

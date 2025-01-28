@@ -10,6 +10,8 @@ import SwiftData
 import TipKit
 
 struct PitchLocationView: View {
+
+    @State private var path = [Int]()
     
     @AppStorage("BatterStance") var ASBatterStance: Bool?
     @AppStorage("BullpenMode") var ASBullpenMode : Bool?
@@ -69,7 +71,7 @@ struct PitchLocationView: View {
        
     var body: some View {
         
-        NavigationStack{
+        NavigationStack(path: $path){
                 
                 VStack{
                     
@@ -121,7 +123,31 @@ struct PitchLocationView: View {
                                 .frame(width: 35.0, height: 35.0, alignment: .center)
                                 .position(location)
                             
-                            NavigationLink(destination: PitchResultView().navigationBarBackButtonHidden(true).preferredColorScheme(.dark).task {
+//                            NavigationLink(destination: PitchResultView(path: $path).navigationBarBackButtonHidden(true).preferredColorScheme(.dark).task {
+//                                ptconfig.pitch_x_loc.append(location.x)
+//                                event.x_cor = Double(location.x)
+//                                ptconfig.pitch_y_loc.append(location.y)
+//                                event.y_cor = Double(location.y)
+//                                ptconfig.ab_pitch_color.append(ptconfig.ptcolor)
+//                                ptconfig.pitch_cur_ab += 1
+//                                cur_pitch_color = .clear
+//                                cur_pitch_outline = .clear
+//                                
+//                                ptconfig.hidePitchOverlay = false
+//                                
+//                                locationinputtip.invalidate(reason: .actionPerformed)
+//                            }) {
+//                                Text("")
+//                                    .frame(width: 35.0, height: 35.0)
+//                            }
+//                            .background(cur_pitch_color)
+//                            .foregroundColor(.white)
+//                            .cornerRadius(90.0)
+//                            .position(location)
+                            
+                            Button{
+                                path.append(1)
+                                
                                 ptconfig.pitch_x_loc.append(location.x)
                                 event.x_cor = Double(location.x)
                                 ptconfig.pitch_y_loc.append(location.y)
@@ -134,7 +160,7 @@ struct PitchLocationView: View {
                                 ptconfig.hidePitchOverlay = false
                                 
                                 locationinputtip.invalidate(reason: .actionPerformed)
-                            }) {
+                            } label: {
                                 Text("")
                                     .frame(width: 35.0, height: 35.0)
                             }
@@ -143,6 +169,10 @@ struct PitchLocationView: View {
                             .cornerRadius(90.0)
                             .position(location)
                             
+                        }
+                        .navigationDestination(for: Int.self) { selection in
+                            PitchResultView(path: $path)
+                                .navigationBarBackButtonHidden(true).preferredColorScheme(.dark)
                         }
                         
                         

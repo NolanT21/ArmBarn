@@ -11,6 +11,8 @@ import Observation
 
 struct PitchResultView: View {
     
+    @Binding var path: [Int]
+    
     @AppStorage("StrikeType") var ASStrikeType : Bool?
     @AppStorage("VelocityInput") var ASVeloInput : Bool?
 
@@ -39,363 +41,369 @@ struct PitchResultView: View {
     
     var body: some View {
         
-        NavigationStack{
+        ZStack{
+            
             ZStack{
+                Image("PLI_Background")
+                    .resizable()
                 
-                ZStack{
-                    Image("PLI_Background")
-                        .resizable()
+                    ForEach(ptconfig.pitch_x_loc.indices, id: \.self){ index in
+                        let xloc = ptconfig.pitch_x_loc[index]
+                        let yloc = ptconfig.pitch_y_loc[index]
+                        let point = CGPoint(x: xloc, y: yloc)
+                        let pitch_color = ptconfig.ab_pitch_color[index]
+                        Circle()
+                            .fill(pitch_color)
+                            .stroke(.white, lineWidth: 4)
+                            .frame(width: 40, height: 40, alignment: .center)
+                            .position(point)
+                            .overlay {
+                                Text("\(index + 1)")
+                                    .foregroundColor(.white)
+                                    .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                                    .position(point)
+                            }
+                    }
+            }
+            .blur(radius: 20, opaque: false)
+            
+            if showPitchResult == true {
+                HStack{
                     
-//                    ForEach(ptconfig.pitch_x_loc.indices, id: \.self){ index in
-//                        let xloc = ptconfig.pitch_x_loc[index]
-//                        let yloc = ptconfig.pitch_y_loc[index]
-//                        let point = CGPoint(x: xloc, y: yloc)
-//                        let pitch_color = ptconfig.ab_pitch_color[index]
-//                        Circle()
-//                            .fill(pitch_color)
-//                            .stroke(.white, lineWidth: 4)
-//                            .frame(width: 40, height: 40, alignment: .center)
-//                            .position(point)
-//                            .overlay {
-//                                Text("\(index + 1)")
-//                                    .foregroundColor(.white)
-//                                    .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
-//                                    .position(point)
-//                            }
-//                    }
-                }
-                .blur(radius: 20, opaque: false)
-                
-                if showPitchResult == true {
-                    HStack{
+                    Spacer()
+                    
+                    VStack{
                         
                         Spacer()
                         
-                        VStack{
-                            
-                            Spacer()
-                            
-                            NavigationLink {
-                                MainContainerView().navigationBarBackButtonHidden(true).onAppear {
-                                    add_Ball()
-                                }
-                            } label: {
-                                Text("BALL")
-                                    .font(.system(size: 22))
-                                    .fontWeight(.black)
-                                    .padding(.horizontal, 53.0)
+//                            NavigationLink {
+//                                MainContainerView().navigationBarBackButtonHidden(true).onAppear {
+//                                    add_Ball()
+//                                }
+                        Button {
+                            add_Ball()
+                            path.removeAll()
+                        } label: {
+                            Text("BALL")
+                                .font(.system(size: 22))
+                                .fontWeight(.black)
+                                .padding(.horizontal, 53.0)
+                                .padding(.vertical, 15.0)
+                        }
+                        .foregroundColor(Color.white)
+                        .background(Color("ScoreboardGreen"))
+                        .cornerRadius(8.0)
+                        
+                        if scoreboard.strikes < 2 {
+                            if ASStrikeType == true {
+                                Button {
+                                    
+                                    event.pitch_result = "L"
+                                    event.result_detail = "N"
+                                    add_Strike()
+                                    
+                                    path.removeAll()
+                                    
+                                } label: {
+                                    HStack{
+                                        Text("K")
+                                            //.rotationEffect(.degrees(-180))
+                                            .font(.system(size: 22))
+                                            .fontWeight(.black)
+                                        
+                                         Text("- CALLED")
+                                            .font(.system(size: 22))
+                                            .fontWeight(.black)
+                                    }
+                                    .padding(.horizontal, 18.0)
                                     .padding(.vertical, 15.0)
+                                }
+                                .foregroundColor(Color.white)
+                                .background(Color("ScoreboardGreen"))
+                                .cornerRadius(8.0)
+                            }
+                            
+                            Button {
+                                
+                                event.pitch_result = "Z"
+                                event.result_detail = "N"
+                                add_Strike()
+                                
+                                path.removeAll()
+                                
+                            } label: {
+                                if ASStrikeType == true {
+                                    Text("K - SWINGING")
+                                        .font(.system(size: 22))
+                                        .fontWeight(.black)
+                                        .padding(.horizontal, 5.0)
+                                        .padding(.vertical, 15.0)
+                                } else {
+                                    Text("STRIKE")
+                                        .font(.system(size: 22))
+                                        .fontWeight(.black)
+                                        .padding(.horizontal, 40.0)
+                                        .padding(.vertical, 15.0)
+                                }
+                                
                             }
                             .foregroundColor(Color.white)
                             .background(Color("ScoreboardGreen"))
                             .cornerRadius(8.0)
                             
-                            if scoreboard.strikes < 2 {
-                                if ASStrikeType == true {
-                                    NavigationLink {
-                                        MainContainerView().navigationBarBackButtonHidden(true).onAppear {
-                                            event.pitch_result = "L"
-                                            event.result_detail = "N"
-                                            add_Strike()
-                                        }
-                                    } label: {
-                                        HStack{
-                                            Text("K")
-                                                //.rotationEffect(.degrees(-180))
-                                                .font(.system(size: 22))
-                                                .fontWeight(.black)
-                                            
-                                             Text("- CALLED")
-                                                .font(.system(size: 22))
-                                                .fontWeight(.black)
-                                        }
-                                        .padding(.horizontal, 18.0)
-                                        .padding(.vertical, 15.0)
-                                    }
-                                    .foregroundColor(Color.white)
-                                    .background(Color("ScoreboardGreen"))
-                                    .cornerRadius(8.0)
-                                }
-                                
-                                NavigationLink {
-                                    MainContainerView().navigationBarBackButtonHidden(true).onAppear {
-                                        event.pitch_result = "Z"
-                                        event.result_detail = "N"
-                                        add_Strike()
-                                    }
-                                } label: {
-                                    if ASStrikeType == true {
-                                        Text("K - SWINGING")
-                                            .font(.system(size: 22))
-                                            .fontWeight(.black)
-                                            .padding(.horizontal, 5.0)
-                                            .padding(.vertical, 15.0)
-                                    } else {
-                                        Text("STRIKE")
-                                            .font(.system(size: 22))
-                                            .fontWeight(.black)
-                                            .padding(.horizontal, 40.0)
-                                            .padding(.vertical, 15.0)
-                                    }
-                                    
-                                }
-                                .foregroundColor(Color.white)
-                                .background(Color("ScoreboardGreen"))
-                                .cornerRadius(8.0)
-                                
-                            }
-                            else {
-                                if ASStrikeType == true {
-                                    Button(action: {
-                                        event.pitch_result = "L"
-                                        result_detail = "M"
-                                        
-                                        if scoreboard.strikes == 2 {
-                                            showOutRecorded = true
-
-                                        }
-                                        else {
-                                            add_Strike()
-                                        }
-                                    }) {
-                                        HStack{
-                                            Text("K")
-                                                //.rotationEffect(.degrees(-180))
-                                                .font(.system(size: 22))
-                                                .fontWeight(.black)
-                                            
-                                             Text("- CALLED")
-                                                .font(.system(size: 22))
-                                                .fontWeight(.black)
-                                        }
-                                        .padding(.horizontal, 18.0)
-                                        .padding(.vertical, 15.0)
-                                    }
-                                    .background(Color("ScoreboardGreen"))
-                                    .foregroundColor(Color.white)
-                                    .cornerRadius(8.0)
-                                }
-                                
-
+                        }
+                        else {
+                            if ASStrikeType == true {
                                 Button(action: {
-                                    event.pitch_result = "Z"
-                                    result_detail = "K"
+                                    event.pitch_result = "L"
+                                    result_detail = "M"
+                                    
                                     if scoreboard.strikes == 2 {
                                         showOutRecorded = true
+
                                     }
                                     else {
                                         add_Strike()
                                     }
                                 }) {
-                                    if ASStrikeType == true {
-                                        HStack{
-                                            Text("K - SWINGING")
-                                                .font(.system(size: 22))
-                                                .fontWeight(.black)
-                                                .padding(.horizontal, 5.0)
-                                                .padding(.vertical, 15.0)
-                                            
-                                        }
-                                        .foregroundColor(Color.white)
-                                        .background(Color("ScoreboardGreen"))
-                                        .cornerRadius(8.0)
+                                    HStack{
+                                        Text("K")
+                                            //.rotationEffect(.degrees(-180))
+                                            .font(.system(size: 22))
+                                            .fontWeight(.black)
+                                        
+                                         Text("- CALLED")
+                                            .font(.system(size: 22))
+                                            .fontWeight(.black)
                                     }
-                                    else {
-                                        HStack{
-                                            Text("STRIKE")
-                                                .font(.system(size: 22))
-                                                .fontWeight(.black)
-                                                .padding(.horizontal, 40.0)
-                                                .padding(.vertical, 15.0)
-                                            
-                                        }
-                                        .foregroundColor(Color.white)
-                                        .background(Color("ScoreboardGreen"))
-                                        .cornerRadius(8.0)
-                                    }
-                                    
-                                    
+                                    .padding(.horizontal, 18.0)
+                                    .padding(.vertical, 15.0)
                                 }
                                 .background(Color("ScoreboardGreen"))
                                 .foregroundColor(Color.white)
                                 .cornerRadius(8.0)
                             }
                             
-                            NavigationLink {
-                                MainContainerView().navigationBarBackButtonHidden(true).onAppear {
-                                    event.pitch_result = "T"
-                                    event.result_detail = "N"
+
+                            Button(action: {
+                                event.pitch_result = "Z"
+                                result_detail = "K"
+                                if scoreboard.strikes == 2 {
+                                    showOutRecorded = true
+                                }
+                                else {
                                     add_Strike()
                                 }
-                            } label: {
-                                Text("FOUL BALL")
-                                    .font(.system(size: 22))
-                                    .fontWeight(.black)
-                                    .padding(.vertical, 15.0)
-                                    .padding(.horizontal, 20.0)
-                            }
-                            .background(Color("ScoreboardGreen"))
-                            .foregroundColor(Color.white)
-                            .cornerRadius(8.0)
-                            
-                            Button(action: {
-                                withAnimation{
-                                    showPitchResult = false
-                                    showHitResult = true
-                                }
                             }) {
-                                Text("HIT")
-                                    .font(.system(size: 22))
-                                    .fontWeight(.black)
-                                    .padding(.horizontal, 60.0)
-                                    .padding(.vertical, 15.0)
-                            }
-                            .background(Color("ScoreboardGreen"))
-                            .foregroundColor(Color.white)
-                            .cornerRadius(8.0)
-                            
-                            Button(action: {
-                                withAnimation{
-                                    showPitchResult = false
-                                    showOutResult = true
+                                if ASStrikeType == true {
+                                    HStack{
+                                        Text("K - SWINGING")
+                                            .font(.system(size: 22))
+                                            .fontWeight(.black)
+                                            .padding(.horizontal, 5.0)
+                                            .padding(.vertical, 15.0)
+                                        
+                                    }
+                                    .foregroundColor(Color.white)
+                                    .background(Color("ScoreboardGreen"))
+                                    .cornerRadius(8.0)
                                 }
-                            }) {
-                                Text("OUT")
-                                    .font(.system(size: 22))
-                                    .fontWeight(.black)
-                                    .padding(.horizontal, 55.0)
-                                    .padding(.vertical, 15.0)
-                            }
-                            .background(Color("ScoreboardGreen"))
-                            .foregroundColor(Color.white)
-                            .cornerRadius(8.0)
-                            
-                            NavigationLink {
-                                MainContainerView().navigationBarBackButtonHidden(true).onAppear{
-                                    event.result_detail = "B"
-                                    record_HBP()
+                                else {
+                                    HStack{
+                                        Text("STRIKE")
+                                            .font(.system(size: 22))
+                                            .fontWeight(.black)
+                                            .padding(.horizontal, 40.0)
+                                            .padding(.vertical, 15.0)
+                                        
+                                    }
+                                    .foregroundColor(Color.white)
+                                    .background(Color("ScoreboardGreen"))
+                                    .cornerRadius(8.0)
                                 }
-                            } label: {
-                                Text("HIT BY PITCH")
-                                    .font(.system(size: 22))
-                                    .fontWeight(.black)
-                                    .padding(.horizontal, 5.0)
-                                    .padding(.vertical, 15.0)
+                                
+                                
                             }
                             .background(Color("ScoreboardGreen"))
                             .foregroundColor(Color.white)
                             .cornerRadius(8.0)
-                            
-                            Spacer()
-                            
                         }
+                        
+                        Button {
+                            event.pitch_result = "T"
+                            event.result_detail = "N"
+                            add_Strike()
+                            
+                            path.removeAll()
+                            
+                        } label: {
+                            Text("FOUL BALL")
+                                .font(.system(size: 22))
+                                .fontWeight(.black)
+                                .padding(.vertical, 15.0)
+                                .padding(.horizontal, 20.0)
+                        }
+                        .background(Color("ScoreboardGreen"))
+                        .foregroundColor(Color.white)
+                        .cornerRadius(8.0)
+                        
+                        NavigationLink {
+                            HitDetailView(path: $path).navigationBarBackButtonHidden(true)
+                        } label: {
+                            Text("HIT")
+                                .font(.system(size: 22))
+                                .fontWeight(.black)
+                                .padding(.horizontal, 60.0)
+                                .padding(.vertical, 15.0)
+                        }
+                        .background(Color("ScoreboardGreen"))
+                        .foregroundColor(Color.white)
+                        .cornerRadius(8.0)
+                        
+                        NavigationLink {
+                            OutDetailView(path: $path).navigationBarBackButtonHidden(true)
+//                                withAnimation{
+//                                    showPitchResult = false
+//                                    showOutResult = true
+//                                }
+                        } label: {
+                            Text("OUT")
+                                .font(.system(size: 22))
+                                .fontWeight(.black)
+                                .padding(.horizontal, 55.0)
+                                .padding(.vertical, 15.0)
+                        }
+                        .background(Color("ScoreboardGreen"))
+                        .foregroundColor(Color.white)
+                        .cornerRadius(8.0)
+                        
+                        Button {
+                            event.result_detail = "B"
+                            record_HBP()
+                            
+                            path.removeAll()
+                            
+                        } label: {
+                            Text("HIT BY PITCH")
+                                .font(.system(size: 22))
+                                .fontWeight(.black)
+                                .padding(.horizontal, 5.0)
+                                .padding(.vertical, 15.0)
+                        }
+                        .background(Color("ScoreboardGreen"))
+                        .foregroundColor(Color.white)
+                        .cornerRadius(8.0)
                         
                         Spacer()
                         
                     }
-                    .transition(.opacity)
-                }
-                else if showHitResult == true {
-                    HitDetailView()
-                        .transition(.opacity)
-                }
-                else if showOutResult == true {
-                    OutDetailView()
-                        .transition(.opacity)
-                }
-                
-                if showOutRecorded == true{
-                    StrikeoutAlertView(isActive: $showOutRecorded, result_detail: result_detail)
-                }
-                
-                if showVeloInput == true && ASVeloInput == true{
-                    VelocityInputView(isActive: $showVeloInput, close_action: {showVeloInput = false})
-                        .preferredColorScheme(.dark)
-                }
-
-            }
-            .background(.black)
-            .navigationTitle("")
-            .navigationBarTitleDisplayMode(.inline)
-            .ignoresSafeArea()
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarBackground(Color("ScoreboardGreen"))
-            .toolbar {
-                ToolbarItemGroup(placement: .topBarLeading) {
                     
-                    HStack{
-
-                        Button(action: {
-                            let impact = UIImpactFeedbackGenerator(style: .medium)
-                            impact.impactOccurred()
-                            event.pitch_result = "NONE"
-                            if showHitResult == true {
-                                withAnimation{
-                                    showHitResult = false
-                                    showPitchResult = true
-                                }
-                            }
-                            else if showOutResult == true {
-                                withAnimation{
-                                    showOutResult = false
-                                    showPitchResult = true
-                                }
-                            }
-                            else if showOutRecorded == true {
-                                showOutRecorded = false
-                            }
-                            else if showVeloInput == false{
-                                showVeloInput = true
-                            }
-                            else {
-                                back_func()
-                                dismiss()
-                            }
-                            
-                        }) {
-                            Image(systemName: "chevron.left")
-                                .imageScale(.medium)
-                                .font(.system(size: 17))
-                                .frame(width: sbl_width, height: sbl_height)
-                                .foregroundColor(.white)
-                                .bold()
-                            Text("BACK")
-                                .font(.system(size: 17))
-                                .fontWeight(.heavy)
-                                .foregroundColor(.white)
-                                .padding(.leading, -5)
-                        }
-                        .padding(.leading, -5)
-                    }
+                    Spacer()
+                    
                 }
-                
-                ToolbarItemGroup(placement: .principal) {
-                    HStack(alignment: .center){
-                        Text("P")
-                            .font(.system(size: 20))
-                            .fontWeight(.bold)
-                            .foregroundColor(Color.white)
-                        
-                        ZStack(alignment: .leading){
-                            RoundedRectangle(cornerRadius: 4)
-                                .foregroundStyle(
-                                    Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
-                                )
-                                .frame(width: 170, height: 30)
-                            
-                            let pitcher_lname = String(current_pitcher.lastName.prefix(11))
+                .transition(.opacity)
+            }
+//                else if showHitResult == true {
+//                    HitDetailView()
+//                        .transition(.opacity)
+//                }
+//                else if showOutResult == true {
+//                    OutDetailView()
+//                        .transition(.opacity)
+//                }
+            
+            if showOutRecorded == true{
+                StrikeoutAlertView(path: $path, isActive: $showOutRecorded, result_detail: result_detail)
+            }
+            
+            if showVeloInput == true && ASVeloInput == true{
+                VelocityInputView(isActive: $showVeloInput, close_action: {showVeloInput = false})
+                    .preferredColorScheme(.dark)
+            }
 
-                            Text(pitcher_lname)
-                                .textCase(.uppercase)
-                                .font(.system(size: 20))
-                                .fontWeight(.black)
-                                .foregroundColor(.white)
-                                .padding(.leading,  4)
+        }
+        .background(.black)
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
+        .ignoresSafeArea()
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(Color("ScoreboardGreen"))
+        .toolbar {
+            ToolbarItemGroup(placement: .topBarLeading) {
+                
+                HStack{
+
+                    Button(action: {
+                        let impact = UIImpactFeedbackGenerator(style: .medium)
+                        impact.impactOccurred()
+                        event.pitch_result = "NONE"
+                        if showHitResult == true {
+                            withAnimation{
+                                showHitResult = false
+                                showPitchResult = true
+                            }
                         }
+                        else if showOutResult == true {
+                            withAnimation{
+                                showOutResult = false
+                                showPitchResult = true
+                            }
+                        }
+                        else if showOutRecorded == true {
+                            showOutRecorded = false
+                        }
+                        else if showVeloInput == false{
+                            showVeloInput = true
+                        }
+                        else {
+                            back_func()
+                            dismiss()
+                        }
+                        
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .imageScale(.medium)
+                            .font(.system(size: 17))
+                            .frame(width: sbl_width, height: sbl_height)
+                            .foregroundColor(.white)
+                            .bold()
+                        Text("BACK")
+                            .font(.system(size: 17))
+                            .fontWeight(.heavy)
+                            .foregroundColor(.white)
+                            .padding(.leading, -5)
+                    }
+                    .padding(.leading, -5)
+                }
+            }
+            
+            ToolbarItemGroup(placement: .principal) {
+                HStack(alignment: .center){
+                    Text("P")
+                        .font(.system(size: 20))
+                        .fontWeight(.bold)
+                        .foregroundColor(Color.white)
+                    
+                    ZStack(alignment: .leading){
+                        RoundedRectangle(cornerRadius: 4)
+                            .foregroundStyle(
+                                Color("ScoreboardGreen").shadow(.inner(color: .black.opacity(0.4), radius: 2, x: 1, y: 1))
+                            )
+                            .frame(width: 170, height: 30)
+                        
+                        let pitcher_lname = String(current_pitcher.lastName.prefix(11))
+
+                        Text(pitcher_lname)
+                            .textCase(.uppercase)
+                            .font(.system(size: 20))
+                            .fontWeight(.black)
+                            .foregroundColor(.white)
+                            .padding(.leading,  4)
                     }
                 }
             }
         }
+        
     }
     
     func back_func() {
@@ -552,9 +560,9 @@ struct PitchResultView: View {
     
 }
 
-#Preview {
-    PitchResultView()
-        .environment(Scoreboard())
-        .environment(Event_String())
-        .environment(PitchTypeConfig())
-}
+//#Preview {
+//    PitchResultView()
+//        .environment(Scoreboard())
+//        .environment(Event_String())
+//        .environment(PitchTypeConfig())
+//}
