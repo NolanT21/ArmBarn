@@ -14,6 +14,7 @@
 		D52724482D39739600E56EE0 /* OutDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D52724472D39739600E56EE0 /* OutDetailView.swift */; };
 		D527244C2D3BE91A00E56EE0 /* PitchLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D527244B2D3BE91A00E56EE0 /* PitchLocationView.swift */; };
 		D54965352D3BEF83007B7D84 /* GameReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54965342D3BEF83007B7D84 /* GameReportView.swift */; };
+		D549655F2D490E91007B7D84 /* StrikeoutAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D549655E2D490E91007B7D84 /* StrikeoutAlertView.swift */; };
 		D575388D2C776ABE00B7EBF7 /* BullpenMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D575388C2C776ABE00B7EBF7 /* BullpenMainView.swift */; };
 		D57E62382BD2CD7D003987E1 /* ArmBarnApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */; };
 		D57E62392BD2CD7D003987E1 /* global_variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = D50E3E8F2B0926A8006699FB /* global_variables.swift */; };
@@ -24,7 +25,6 @@
 		D57E62442BD2CD7D003987E1 /* PopupAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C6DE1C2BD2C52D00C64555 /* PopupAlertView.swift */; };
 		D57E62452BD2CD7D003987E1 /* report_variables.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C6DE1E2BD2C52D00C64555 /* report_variables.swift */; };
 		D57E62462BD2CD7D003987E1 /* SelectPitcherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C6DE1B2BD2C52D00C64555 /* SelectPitcherView.swift */; };
-		D57E62472BD2CD7D003987E1 /* StrikeoutAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C6DE1F2BD2C52D00C64555 /* StrikeoutAlertView.swift */; };
 		D58DAF152C45D38D003EFB2E /* FileNamePopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58DAF142C45D38D003EFB2E /* FileNamePopUpView.swift */; };
 		D58FE76D2BD717DC004FC234 /* BatterPositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58FE76C2BD717DC004FC234 /* BatterPositionView.swift */; };
 		D5959D9D2BE5381B00FFDA0B /* TipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5959D9C2BE5381B00FFDA0B /* TipView.swift */; };
@@ -42,6 +42,7 @@
 		D52724472D39739600E56EE0 /* OutDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OutDetailView.swift; path = ArmBarn/OutDetailView.swift; sourceTree = SOURCE_ROOT; };
 		D527244B2D3BE91A00E56EE0 /* PitchLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PitchLocationView.swift; path = ArmBarn/Controllers/PitchLocationView.swift; sourceTree = SOURCE_ROOT; };
 		D54965342D3BEF83007B7D84 /* GameReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GameReportView.swift; path = ArmBarn/GameReportView.swift; sourceTree = SOURCE_ROOT; };
+		D549655E2D490E91007B7D84 /* StrikeoutAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StrikeoutAlertView.swift; path = ArmBarn/StrikeoutAlertView.swift; sourceTree = SOURCE_ROOT; };
 		D575388C2C776ABE00B7EBF7 /* BullpenMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BullpenMainView.swift; path = ../../BullpenMainView.swift; sourceTree = "<group>"; };
 		D58DAF142C45D38D003EFB2E /* FileNamePopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileNamePopUpView.swift; sourceTree = SOURCE_ROOT; };
 		D58FE76C2BD717DC004FC234 /* BatterPositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BatterPositionView.swift; path = ../../../BatterPositionView.swift; sourceTree = "<group>"; };
@@ -49,7 +50,6 @@
 		D5C6DE1B2BD2C52D00C64555 /* SelectPitcherView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectPitcherView.swift; path = ../../SelectPitcherView.swift; sourceTree = "<group>"; };
 		D5C6DE1C2BD2C52D00C64555 /* PopupAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupAlertView.swift; path = ../../../PopupAlertView.swift; sourceTree = "<group>"; };
 		D5C6DE1E2BD2C52D00C64555 /* report_variables.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = report_variables.swift; sourceTree = "<group>"; };
-		D5C6DE1F2BD2C52D00C64555 /* StrikeoutAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StrikeoutAlertView.swift; path = ../../../StrikeoutAlertView.swift; sourceTree = "<group>"; };
 		D5C6DE202BD2C52D00C64555 /* MainContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainContainerView.swift; sourceTree = "<group>"; };
 		D5DD111B2AF52FE60064F1A5 /* ArmBarn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArmBarn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArmBarnApp.swift; sourceTree = "<group>"; };
@@ -169,7 +169,7 @@
 				D58FE76C2BD717DC004FC234 /* BatterPositionView.swift */,
 				D58DAF142C45D38D003EFB2E /* FileNamePopUpView.swift */,
 				D5C6DE1C2BD2C52D00C64555 /* PopupAlertView.swift */,
-				D5C6DE1F2BD2C52D00C64555 /* StrikeoutAlertView.swift */,
+				D549655E2D490E91007B7D84 /* StrikeoutAlertView.swift */,
 			);
 			path = "Pop-Up Views";
 			sourceTree = "<group>";
@@ -262,6 +262,7 @@
 				D58DAF152C45D38D003EFB2E /* FileNamePopUpView.swift in Sources */,
 				D58FE76D2BD717DC004FC234 /* BatterPositionView.swift in Sources */,
 				D5EE0C4A2D11CFD500374749 /* SettingsView.swift in Sources */,
+				D549655F2D490E91007B7D84 /* StrikeoutAlertView.swift in Sources */,
 				D57E62412BD2CD7D003987E1 /* AddPitcherView.swift in Sources */,
 				D575388D2C776ABE00B7EBF7 /* BullpenMainView.swift in Sources */,
 				D57E62432BD2CD7D003987E1 /* MainContainerView.swift in Sources */,
@@ -274,7 +275,6 @@
 				D54965352D3BEF83007B7D84 /* GameReportView.swift in Sources */,
 				D57E62452BD2CD7D003987E1 /* report_variables.swift in Sources */,
 				D57E62462BD2CD7D003987E1 /* SelectPitcherView.swift in Sources */,
-				D57E62472BD2CD7D003987E1 /* StrikeoutAlertView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
