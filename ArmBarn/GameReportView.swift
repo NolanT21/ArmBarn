@@ -2239,12 +2239,12 @@ struct GameReportView: View {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "M.d.yy"
 
-        //let formattedDate = dateFormatter.string(from: Date())
+        let formattedDate = dateFormatter.string(from: Date())
         
-        //let first_name = current_pitcher.firstName.prefix(1)
-        //let last_name = current_pitcher.lastName.prefix(5)
+        let first_name = current_pitcher.firstName.prefix(1)
+        let last_name = current_pitcher.lastName.prefix(5)
         
-        let path_string = "AtBatBreakdown.pdf"
+        let path_string = first_name + "-" + last_name + "-" + "AtBatBreakdown" + "-" + formattedDate + ".pdf"
         let url = URL.documentsDirectory.appending(path: path_string)
         
         abb_renderer.render { size, context in
