@@ -52,11 +52,11 @@ struct GameReportView: View {
     @State var sbl_height: Double = 13.0
     
     @State var _default: CGFloat = 17.0
-    @State var title_size: CGFloat = 28.0
+    @State var title_size: CGFloat = 27.0
     @State var headbody_size: CGFloat = 17
-    @State var callout_size: CGFloat = 16
+    @State var callout_size: CGFloat = 17
     @State var subheadline_size: CGFloat = 15
-    @State var caption_size: CGFloat = 12
+    @State var caption_size: CGFloat = 13
     @State var caption2_size: CGFloat = 11
     
     var background: Color = .black
@@ -1329,7 +1329,7 @@ struct GameReportView: View {
                             
                             VStack{
                                 HStack{
-                                    Text("Swing %")
+                                    Text("Swinging Strike %")
                                         .font(.system(size: subheadline_size))
                                         .foregroundStyle(text_color)
                                         .padding(.top, view_padding)
@@ -1440,6 +1440,7 @@ struct GameReportView: View {
                             Text("Pitch Velocity (" + velo_units.lowercased() + ")")
                                 .font(.system(size: subheadline_size))
                                 .foregroundStyle(text_color)
+                                .padding(.bottom, view_padding * -1)
                             Spacer()
                         }
                         
@@ -1447,6 +1448,7 @@ struct GameReportView: View {
                             
                             Grid(alignment: .trailing){
                                 ForEach(Array(game_report.velo_set_list.enumerated()), id: \.offset){ index, pitch in
+                                    
                                     GridRow{
                                         VStack(alignment: .trailing){
                                             Text(pitch.pitch_type)
@@ -1462,7 +1464,7 @@ struct GameReportView: View {
                                             Rectangle()
                                                 .fill(.grey)
                                                 .frame(maxWidth: .infinity, maxHeight: 1)
-                                                .padding(.trailing, 18)
+                                                //.padding(.trailing, 18)
                                             
                                             GeometryReader{ geometry in
                                                 
@@ -1470,36 +1472,45 @@ struct GameReportView: View {
                                                     Rectangle()
                                                         .fill(.clear)
                                                         .frame(width: geometry.size.width * pitch.velo_factor)
+                                                        .clipped()
                                                     
-                                                    ZStack{
-                                                        Rectangle()
-                                                            .fill(LinearGradient(colors: [.clear, colorset[index], colorset[index], .clear], startPoint: .leading, endPoint: .trailing).opacity(0.7))
-                                                            .frame(width: 20, height: 15)
-                                                        
-                                                        Rectangle()
-                                                            .fill(.black)
-                                                            .frame(width: 2, height: 17)
-                                                        
-                                                        Text("\(pitch.avg_velo, specifier: "%.1f")")
-                                                            .foregroundStyle(text_color)
-                                                            .font(.system(size: 13))
-                                                            .padding(.top, -25)
-                                                        
-                                                    }
-                                                    
+                                                    Rectangle()
+                                                        .fill(.black)
+                                                        .frame(width: 2, height: 17)
+                                                        .overlay{
+                                                            
+                                                            ZStack{
+                                                                Rectangle()
+                                                                    .fill(LinearGradient(colors: [.clear, colorset[index], colorset[index], .clear], startPoint: .leading, endPoint: .trailing).opacity(0.7))
+                                                                    .frame(width: pitch.range_factor, height: 15)
+                                                                
+                                                                Rectangle()
+                                                                    .fill(.black)
+                                                                    .frame(width: 2, height: 17)
+                                                                
+                                                                Text("\(pitch.avg_velo, specifier: "%.1f")")
+                                                                    .foregroundStyle(text_color)
+                                                                    .font(.system(size: 13))
+                                                                    .padding(.top, -25)
+                                                                    .frame(minWidth: 40)
+                                                            }
+                                                            
+                                                        }
                                                 }
                                                 
                                             }
                                             
                                         }
                                         .padding(.leading, view_padding)
-                                        
                                     }
                                 }
+                                
                             }
-                            
+                            .padding(.top, view_padding)
+                            .clipped()
+                            //.border(Color.blue)
+                            .padding(.trailing, view_padding)
                         }
-                        
                     }
                     .padding(view_padding)
                     .frame(maxWidth: .infinity)
@@ -1724,7 +1735,8 @@ struct GameReportView: View {
                         .padding(.top, view_padding - 3)
                         VStack{
                             HStack{
-                                Text("\(game_report.game_score)")
+                                Text("\(game_report.game_score, specifier: "%.0f")")
+                                
                                     .font(.system(size: 40))
                                     .foregroundStyle(text_color)
                                     .padding(.horizontal, view_padding)
@@ -1759,7 +1771,7 @@ struct GameReportView: View {
                             .foregroundStyle(.gray)
                             .font(.system(size: 10))
                         
-                        + Text("Calculated using Tango's formula without runs, with extra weight placed on XBHs")
+                        + Text("Calculated using Tango's formula excluding runs, every hit has value added based on a run expectancy matrix")
                             .foregroundStyle(.gray)
                             .font(.system(size: 10))
                         
