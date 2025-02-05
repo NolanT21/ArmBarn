@@ -27,9 +27,9 @@ import Observation
     var strikes_per: Int = 0
     var balls_to_strikes: [Int] = [0, 0]
     
-    var game_score: Int = 40
-    var game_score_min: Int = 0
-    var game_score_max: Int = 0
+    var game_score: Double = 40
+    var game_score_min: Double = 0
+    var game_score_max: Double = 0
     
     var x_coordinate_list: [Double] = []
     var y_coordinate_list: [Double] = []
@@ -143,8 +143,10 @@ struct PitchVeloSet: Identifiable {
     let id = UUID()
     var pitch_type : String
     var max_velo : Double
+    var min_velo : Double
     var avg_velo : Double
     var velo_factor: Double
+    var range_factor: Double
 }
 
 struct PitchTypeDataset: Identifiable {
