@@ -307,12 +307,33 @@ struct EditPitcherView: View {
     
     let pitch_types = ["None", "Fastball", "Curveball", "Slider", "Change-Up", "Splitter", "Cutter", "Sinker", "Other"]
     
+    @State private var selected_pitcher_hand = "Right"
+    let pitcher_hand_list = ["Right", "Left"]
+    
     var body: some View {
+        
+        let impact = UIImpactFeedbackGenerator(style: .medium)
+        
         VStack{
             Form{
                 Section(header: Text("Player Name")){
                     TextField("First Name", text: $edit_pitcher.firstName)
+                    
                     TextField("Last Name", text: $edit_pitcher.lastName)
+                    
+                    Picker("Velocity Units", selection: $edit_pitcher.throwingHand) {
+                        ForEach(pitcher_hand_list, id: \.self) {
+                            Text($0)
+                                .bold()
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .onChange(of: edit_pitcher.throwingHand){
+                        impact.impactOccurred()
+                        //ASVeloUnits = selected_velo_units
+                        //print(selected_velo_units)
+                    }
+                    
                 }
                 Section(header: Text("Pitch Arsenal")){
                     Picker("Pitch 1", selection: $edit_pitcher.pitch1){

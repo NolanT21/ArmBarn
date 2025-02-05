@@ -15,6 +15,9 @@ struct AddPitcherView: View {
     
     let pitch_types = ["None", "Fastball", "Curveball", "Slider", "Change-Up", "Splitter", "Cutter", "Sinker", "Sweeper", "Other"]
     
+    @State private var selected_pitcher_hand = "Right"
+    let pitcher_hand_list = ["Right", "Left"]
+    
     @State private var firstName = ""
     @State private var lastName = ""
     @State private var pitch1 = "None"
@@ -23,11 +26,14 @@ struct AddPitcherView: View {
     @State private var pitch4 = "None"
     
     @State private var text_color = Color.white
-    
+     
     @State var sbl_width: Double = 17.0
     @State var sbl_height: Double = 13.0
     
     var body: some View {
+        
+        let impact = UIImpactFeedbackGenerator(style: .medium)
+        
         VStack{
             HStack{
                 
@@ -56,10 +62,26 @@ struct AddPitcherView: View {
             .padding(15)
             
             Form{
-                Section(header: Text("Player Name")){
+                Section(header: Text("Player Info")){
                     TextField("First Name", text: $firstName)
+                    
                     TextField("Last Name", text: $lastName)
+
+                    Picker("Velocity Units", selection: $selected_pitcher_hand) {
+                        ForEach(pitcher_hand_list, id: \.self) {
+                            Text($0)
+                                .bold()
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .onChange(of: selected_pitcher_hand){
+                        impact.impactOccurred()
+                        //ASVeloUnits = selected_velo_units
+                        //print(selected_velo_units)
+                    }
+                    
                 }
+                
                 Section(header: Text("Pitch Arsenal")){
                     Picker("Pitch 1", selection: $pitch1){
                         ForEach(pitch_types, id: \.self){
@@ -83,7 +105,7 @@ struct AddPitcherView: View {
                     }
                 }
                 Button("Save") {
-                    let pitcher = Pitcher(id: UUID(), firstName: firstName, lastName: lastName, pitch1: pitch1, pitch2: pitch2, pitch3: pitch3, pitch4: pitch4)
+                    let pitcher = Pitcher(id: UUID(), firstName: firstName, lastName: lastName, pitch1: pitch1, pitch2: pitch2, pitch3: pitch3, pitch4: pitch4, throwingHand: selected_pitcher_hand)
                     context.insert(pitcher)
                     dismiss()
                 }
