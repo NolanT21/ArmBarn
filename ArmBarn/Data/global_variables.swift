@@ -117,7 +117,7 @@ struct PitchersAppeared {
 
 @Model class Event{
     
-    @Attribute(.externalStorage) var pitcher_id = UUID()
+    var pitcher_id = UUID()
     
     var pitch_result: String
     var pitch_type: String
@@ -127,8 +127,8 @@ struct PitchersAppeared {
     var outs: Int
     var inning: Int
     var atbats: Int
-    @Attribute(.externalStorage) var pitch_x_location: Double = 0
-    @Attribute(.externalStorage) var pitch_y_location: Double = 0
+    var pitch_x_location: Double = 0
+    var pitch_y_location: Double = 0
     var batter_stance: String = ""
     var velocity: Double = 0
     var event_number: Int = 0
@@ -159,8 +159,9 @@ struct PitchersAppeared {
     var pitch2: String
     var pitch3: String
     var pitch4: String
+    var throwingHand: String = ""
     
-    init(id: UUID, firstName: String, lastName: String, pitch1: String, pitch2: String, pitch3: String, pitch4: String){
+    init(id: UUID, firstName: String, lastName: String, pitch1: String, pitch2: String, pitch3: String, pitch4: String, throwingHand: String){
         self.id = id
         self.firstName = firstName
         self.lastName = lastName
@@ -168,6 +169,7 @@ struct PitchersAppeared {
         self.pitch2 = pitch2
         self.pitch3 = pitch3
         self.pitch4 = pitch4
+        self.throwingHand = throwingHand
     }
 }
 
