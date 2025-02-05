@@ -51,7 +51,6 @@ struct SettingsView: View {
     let velo_units = ["MPH", "KPH"]
     
     var body: some View {
-        NavigationStack{
             
             ZStack{
                 VStack{
@@ -176,7 +175,7 @@ struct SettingsView: View {
                             .onChange(of: selected_velo_units){
                                 impact.impactOccurred()
                                 ASVeloUnits = selected_velo_units
-                                print(selected_velo_units)
+                                //print(selected_velo_units)
                             }
                         }
                         Section(header: Text("Output Options")){
@@ -338,7 +337,7 @@ struct SettingsView: View {
                     FileNamePopUpView(action: {showFileNameInfo = false; scoreboard.enable_bottom_row = true})
                 }
             }
-        }
+
     }
     
     func allow_input_change() -> Bool{
