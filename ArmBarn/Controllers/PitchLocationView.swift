@@ -18,6 +18,7 @@ struct PitchLocationView: View {
     @AppStorage("CurrentOpponentName") var ASCurOpponentName : String?
     @AppStorage("GameLocation") var ASGameLocation : String?
     @AppStorage("StrikeType") var ASStrikeType : Bool?
+    @AppStorage("VelocityUnits") var ASVeloUnits : String?
     
     @Environment(Scoreboard.self) var scoreboard
     @Environment(PitchTypeConfig.self) var ptconfig
@@ -308,7 +309,8 @@ struct PitchLocationView: View {
                                             
                                         }
                                         .padding(50)
-                                        .background(Color.black.opacity(0.8))
+                                        .background(Color.black.opacity(0.5))
+                                        .background(.ultraThinMaterial)
                                         .foregroundColor(.white)
                                         .clipShape(RoundedRectangle(cornerRadius: 8))
                                         
@@ -1030,6 +1032,18 @@ struct PitchLocationView: View {
         var p3_cntr = 0
         var p4_cntr = 0
         
+        let first_base_run_matrix = [0.42, 0.27, 0.13]
+        let second_base_run_matrix = [0.62, 0.41, 0.22]
+        let third_base_run_matrix = [0.84, 0.66, 0.27]
+        
+        var velo_offset = 0.0
+        if ASVeloUnits == "MPH" {
+            velo_offset = 60.0
+        }
+        else if ASVeloUnits == "KPH" {
+            velo_offset = 100.0
+        }
+        
         for evnt in events{
             if evnt.pitcher_id == current_pitcher.idcode {
                 if evnt.inning > inn_cntr{
@@ -1114,6 +1128,7 @@ struct PitchLocationView: View {
                         if evnt.pitch_result == "H" && evnt.result_detail != "E"{
                             game_report.hits += 1
                             game_report.swings += 1
+                            game_report.game_score -= 2
                             
                             if evnt.batter_stance == "L" {
                                 game_report.lh_hits += 1
@@ -1123,11 +1138,11 @@ struct PitchLocationView: View {
                             }
                                 
                             if evnt.result_detail == "S" {
-                                game_report.game_score -= 2
+                                game_report.game_score -= first_base_run_matrix[evnt.outs] * 3
                                 game_report.singles += 1
                             }
                             else if evnt.result_detail == "D" {
-                                game_report.game_score -= 3
+                                game_report.game_score -= second_base_run_matrix[evnt.outs] * 3
                                 game_report.doubles += 1
                                 
                                 if evnt.batter_stance == "L" {
@@ -1139,7 +1154,7 @@ struct PitchLocationView: View {
                                 
                             }
                             else if evnt.result_detail == "T" {
-                                game_report.game_score -= 4
+                                game_report.game_score -= third_base_run_matrix[evnt.outs] * 3
                                 game_report.triples += 1
                                 
                                 if evnt.batter_stance == "L" {
@@ -1151,7 +1166,7 @@ struct PitchLocationView: View {
                                 
                             }
                             else if evnt.result_detail == "H" {
-                                game_report.game_score -= 6
+                                game_report.game_score -= 8
                                 game_report.homeruns += 1
                                 
                                 if evnt.batter_stance == "L" {
@@ -1195,9 +1210,15 @@ struct PitchLocationView: View {
                             game_report.first_pitch_ball += 1
                         }
                         
+                        else if evnt.result_detail == "B" {
+                            game_report.game_score -= 2
+                            game_report.game_score -= first_base_run_matrix[evnt.outs] * 3
+                        }
+                        
                         else if evnt.result_detail == "W"{
                             game_report.walks += 1
                             game_report.game_score -= 2
+                            game_report.game_score -= first_base_run_matrix[evnt.outs] * 3
                             
                             if evnt.batter_stance == "L" {
                                 game_report.lh_walks += 1
@@ -1213,6 +1234,7 @@ struct PitchLocationView: View {
                     if evnt.result_detail == "W" {
                         game_report.walks += 1
                         game_report.game_score -= 2
+                        game_report.game_score -= first_base_run_matrix[evnt.outs] * 3
                     }
                 }
                 else if evnt.pitch_result == "VZ" {
@@ -1323,40 +1345,61 @@ struct PitchLocationView: View {
         }
         
         if game_report.p1_velo_list.count >= 1 {
-            let p1_avg = game_report.p1_velo_list.reduce(0, +) / Double(game_report.p1_velo_list.count)
-            let p1_max = game_report.p1_velo_list.max() ?? 0
-            var p1_factor = (p1_avg - 60) / 40
-            if p1_factor <= 0.01 { p1_factor = 0.01 }
-            else if p1_factor >= 0.86 { p1_factor = 0.86 }
             
-            game_report.velo_set_list.append(PitchVeloSet(pitch_type: current_pitcher.pitch1, max_velo: p1_max, avg_velo: p1_avg, velo_factor: p1_factor))
+            //Average for middle line and label
+            let p1_avg = game_report.p1_velo_list.reduce(0, +) / Double(game_report.p1_velo_list.count)
+            
+            //Min and Max values for calculating range
+            let p1_max = game_report.p1_velo_list.max() ?? 0
+            let p1_min = game_report.p1_velo_list.min() ?? 0
+            
+            //Range factor for showing range of pitch velos
+            var p1_range_factor = ((p1_max - p1_min) / 2) * 10
+            if p1_range_factor < 30 {p1_range_factor = 30}
+
+            //Factor for positioning average velo line
+            var p1_factor = (p1_avg - velo_offset) / 40
+            if p1_factor <= 0.01 { p1_factor = 0.01 }
+            else if p1_factor >= 0.92 { p1_factor = 0.92 }
+            
+            //Add to velo list for pitch1 component visual
+            game_report.velo_set_list.append(PitchVeloSet(pitch_type: current_pitcher.pitch1, max_velo: p1_max, min_velo: p1_min, avg_velo: p1_avg, velo_factor: p1_factor, range_factor: p1_range_factor))
         }
         if game_report.p2_velo_list.count >= 1 {
             let p2_avg = game_report.p2_velo_list.reduce(0, +) / Double(game_report.p2_velo_list.count)
             let p2_max = game_report.p2_velo_list.max() ?? 0
-            var p2_factor = (p2_avg - 60) / 40
+            let p2_min = game_report.p2_velo_list.min() ?? 0
+            var p2_range_factor = ((p2_max - p2_min) / 2) * 10
+            if p2_range_factor < 30 {p2_range_factor = 30}
+            var p2_factor = (p2_avg - velo_offset) / 40
             if p2_factor <= 0.01 { p2_factor = 0.01 }
-            else if p2_factor >= 0.86 { p2_factor = 0.86 }
+            else if p2_factor >= 0.92 { p2_factor = 0.92 }
             
-            game_report.velo_set_list.append(PitchVeloSet(pitch_type: current_pitcher.pitch2, max_velo: p2_max, avg_velo: p2_avg, velo_factor: p2_factor))
+            game_report.velo_set_list.append(PitchVeloSet(pitch_type: current_pitcher.pitch2, max_velo: p2_max, min_velo: p2_min, avg_velo: p2_avg, velo_factor: p2_factor, range_factor: p2_range_factor))
         }
         if game_report.p3_velo_list.count >= 1 {
             let p3_avg = game_report.p3_velo_list.reduce(0, +) / Double(game_report.p3_velo_list.count)
             let p3_max = game_report.p3_velo_list.max() ?? 0
-            var p3_factor = (p3_avg - 60) / 40
+            let p3_min = game_report.p3_velo_list.min() ?? 0
+            var p3_range_factor = ((p3_max - p3_min) / 2) * 10
+            if p3_range_factor < 30 {p3_range_factor = 30}
+            var p3_factor = (p3_avg - velo_offset) / 40
             if p3_factor <= 0.01 { p3_factor = 0.01 }
-            else if p3_factor >= 0.86 { p3_factor = 0.86 }
+            else if p3_factor >= 0.92 { p3_factor = 0.92 }
             
-            game_report.velo_set_list.append(PitchVeloSet(pitch_type: current_pitcher.pitch3, max_velo: p3_max, avg_velo: p3_avg, velo_factor: p3_factor))
+            game_report.velo_set_list.append(PitchVeloSet(pitch_type: current_pitcher.pitch3, max_velo: p3_max, min_velo: p3_min, avg_velo: p3_avg, velo_factor: p3_factor, range_factor: p3_range_factor))
         }
         if game_report.p4_velo_list.count >= 1 {
             let p4_avg = game_report.p4_velo_list.reduce(0, +) / Double(game_report.p4_velo_list.count)
             let p4_max = game_report.p4_velo_list.max() ?? 0
-            var p4_factor = (p4_avg - 60) / 40
+            let p4_min = game_report.p4_velo_list.min() ?? 0
+            var p4_range_factor = ((p4_max - p4_min) / 2) * 10
+            if p4_range_factor < 30 {p4_range_factor = 30}
+            var p4_factor = (p4_avg - velo_offset) / 40
             if p4_factor <= 0.01 { p4_factor = 0.01 }
-            else if p4_factor >= 0.86 { p4_factor = 0.86 }
+            else if p4_factor >= 0.92 { p4_factor = 0.92 }
             
-            game_report.velo_set_list.append(PitchVeloSet(pitch_type: current_pitcher.pitch4, max_velo: p4_max, avg_velo: p4_avg, velo_factor: p4_factor))
+            game_report.velo_set_list.append(PitchVeloSet(pitch_type: current_pitcher.pitch4, max_velo: p4_max, min_velo: p4_min, avg_velo: p4_avg, velo_factor: p4_factor, range_factor: p4_range_factor))
         }
         
         
@@ -2122,7 +2165,8 @@ struct PitchClockViolation: View {
                     }
                     .padding(.vertical, 25.0)
                     .padding(.horizontal, 20.0)
-                    .background(Color.black.opacity(0.8))
+                    .background(Color.black.opacity(0.5))
+                    .background(.ultraThinMaterial)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                         
                 }
@@ -2422,7 +2466,8 @@ struct PitchLocationInput : View {
                         }
                         .padding(.vertical, 25.0)
                         .padding(.horizontal, 20.0)
-                        .background(Color.black.opacity(0.8))
+                        .background(Color.black.opacity(0.5))
+                        .background(.ultraThinMaterial)
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                             
                     }
