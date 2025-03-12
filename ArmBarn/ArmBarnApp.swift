@@ -25,7 +25,7 @@ struct ArmBarnApp: App {
             "HitSummary" : true,
             "GameScore" : true,
             "PitByInn" : true,
-//            "BullpenMode" : false,
+            "BullpenMode" : false,
             ])
       }
     
@@ -41,6 +41,6 @@ struct ArmBarnApp: App {
                 .environment(BullpenReport())
                 .environment(AtBatBreakdown())
         }
-        .modelContainer(for: [Event.self, Pitcher.self/*, BullpenEvent.self*/])
+        .modelContainer(for: [Event.self, Pitcher.self, SavedGames.self]) /*, BullpenEvent.self*/
     }
 }
