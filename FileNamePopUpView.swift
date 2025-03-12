@@ -22,9 +22,12 @@ struct FileNamePopUpView: View {
     var game_location: [String] = ["Home", "Away"]
     @State private var selected_location = "Home"
     
+    @State private var start_date = Date.now
+    
     @State private var showExportPR: Bool = true
     
-    @State var opponentname: String = String()
+    @State private var opponentname: String = String()
+    @State private var validTeamName: Bool = false
     
     @FocusState private var fieldIsFocused: Bool
     
@@ -32,12 +35,14 @@ struct FileNamePopUpView: View {
     var crnr_radius: CGFloat = 12
     
     let title: String = "Game Information"
-    let buttonTitle: String = "DONE"
+    let buttonTitle: String = "ENTER"
     let action: () -> ()
     
     @State private var offset: CGFloat = 1000
     
     var body: some View {
+        
+        let impact = UIImpactFeedbackGenerator(style: .medium)
         
         if showExportPR == true {
             ZStack{
@@ -65,34 +70,39 @@ struct FileNamePopUpView: View {
                         Picker("", selection: $selected_location) {
                             ForEach(game_location, id: \.self) {
                                 Text($0)
-
                             }
                         }
                         .pickerStyle(.segmented)
                         .preferredColorScheme(/*@START_MENU_TOKEN@*/.dark/*@END_MENU_TOKEN@*/)
                         .padding()
                         .onChange(of: selected_location){
+                            impact.impactOccurred()
                             game_report.game_location = selected_location
                             ASGameLocation = selected_location
                         }
                         
+                        DatePicker("", selection: $start_date)
+                            .labelsHidden()
+                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
+                            .accentColor(Color("ScoreboardGreen"))
+                            .padding(.horizontal, 20)
+                        
                         Button {
-                            if opponentname != "" {
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.12){
                                     fieldIsFocused = false
                                     game_report.opponent_name = opponentname
                                     ASCurOpponentName = opponentname
+                                    game_report.start_date = start_date
                                     action()
                                 }
                                 close()
-                                
+                            
                                 welcometip.invalidate(reason: .actionPerformed)
-                            }
                             
                         } label: {
                             ZStack{
                                 RoundedRectangle(cornerRadius: crnr_radius)
-                                    .foregroundColor(Color("ScoreboardGreen"))
+                                    .foregroundColor(validTeamName ? Color("ScoreboardGreen") : Color.gray)
                                 
                                 Text(buttonTitle)
                                     .font(.system(size: 20, weight: .bold))
@@ -101,6 +111,10 @@ struct FileNamePopUpView: View {
                             }
                             .padding()
                             
+                        }
+                        .disabled(!validTeamName || opponentname.isEmpty)
+                        .onChange(of: opponentname){ _, _ in
+                            validate_opponent_name()
                         }
                         
                     }
@@ -129,20 +143,23 @@ struct FileNamePopUpView: View {
                     }
                     
                 }
-                
-                
-                
+
             }
             .onAppear{
                 scoreboard.enable_bottom_row = false
                 game_report.game_location = "Home"
                 ASGameLocation = "Home"
             }
-            .padding(.top, 45)
+            .padding(.top, 0)
             .ignoresSafeArea()
 
         }
         
+    }
+    
+    func validate_opponent_name() {
+        let validate = NSPredicate(format: "SELF MATCHES %@", "^[a-zA-Z\\s\\&\\-]*$")
+        validTeamName = validate.evaluate(with: opponentname)
     }
     
     func close() {
@@ -151,9 +168,6 @@ struct FileNamePopUpView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 showExportPR = false
             }
-
-//            showExportPR = true
-
         }
     }
     
