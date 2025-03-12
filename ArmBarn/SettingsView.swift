@@ -50,6 +50,11 @@ struct SettingsView: View {
     @State private var selected_velo_units = "MPH"
     let velo_units = ["MPH", "KPH"]
     
+    @State private var text_color = Color.white
+    
+    @State var sbl_width: Double = 17.0
+    @State var sbl_height: Double = 13.0
+    
     var body: some View {
             
             ZStack{
@@ -57,254 +62,271 @@ struct SettingsView: View {
                     
                     let impact = UIImpactFeedbackGenerator(style: .medium)
                     
-                    List{
-                        Section() {
-                            TipView(changeinputtip)
-                        }
-                        
-//                        Bullpen Mode Button
-                        
-//                        Section() {
-//
-//                            Button(action: {
-//                                dismiss()
-//                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-//                                    ASBullpenMode = true
-//                                }
-//                            }, label: {
-//                                Text("Bullpen Mode")
-//                            })
-//                            .bold()
-//                            .foregroundStyle(.white)
-//                            .listRowBackground(Color("ScoreboardGreen"))
-//                            .frame(maxWidth: .infinity)
-//                            .multilineTextAlignment(.center)
-//                        }
-                        
-                        Section(header: Text("Input Options")){
-                            HStack{
-                                ZStack{
-                                    Rectangle()
-                                        .fill(Color("PowderBlue"))
-                                        .frame(width: 30, height: 30)
-                                        .cornerRadius(7)
-                                    Image(systemName: "figure.baseball")
-                                        .imageScale(.large)
-                                        .font(.system(size: 17))
-                                        .foregroundColor(Color.white)
-                                }
-                                
-                                Toggle("Batter Stance", isOn: $useBatterStance)
-                                    .onChange(of: useBatterStance){
-                                        impact.impactOccurred()
-                                        let showpopup = allow_input_change()
-
-                                        if showpopup == true {
-                                            showInputChange = true
-                                            useBatterStance = ASBatterStance ?? false
-                                        }
-                                        else {
-                                            ASBatterStance = useBatterStance
-                                            event.batter_stance = ""
-                                        }
-
-                                    }
+                    NavigationView{
+                        List{
+                            Section() {
+                                TipView(changeinputtip)
                             }
-                            .tint(Color("ScoreboardGreen"))
-                            HStack{
-                                ZStack{
-                                    Rectangle()
-                                        .fill(Color("Gold"))
-                                        .frame(width: 30, height: 30)
-                                        .cornerRadius(7)
-                                    Image(systemName: "bolt.fill")
-                                        .imageScale(.large)
-                                        .font(.system(size: 17))
-                                        .foregroundColor(Color.white)
-                                }
-                                Toggle("Strike Type", isOn: $useStrikeType)
-                                    .onChange(of: useStrikeType){
-                                        impact.impactOccurred()
-                                        let showpopup = allow_input_change()
-
-                                        if showpopup == true {
-                                            showInputChange = true
-                                            useStrikeType = ASStrikeType ?? false
-                                        }
-                                        else {
-                                            ASStrikeType = useStrikeType
-                                        }
-                                    }
-                            }
-                            .tint(Color("ScoreboardGreen"))
-                            HStack{
-                                ZStack{
-                                    Rectangle()
-                                        .fill(Color("Tangerine"))
-                                        .frame(width: 30, height: 30)
-                                        .cornerRadius(7)
-                                    Image(systemName: "gauge.with.needle")
-                                        .imageScale(.large)
-                                        .font(.system(size: 17))
-                                        .foregroundColor(Color.white)
-                                }
-                                Toggle("Velocity Input", isOn: $useVelocityInput)
-                                    .onChange(of: useVelocityInput){
-                                        impact.impactOccurred()
-                                        let showpopup = allow_input_change()
-                                        
-                                        if showpopup == true {
-                                            showInputChange = true
-                                            useVelocityInput = ASVeloInput ?? false
-                                        }
-                                        else {
-                                            ASVeloInput = useVelocityInput
-                                            event.velocity = 0.0
-                                        }
-                                        
-                                    }
-                            }
-                            .tint(Color("ScoreboardGreen"))
-                            Picker("Velocity Units", selection: $selected_velo_units) {
-                                ForEach(velo_units, id: \.self) {
-                                    Text($0)
-                                        .bold()
-                                }
-                            }
-                            .pickerStyle(.segmented)
-                            .onChange(of: selected_velo_units){
-                                impact.impactOccurred()
-                                ASVeloUnits = selected_velo_units
-                                //print(selected_velo_units)
-                            }
-                        }
-                        Section(header: Text("Output Options")){
-                            HStack{
-                                ZStack{
-                                    Rectangle()
-                                        .fill(Color("Grey"))
-                                        .frame(width: 30, height: 30)
-                                        .cornerRadius(7)
-                                    Image(systemName: "archivebox.fill")
-                                        .imageScale(.large)
-                                        .font(.system(size: 17))
-                                        .foregroundColor(Color.white)
-                                }
-                                Toggle("Box Score", isOn: $showBoxScore)
-                                    .onChange(of: showBoxScore){
-                                        impact.impactOccurred()
-                                        ASBoxScore = showBoxScore
-                                    }
-                            }
-                            .tint(Color("ScoreboardGreen"))
-                            HStack{
-                                ZStack{
-                                    Rectangle()
-                                        .fill(Color("ScoreboardGreen"))
-                                        .frame(width: 30, height: 30)
-                                        .cornerRadius(7)
-                                    Image(systemName: "percent")
-                                        .bold()
-                                        .imageScale(.medium)
-                                        .font(.system(size: 17))
-                                        .foregroundColor(Color.white)
-                                }
-                                Toggle("Strike Percentages", isOn: $showStrikePer)
-                                    .onChange(of: showStrikePer){
-                                        impact.impactOccurred()
-                                        ASStrikePer = showStrikePer
-                                    }
-                            }
-                            .tint(Color("ScoreboardGreen"))
-                            HStack{
-                                ZStack{
-                                    Rectangle()
-                                        .fill(Color("Purple"))
-                                        .frame(width: 30, height: 30)
-                                        .cornerRadius(7)
-                                    Image(systemName: "location.fill")
-                                        .imageScale(.medium)
-                                        .font(.system(size: 17))
-                                        .foregroundColor(Color.white)
-                                }
-                                Toggle("Pitch Location Map", isOn: $showLocationMap)
-                                    .onChange(of: showLocationMap){
-                                        impact.impactOccurred()
-                                        ASLocation = showLocationMap
-                                    }
-                            }
-                            .tint(Color("ScoreboardGreen"))
-                            HStack{
-                                ZStack{
-                                    Rectangle()
-                                        .fill(Color("Emerald"))
-                                        .frame(width: 30, height: 30)
-                                        .cornerRadius(7)
-                                    Image(systemName: "hammer.fill")
-                                        .imageScale(.medium)
-                                        .font(.system(size: 17))
-                                        .foregroundColor(Color.white)
-                                }
-                                Toggle("Hit Summary", isOn: $showHitSummary)
-                                    .onChange(of: showHitSummary){
-                                        impact.impactOccurred()
-                                        ASHitSummary = showHitSummary
-                                    }
-                            }
-                            .tint(Color("ScoreboardGreen"))
-                            HStack{
-                                ZStack{
-                                    Rectangle()
-                                        .fill(Color("LightBrown"))
-                                        .frame(width: 30, height: 30)
-                                        .cornerRadius(7)
-                                    Image(systemName: "gamecontroller.fill")
-                                        .imageScale(.medium)
-                                        .font(.system(size: 17))
-                                        .foregroundColor(Color.white)
-                                }
-                                Toggle("Game Score", isOn: $showGameScore)
-                                    .onChange(of: showGameScore){
-                                        impact.impactOccurred()
-                                        ASGameScore = showGameScore
-                                    }
-                            }
-                            .tint(Color("ScoreboardGreen"))
-                            HStack{
-                                ZStack{
-                                    Rectangle()
-                                        .fill(Color("Scarlet"))
-                                        .frame(width: 30, height: 30)
-                                        .cornerRadius(7)
-                                    Image(systemName: "chart.xyaxis.line")
-                                        .imageScale(.large)
-                                        .font(.system(size: 17))
-                                        .foregroundColor(Color.white)
-                                }
-                                Toggle("Pitch by Inning Chart", isOn: $showPitByInn)
-                                    .onChange(of: showPitByInn){
-                                        impact.impactOccurred()
-                                        ASPitByInn = showPitByInn
-                                    }
-                            }
-                            .tint(Color("ScoreboardGreen"))
                             
-                        }
-                        Section() {
-                            Button {
-                                showFileNameInfo = true
-                            } label: {
-                                Text("Edit Game Info")
+    //                        Bullpen Mode Button
+                            
+    //                        Section() {
+    //
+    //                            Button(action: {
+    //                                dismiss()
+    //                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+    //                                    ASBullpenMode = true
+    //                                }
+    //                            }, label: {
+    //                                Text("Bullpen Mode")
+    //                            })
+    //                            .bold()
+    //                            .foregroundStyle(.white)
+    //                            .listRowBackground(Color("ScoreboardGreen"))
+    //                            .frame(maxWidth: .infinity)
+    //                            .multilineTextAlignment(.center)
+    //                        }
+                            
+                            Section(header: Text("Input Options")){
+                                HStack{
+                                    ZStack{
+                                        Rectangle()
+                                            .fill(Color("PowderBlue"))
+                                            .frame(width: 30, height: 30)
+                                            .cornerRadius(7)
+                                        Image(systemName: "figure.baseball")
+                                            .imageScale(.large)
+                                            .font(.system(size: 17))
+                                            .foregroundColor(Color.white)
+                                    }
+                                    
+                                    Toggle("Batter Stance", isOn: $useBatterStance)
+                                        .onChange(of: useBatterStance){
+                                            impact.impactOccurred()
+                                            let showpopup = allow_input_change()
+
+                                            if showpopup == true {
+                                                showInputChange = true
+                                                useBatterStance = ASBatterStance ?? false
+                                            }
+                                            else {
+                                                ASBatterStance = useBatterStance
+                                                event.batter_stance = ""
+                                            }
+
+                                        }
+                                }
+                                .tint(Color("ScoreboardGreen"))
+                                HStack{
+                                    ZStack{
+                                        Rectangle()
+                                            .fill(Color("Gold"))
+                                            .frame(width: 30, height: 30)
+                                            .cornerRadius(7)
+                                        Image(systemName: "bolt.fill")
+                                            .imageScale(.large)
+                                            .font(.system(size: 17))
+                                            .foregroundColor(Color.white)
+                                    }
+                                    Toggle("Strike Type", isOn: $useStrikeType)
+                                        .onChange(of: useStrikeType){
+                                            impact.impactOccurred()
+                                            let showpopup = allow_input_change()
+
+                                            if showpopup == true {
+                                                showInputChange = true
+                                                useStrikeType = ASStrikeType ?? false
+                                            }
+                                            else {
+                                                ASStrikeType = useStrikeType
+                                            }
+                                        }
+                                }
+                                .tint(Color("ScoreboardGreen"))
+                                HStack{
+                                    ZStack{
+                                        Rectangle()
+                                            .fill(Color("Tangerine"))
+                                            .frame(width: 30, height: 30)
+                                            .cornerRadius(7)
+                                        Image(systemName: "gauge.with.needle")
+                                            .imageScale(.large)
+                                            .font(.system(size: 17))
+                                            .foregroundColor(Color.white)
+                                    }
+                                    Toggle("Velocity Input", isOn: $useVelocityInput)
+                                        .onChange(of: useVelocityInput){
+                                            impact.impactOccurred()
+                                            let showpopup = allow_input_change()
+                                            
+                                            if showpopup == true {
+                                                showInputChange = true
+                                                useVelocityInput = ASVeloInput ?? false
+                                            }
+                                            else {
+                                                ASVeloInput = useVelocityInput
+                                                event.velocity = 0.0
+                                            }
+                                            
+                                        }
+                                }
+                                .tint(Color("ScoreboardGreen"))
+                                Picker("Velocity Units", selection: $selected_velo_units) {
+                                    ForEach(velo_units, id: \.self) {
+                                        Text($0)
+                                            .bold()
+                                    }
+                                }
+                                .pickerStyle(.segmented)
+                                .onChange(of: selected_velo_units){
+                                    impact.impactOccurred()
+                                    ASVeloUnits = selected_velo_units
+                                    //print(selected_velo_units)
+                                }
                             }
-                            .bold()
-                            .foregroundStyle(.white)
-                            .listRowBackground(Color("ScoreboardGreen"))
-                            .frame(maxWidth: .infinity)
-                            .multilineTextAlignment(.center)
+                            Section(header: Text("Output Options")){
+                                HStack{
+                                    ZStack{
+                                        Rectangle()
+                                            .fill(Color("Grey"))
+                                            .frame(width: 30, height: 30)
+                                            .cornerRadius(7)
+                                        Image(systemName: "archivebox.fill")
+                                            .imageScale(.large)
+                                            .font(.system(size: 17))
+                                            .foregroundColor(Color.white)
+                                    }
+                                    Toggle("Box Score", isOn: $showBoxScore)
+                                        .onChange(of: showBoxScore){
+                                            impact.impactOccurred()
+                                            ASBoxScore = showBoxScore
+                                        }
+                                }
+                                .tint(Color("ScoreboardGreen"))
+                                HStack{
+                                    ZStack{
+                                        Rectangle()
+                                            .fill(Color("ScoreboardGreen"))
+                                            .frame(width: 30, height: 30)
+                                            .cornerRadius(7)
+                                        Image(systemName: "percent")
+                                            .bold()
+                                            .imageScale(.medium)
+                                            .font(.system(size: 17))
+                                            .foregroundColor(Color.white)
+                                    }
+                                    Toggle("Strike Percentages", isOn: $showStrikePer)
+                                        .onChange(of: showStrikePer){
+                                            impact.impactOccurred()
+                                            ASStrikePer = showStrikePer
+                                        }
+                                }
+                                .tint(Color("ScoreboardGreen"))
+                                HStack{
+                                    ZStack{
+                                        Rectangle()
+                                            .fill(Color("Purple"))
+                                            .frame(width: 30, height: 30)
+                                            .cornerRadius(7)
+                                        Image(systemName: "location.fill")
+                                            .imageScale(.medium)
+                                            .font(.system(size: 17))
+                                            .foregroundColor(Color.white)
+                                    }
+                                    Toggle("Pitch Location Map", isOn: $showLocationMap)
+                                        .onChange(of: showLocationMap){
+                                            impact.impactOccurred()
+                                            ASLocation = showLocationMap
+                                        }
+                                }
+                                .tint(Color("ScoreboardGreen"))
+                                HStack{
+                                    ZStack{
+                                        Rectangle()
+                                            .fill(Color("Emerald"))
+                                            .frame(width: 30, height: 30)
+                                            .cornerRadius(7)
+                                        Image(systemName: "hammer.fill")
+                                            .imageScale(.medium)
+                                            .font(.system(size: 17))
+                                            .foregroundColor(Color.white)
+                                    }
+                                    Toggle("Hit Summary", isOn: $showHitSummary)
+                                        .onChange(of: showHitSummary){
+                                            impact.impactOccurred()
+                                            ASHitSummary = showHitSummary
+                                        }
+                                }
+                                .tint(Color("ScoreboardGreen"))
+                                HStack{
+                                    ZStack{
+                                        Rectangle()
+                                            .fill(Color("LightBrown"))
+                                            .frame(width: 30, height: 30)
+                                            .cornerRadius(7)
+                                        Image(systemName: "gamecontroller.fill")
+                                            .imageScale(.medium)
+                                            .font(.system(size: 17))
+                                            .foregroundColor(Color.white)
+                                    }
+                                    Toggle("Game Score", isOn: $showGameScore)
+                                        .onChange(of: showGameScore){
+                                            impact.impactOccurred()
+                                            ASGameScore = showGameScore
+                                        }
+                                }
+                                .tint(Color("ScoreboardGreen"))
+                                HStack{
+                                    ZStack{
+                                        Rectangle()
+                                            .fill(Color("Scarlet"))
+                                            .frame(width: 30, height: 30)
+                                            .cornerRadius(7)
+                                        Image(systemName: "chart.xyaxis.line")
+                                            .imageScale(.large)
+                                            .font(.system(size: 17))
+                                            .foregroundColor(Color.white)
+                                    }
+                                    Toggle("Pitch by Inning Chart", isOn: $showPitByInn)
+                                        .onChange(of: showPitByInn){
+                                            impact.impactOccurred()
+                                            ASPitByInn = showPitByInn
+                                        }
+                                }
+                                .tint(Color("ScoreboardGreen"))
+                                
+                            }
+                            Section() {
+                                Button {
+                                    showFileNameInfo = true
+                                } label: {
+                                    Text("Edit Game Info")
+                                }
+                                .bold()
+                                .foregroundStyle(.white)
+                                .listRowBackground(Color("ScoreboardGreen"))
+                                .frame(maxWidth: .infinity)
+                                .multilineTextAlignment(.center)
+                            }
+                        }
+                        .navigationBarTitleDisplayMode(.large)
+                        .navigationTitle("Settings")
+                        .toolbar{
+                            ToolbarItem(placement: .navigationBarLeading){
+                                Button{
+                                    dismiss()
+                                } label: {
+                                    Image(systemName: "xmark")
+                                        .imageScale(.medium)
+                                        .font(.system(size: 17))
+                                        .frame(width: sbl_width, height: sbl_height)
+                                        .foregroundColor(text_color)
+                                        .bold()
+                                }
+                            }
                         }
                     }
-                    .navigationBarTitleDisplayMode(.large)
-                    .navigationBarTitle("Settings")
+                    
                 }
                 .onAppear{
                     useBatterStance = ASBatterStance ?? false
@@ -334,7 +356,7 @@ struct SettingsView: View {
                 }
                 
                 if showFileNameInfo == true {
-                    FileNamePopUpView(action: {showFileNameInfo = false; scoreboard.enable_bottom_row = true})
+                    EditFileNamePopUpSettingsView(close_action: {showFileNameInfo = false; scoreboard.enable_bottom_row = true})
                 }
             }
 
