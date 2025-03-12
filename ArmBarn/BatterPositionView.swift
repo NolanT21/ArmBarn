@@ -120,6 +120,7 @@ struct BatterPositionView: View {
                         } label: {
                             Image(systemName: "xmark")
                                 .foregroundStyle(.white)
+                                .bold()
                         }
                         
                         Spacer()
