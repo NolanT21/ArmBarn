@@ -48,7 +48,9 @@ struct PopupAlertView: View {
                     
                     Button {
                         close()
-                        leftButtonAction()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12){
+                            leftButtonAction()
+                        }
                     } label: {
                         ZStack{
                             RoundedRectangle(cornerRadius: crnr_radius)
