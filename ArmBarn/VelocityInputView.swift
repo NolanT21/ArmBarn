@@ -18,7 +18,8 @@ struct VelocityInputView: View {
     @Binding var isActive: Bool
     @State var close_action: () -> ()
     
-    @State var veloinput: Double = Double()
+    @State var veloinput: Double = 0.0
+    @State var validVeloInput: Bool = false
     
     @FocusState private var fieldIsFocused: Bool
     
@@ -84,7 +85,7 @@ struct VelocityInputView: View {
                         } label : {
                             ZStack{
                                 RoundedRectangle(cornerRadius: crnr_radius)
-                                    .foregroundColor(Color("ScoreboardGreen"))
+                                    .foregroundColor(validVeloInput ? Color("ScoreboardGreen") : Color.gray)
                                 
                                 Text("ENTER")
                                     .font(.system(size: 20, weight: .bold))
@@ -94,6 +95,10 @@ struct VelocityInputView: View {
                         }
                         .padding(.horizontal, 20)
                         .padding(.top, 20)
+                        .disabled(!validVeloInput || (veloinput > 175 && veloinput < 30))
+                        .onChange(of: veloinput){ _, _ in
+                            validate_velocity_input()
+                        }
                     }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 20)
@@ -121,6 +126,11 @@ struct VelocityInputView: View {
             }
         }
 
+    }
+    
+    func validate_velocity_input() {
+        let validate = NSPredicate(format: "SELF MATCHES %@", "^[+]?([0-9]+(?:[\\.][0-9]*)?|\\.[0-9]+)$")
+        validVeloInput = validate.evaluate(with: String(veloinput))
     }
     
     func close() {
