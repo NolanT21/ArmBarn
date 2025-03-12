@@ -90,6 +90,7 @@ import Observation
     
     var game_location: String = ""
     var opponent_name: String = ""
+    var start_date: Date = Date()
     
 }
 
