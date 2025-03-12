@@ -5,6 +5,7 @@
 //  Created by Nolan Thompson on 11/18/23.
 //
 
+import Foundation
 import SwiftUI
 import SwiftData
 import Observation
@@ -153,12 +154,12 @@ struct PitchersAppeared {
 
 @Model class Pitcher{
     var id = UUID()
-    var firstName: String
-    var lastName: String
-    var pitch1: String
-    var pitch2: String
-    var pitch3: String
-    var pitch4: String
+    var firstName: String = ""
+    var lastName: String = ""
+    var pitch1: String = ""
+    var pitch2: String = ""
+    var pitch3: String = ""
+    var pitch4: String = ""
     var throwingHand: String = ""
     
     init(id: UUID, firstName: String, lastName: String, pitch1: String, pitch2: String, pitch3: String, pitch4: String, throwingHand: String){
@@ -173,5 +174,47 @@ struct PitchersAppeared {
     }
 }
 
+struct SavedPitcherInfo: Codable, Hashable{
+    var pitcher_id: UUID
+    var first_name: String = ""
+    var last_name: String = ""
+    var pitch1: String = ""
+    var pitch2: String = ""
+    var pitch3: String = ""
+    var pitch4: String = ""
+}
+
+@Model class SavedGames{
+    var opponent_name: String
+    var date: Date
+    var location: String
+    var game_data: [SavedEvent]
+    var pitcher_info: [SavedPitcherInfo]
+    
+    init(opponent_name: String, date: Date, location: String, game_data: [SavedEvent], pitcher_info: [SavedPitcherInfo]) {
+        self.opponent_name = opponent_name
+        self.date = date
+        self.location = location
+        self.game_data = game_data
+        self.pitcher_info = pitcher_info
+    }
+}
+
+struct SavedEvent: Codable, Hashable{
+    var event_num: Int
+    var pitcher_id: UUID
+    var pitch_result: String
+    var pitch_type: String
+    var result_detail: String
+    var balls: Int
+    var strikes: Int
+    var outs: Int
+    var inning: Int
+    var battersfaced: Int
+    var pitch_x_location: CGFloat
+    var pitch_y_location: CGFloat
+    var batters_stance: String
+    var velocity: Double
+}
 
 
