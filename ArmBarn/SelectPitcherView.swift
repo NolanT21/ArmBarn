@@ -154,6 +154,9 @@ struct SelectPitcherView: View {
                 if pitchers.count == 0 {
                     showAddPitcher = true
                 }
+                print("Select Pitchers View")
+                print("Appearance List: ", scoreboard.pitchers_appearance_list)
+                print("Current Pitcher: ", current_pitcher.firstName, current_pitcher.idcode)
             }
     }
     
@@ -187,20 +190,6 @@ struct SelectPitcherView: View {
             scoreboard.atbats = 1
         }
         print(appeared)
-        
-//        scoreboard.pitches = 0
-//        scoreboard.atbats = 1
-//        
-//        for evnt in events {
-//            if pitcher_id == evnt.pitcher_id  {
-//                if evnt.result_detail != "R" && evnt.result_detail != "RE" && evnt.pitch_result != "VZ" && evnt.pitch_result != "VA" && evnt.pitch_result != "IW"{
-//                    scoreboard.pitches += 1
-//                }
-//                if event.end_ab_rd.contains(evnt.result_detail) {
-//                    scoreboard.atbats += 1
-//                }
-//            }
-//        }
     }
     
     func store_pitcher_appearance() {
@@ -211,14 +200,18 @@ struct SelectPitcherView: View {
             if pitcher.pitcher_id == current_pitcher.idcode {
                 
                 scoreboard.pitchers_appearance_list = scoreboard.pitchers_appearance_list.filter(){ $0.pitcher_id != current_pitcher.idcode}
-                //break
                 
             }
         }
         
-        scoreboard.pitchers_appearance_list.append(PitchersAppeared(pitcher_id: current_pitcher.idcode, pitches: scoreboard.pitches, batters_faced: scoreboard.atbats))
+        if scoreboard.pitches > 0 {
+            print("Adding Selected Pitcher")
+            scoreboard.pitchers_appearance_list.append(PitchersAppeared(pitcher_id: current_pitcher.idcode, pitches: scoreboard.pitches, batters_faced: scoreboard.atbats))
+        }
+        
+        print("Appearance List:", scoreboard.pitchers_appearance_list)
+        
     }
-    
     func clear_game_report() {
         
         game_report.batters_faced = 0
