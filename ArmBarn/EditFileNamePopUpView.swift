@@ -69,11 +69,19 @@ struct EditFileNamePopUpView: View {
 //                        ASGameLocation = selected_location
                     }
                     
-                    DatePicker("", selection: $gameInfo.date)
-                        .labelsHidden()
-                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
-                        .accentColor(Color("ScoreboardGreen"))
-                        .padding(.horizontal, 20)
+                    VStack{
+                        
+                        Text("Start Time")
+                            .font(.system(size: 17))
+                            .foregroundStyle(font_color)
+                        
+                        DatePicker("", selection: $gameInfo.date)
+                            .labelsHidden()
+                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
+                            .accentColor(Color("ScoreboardGreen"))
+                            .padding(.horizontal, 20)
+                            .padding(.top, -5)
+                    }
                     
                     Button {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.12){
@@ -115,6 +123,7 @@ struct EditFileNamePopUpView: View {
                     withAnimation(.spring()) {
                         offset = -100
                     }
+                    validate_opponent_name()
                 }
             }
         }
@@ -212,11 +221,19 @@ struct EditFileNamePopUpSettingsView: View {
 
                     }
                     
-                    DatePicker("", selection: $startdate)
-                        .labelsHidden()
-                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
-                        .accentColor(Color("ScoreboardGreen"))
-                        .padding(.horizontal, 20)
+                    VStack{
+                        
+                        Text("Start Time")
+                            .font(.system(size: 17))
+                            .foregroundStyle(font_color)
+                        
+                        DatePicker("", selection: $startdate)
+                            .labelsHidden()
+                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
+                            .accentColor(Color("ScoreboardGreen"))
+                            .padding(.horizontal, 20)
+                            .padding(.top, -5)
+                    }
                     
                     Button {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.12){
