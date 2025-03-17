@@ -10,23 +10,25 @@ import TipKit
 
 struct SelectPitcherTip: Tip {
     
-    var options: [TipOption] {
-        [Tips.MaxDisplayCount(1)]
-    }
+    static let showPitcherTip = Event(id: "showPitcherTip")
     
     var title: Text {
         Text("Select Pitcher")
     }
     
     var message: Text? {
-        Text("Tap here to change or add pitchers.")
+        Text("Tap here to choose or add pitchers.")
     }
     
     var image: Image? {
         Image(systemName: "person.crop.circle")
     }
     
-
+    var rules: [Rule] = [
+        #Rule(Self.showPitcherTip) {
+            $0.donations.count >= 1
+        }
+    ]
     
 }
 
@@ -122,7 +124,7 @@ struct WelcomeTip: Tip {
     }
     
     var message: Text? {
-        Text("To get started, enter the opposing team's name and game location")
+        Text("To get started, enter the opposing team's name game location and start time")
     }
     
     var image: Image? {
