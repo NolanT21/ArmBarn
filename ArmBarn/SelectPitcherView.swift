@@ -154,9 +154,9 @@ struct SelectPitcherView: View {
                 if pitchers.count == 0 {
                     showAddPitcher = true
                 }
-                print("Select Pitchers View")
-                print("Appearance List: ", scoreboard.pitchers_appearance_list)
-                print("Current Pitcher: ", current_pitcher.firstName, current_pitcher.idcode)
+                //print("Select Pitchers View")
+                //print("Appearance List: ", scoreboard.pitchers_appearance_list)
+                //print("Current Pitcher: ", current_pitcher.firstName, current_pitcher.idcode)
             }
     }
     
@@ -189,7 +189,7 @@ struct SelectPitcherView: View {
             scoreboard.pitches = 0
             scoreboard.atbats = 1
         }
-        print(appeared)
+        //print(appeared)
     }
     
     func store_pitcher_appearance() {
@@ -205,11 +205,11 @@ struct SelectPitcherView: View {
         }
         
         if scoreboard.pitches > 0 {
-            print("Adding Selected Pitcher")
+            //print("Adding Selected Pitcher")
             scoreboard.pitchers_appearance_list.append(PitchersAppeared(pitcher_id: current_pitcher.idcode, pitches: scoreboard.pitches, batters_faced: scoreboard.atbats))
         }
         
-        print("Appearance List:", scoreboard.pitchers_appearance_list)
+        //print("Appearance List:", scoreboard.pitchers_appearance_list)
         
     }
     func clear_game_report() {
