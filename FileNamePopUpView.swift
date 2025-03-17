@@ -45,116 +45,143 @@ struct FileNamePopUpView: View {
         let impact = UIImpactFeedbackGenerator(style: .medium)
         
         if showExportPR == true {
-            ZStack{
+            ZStack(alignment: .top){
                 
                 Color(.black)
                     .opacity(0.2)
                 
-                ZStack {
+                HStack{
                     
                     VStack{
                         
-                        Text(title)
-                            .font(.system(size: 22, weight: .bold))
-                            .foregroundStyle(font_color)
-                            .padding()
-                        
-                        TextField("Enter Opponent Name", text: $opponentname)
-                            .focused($fieldIsFocused)
-                            .submitLabel(.done)
-                            .font(.system(size: 20, weight: .bold))
-                            .textFieldStyle(.roundedBorder)
-                            .multilineTextAlignment(.leading)
-                            .padding(.horizontal, 20)
-                        
-                        Picker("", selection: $selected_location) {
-                            ForEach(game_location, id: \.self) {
-                                Text($0)
-                            }
+                        VStack{
+                            TipView(welcometip)
+                                .tipBackground(Color("DarkGrey"))
+                                .tint(Color("ScoreboardGreen"))
+                                .padding(.horizontal, 10)
+                                .preferredColorScheme(.dark)
                         }
-                        .pickerStyle(.segmented)
-                        .preferredColorScheme(/*@START_MENU_TOKEN@*/.dark/*@END_MENU_TOKEN@*/)
-                        .padding()
-                        .onChange(of: selected_location){
-                            impact.impactOccurred()
-                            game_report.game_location = selected_location
-                            ASGameLocation = selected_location
-                        }
+                        .frame(minHeight: 35)
                         
-                        DatePicker("", selection: $start_date)
-                            .labelsHidden()
-                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
-                            .accentColor(Color("ScoreboardGreen"))
-                            .padding(.horizontal, 20)
                         
-                        Button {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.12){
-                                    fieldIsFocused = false
-                                    game_report.opponent_name = opponentname
-                                    ASCurOpponentName = opponentname
-                                    game_report.start_date = start_date
-                                    action()
-                                }
-                                close()
-                            
-                                welcometip.invalidate(reason: .actionPerformed)
-                            
-                        } label: {
-                            ZStack{
-                                RoundedRectangle(cornerRadius: crnr_radius)
-                                    .foregroundColor(validTeamName ? Color("ScoreboardGreen") : Color.gray)
+                        // Spacer()
+                        
+                        ZStack{
                                 
-                                Text(buttonTitle)
-                                    .font(.system(size: 20, weight: .bold))
+                            VStack(alignment: .center){
+                                
+                                Text(title)
+                                    .font(.system(size: 22, weight: .bold))
                                     .foregroundStyle(font_color)
+                                    .padding(.top, 5)
+                                    .padding(.bottom, 15)
+                                
+                                TextField("Enter Opponent Name", text: $opponentname)
+                                    .focused($fieldIsFocused)
+                                    .submitLabel(.done)
+                                    .font(.system(size: 20, weight: .bold))
+                                    .textFieldStyle(.roundedBorder)
+                                    .multilineTextAlignment(.leading)
+                                    .padding(.horizontal, 20)
+                                
+                                Picker("", selection: $selected_location) {
+                                    ForEach(game_location, id: \.self) {
+                                        Text($0)
+                                    }
+                                }
+                                .pickerStyle(.segmented)
+                                .preferredColorScheme(/*@START_MENU_TOKEN@*/.dark/*@END_MENU_TOKEN@*/)
+                                .padding()
+                                .onChange(of: selected_location){
+                                    impact.impactOccurred()
+                                    game_report.game_location = selected_location
+                                    ASGameLocation = selected_location
+                                }
+                                
+                                VStack{
+                                    
+                                    Text("Start Time")
+                                        .font(.system(size: 17))
+                                        .foregroundStyle(font_color)
+                                    
+                                    DatePicker("", selection: $start_date)
+                                        .labelsHidden()
+                                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
+                                        .accentColor(Color("ScoreboardGreen"))
+                                        .padding(.horizontal, 20)
+                                        .padding(.top, -5)
+                                }
+                                
+                                
+                                Button {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.12){
+                                        fieldIsFocused = false
+                                        game_report.opponent_name = opponentname
+                                        ASCurOpponentName = opponentname
+                                        game_report.start_date = start_date
+                                        action()
+                                    }
+                                    close()
+                                
+                                    welcometip.invalidate(reason: .actionPerformed)
+                                    
+                                    Task{
+                                        await SelectPitcherTip.showPitcherTip.donate()
+                                    }
+                                    
+                                } label: {
+                                    ZStack{
+                                        RoundedRectangle(cornerRadius: crnr_radius)
+                                            .foregroundColor(validTeamName ? Color("ScoreboardGreen") : Color.gray)
+                                        
+                                        Text(buttonTitle)
+                                            .font(.system(size: 20, weight: .bold))
+                                            .foregroundStyle(font_color)
+                                            .padding()
+                                    }
                                     .padding()
+                                    
+                                }
+                                .disabled(!validTeamName || opponentname.isEmpty)
+                                .onChange(of: opponentname){ _, _ in
+                                    validate_opponent_name()
+                                }
+                                
                             }
                             .padding()
+                            .background(Color("DarkGrey"))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .padding(.horizontal, 30)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .offset(x: 0, y: offset)
+                            .onAppear{
+                                withAnimation(.spring()) {
+                                    offset = 20
+                                }
+                            }
                             
                         }
-                        .disabled(!validTeamName || opponentname.isEmpty)
-                        .onChange(of: opponentname){ _, _ in
-                            validate_opponent_name()
-                        }
+                        .ignoresSafeArea()
+                        
+                        //.border(Color.orange, width: 4)
+                        
                         
                     }
-                    .fixedSize(horizontal: false, vertical: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
-                    .padding()
-                    .background(Color("DarkGrey"))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .padding(30)
-                    .offset(x: 0, y: offset)
-                    .onAppear{
-                        withAnimation(.spring()) {
-                            offset = -100
-                        }
-                    }
-                    
-                    VStack{
-                        
-                        TipView(welcometip)
-                            .tipBackground(Color("DarkGrey"))
-                            .tint(Color("ScoreboardGreen"))
-                            .padding(.horizontal, 20)
-                            .preferredColorScheme(.dark)
-                        
-                        Spacer()
-                        
-                    }
-                    
+//                    .border(Color.blue, width: 4)
                 }
+                .padding(.top, 50)
 
             }
+            .ignoresSafeArea()
             .onAppear{
                 scoreboard.enable_bottom_row = false
                 game_report.game_location = "Home"
                 ASGameLocation = "Home"
             }
-            .padding(.top, 0)
-            .ignoresSafeArea()
+            //.padding(.top, 0)
 
         }
-        
+
     }
     
     func validate_opponent_name() {
