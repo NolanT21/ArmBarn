@@ -228,7 +228,7 @@ struct PitchLocationView: View {
                                     .preferredColorScheme(.dark)
                                 
                                 Spacer()
-                                
+
                             }
                             
                             if newAtBat == true  && ASBatterStance == true{
@@ -377,7 +377,7 @@ struct PitchLocationView: View {
                                 XPopupAlertView(isActive: $showEndGame, show_close: false, title: "Save Game", message: "Do you want to save this game before starting a new one?", leftButtonAction: {scoreboard.enable_bottom_row = true; save_game_func(); showSaveGame = true;}, rightButtonAction: {showNoSave = true}, XButtonAction: {scoreboard.enable_bottom_row = true; showEndGame = false})
                             }
                             else if showEndGame == true && events.count == 0{
-                                XPopupAlertView(isActive: $showEndGame, show_close: false, title: "New Game", message: "Do you want to start a new game?", leftButtonAction: {scoreboard.enable_bottom_row = true; showEndGame = false;}, rightButtonAction: {showEndGame = false}, XButtonAction: {scoreboard.enable_bottom_row = true; showEndGame = false})
+                                XPopupAlertView(isActive: $showEndGame, show_close: false, title: "New Game", message: "Do you want to start a new game?", leftButtonAction: {scoreboard.enable_bottom_row = true; showEndGame = false; showFileNameInfo = true}, rightButtonAction: {showEndGame = false}, XButtonAction: {scoreboard.enable_bottom_row = true; showEndGame = false})
                             }
                             
                             if showNoSave == true {
@@ -571,9 +571,7 @@ struct PitchLocationView: View {
                                     .bold()
                             }
                             .popover(isPresented: $showSavedGames) {
-                                SavedGamesView().preferredColorScheme(.dark).task{
-                                    
-                                }
+                                SavedGamesView().preferredColorScheme(.dark)
                             }
                         }
                         .padding(.trailing, -5)
