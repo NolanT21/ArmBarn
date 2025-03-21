@@ -86,6 +86,7 @@ struct SavedGameMainView: View {
                 } label: {
                     Text("Summary")
                         .foregroundStyle(showSummary ? Color.white : Color.gray)
+                        .font(.system(size: 17))
                 }
                 .frame(maxWidth: .infinity)
                 
@@ -95,6 +96,7 @@ struct SavedGameMainView: View {
                 } label: {
                     Text("Game Log")
                         .foregroundStyle(showGameLog ? Color.white : Color.gray)
+                        .font(.system(size: 17))
                 }
                 .frame(maxWidth: .infinity)
                 
