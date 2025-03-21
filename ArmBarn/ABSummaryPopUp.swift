@@ -38,6 +38,7 @@ struct ABSummaryPopUp: View {
                         }
                     } label: {
                         Image(systemName: "xmark")
+                            .font(.system(size: 17))
                             .foregroundStyle(.white)
                             .imageScale(.medium)
                             .bold()
@@ -84,17 +85,18 @@ struct ABSummaryPopUp: View {
                                     let pitch_color = data_row.result_color
                                     let pitch_num = data_row.pitch_num
                                     
-                                    Circle()
-                                        .fill(pitch_color)
-                                        .stroke(.white, lineWidth: 2)
-                                        .frame(width: 17, height: 17, alignment: .center)
-                                        .overlay {
-                                            Text("\(pitch_num)")
-                                                .font(.system(size: 9))
-                                                .bold()
-                                        }
-                                        .position(point)
-                                    
+                                    if data_row.pitch_type != "ROE" {
+                                        Circle()
+                                            .fill(pitch_color)
+                                            .stroke(.white, lineWidth: 2)
+                                            .frame(width: 17, height: 17, alignment: .center)
+                                            .overlay {
+                                                Text("\(pitch_num)")
+                                                    .font(.system(size: 9))
+                                                    .bold()
+                                            }
+                                            .position(point)
+                                    }
                                 }
                             }
                         
@@ -164,45 +166,87 @@ struct ABSummaryPopUp: View {
                             Divider()
                             ForEach(Array(pitch_list_data.enumerated()), id: \.offset) { index, data_row in
                                 
-                                GridRow{
-                                    
-                                    Circle()
-                                        .fill(data_row.result_color)
-                                        .stroke(.white, lineWidth: 2)
-                                        .frame(width: 20, height: 20, alignment: .center)
-                                        .overlay{
-                                            Text("\(data_row.pitch_num)")
-                                                .font(.system(size: 12))
+                                if data_row.pitch_type == "NPE" {
+                                    GridRow{
+                                        HStack{
+                                            
+                                            Spacer()
+                                            
+                                            Text(data_row.result)
+                                                .foregroundStyle(Color.yellow.opacity(2))
+                                                .font(.system(size: 14))
                                                 .bold()
-                                        }
-                                    
-                                    VStack(alignment: .leading){
-                                        Text("\(data_row.result)")
-                                            .font(.system(size: 14))
-                                            .bold()
-                                        
-                                        HStack(spacing: 2){
+                                                .padding(.vertical, 7)
                                             
-                                            if data_row.velocity != 0 {
-
-                                                Text("\(data_row.velocity, specifier: "%.1f")") +
-                                                
-                                                Text(velo_units.lowercased())
-                                                
-                                            }
+                                            Spacer()
                                             
-                                            Text("\(data_row.pitch_type)")
                                         }
-                                        .font(.system(size: 10))
-                                        
+                                        .background(Color.yellow.opacity(0.07))
+                                        .gridCellColumns(4)
                                     }
-                                    .gridColumnAlignment(.leading)
-                                    
-                                    
-                                    Spacer()
+                                }
+                                else if data_row.pitch_type == "RO" {
+                                    GridRow{
+                                        HStack{
+                                            
+                                            Spacer()
+                                            
+                                            Text(data_row.result)
+                                                .foregroundStyle(Color.red.opacity(2))
+                                                .font(.system(size: 14))
+                                                .bold()
+                                                .padding(.vertical, 7)
+                                            
+                                            Spacer()
+                                            
+                                        }
+                                        .background(Color.red.opacity(0.07))
+                                        .gridCellColumns(4)
+                                    }
+                                }
+                                else if data_row.pitch_type != "ROE"{
+                                    GridRow{
                                         
-                                    Text("\(data_row.balls)-\(data_row.strikes)")
+                                        Circle()
+                                            .fill(data_row.result_color)
+                                            .stroke(.white, lineWidth: 2)
+                                            .frame(width: 20, height: 20, alignment: .center)
+                                            .overlay{
+                                                Text("\(data_row.pitch_num)")
+                                                    .font(.system(size: 12))
+                                                    .bold()
+                                            }
                                         
+                                        VStack(alignment: .leading){
+                                            Text("\(data_row.result)")
+                                                .font(.system(size: 14))
+                                                .bold()
+                                            
+                                            HStack(spacing: 2){
+                                                
+                                                if data_row.velocity != 0 {
+
+                                                    Text("\(data_row.velocity, specifier: "%.1f")") +
+                                                    
+                                                    Text(velo_units.lowercased())
+                                                    
+                                                }
+                                                
+                                                Text("\(data_row.pitch_type)")
+                                            }
+                                            .font(.system(size: 10))
+                                            
+                                        }
+                                        .gridColumnAlignment(.leading)
+                                        
+                                        
+                                        Spacer()
+                                            
+                                        Text("\(data_row.balls)-\(data_row.strikes)")
+                                            .font(.system(size: 14))
+                                            
+
+                                    }
 
                                 }
                                 
@@ -228,7 +272,7 @@ struct ABSummaryPopUp: View {
 //                for i in pitch_list_data {
 //                    print(i.)
 //                }
-                print(pitcher_name)
+                //print("Pitcher Name: ", pitcher_name)
             }
         }
         
