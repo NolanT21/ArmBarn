@@ -321,6 +321,7 @@ struct GameDataSummaryView: View {
                             }
                             
                         }
+                        .font(.system(size: 17))
     //                    .border(Color.blue)
                     }
                     
@@ -356,6 +357,8 @@ struct GameDataSummaryView: View {
             let first_base_run_matrix = [0.42, 0.27, 0.13]
             let second_base_run_matrix = [0.62, 0.41, 0.22]
             let third_base_run_matrix = [0.84, 0.66, 0.27]
+            
+            var pitcher_order_list = [UUID()]
             
             for event in saved_data {
                 //print(event.pitch_result, event.result_detail, event.balls, event.strikes, event.atbats)
@@ -464,13 +467,33 @@ struct GameDataSummaryView: View {
                     innings_scored += 1
                 }
                 
+                //Logic to order pitchers by entry for box score appearance
+                if !pitcher_order_list.contains(event.pitcher_id) {
+                    //print(event.inning, event.result_detail)
+                    pitcher_order_list.append(event.pitcher_id)
+                }
+                
             } //End of game for-loop
+            
+            pitcher_order_list.remove(at: 0)
             
             if strikes > 0 { strike_percentage = Double(strikes * 100 / pitches) }
             if first_pitch_strikes > 0 { fps_percentage = Double(first_pitch_strikes * 100 / batters_faced) }
             innings_scored = Double(innings_scored + (Double(outs) * 0.1))
             
-            for pitcher_info in game_data.pitcher_info {
+            print("Pitcher Order List: ", pitcher_order_list)
+            //Logic to sort game_data.pitcher_info
+            var sorted_pitcher_info: [SavedPitcherInfo] = []
+            for order_id in pitcher_order_list {
+                for id in game_data.pitcher_info {
+                    if id.pitcher_id == order_id {
+                        sorted_pitcher_info.append(id)
+                    }
+                }
+            }
+            print("Sorted List: ", sorted_pitcher_info)
+            
+            for pitcher_info in sorted_pitcher_info {
                 var inn_pitched = 0.0
                 var bat_faced = 0
                 var pitch_num = 0
@@ -481,7 +504,8 @@ struct GameDataSummaryView: View {
                 var homerun_num = 0
                 var pit_outs = 0
                 
-                let saved_pitcher_data = saved_data.filter { $0.pitcher_id == pitcher_info.pitcher_id}
+                saved_data.sort{$0.event_num < $1.event_num}
+                var saved_pitcher_data = saved_data.filter { $0.pitcher_id == pitcher_info.pitcher_id}
                 
                 for evnt in saved_pitcher_data {
                     if evnt.pitch_result != "VA" && evnt.pitch_result != "VZ" && evnt.pitch_result != "IW" && evnt.result_detail != "R" && evnt.result_detail != "RE" {
@@ -547,36 +571,6 @@ struct GameDataSummaryView: View {
                 }
                 
                 inn_pitched = Double(inn_pitched + (Double(pit_outs) * 0.1))
-                
-                //Batters faced and innings pitched logic
-                //Needs replaced
-//                let pitcher_first_event = saved_pitcher_data.first!
-//                let pitcher_last_event = saved_pitcher_data.last!
-//                
-//                let first_inning = pitcher_first_event.inning
-//                let first_outs = pitcher_first_event.outs
-//                let first_at_bat = pitcher_first_event.atbats
-//                
-//                let last_inning = pitcher_last_event.inning
-//                var last_outs = pitcher_last_event.outs
-//                let last_at_bat = pitcher_last_event.atbats
-//                let last_result_detail = pitcher_last_event.result_detail
-//                
-//                if add_out_list.contains(last_result_detail) {
-//                    last_outs += 1
-//                }
-//                
-//                var inn_difference = Double(last_inning - first_inning) //Logic for 1/3's of inning
-//                var out_difference = Double(last_outs - first_outs)
-//                
-//                if out_difference == 3 {
-//                    out_difference = 0
-//                    inn_difference += 1
-//                }
-//                
-//                inn_pitched = inn_difference + (out_difference * 0.1)
-//                bat_faced = last_at_bat - (first_at_bat - 1)
-                //Logic stops here
                 
                 box_score_list.append(PlayerBoxScore(pitcher_id: pitcher_info.pitcher_id, first_name: pitcher_info.first_name, last_name: pitcher_info.last_name, innings_pitched: inn_pitched, batters_faced: bat_faced, number_of_pitches: pitch_num, hits: hit_num, walks: walk_num, strikeouts: strikeout_num, hit_by_pitches: hit_by_pitch_num, homeruns: homerun_num))
                 
