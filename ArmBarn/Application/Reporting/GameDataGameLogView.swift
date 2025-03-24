@@ -21,20 +21,13 @@ struct AtBatSummary: Codable, Hashable {
     var inning: Int
 }
 
-struct PopUpData {
-//    var pitch_num_list: [Int]
-    var pitch_info_list: [pitch_info_ab]
-//    var result_list: [String]
-//    var x_coor_list: [CGFloat]
-//    var y_coor_list: [CGFloat]
-//    var pitch_type_list: [String]
-//    var pitcher_name: String
-}
-
 struct popup_pitch_info {
+    var pitcher_first_name: String = ""
+    var pitcher_last_name: String = ""
+    var pitcher_id: UUID = UUID()
     var pitch_num: Int = 0
     var result: String = ""
-    var result_color: Color = .clear //Text placeholder
+    var result_color: Color = .clear
     var pitch_type: String = ""
     var x_loc: CGFloat = 0
     var y_loc: CGFloat = 0
@@ -73,8 +66,6 @@ struct GameDataGameLogView: View {
     @State var pitch_type3: String = ""
     @State var pitch_type4: String = ""
     @State var batter_stance: String = ""
-    
-//    ["S", "D", "T", "H", "E", "B", "F", "G", "L", "P", "Y", "W", "K", "C", "M", "RE"]
     
     @State var ab_data_list: [popup_pitch_info] = []
     
@@ -136,12 +127,10 @@ struct GameDataGameLogView: View {
                                     
                                     Text("\(at_bat.ab_counter)")
                                     
-                                    //Text("INN \(at_bat.inning)")
-                                    
                                     Text("\(at_bat.pitcher_name)")
                                     
                                     Text("\(at_bat.ab_summary)")
-                                    //Text("\(at_bat.pitch_number)")
+
                                     Text("\(at_bat.balls)-\(at_bat.strikes)")
                                     
                                     if at_bat.outs == 1 {
@@ -159,11 +148,12 @@ struct GameDataGameLogView: View {
                                 .onTapGesture {
                                     showPopup = true
                                     
-                                    print("Generated Pitcher ID List: ", at_bat.pitcher_id_list)
+                                    //print("Generated Pitcher ID List: ", at_bat.pitcher_id_list)
                                     
                                     generate_ab_list(ab_data: at_bat, pitcher_ids: at_bat.pitcher_id_list)
                                     
-                                    //print("tapped")
+                                    //print("Source At Bat Data: ", at_bat)
+                                
                                 }
                             }
 
@@ -192,16 +182,18 @@ struct GameDataGameLogView: View {
             var inning = 0
             var pitcher_id = UUID()
             var pitcher_id_list = [UUID()]
-            for event in game_data.game_data {
-                
-                //print(event.pitch_result, event.result_detail, event.battersfaced)
-                //Adds id of every pitcher for every AtBat
-                if pitcher_id != event.pitcher_id {
+            let game_data_events = game_data.game_data.sorted { $0.event_num < $1.event_num }
+            pitcher_id_list.removeAll()
+            for (index,event) in game_data_events.enumerated() {
+    
+                if index == 0 {
                     pitcher_id = event.pitcher_id
                     pitcher_id_list.append(event.pitcher_id)
-                    print(pitcher_id_list)
-                    //If AtBat is over then cur_ab = 1
-                    //cur_at_bat = 1
+                }
+                //Adds id of every pitcher for every AtBat
+                else if pitcher_id != event.pitcher_id {
+                    pitcher_id = event.pitcher_id
+                    pitcher_id_list.append(event.pitcher_id)
                 }
                 
                 if event.pitch_result != "VA" && event.pitch_result != "VZ" && event.pitch_result != "IW" && event.result_detail != "R" && event.result_detail != "RE" {
@@ -214,7 +206,6 @@ struct GameDataGameLogView: View {
                 }
                 
                 if result_detail_abr.contains(event.result_detail) {
-                    //print("Entered")
                     ab_cnt += 1
                     inning = event.inning
                     
@@ -230,8 +221,6 @@ struct GameDataGameLogView: View {
                     let summary_index = result_detail_abr.firstIndex(of: event.result_detail)
                     let summary = result_detail_description[summary_index!]
                     
-                    print("AB Number: ", event.battersfaced)
-                    
                     at_bat_list.append(AtBatSummary(pitcher_name: pitcher_name, pitcher_id: event.pitcher_id, pitcher_id_list: pitcher_id_list, ab_num: event.battersfaced, ab_counter: ab_cnt, ab_summary: summary, pitch_number: pitches, outs: event.outs, balls: event.balls, strikes: event.strikes, inning: inning))
                     
                     //Reset Variables
@@ -239,45 +228,45 @@ struct GameDataGameLogView: View {
                     pitcher_id_list.removeAll()
                     pitcher_id = UUID()
                 }
-                //print("event")
             }
-            
         }
     }
     
     func generate_ab_list(ab_data: AtBatSummary, pitcher_ids: [UUID]) {
-        print("Entered", ab_data)
-        print("Passed IDs List: ", pitcher_ids)
+        //print("At Bat Data", ab_data)
+        //print("Passed IDs List: ", pitcher_ids)
         ab_data_list.removeAll()
-        
-        //print("At-Bat Data: ", ab_data)
-        print("At-Bat Count: ", ab_data.ab_counter)
-        print("At-Bat Number: ", ab_data.ab_num)
+    
+//        print("At-Bat Count: ", ab_data.ab_counter)
+//        print("At-Bat Number: ", ab_data.ab_num)
         let ab_number = ab_data.ab_num
         ab_num = ab_number
-        //print(ab_num)
         
         var saved_data = game_data.game_data
         saved_data.sort{$0.event_num < $1.event_num}
-        //print(saved_data)
         
-        let cur_at_bat = saved_data.filter {ab_number == $0.battersfaced /*&& pitcher_id == $0.pitcher_id*/}
-        print("Data by AB Number: ", cur_at_bat)
-        
+        let cur_at_bat = saved_data.filter {ab_number == $0.battersfaced}
         var ab_pitcher_events: [SavedEvent] = []
         
-        print("Pitcher ID List: ", pitcher_ids)
         for event in cur_at_bat {
-            print("Current Pitcher ID: ", event.pitcher_id)
             if pitcher_ids.contains(event.pitcher_id) {
                 ab_pitcher_events.append(event)
             }
         }
         
-        print("AB Data: ", ab_pitcher_events)
+        if ab_number == 1 && pitcher_ids.count > 1 {
+            //Get first pitcher data and number of last batter faced
+            var first_pitcher_data = saved_data.filter {ab_pitcher_events[0].pitcher_id == $0.pitcher_id}
+            let last_event = first_pitcher_data.last!
+            let last_ab = last_event.battersfaced
+            
+            first_pitcher_data = first_pitcher_data.filter {$0.battersfaced == last_ab}
+            ab_pitcher_events = ab_pitcher_events.filter{$0.pitcher_id != ab_pitcher_events[0].pitcher_id}
+            ab_pitcher_events.insert(contentsOf: first_pitcher_data, at: 0)
+        }
         
-        //print("AtBat data: ", cur_at_bat)
-        
+        var first_name = ""
+        var last_name = ""
         var pitch_number = 0
         var result = ""
         var velocity = 0.0
@@ -292,20 +281,15 @@ struct GameDataGameLogView: View {
         ab_pitchers.removeAll()
         
         for (index,p) in ab_pitcher_events.enumerated() {
-            //print("Gen AbText: \(index) \t \(p.event_number) \t \(p.pitch_result) \t \(p.balls) - \(p.strikes) ")
-            //print("Iteration: ", index)
-            
-            //print("PopUp Header: \(p.inning), \(p.outs), \(p.batters_stance)")
-            print("Current Iteration: ", p)
             
             if cur_pit_id != p.pitcher_id {
-                //print("Add Pitcher")
                 cur_pit_id = p.pitcher_id
                 for p_er in game_data.pitcher_info {
                     if p_er.pitcher_id == cur_pit_id {
                         let temp_pitcher_name = p_er.first_name.prefix(1) + ". " + p_er.last_name
                         ab_pitchers.append(temp_pitcher_name)
-                        //print("Added Pitcher: \(temp_pitcher_name)")
+                        first_name = p_er.first_name
+                        last_name = p_er.last_name
                         pitch_type1 = p_er.pitch1
                         pitch_type2 = p_er.pitch2
                         pitch_type3 = p_er.pitch3
@@ -368,7 +352,7 @@ struct GameDataGameLogView: View {
                                 result = "Strikeout - Swinging"
                             }
                             else if p.result_detail == "C" {
-                                //Change to baserunner color
+                                pitch_color = Color("Tangerine")
                             }
                         }
                     }
@@ -447,25 +431,16 @@ struct GameDataGameLogView: View {
                 pitch_type = "ROE"
                 result = "RUNNER OUT - END OF INNING"
             }
-            
 
-            
-            let ab_line_data = popup_pitch_info(pitch_num: pitch_number, result: result, result_color: pitch_color, pitch_type: pitch_type, x_loc: p.pitch_x_location, y_loc: p.pitch_y_location, velocity: p.velocity, balls: p.balls, strikes: p.strikes, units: "MPH")
-            
-            //print(ab_line_text)
+            let ab_line_data = popup_pitch_info(pitcher_first_name: first_name, pitcher_last_name: last_name, pitcher_id: p.pitcher_id, pitch_num: pitch_number, result: result, result_color: pitch_color, pitch_type: pitch_type, x_loc: p.pitch_x_location, y_loc: p.pitch_y_location, velocity: p.velocity, balls: p.balls, strikes: p.strikes, units: "MPH")
             
             ab_data_list.append(ab_line_data)
             
-//            Error Here, Conditional Logic Problem?
-            //print("Index vs Count: \(index), \(ab_pitcher_events.count - 1)")
             if index == ab_pitcher_events.count - 1 {
-                //print(p.inning, p.outs, p.batters_stance)
                 inning = p.inning
                 outs = p.outs
                 batter_stance = p.batters_stance
             }
-            
-            
             
         }
         
