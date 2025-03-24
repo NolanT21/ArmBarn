@@ -64,13 +64,10 @@ struct ABSummaryPopUp: View {
                     }
                     
                     let screenSize = UIScreen.main.bounds.size
-                    //let width_ratio = (screenSize.width * 0.001087)
                     let velo_units = ASVeloUnits ?? "mph"
                     
                     ZStack{
                         Image("PLO_Background")
-//                            .resizable()
-//                            .scaledToFit()
                             .clipShape(RoundedRectangle(cornerRadius: 6))
                             .clipped()
                             .overlay(alignment: .center){
@@ -111,16 +108,12 @@ struct ABSummaryPopUp: View {
                                         Image(systemName: "figure.baseball")
                                             .scaleEffect(x: 1, y: 2)
                                             .rotation3DEffect(.degrees(50), axis: (x: 0, y: 1, z: 0))
-                                            //.scaleEffect(x: 0.9, y: 1)
-                                            //.imageScale(.large)
                                             .font(.system(size: 100))
                                             .foregroundColor(.white.opacity(0.5))
-                                            //.position(batter_figure_position_right)
                                         
                                         Spacer()
                                         
                                     }
-                                    //.padding(.leading, 10)
                                     .padding(.top, 20)
                                     
                                     Spacer()
@@ -139,32 +132,43 @@ struct ABSummaryPopUp: View {
                                         Image(systemName: "figure.baseball")
                                             .scaleEffect(x: -1, y: 2)
                                             .rotation3DEffect(.degrees(-50), axis: (x: 0, y: 1, z: 0))
-                                            //.scaleEffect(x: 0.9, y: 1)
-                                            //.imageScale(.large)
                                             .font(.system(size: 100))
                                             .foregroundColor(.white.opacity(0.5))
-                                            //.position(batter_figure_position_right)
-                                        
-                                        
                                         
                                     }
-                                    //.padding(.leading, 10)
                                     .padding(.top, 20)
                                     
                                     Spacer()
                                     
                                 }
                             }
-                            
                         }
-                        
-                        
                     }
                     
                     ScrollView{
                         Grid(alignment: .center){
                             Divider()
                             ForEach(Array(pitch_list_data.enumerated()), id: \.offset) { index, data_row in
+                                
+                                if index > 0 && pitch_list_data[index].pitcher_id != pitch_list_data[index-1].pitcher_id {
+                                    GridRow{
+                                        HStack{
+                                            
+                                            Spacer()
+                                            
+                                            Text(data_row.pitcher_first_name + " " + data_row.pitcher_last_name + " Entered")
+                                                .foregroundStyle(Color.green.opacity(2))
+                                                .font(.system(size: 14))
+                                                .bold()
+                                                .padding(.vertical, 7)
+                                            
+                                            Spacer()
+                                            
+                                        }
+                                        .background(Color.green.opacity(0.07))
+                                        .gridCellColumns(4)
+                                    }
+                                }
                                 
                                 if data_row.pitch_type == "NPE" {
                                     GridRow{
@@ -244,7 +248,6 @@ struct ABSummaryPopUp: View {
                                             
                                         Text("\(data_row.balls)-\(data_row.strikes)")
                                             .font(.system(size: 14))
-                                            
 
                                     }
 
@@ -268,11 +271,6 @@ struct ABSummaryPopUp: View {
                 withAnimation(.spring()) {
                     offset = -100
                 }
-                //print("Data List: ", pitch_list_data)
-//                for i in pitch_list_data {
-//                    print(i.)
-//                }
-                //print("Pitcher Name: ", pitcher_name)
             }
         }
         
@@ -281,12 +279,6 @@ struct ABSummaryPopUp: View {
     func close() {
         withAnimation(.spring()) {
             offset = 1000
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-//                showExportPR = false
-//            }
-
-//            showExportPR = true
-
         }
     }
     
