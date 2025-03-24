@@ -128,8 +128,8 @@ struct SavedGameMainView: View {
         .background(Color.black)
         .onAppear{
             side = screenSize.width / 4.1
-            print("Number of Events: \(game_data.game_data.count)")
-            print("Saved Pitcher List: (\(game_data.pitcher_info.count))", game_data.pitcher_info)
+            //print("Number of Events: \(game_data.game_data.count)")
+            //print("Saved Pitcher List: (\(game_data.pitcher_info.count))", game_data.pitcher_info)
         }
     }
 }

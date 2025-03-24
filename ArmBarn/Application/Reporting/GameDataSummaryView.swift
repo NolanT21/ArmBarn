@@ -338,21 +338,11 @@ struct GameDataSummaryView: View {
         }
         .background(Color.black)
         .onAppear{
-            
-            //print(pitchers_list)
+
             let add_out_list = ["F", "G", "L", "P", "Y", "K", "M", "RE", "R"]
 
             var saved_data = game_data.game_data
             saved_data.sort{ $0.event_num < $1.event_num}
-//            
-//            print(saved_data.count - 1)
-//            let last_event = saved_data.last!
-//
-//            innings_pitched = (Double(last_event.inning) + Double(last_event.outs) * 0.1) - 1
-//            batters_faced = last_event.atbats
-            
-//            innings_pitched
-//            batters_faced
             
             let first_base_run_matrix = [0.42, 0.27, 0.13]
             let second_base_run_matrix = [0.62, 0.41, 0.22]
@@ -361,7 +351,6 @@ struct GameDataSummaryView: View {
             var pitcher_order_list = [UUID()]
             
             for event in saved_data {
-                //print(event.pitch_result, event.result_detail, event.balls, event.strikes, event.atbats)
                 if event.pitch_result != "VA" && event.pitch_result != "VZ" && event.pitch_result != "IW" && event.result_detail != "R" && event.result_detail != "RE" {
                     
                     pitches += 1
@@ -469,7 +458,6 @@ struct GameDataSummaryView: View {
                 
                 //Logic to order pitchers by entry for box score appearance
                 if !pitcher_order_list.contains(event.pitcher_id) {
-                    //print(event.inning, event.result_detail)
                     pitcher_order_list.append(event.pitcher_id)
                 }
                 
@@ -481,8 +469,7 @@ struct GameDataSummaryView: View {
             if first_pitch_strikes > 0 { fps_percentage = Double(first_pitch_strikes * 100 / batters_faced) }
             innings_scored = Double(innings_scored + (Double(outs) * 0.1))
             
-            print("Pitcher Order List: ", pitcher_order_list)
-            //Logic to sort game_data.pitcher_info
+            //Logic to sort game_data.pitcher_info by appearance
             var sorted_pitcher_info: [SavedPitcherInfo] = []
             for order_id in pitcher_order_list {
                 for id in game_data.pitcher_info {
@@ -491,7 +478,7 @@ struct GameDataSummaryView: View {
                     }
                 }
             }
-            print("Sorted List: ", sorted_pitcher_info)
+            //print("Sorted List: ", sorted_pitcher_info)
             
             for pitcher_info in sorted_pitcher_info {
                 var inn_pitched = 0.0
