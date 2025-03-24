@@ -32,7 +32,7 @@ struct SavedGamesView: View {
                 
                 NavigationStack{
                     List{
-                        ForEach(saved_games, id: \.id) { games in
+                        ForEach(saved_games.sorted(by: {$0.date > $1.date}), id: \.id) { games in
                             HStack{
                                 
     //                            let pitcher_info = games.pitcher_info
