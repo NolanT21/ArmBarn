@@ -298,15 +298,9 @@ struct PitchLocationView: View {
                                         
                                         VStack{
                                             Button{
+                                                
                                                 showPitcherSelect = true
                                                 selectpitchertip.invalidate(reason: .actionPerformed)
-                                                
-//                                                do {
-//                                                    try context.delete(model: SavedGames.self)
-//                                                } catch {
-//                                                    print("Failed to delete all events.")
-//                                                }
-                                                
                                                 
                                             } label: {
                                                 Text("Select Pitcher")
