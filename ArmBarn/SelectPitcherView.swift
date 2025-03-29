@@ -109,6 +109,7 @@ struct SelectPitcherView: View {
                     }
                     .font(.system(size: 17))
                     .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search by Last Name")
+                   
                     .toolbar{
                         
                         ToolbarItemGroup(placement: .topBarLeading) {
@@ -154,6 +155,7 @@ struct SelectPitcherView: View {
                 if pitchers.count == 0 {
                     showAddPitcher = true
                 }
+                UILabel.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = .white
                 //print("Select Pitchers View")
                 //print("Appearance List: ", scoreboard.pitchers_appearance_list)
                 //print("Current Pitcher: ", current_pitcher.firstName, current_pitcher.idcode)
