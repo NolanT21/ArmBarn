@@ -51,6 +51,7 @@ struct PitchLocationView: View {
     @State private var showResumeGame = false
     @State private var showFileNameInfo = false
     @State private var showSettingsView = false
+    @State private var showDifferentPreviousPitcher: Bool = false
     
     @State private var showUndoToast = false
     
@@ -366,6 +367,10 @@ struct PitchLocationView: View {
 //                            if showEndGame == true{
 //                                PopupAlertView(isActive: $showEndGame, title: "End Game", message: "This game and its data will not be saved!", leftButtonAction: {new_game_func(); newAtBat = false; showFileNameInfo = true; showEndGame = false; scoreboard.enable_bottom_row = true}, rightButtonAction: {showEndGame = false; scoreboard.enable_bottom_row = true})
 //                            }
+                            
+                            if showDifferentPreviousPitcher == true {
+                                XInfoPopUpView(isActive: $showDifferentPreviousPitcher, show_close: false, title: "Attention", message: current_pitcher.firstName + " " + current_pitcher.lastName + " was in the game for the previous event. They have been set to the current pitcher.", buttonAction: {scoreboard.enable_bottom_row = true; showDifferentPreviousPitcher = false}, XButtonAction: {scoreboard.enable_bottom_row = true; showDifferentPreviousPitcher = false})
+                            }
                             
                             if showEndGame == true && events.count > 0{
                                 XPopupAlertView(isActive: $showEndGame, show_close: false, title: "Save Game", message: "Do you want to save this game before starting a new one?", leftButtonAction: {scoreboard.enable_bottom_row = true; save_game_func(); showSaveGame = true;}, rightButtonAction: {showNoSave = true}, XButtonAction: {scoreboard.enable_bottom_row = true; showEndGame = false})
@@ -1667,6 +1672,36 @@ struct PitchLocationView: View {
         game_report.start_date = Date()
         
         let previous_event = events[events.count - 1]
+        
+        if current_pitcher.idcode != previous_event.pitcher_id {
+            let pitcher_appearance_list = scoreboard.pitchers_appearance_list
+            for pitcher in pitchers {
+                if pitcher.id == previous_event.pitcher_id {
+                    print("Different pitcher was in game for previous event")
+                    //Set current pitcher characteristics
+                    current_pitcher.firstName = pitcher.firstName
+                    current_pitcher.lastName = pitcher.lastName
+                    current_pitcher.pitch1 = pitcher.pitch1
+                    current_pitcher.pitch2 = pitcher.pitch2
+                    current_pitcher.pitch3 = pitcher.pitch3
+                    current_pitcher.pitch4 = pitcher.pitch4
+                    current_pitcher.idcode = pitcher.id
+                    
+                    //Set scoreboard values for previous pitcher
+                    for p_er in pitcher_appearance_list {
+                        if p_er.pitcher_id == pitcher.id {
+                            scoreboard.pitches = p_er.pitches
+                            scoreboard.atbats = p_er.batters_faced
+                        }
+                    }
+                    
+                    showDifferentPreviousPitcher = true
+                   
+                    break
+
+                }
+            }
+        }
         
         //print(previous_event.atbats)
         
