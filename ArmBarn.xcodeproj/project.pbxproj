@@ -37,6 +37,7 @@
 		D5542B9F2D6008BC00A8607E /* GameReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5542B9E2D6008BC00A8607E /* GameReportView.swift */; };
 		D5542BA12D6008DB00A8607E /* GameDataSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5542BA02D6008DB00A8607E /* GameDataSummaryView.swift */; };
 		D56801AF2D6CD16A00165AD1 /* ABSummaryPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56801AE2D6CD16A00165AD1 /* ABSummaryPopUp.swift */; };
+		D57607B32D945B1E0058074D /* XInfoPopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57607B22D945B1E0058074D /* XInfoPopUpView.swift */; };
 		D58DF60A2D7363330038A212 /* BatterPositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58DF6092D7363330038A212 /* BatterPositionView.swift */; };
 		D58E1BDF2D6394670007E4A2 /* SavedGameMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58E1BDE2D6394670007E4A2 /* SavedGameMainView.swift */; };
 		D5DD11262AF52FE80064F1A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5DD11252AF52FE80064F1A5 /* Preview Assets.xcassets */; };
@@ -62,6 +63,7 @@
 		D56801AE2D6CD16A00165AD1 /* ABSummaryPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ABSummaryPopUp.swift; path = ArmBarn/ABSummaryPopUp.swift; sourceTree = SOURCE_ROOT; };
 		D5743E1F2D56C28200B773A5 /* SavedGamesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedGamesView.swift; sourceTree = "<group>"; };
 		D575388C2C776ABE00B7EBF7 /* BullpenMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BullpenMainView.swift; path = ../../BullpenMainView.swift; sourceTree = "<group>"; };
+		D57607B22D945B1E0058074D /* XInfoPopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XInfoPopUpView.swift; sourceTree = SOURCE_ROOT; };
 		D58DAF142C45D38D003EFB2E /* FileNamePopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileNamePopUpView.swift; sourceTree = SOURCE_ROOT; };
 		D58DF6092D7363330038A212 /* BatterPositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BatterPositionView.swift; path = ArmBarn/BatterPositionView.swift; sourceTree = SOURCE_ROOT; };
 		D58E1BDE2D6394670007E4A2 /* SavedGameMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedGameMainView.swift; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 				D54AFED72D71F49D0037C16B /* VelocityInputView.swift */,
 				D5B019A62D53E9F500E33C7C /* PopupAlertView.swift */,
 				D5B019A82D53EAE600E33C7C /* XPopupAlertView.swift */,
+				D57607B22D945B1E0058074D /* XInfoPopUpView.swift */,
 				D549655E2D490E91007B7D84 /* StrikeoutAlertView.swift */,
 				D535C9162D550E90000C025C /* SavePopUpView.swift */,
 			);
@@ -281,6 +284,7 @@
 				D54D66E42D6006FE00832995 /* ArmBarnApp.swift in Sources */,
 				D54D66E52D6006FE00832995 /* Assets.xcassets in Sources */,
 				D54D66E62D6006FE00832995 /* global_variables.swift in Sources */,
+				D57607B32D945B1E0058074D /* XInfoPopUpView.swift in Sources */,
 				D54D66E72D6006FE00832995 /* report_variables.swift in Sources */,
 				D54D66E82D6006FE00832995 /* MainView.swift in Sources */,
 				D58DF60A2D7363330038A212 /* BatterPositionView.swift in Sources */,
