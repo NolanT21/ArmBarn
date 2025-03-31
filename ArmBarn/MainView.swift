@@ -36,13 +36,13 @@ struct MainView: View {
                 .background(Color("ScoreboardGreen"))
             
             }
-            else {
-                VStack{
-                    BullpenMainView().preferredColorScheme(.dark).task{
-                        event.recordEvent = false
-                    }
-                }
-            }
+//            else {
+//                VStack{
+//                    BullpenMainView().preferredColorScheme(.dark).task{
+//                        event.recordEvent = false
+//                    }
+//                }
+//            }
         }
     }
 }

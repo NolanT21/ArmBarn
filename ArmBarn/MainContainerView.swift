@@ -2,15 +2,44 @@
 //  MainContainerView.swift
 //  ArmBarn
 //
-//  Created by Nolan Thompson on 9/26/24.
+//  Created by Nolan Thompson on 1/15/24.
 //
 
 import SwiftUI
+import SwiftData
+import Observation
 
 struct MainContainerView: View {
+    
+    //@AppStorage("BullpenMode") var ASBullpenMode : Bool?
+    
+    //@Environment(Event_String.self) var event
+    //@Environment(\.dismiss) var dismiss
+    
+    //@Query(sort: \Event.event_number) var events: [Event]
+    
+    //@State private var showBullpenMode : Bool = false
+      
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack{
+//          if !(ASBullpenMode ?? false) {
+//                        PitchLocationView()
+//                            .preferredColorScheme(.dark)
+//                            .ignoresSafeArea()
+//                    }
+//                    else {
+//                        VStack{
+//                            BullpenMainView().task{
+//                                event.recordEvent = false
+//                            }
+//                        }
+//                    }
+            PitchLocationView()
+                .preferredColorScheme(.dark)
+                .ignoresSafeArea()
+        }
     }
+    
 }
 
 #Preview {
