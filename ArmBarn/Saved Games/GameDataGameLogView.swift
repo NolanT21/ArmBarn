@@ -220,7 +220,6 @@ struct GameDataGameLogView: View {
                     
                     let summary_index = result_detail_abr.firstIndex(of: event.result_detail)
                     let summary = result_detail_description[summary_index!]
-                    print(summary)
                     
                     at_bat_list.append(AtBatSummary(pitcher_name: pitcher_name, pitcher_id: event.pitcher_id, pitcher_id_list: pitcher_id_list, ab_num: event.battersfaced, ab_counter: ab_cnt, ab_summary: summary, pitch_number: pitches, outs: event.outs, balls: event.balls, strikes: event.strikes, inning: inning))
                     
