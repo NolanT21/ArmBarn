@@ -13,11 +13,12 @@ struct SettingsView: View {
     
     @AppStorage("BatterStance") var ASBatterStance : Bool?
     @AppStorage("VelocityInput") var ASVeloInput : Bool?
-    @AppStorage("StrikeType") var ASStrikeType : Bool?
+
     @AppStorage("VelocityUnits") var ASVeloUnits : String?
     
     @AppStorage("BoxScore") var ASBoxScore : Bool?
     @AppStorage("StrikePer") var ASStrikePer : Bool?
+    @AppStorage("SwingPer") var ASSwingPer : Bool?
     @AppStorage("Location") var ASLocation : Bool?
     @AppStorage("HitSummary") var ASHitSummary : Bool?
     @AppStorage("GameScore") var ASGameScore : Bool?
@@ -37,11 +38,11 @@ struct SettingsView: View {
     @State private var showFileNameInfo = false
     
     @State private var useBatterStance = false
-    @State private var useStrikeType = false
     @State private var useVelocityInput = false
     
     @State private var showBoxScore = false
     @State private var showStrikePer = false
+    @State private var showSwingPer = false
     @State private var showLocationMap = false
     @State private var showHitSummary = false
     @State private var showGameScore = false
@@ -123,32 +124,6 @@ struct SettingsView: View {
                                             .fill(Color("Gold"))
                                             .frame(width: 30, height: 30)
                                             .cornerRadius(7)
-                                        Image(systemName: "bolt.fill")
-                                            .imageScale(.large)
-                                            .font(.system(size: 17))
-                                            .foregroundColor(Color.white)
-                                    }
-                                    Toggle("Strike Type", isOn: $useStrikeType)
-                                        .onChange(of: useStrikeType){
-                                            impact.impactOccurred()
-                                            let showpopup = allow_input_change()
-
-                                            if showpopup == true {
-                                                showInputChange = true
-                                                useStrikeType = ASStrikeType ?? false
-                                            }
-                                            else {
-                                                ASStrikeType = useStrikeType
-                                            }
-                                        }
-                                }
-                                .tint(Color("ScoreboardGreen"))
-                                HStack{
-                                    ZStack{
-                                        Rectangle()
-                                            .fill(Color("Tangerine"))
-                                            .frame(width: 30, height: 30)
-                                            .cornerRadius(7)
                                         Image(systemName: "gauge.with.needle")
                                             .imageScale(.large)
                                             .font(.system(size: 17))
@@ -188,7 +163,7 @@ struct SettingsView: View {
                                 HStack{
                                     ZStack{
                                         Rectangle()
-                                            .fill(Color("Grey"))
+                                            .fill(Color("Tangerine"))
                                             .frame(width: 30, height: 30)
                                             .cornerRadius(7)
                                         Image(systemName: "archivebox.fill")
@@ -206,7 +181,7 @@ struct SettingsView: View {
                                 HStack{
                                     ZStack{
                                         Rectangle()
-                                            .fill(Color("ScoreboardGreen"))
+                                            .fill(Color("Grey"))
                                             .frame(width: 30, height: 30)
                                             .cornerRadius(7)
                                         Image(systemName: "percent")
@@ -219,6 +194,33 @@ struct SettingsView: View {
                                         .onChange(of: showStrikePer){
                                             impact.impactOccurred()
                                             ASStrikePer = showStrikePer
+                                        }
+                                }
+                                .tint(Color("ScoreboardGreen"))
+                                HStack{
+                                    ZStack{
+                                        Rectangle()
+                                            .fill(Color("ScoreboardGreen"))
+                                            .frame(width: 30, height: 30)
+                                            .cornerRadius(7)
+                                        Image(systemName: "wand.and.sparkles.inverse")
+                                            .imageScale(.large)
+                                            .font(.system(size: 17))
+                                            .foregroundColor(Color.white)
+                                    }
+                                    Toggle("Swing Percentages", isOn: $showSwingPer)
+                                        .onChange(of: showSwingPer){
+                                            impact.impactOccurred()
+                                            ASSwingPer = showSwingPer
+//                                            let showpopup = allow_input_change()
+//
+//                                            if showpopup == true {
+//                                                showInputChange = true
+//                                                showSwingPer = ASSwingPer ?? false
+//                                            }
+//                                            else {
+//                                                ASSwingPer = showSwingPer
+//                                            }
                                         }
                                 }
                                 .tint(Color("ScoreboardGreen"))
@@ -331,11 +333,11 @@ struct SettingsView: View {
                 .onAppear{
                     useBatterStance = ASBatterStance ?? false
                     useVelocityInput = ASVeloInput ?? false
-                    useStrikeType = ASStrikeType ?? false
                     selected_velo_units = ASVeloUnits ?? "MPH"
                     
                     showBoxScore = ASBoxScore ?? true
                     showStrikePer = ASStrikePer ?? true
+                    showSwingPer = ASSwingPer ?? true
                     showLocationMap = ASLocation ?? true
                     showHitSummary = ASHitSummary ?? true
                     showGameScore = ASGameScore ?? true
@@ -343,6 +345,7 @@ struct SettingsView: View {
                     
                     ASBoxScore = showBoxScore
                     ASStrikePer = showStrikePer
+                    ASSwingPer = showSwingPer
                     ASLocation = showLocationMap
                     ASHitSummary = showHitSummary
                     ASGameScore = showGameScore

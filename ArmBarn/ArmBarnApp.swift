@@ -21,6 +21,7 @@ struct ArmBarnApp: App {
         UserDefaults.standard.register(defaults: [
             "BoxScore" : true,
             "StrikePer" : true,
+            "SwingPer" : true,
             "Location" : true,
             "HitSummary" : true,
             "GameScore" : true,

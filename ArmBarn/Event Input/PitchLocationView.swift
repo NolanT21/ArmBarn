@@ -17,7 +17,6 @@ struct PitchLocationView: View {
     @AppStorage("BullpenMode") var ASBullpenMode : Bool?
     @AppStorage("CurrentOpponentName") var ASCurOpponentName : String?
     @AppStorage("GameLocation") var ASGameLocation : String?
-    @AppStorage("StrikeType") var ASStrikeType : Bool?
     @AppStorage("VelocityUnits") var ASVeloUnits : String?
     
     @Environment(Scoreboard.self) var scoreboard
@@ -662,30 +661,28 @@ struct PitchLocationView: View {
                 else if evnt.pitch_result == "Z" || evnt.pitch_result == "L"{
                     num += 1
                     color = Color("Gold")
-                    if evnt.result_detail == "N" && ASStrikeType == false{
+                    if evnt.result_detail == "N" {
                         result = "Strike"
                     }
-                    else{
-                        if evnt.pitch_result == "L" {
+                    else if evnt.pitch_result == "L" {
                             result = "K - Called"
-                        }
-                        else if evnt.pitch_result == "Z" {
-                            result = "K - Swinging"
-                        }
                     }
+                    else if evnt.pitch_result == "Z" {
+                        result = "K - Swinging"
+                    }
+                    
                     if evnt.result_detail == "K" || evnt.result_detail == "C" || evnt.result_detail == "M"{
                         color = Color("Grey")
                         result = "Strikeout"
-                        if ASStrikeType == true {
-                            if evnt.result_detail == "M" {
-                                result = "Strikeout - ꓘ"
-                            }
-                            if evnt.result_detail == "K" {
-                                result = "Strikeout - K"
-                            }
-                            if evnt.result_detail == "C" {
-                                color = Color("Tangerine")
-                            }
+                        if evnt.result_detail == "M" {
+                            result = "Strikeout - ꓘ"
+                        }
+                        else if evnt.result_detail == "K" {
+                            result = "Strikeout - K"
+                        }
+                        else if evnt.result_detail == "C" {
+                            result = "Strikeout - No Out"
+                            color = Color("Tangerine")
                         }
                     }
                 }

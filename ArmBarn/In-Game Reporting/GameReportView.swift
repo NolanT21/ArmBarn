@@ -14,11 +14,11 @@ struct GameReportView: View {
     
     @AppStorage("BatterStance") var ASBatterStance : Bool?
     @AppStorage("VelocityInput") var ASVeloInput : Bool?
-    @AppStorage("StrikeType") var ASStrikeType : Bool?
     @AppStorage("VelocityUnits") var ASVeloUnits : String?
     
     @AppStorage("BoxScore") var ASBoxScore : Bool?
     @AppStorage("StrikePer") var ASStrikePer : Bool?
+    @AppStorage("SwingPer") var ASSwingPer : Bool?
     @AppStorage("Location") var ASLocation : Bool?
     @AppStorage("HitSummary") var ASHitSummary : Bool?
     @AppStorage("GameScore") var ASGameScore : Bool?
@@ -1302,7 +1302,7 @@ struct GameReportView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(Color("DarkGrey"))
                         .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
-                        .padding(.bottom, view_padding/2)
+                        .padding(.bottom, ASSwingPer ?? true ? view_padding/2 : view_padding)
                         .padding(.leading, view_padding)
                         .padding(.trailing, view_padding/4)
                         
@@ -1350,116 +1350,116 @@ struct GameReportView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(Color("DarkGrey"))
                         .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
-                        .padding(.bottom, view_padding/2)
+                        .padding(.bottom, ASSwingPer ?? true ? view_padding/2 : view_padding)
                         .padding(.leading, view_padding/4)
                         .padding(.trailing, view_padding)
                         
                     }
-                    
-                    if ASStrikeType == true {
-                        HStack{
-                            
-                            VStack{
-                                HStack{
-                                    Text("Swinging Strike %")
-                                        .font(.system(size: subheadline_size))
-                                        .foregroundStyle(text_color)
-                                        .padding(.top, view_padding)
-                                    
-                                    Spacer()
-                                }
-                                .padding(.leading, view_padding)
-                                .padding(.bottom, view_padding)
-                                
-                                VStack{
-                                    
-                                    ZStack{
-                                        Gauge(value: Double(game_report.swing_per) * 0.01) {}
-                                            .scaleEffect(2.5)
-                                            .gaugeStyle(.accessoryCircularCapacity)
-                                            .tint(Color("Tangerine"))
-                                            .padding(view_padding)
-                                        VStack{
-                                            Text("\(game_report.swing_per)%")
-                                                .font(.system(size: 40))
-                                                .foregroundStyle(text_color)
-                                                .bold()
-                                            Text("\(game_report.swings)/\(game_report.strikes)")
-                                                .font(.system(size: subheadline_size))
-                                                .foregroundStyle(text_color)
-                                        }
-                                        .padding(.top, view_padding)
-                                    }
-                                    .padding(view_padding)
-                                    
-                                    Spacer()
-                                    
-                                }
-                                .padding(view_padding)
-                                
-                                Spacer()
-                                
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color("DarkGrey"))
-                            .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
-                            .padding(.bottom, view_padding/2)
-                            .padding(.leading, view_padding)
-                            .padding(.trailing, view_padding/4)
-                            
-                            VStack{
-                                
-                                HStack{
-                                    Text("Whiff %")
-                                        .font(.system(size: subheadline_size))
-                                        .padding(.top, view_padding)
-                                        .foregroundStyle(text_color)
-                                    
-                                    Spacer()
-                                }
-                                .padding(.leading, view_padding)
-                                .padding(.bottom, view_padding)
-                                
-                                VStack{
-                                    ZStack{
-                                        Gauge(value: Double(game_report.whiff_per) * 0.01) {}
-                                            .scaleEffect(2.5)
-                                            .gaugeStyle(.accessoryCircularCapacity)
-                                            .tint(Color("Grey"))
-                                            .padding(view_padding)
-                                        VStack{
-                                            Text("\(game_report.whiff_per)%")
-                                                .font(.system(size: 40))
-                                                .foregroundStyle(text_color)
-                                                .bold()
-                                            Text("\(game_report.whiffs)/\(game_report.swings)")
-                                                .font(.system(size: subheadline_size))
-                                                .foregroundStyle(text_color)
-                                        }
-                                        .padding(.top, view_padding)
-                                    }
-                                    .padding(view_padding)
-                                    
-                                    Spacer()
-                                    
-                                }
-                                .padding(view_padding)
-                                
-                                Spacer()
-                                
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color("DarkGrey"))
-                            .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
-                            .padding(.leading, view_padding/4)
-                            .padding(.bottom, view_padding/2)
-                            .padding(.trailing, view_padding)
-                        }
-                    }
-                    
+
                 }
-                .padding(.bottom, view_padding/2)
-                
+                //.padding(.bottom, view_padding/2)
+
+            }
+            
+            if ASSwingPer == true {
+                HStack{
+                    
+                    VStack{
+                        HStack{
+                            Text("Swinging Strike %")
+                                .font(.system(size: subheadline_size))
+                                .foregroundStyle(text_color)
+                                .padding(.top, view_padding)
+                            
+                            Spacer()
+                        }
+                        .padding(.leading, view_padding)
+                        .padding(.bottom, view_padding)
+                        
+                        VStack{
+                            
+                            ZStack{
+                                Gauge(value: Double(game_report.swing_per) * 0.01) {}
+                                    .scaleEffect(2.5)
+                                    .gaugeStyle(.accessoryCircularCapacity)
+                                    .tint(Color("Tangerine"))
+                                    .padding(view_padding)
+                                VStack{
+                                    Text("\(game_report.swing_per)%")
+                                        .font(.system(size: 40))
+                                        .foregroundStyle(text_color)
+                                        .bold()
+                                    Text("\(game_report.swings)/\(game_report.strikes)")
+                                        .font(.system(size: subheadline_size))
+                                        .foregroundStyle(text_color)
+                                }
+                                .padding(.top, view_padding)
+                            }
+                            .padding(view_padding)
+                            
+                            Spacer()
+                            
+                        }
+                        .padding(view_padding)
+                        
+                        Spacer()
+                        
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color("DarkGrey"))
+                    .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
+                    .padding(.bottom, view_padding)
+                    .padding(.leading, view_padding)
+                    .padding(.trailing, view_padding/4)
+                    
+                    VStack{
+                        
+                        HStack{
+                            Text("Whiff %")
+                                .font(.system(size: subheadline_size))
+                                .padding(.top, view_padding)
+                                .foregroundStyle(text_color)
+                            
+                            Spacer()
+                        }
+                        .padding(.leading, view_padding)
+                        .padding(.bottom, view_padding)
+                        
+                        VStack{
+                            ZStack{
+                                Gauge(value: Double(game_report.whiff_per) * 0.01) {}
+                                    .scaleEffect(2.5)
+                                    .gaugeStyle(.accessoryCircularCapacity)
+                                    .tint(Color("Grey"))
+                                    .padding(view_padding)
+                                VStack{
+                                    Text("\(game_report.whiff_per)%")
+                                        .font(.system(size: 40))
+                                        .foregroundStyle(text_color)
+                                        .bold()
+                                    Text("\(game_report.whiffs)/\(game_report.swings)")
+                                        .font(.system(size: subheadline_size))
+                                        .foregroundStyle(text_color)
+                                }
+                                .padding(.top, view_padding)
+                            }
+                            .padding(view_padding)
+                            
+                            Spacer()
+                            
+                        }
+                        .padding(view_padding)
+                        
+                        Spacer()
+                        
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color("DarkGrey"))
+                    .clipShape(RoundedRectangle(cornerRadius: view_crnr_radius))
+                    .padding(.leading, view_padding/4)
+                    .padding(.bottom, view_padding)
+                    .padding(.trailing, view_padding)
+                }
             }
             
             if ASVeloInput == true && game_report.velo_set_list.count > 0{

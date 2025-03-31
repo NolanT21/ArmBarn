@@ -42,7 +42,7 @@ struct GameDataGameLogView: View {
     
     @AppStorage("BatterStance") var ASBatterStance : Bool?
     @AppStorage("VelocityInput") var ASVeloInput : Bool?
-    @AppStorage("StrikeType") var ASStrikeType : Bool?
+    @AppStorage("SwingPer") var ASSwingPer : Bool?
     @AppStorage("VelocityUnits") var ASVeloUnits : String?
     
     @Environment(Event_String.self) var event
@@ -52,7 +52,7 @@ struct GameDataGameLogView: View {
     
     @State var result_detail_abr: [String] = []
     @State var result_detail_description: [String] = ["Single", "Double", "Triple", "Homerun", "Error", "Hit by Pitch", "Flyout", "Groundout", "Lineout",
-    "Popout", "Sac Bunt", "Walk", "Strikeout", "K - Runner Reached", "K - Looking", "Runner Out - End of Inning"]
+    "Popout", "Sac Bunt", "Walk", "K - Swinging", "K - Runner Reached", "K - Looking", "Runner Out - End of Inning"]
     
     @State var showPopup: Bool = false
     
@@ -220,6 +220,7 @@ struct GameDataGameLogView: View {
                     
                     let summary_index = result_detail_abr.firstIndex(of: event.result_detail)
                     let summary = result_detail_description[summary_index!]
+                    print(summary)
                     
                     at_bat_list.append(AtBatSummary(pitcher_name: pitcher_name, pitcher_id: event.pitcher_id, pitcher_id_list: pitcher_id_list, ab_num: event.battersfaced, ab_counter: ab_cnt, ab_summary: summary, pitch_number: pitches, outs: event.outs, balls: event.balls, strikes: event.strikes, inning: inning))
                     
@@ -332,28 +333,25 @@ struct GameDataGameLogView: View {
                     pitch_color = Color("Gold")
                     result = "Strike"
                     
-                    if ASStrikeType == true{
-                        if p.pitch_result == "L" {
-                            result = "Strike - Called"
-                        }
-                        else if p.pitch_result == "Z" {
-                            result = "Strike - Swinging"
-                        }
+                    if p.pitch_result == "L" {
+                        result = "Strike - Looking"
+                    }
+                    else if p.pitch_result == "Z" {
+                        result = "Strike - Swinging"
                     }
                     
                     if p.result_detail == "K" || p.result_detail == "C" || p.result_detail == "M"{
-                        result = "Strikeout"
+                        //result = "Strikeout"
                         pitch_color = Color("Grey")
-                        if ASStrikeType == true {
-                            if p.result_detail == "M" {
-                                result = "Strikeout - Looking"
-                            }
-                            else if p.result_detail == "K" {
-                                result = "Strikeout - Swinging"
-                            }
-                            else if p.result_detail == "C" {
-                                pitch_color = Color("Tangerine")
-                            }
+                        if p.result_detail == "M" {
+                            result = "Strikeout - Looking"
+                        }
+                        else if p.result_detail == "K" {
+                            result = "Strikeout - Swinging"
+                        }
+                        else if p.result_detail == "C" {
+                            pitch_color = Color("Tangerine")
+                            result = "Strikeout - No Out"
                         }
                     }
                     
@@ -416,7 +414,7 @@ struct GameDataGameLogView: View {
                 pitch_type = "NPE"
                 result = "PITCH CLOCK VIOLATION - STRIKE"
                 if p.result_detail == "K" {
-                    result = "PITCH CLOCK VIOLATION - STRIKEOUT"
+                    result = "PITCH CLOCK VIOLATION - K"
                 }
             }
             else if p.pitch_result == "IW" {

@@ -13,7 +13,6 @@ struct PitchResultView: View {
     
     @Binding var path: [Int]
     
-    @AppStorage("StrikeType") var ASStrikeType : Bool?
     @AppStorage("VelocityInput") var ASVeloInput : Bool?
 
     @Environment(Scoreboard.self) var scoreboard
@@ -95,33 +94,31 @@ struct PitchResultView: View {
                         .cornerRadius(8.0)
                         
                         if scoreboard.strikes < 2 {
-                            if ASStrikeType == true {
-                                Button {
+                            Button {
+                                
+                                event.pitch_result = "L"
+                                event.result_detail = "N"
+                                add_Strike()
+                                
+                                path.removeAll()
+                                
+                            } label: {
+                                HStack{
+                                    Text("K")
+                                        //.rotationEffect(.degrees(-180))
+                                        .font(.system(size: 22))
+                                        .fontWeight(.black)
                                     
-                                    event.pitch_result = "L"
-                                    event.result_detail = "N"
-                                    add_Strike()
-                                    
-                                    path.removeAll()
-                                    
-                                } label: {
-                                    HStack{
-                                        Text("K")
-                                            //.rotationEffect(.degrees(-180))
-                                            .font(.system(size: 22))
-                                            .fontWeight(.black)
-                                        
-                                         Text("- CALLED")
-                                            .font(.system(size: 22))
-                                            .fontWeight(.black)
-                                    }
-                                    .padding(.horizontal, 18.0)
-                                    .padding(.vertical, 15.0)
+                                     Text("- CALLED")
+                                        .font(.system(size: 22))
+                                        .fontWeight(.black)
                                 }
-                                .foregroundColor(Color.white)
-                                .background(Color("ScoreboardGreen"))
-                                .cornerRadius(8.0)
+                                .padding(.horizontal, 18.0)
+                                .padding(.vertical, 15.0)
                             }
+                            .foregroundColor(Color.white)
+                            .background(Color("ScoreboardGreen"))
+                            .cornerRadius(8.0)
                             
                             Button {
                                 
@@ -132,19 +129,12 @@ struct PitchResultView: View {
                                 path.removeAll()
                                 
                             } label: {
-                                if ASStrikeType == true {
-                                    Text("K - SWINGING")
-                                        .font(.system(size: 22))
-                                        .fontWeight(.black)
-                                        .padding(.horizontal, 5.0)
-                                        .padding(.vertical, 15.0)
-                                } else {
-                                    Text("STRIKE")
-                                        .font(.system(size: 22))
-                                        .fontWeight(.black)
-                                        .padding(.horizontal, 40.0)
-                                        .padding(.vertical, 15.0)
-                                }
+                                
+                                Text("K - SWINGING")
+                                    .font(.system(size: 22))
+                                    .fontWeight(.black)
+                                    .padding(.horizontal, 5.0)
+                                    .padding(.vertical, 15.0)
                                 
                             }
                             .foregroundColor(Color.white)
@@ -153,37 +143,34 @@ struct PitchResultView: View {
                             
                         }
                         else {
-                            if ASStrikeType == true {
-                                Button(action: {
-                                    event.pitch_result = "L"
-                                    result_detail = "M"
-                                    
-                                    if scoreboard.strikes == 2 {
-                                        showOutRecorded = true
+                            Button(action: {
+                                event.pitch_result = "L"
+                                result_detail = "M"
+                                
+                                if scoreboard.strikes == 2 {
+                                    showOutRecorded = true
 
-                                    }
-                                    else {
-                                        add_Strike()
-                                    }
-                                }) {
-                                    HStack{
-                                        Text("K")
-                                            //.rotationEffect(.degrees(-180))
-                                            .font(.system(size: 22))
-                                            .fontWeight(.black)
-                                        
-                                         Text("- CALLED")
-                                            .font(.system(size: 22))
-                                            .fontWeight(.black)
-                                    }
-                                    .padding(.horizontal, 18.0)
-                                    .padding(.vertical, 15.0)
                                 }
-                                .background(Color("ScoreboardGreen"))
-                                .foregroundColor(Color.white)
-                                .cornerRadius(8.0)
+                                else {
+                                    add_Strike()
+                                }
+                            }) {
+                                HStack{
+                                    Text("K")
+                                        //.rotationEffect(.degrees(-180))
+                                        .font(.system(size: 22))
+                                        .fontWeight(.black)
+                                    
+                                     Text("- CALLED")
+                                        .font(.system(size: 22))
+                                        .fontWeight(.black)
+                                }
+                                .padding(.horizontal, 18.0)
+                                .padding(.vertical, 15.0)
                             }
-                            
+                            .background(Color("ScoreboardGreen"))
+                            .foregroundColor(Color.white)
+                            .cornerRadius(8.0)
 
                             Button(action: {
                                 event.pitch_result = "Z"
@@ -195,34 +182,18 @@ struct PitchResultView: View {
                                     add_Strike()
                                 }
                             }) {
-                                if ASStrikeType == true {
-                                    HStack{
-                                        Text("K - SWINGING")
-                                            .font(.system(size: 22))
-                                            .fontWeight(.black)
-                                            .padding(.horizontal, 5.0)
-                                            .padding(.vertical, 15.0)
-                                        
-                                    }
-                                    .foregroundColor(Color.white)
-                                    .background(Color("ScoreboardGreen"))
-                                    .cornerRadius(8.0)
+                                HStack{
+                                    Text("K - SWINGING")
+                                        .font(.system(size: 22))
+                                        .fontWeight(.black)
+                                        .padding(.horizontal, 5.0)
+                                        .padding(.vertical, 15.0)
+                                    
                                 }
-                                else {
-                                    HStack{
-                                        Text("STRIKE")
-                                            .font(.system(size: 22))
-                                            .fontWeight(.black)
-                                            .padding(.horizontal, 40.0)
-                                            .padding(.vertical, 15.0)
-                                        
-                                    }
-                                    .foregroundColor(Color.white)
-                                    .background(Color("ScoreboardGreen"))
-                                    .cornerRadius(8.0)
-                                }
-                                
-                                
+                                .foregroundColor(Color.white)
+                                .background(Color("ScoreboardGreen"))
+                                .cornerRadius(8.0)
+
                             }
                             .background(Color("ScoreboardGreen"))
                             .foregroundColor(Color.white)
