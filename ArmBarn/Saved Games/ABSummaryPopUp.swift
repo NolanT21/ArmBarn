@@ -82,7 +82,7 @@ struct ABSummaryPopUp: View {
                                     let pitch_color = data_row.result_color
                                     let pitch_num = data_row.pitch_num
                                     
-                                    if data_row.pitch_type != "ROE" {
+                                    if data_row.pitch_type != "ROE" && data_row.pitch_type != "RO"{
                                         Circle()
                                             .fill(pitch_color)
                                             .stroke(.white, lineWidth: 2)
@@ -168,6 +168,8 @@ struct ABSummaryPopUp: View {
                                         .background(Color.green.opacity(0.07))
                                         .gridCellColumns(4)
                                     }
+                                    
+                                    Divider()
                                 }
                                 
                                 if data_row.pitch_type == "NPE" {
@@ -188,27 +190,30 @@ struct ABSummaryPopUp: View {
                                         .background(Color.yellow.opacity(0.07))
                                         .gridCellColumns(4)
                                     }
+                                    
+                                    Divider()
+                                    
                                 }
-                                else if data_row.pitch_type == "RO" {
-                                    GridRow{
-                                        HStack{
-                                            
-                                            Spacer()
-                                            
-                                            Text(data_row.result)
-                                                .foregroundStyle(Color.red.opacity(2))
-                                                .font(.system(size: 14))
-                                                .bold()
-                                                .padding(.vertical, 7)
-                                            
-                                            Spacer()
-                                            
-                                        }
-                                        .background(Color.red.opacity(0.07))
-                                        .gridCellColumns(4)
-                                    }
-                                }
-                                else if data_row.pitch_type != "ROE"{
+//                                else if data_row.pitch_type == "RO" {
+//                                    GridRow{
+//                                        HStack{
+//                                            
+//                                            Spacer()
+//                                            
+//                                            Text(data_row.result)
+//                                                .foregroundStyle(Color.red.opacity(2))
+//                                                .font(.system(size: 14))
+//                                                .bold()
+//                                                .padding(.vertical, 7)
+//                                            
+//                                            Spacer()
+//                                            
+//                                        }
+//                                        .background(Color.red.opacity(0.07))
+//                                        .gridCellColumns(4)
+//                                    }
+//                                }
+                                else if data_row.pitch_type != "ROE" && data_row.pitch_type != "RO"{
                                     GridRow{
                                         
                                         Circle()
@@ -250,10 +255,11 @@ struct ABSummaryPopUp: View {
                                             .font(.system(size: 14))
 
                                     }
-
+                                    
+                                    Divider()
                                 }
                                 
-                                Divider()
+                                
                                 
                             }
                         }
