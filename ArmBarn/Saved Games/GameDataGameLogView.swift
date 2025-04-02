@@ -52,7 +52,7 @@ struct GameDataGameLogView: View {
     
     @State var result_detail_abr: [String] = []
     @State var result_detail_description: [String] = ["Single", "Double", "Triple", "Homerun", "Error", "Hit by Pitch", "Flyout", "Groundout", "Lineout",
-    "Popout", "Sac Bunt", "Walk", "K - Swinging", "K - Runner Reached", "K - Looking", "Runner Out - End of Inning"]
+    "Popout", "Sac Bunt", "Walk", "K - Swinging", "K - Batter Reached", "K - Looking", "BASERUNNER OUT - END OF INNING"]
     
     @State var showPopup: Bool = false
     
@@ -101,7 +101,27 @@ struct GameDataGameLogView: View {
                                 .gridCellColumns(5)
                             }
                             
-                            if at_bat.ab_summary == "Runner Out - End of Inning" {
+                            if at_bat.ab_summary == "BASERUNNER OUT" {
+                                GridRow{
+                                    HStack{
+                                        Spacer()
+                                        
+                                        Text(at_bat.ab_summary)
+                                            .foregroundStyle(Color.red.opacity(2))
+                                            .font(.system(size: 17))
+                                            .bold()
+                                            .padding(.vertical, 7)
+                                        
+                                        Spacer()
+                                    }
+                    
+                                }
+                                .gridCellColumns(5)
+                                .contentShape(Rectangle())
+                                //.padding(.vertical, 10)
+                                .background(Color.red.opacity(0.07))
+                            }
+                            else if at_bat.ab_summary == "BASERUNNER OUT - END OF INNING"{
                                 GridRow{
                                     HStack{
                                         Spacer()
@@ -227,6 +247,10 @@ struct GameDataGameLogView: View {
                     pitches = 0
                     pitcher_id_list.removeAll()
                     pitcher_id = UUID()
+                }
+                
+                else if event.result_detail == "R" {
+                    at_bat_list.append(AtBatSummary(pitcher_name: "", pitcher_id: UUID(), pitcher_id_list: [], ab_num: 0, ab_counter: 0, ab_summary: "BASERUNNER OUT", pitch_number: 0, outs: 0, balls: 0, strikes: 0, inning: event.inning))
                 }
             }
         }
@@ -422,11 +446,11 @@ struct GameDataGameLogView: View {
             }
             else if p.result_detail == "R" {
                 pitch_type = "RO"
-                result = "RUNNER OUT"
+                result = "BASERUNNER OUT"
             }
             else if p.result_detail == "RE" {
                 pitch_type = "ROE"
-                result = "RUNNER OUT - END OF INNING"
+                result = "BASERUNNER OUT - END OF INNING"
             }
 
             let ab_line_data = popup_pitch_info(pitcher_first_name: first_name, pitcher_last_name: last_name, pitcher_id: p.pitcher_id, pitch_num: pitch_number, result: result, result_color: pitch_color, pitch_type: pitch_type, x_loc: p.pitch_x_location, y_loc: p.pitch_y_location, velocity: p.velocity, balls: p.balls, strikes: p.strikes, units: "MPH")
