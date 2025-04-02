@@ -248,9 +248,31 @@ struct GameDataGameLogView: View {
                     pitcher_id_list.removeAll()
                     pitcher_id = UUID()
                 }
-                
                 else if event.result_detail == "R" {
                     at_bat_list.append(AtBatSummary(pitcher_name: "", pitcher_id: UUID(), pitcher_id_list: [], ab_num: 0, ab_counter: 0, ab_summary: "BASERUNNER OUT", pitch_number: 0, outs: 0, balls: 0, strikes: 0, inning: event.inning))
+                }
+                else if index == game_data_events.endIndex - 1 {
+                    print("At-Bat without result")
+                    ab_cnt += 1
+                    inning = event.inning
+                    
+                    for pitcher in pitcher_info_list {
+                        if pitcher.pitcher_id == event.pitcher_id {
+                            pitcher_name = pitcher.first_name.prefix(1) + ". " + pitcher.last_name
+                            if !pitcher_names.contains(pitcher_name) {
+                                pitcher_names.append(pitcher_name)
+                            }
+                        }
+                    }
+                    
+                    let summary = "No Result"
+                    
+                    at_bat_list.append(AtBatSummary(pitcher_name: pitcher_name, pitcher_id: event.pitcher_id, pitcher_id_list: pitcher_id_list, ab_num: event.battersfaced, ab_counter: ab_cnt, ab_summary: summary, pitch_number: pitches, outs: event.outs, balls: event.balls, strikes: event.strikes, inning: inning))
+                    
+                    pitches = 0
+                    pitcher_id_list.removeAll()
+                    pitcher_id = UUID()
+                    
                 }
             }
         }

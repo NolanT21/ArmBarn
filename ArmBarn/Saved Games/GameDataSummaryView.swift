@@ -26,6 +26,8 @@ struct PlayerBoxScore: Codable, Hashable{
 
 struct GameDataSummaryView: View {
     
+    @Environment(Event_String.self) var event
+    
     var game_data: SavedGames
     @State var box_score_list: [PlayerBoxScore] = []
     
@@ -340,6 +342,7 @@ struct GameDataSummaryView: View {
         .onAppear{
 
             let add_out_list = ["F", "G", "L", "P", "Y", "K", "M", "RE", "R"]
+            let end_ab_list = event.end_ab_rd
 
             var saved_data = game_data.game_data
             saved_data.sort{ $0.event_num < $1.event_num}
@@ -350,7 +353,7 @@ struct GameDataSummaryView: View {
             
             var pitcher_order_list = [UUID()]
             
-            for event in saved_data {
+            for (index, event) in saved_data.enumerated() {
                 if event.pitch_result != "VA" && event.pitch_result != "VZ" && event.pitch_result != "IW" && event.result_detail != "R" && event.result_detail != "RE" {
                     
                     pitches += 1
@@ -456,6 +459,10 @@ struct GameDataSummaryView: View {
                     innings_scored += 1
                 }
                 
+                if index == saved_data.endIndex - 1 && !end_ab_list.contains(event.result_detail){
+                    batters_faced += 1
+                }
+                
                 //Logic to order pitchers by entry for box score appearance
                 if !pitcher_order_list.contains(event.pitcher_id) {
                     pitcher_order_list.append(event.pitcher_id)
@@ -480,6 +487,7 @@ struct GameDataSummaryView: View {
             }
             //print("Sorted List: ", sorted_pitcher_info)
             
+            //
             for pitcher_info in sorted_pitcher_info {
                 var inn_pitched = 0.0
                 var bat_faced = 0
@@ -494,7 +502,7 @@ struct GameDataSummaryView: View {
                 saved_data.sort{$0.event_num < $1.event_num}
                 var saved_pitcher_data = saved_data.filter { $0.pitcher_id == pitcher_info.pitcher_id}
                 
-                for evnt in saved_pitcher_data {
+                for (index, evnt) in saved_pitcher_data.enumerated() {
                     if evnt.pitch_result != "VA" && evnt.pitch_result != "VZ" && evnt.pitch_result != "IW" && evnt.result_detail != "R" && evnt.result_detail != "RE" {
                         
                         pitch_num += 1
@@ -553,6 +561,10 @@ struct GameDataSummaryView: View {
                     if pit_outs >= 3 {
                         pit_outs = 0
                         inn_pitched += 1
+                    }
+                    
+                    if index == saved_pitcher_data.endIndex - 1 && !end_ab_list.contains(evnt.result_detail){
+                        bat_faced += 1
                     }
                         
                 }

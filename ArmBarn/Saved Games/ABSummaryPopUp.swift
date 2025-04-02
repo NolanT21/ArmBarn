@@ -194,26 +194,27 @@ struct ABSummaryPopUp: View {
                                     Divider()
                                     
                                 }
-//                                else if data_row.pitch_type == "RO" {
-//                                    GridRow{
-//                                        HStack{
-//                                            
-//                                            Spacer()
-//                                            
-//                                            Text(data_row.result)
-//                                                .foregroundStyle(Color.red.opacity(2))
-//                                                .font(.system(size: 14))
-//                                                .bold()
-//                                                .padding(.vertical, 7)
-//                                            
-//                                            Spacer()
-//                                            
-//                                        }
-//                                        .background(Color.red.opacity(0.07))
-//                                        .gridCellColumns(4)
-//                                    }
-//                                }
-                                else if data_row.pitch_type != "ROE" && data_row.pitch_type != "RO"{
+                                else if data_row.pitch_type == "RO" && index != 0{
+                                    GridRow{
+                                        HStack{
+                                            
+                                            Spacer()
+                                            
+                                            Text(data_row.result)
+                                                .foregroundStyle(Color.red.opacity(2))
+                                                .font(.system(size: 14))
+                                                .bold()
+                                                .padding(.vertical, 7)
+                                            
+                                            Spacer()
+                                            
+                                        }
+                                        .background(Color.red.opacity(0.07))
+                                        .gridCellColumns(4)
+                                    }
+                                }
+                                
+                                if data_row.pitch_type != "ROE" && data_row.pitch_type != "RO"{
                                     GridRow{
                                         
                                         Circle()
