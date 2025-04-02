@@ -124,9 +124,9 @@
 			children = (
 				D57607D92D9AB0D10058074D /* ABSummaryPopUp.swift */,
 				D5542BA02D6008DB00A8607E /* GameDataSummaryView.swift */,
-				D58E1BDE2D6394670007E4A2 /* SavedGameMainView.swift */,
 				D54A48F82D64DF470007EDD5 /* GameDataGameLogView.swift */,
 				D5743E1F2D56C28200B773A5 /* SavedGamesView.swift */,
+				D58E1BDE2D6394670007E4A2 /* SavedGameMainView.swift */,
 			);
 			path = "Saved Games";
 			sourceTree = "<group>";
@@ -454,7 +454,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.3;
+				MARKETING_VERSION = 1.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "LGT-Productions.ArmBarn";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -483,7 +483,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.3;
+				MARKETING_VERSION = 1.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "LGT-Productions.ArmBarn";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
