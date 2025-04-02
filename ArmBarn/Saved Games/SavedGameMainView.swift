@@ -55,10 +55,21 @@ struct SavedGameMainView: View {
             
             VStack(spacing: 5){
                 HStack(alignment: .bottom){
-                    Text(game_data.opponent_name)
-                        .font(.system(size: title_size))
-                        .bold()
-                        .foregroundStyle(text_color)
+                    HStack(spacing: 2){
+                        
+                        if game_data.location == "Away" {
+                            Text("@")
+                                .font(.system(size: title_size))
+                                .bold()
+                                .foregroundStyle(text_color)
+                        }
+                        
+                        Text(game_data.opponent_name)
+                            .font(.system(size: title_size))
+                            .bold()
+                            .foregroundStyle(text_color)
+                    }
+                    
                     
                     Spacer()
                     
