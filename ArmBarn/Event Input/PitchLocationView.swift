@@ -1500,20 +1500,20 @@ struct PitchLocationView: View {
         var saved_pitcher_list: [SavedPitcherInfo] = []
         var pitcher_id_list: [UUID] = []
         
-        print("Appearance List: ", scoreboard.pitchers_appearance_list)
+        //print("Appearance List: ", scoreboard.pitchers_appearance_list)
         
-        print("Saving Pitcher IDs")
-        print("Adding Pitchers from Scoreboard List")
+        //print("Saving Pitcher IDs")
+        //print("Adding Pitchers from Scoreboard List")
         for pitcher in scoreboard.pitchers_appearance_list {
-            print("Adding: ", pitcher.pitcher_id)
+            //print("Adding: ", pitcher.pitcher_id)
             pitcher_id_list.append(pitcher.pitcher_id)
         }
-        print("Adding Current Pitcher if not already added")
+        //print("Adding Current Pitcher if not already added")
         if !pitcher_id_list.contains(current_pitcher.idcode) {
-            print("Adding: ", current_pitcher.idcode)
+            //print("Adding: ", current_pitcher.idcode)
             pitcher_id_list.append(current_pitcher.idcode)
         }
-        print("Finished Storing Pitcher IDs")
+        //print("Finished Storing Pitcher IDs")
         
         var first_name: String = ""
         var last_name: String = ""
@@ -1522,8 +1522,8 @@ struct PitchLocationView: View {
         var pitch3: String = ""
         var pitch4: String = ""
         
-        print("Generating Saved Pitcher Info")
-        print("Pitcher ID List: ", pitcher_id_list)
+        //print("Generating Saved Pitcher Info")
+        //print("Pitcher ID List: ", pitcher_id_list)
         for pitcher_id in pitcher_id_list {
             for player in pitchers {
                 if pitcher_id == player.id {
@@ -1539,7 +1539,7 @@ struct PitchLocationView: View {
             
             saved_pitcher_list.append(SavedPitcherInfo(pitcher_id: pitcher_id, first_name: first_name, last_name: last_name, pitch1: pitch1, pitch2: pitch2, pitch3: pitch3, pitch4: pitch4))
             
-            print("Added: ", first_name, last_name, pitcher_id)
+            //print("Added: ", first_name, last_name, pitcher_id)
         }
         
         let new_saved_game = SavedGames(opponent_name: opponent_name, date: date, location: location, game_data: game_data_list, pitcher_info: saved_pitcher_list)
