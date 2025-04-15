@@ -10,33 +10,13 @@ import SwiftData
 import Observation
 
 struct MainContainerView: View {
-    
-    //@AppStorage("BullpenMode") var ASBullpenMode : Bool?
-    
-    //@Environment(Event_String.self) var event
-    //@Environment(\.dismiss) var dismiss
-    
-    //@Query(sort: \Event.event_number) var events: [Event]
-    
-    //@State private var showBullpenMode : Bool = false
       
     var body: some View {
         VStack{
-//          if !(ASBullpenMode ?? false) {
-//                        PitchLocationView()
-//                            .preferredColorScheme(.dark)
-//                            .ignoresSafeArea()
-//                    }
-//                    else {
-//                        VStack{
-//                            BullpenMainView().task{
-//                                event.recordEvent = false
-//                            }
-//                        }
-//                    }
-            PitchLocationView()
+            //PitchLocationView()
+            MainDashboardView()
                 .preferredColorScheme(.dark)
-                .ignoresSafeArea()
+                //.ignoresSafeArea()
         }
     }
     

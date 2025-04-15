@@ -22,27 +22,23 @@ struct MainView: View {
     var body: some View {
         
         ZStack{
-            if !(ASBullpenMode ?? false) {
 
-                VStack{
-                    //Move to when game charting is active
-                    ScoreboardView()
-                    ZStack{
-                        PitchLocationView()
-                            .preferredColorScheme(.dark)
-                            .ignoresSafeArea()
-                    }
-                }
-                .background(Color("ScoreboardGreen"))
-            
-            }
-//            else {
-//                VStack{
-//                    BullpenMainView().preferredColorScheme(.dark).task{
-//                        event.recordEvent = false
-//                    }
+            VStack{
+                //Move to when game charting is active
+//                ScoreboardView()
+//                ZStack{
+//                    PitchLocationView()
+//                        .preferredColorScheme(.dark)
+//                        .ignoresSafeArea()
 //                }
-//            }
+                
+                MainDashboardView()
+                    .preferredColorScheme(.dark)
+                    //.ignoresSafeArea()
+                
+            }
+            .background(Color("ScoreboardGreen"))
+            
         }
     }
 }
