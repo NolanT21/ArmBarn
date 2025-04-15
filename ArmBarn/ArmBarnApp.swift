@@ -34,6 +34,7 @@ struct ArmBarnApp: App {
         WindowGroup {
             MainView().task{UserDefaults.standard.set(false, forKey: "BullpenMode")}
                 .environment(Scoreboard())
+                .environment(LocationOverlay())
                 .environment(Event_String())
                 .environment(currentPitcher())
                 .environment(PitchTypeConfig())

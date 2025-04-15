@@ -34,6 +34,15 @@ import Observation
     var enable_bottom_row: Bool = true
     
     var pitchers_appearance_list: [PitchersAppeared] = []
+    
+
+}
+
+@Observable class LocationOverlay{
+    //Variables for location overlay, covers scoreboard
+    var shakecounter: Int = 0
+    var showinputoverlay: Bool = false
+    var showShakeAnimation: Bool = false
 }
 
 struct PitchersAppeared {
