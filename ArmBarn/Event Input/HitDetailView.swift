@@ -238,7 +238,6 @@ struct HitDetailView: View {
             
             reset_Count()
         }
-        
     }
     
     func reset_Count() {
