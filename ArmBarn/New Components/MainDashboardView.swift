@@ -14,8 +14,8 @@ enum ShakeAnimation: CaseIterable {
     
     var rotationDegrees: CGFloat {
         switch self {
-        case .leanLeft: -0.5
-        case .leanRight: 0.5
+        case .leanLeft: -0.3
+        case .leanRight: 0.3
         case .returnCenter: 0
         }
     }
@@ -49,6 +49,7 @@ struct MainDashboardView: View {
     
     @Environment(Event_String.self) var event
     @Environment(Scoreboard.self) var scoreboard
+    @Environment(PitchTypeConfig.self) var ptconfig
     @Environment(LocationOverlay.self) var location_overlay
     
     @State var main_body_padding: CGFloat = 10
@@ -72,10 +73,13 @@ struct MainDashboardView: View {
     var tap: some Gesture {
         SpatialTapGesture()
             .onEnded { click in
-                location = click.location
-                cur_pitch_fill = Color.blue
-                cur_pitch_outline = .white
-                //print("\(click)")
+                if location_overlay.showinputoverlay{
+                    ptconfig.cur_x_location = click.location.x
+                    ptconfig.cur_y_location = click.location.y
+                    location = click.location
+                    cur_pitch_fill = ptconfig.ptcolor
+                    cur_pitch_outline = .white
+                }
              }
     }
     
@@ -159,7 +163,7 @@ struct MainDashboardView: View {
                             HStack{
                                 VStack(alignment: .center, spacing: 2){
                                     Text("INN")
-                                    Text("1")
+                                    Text("\(scoreboard.inning)")
                                 }
                                 .font(.system(size: 15))
                                 .bold()
@@ -172,8 +176,8 @@ struct MainDashboardView: View {
                                         .font(.system(size: 17))
                                         .bold()
                                     HStack{
-                                        Text("Pitches: 52")
-                                        Text("Batters Faced: 11")
+                                        Text("Pitches: \(scoreboard.pitches)")
+                                        Text("Batters Faced: \(scoreboard.atbats)")
                                     }
                                     .font(.system(size: 11))
                                     .foregroundStyle(.gray)
@@ -197,6 +201,7 @@ struct MainDashboardView: View {
                                 .background(Color.gray)
                                 .foregroundColor(Color.white)
                                 .cornerRadius(8.0)
+                                .shadow(color: .black.opacity(0.5), radius: 3, x: 3, y: 3)
                                 
                                 Button{
                                     
@@ -210,6 +215,7 @@ struct MainDashboardView: View {
                                 .background(Color.gray)
                                 .foregroundColor(Color.white)
                                 .cornerRadius(8.0)
+                                .shadow(color: .black.opacity(0.5), radius: 3, x: 3, y: 3)
                                 
                             }
                             .padding(.trailing, 15)
@@ -226,41 +232,52 @@ struct MainDashboardView: View {
                     
                 }
                 
-                
-                Image("Background2.0")
-                    .resizable()
-                    .frame(maxHeight: 480, alignment: .bottom)
-                    .aspectRatio(contentMode: .fit)
-                    .cornerRadius(15)
-                    .padding(.horizontal, main_body_padding)
-                    .gesture(tap)
-                    .overlay{
-                        if location_overlay.showinputoverlay{
-                            Circle()
-                                .stroke(cur_pitch_outline, lineWidth: 4)
-                                .fill(cur_pitch_fill)
-                                .frame(width: 22.0, height: 22.0, alignment: .center)
-                                .position(location)
-                        }
+                VStack{
+
+                    GeometryReader{ geometry in
                         
+                        Image("Background2.0")
+                            .resizable()
+                            .frame(maxHeight: 480, alignment: .center)
+                            .aspectRatio(contentMode: .fit)
+                            .cornerRadius(15)
+                            .padding(.horizontal, main_body_padding)
+                            .gesture(tap)
+                            //.clipped()
+                            .overlay{
+                                
+                                //Hide overlay when inputting new pitch
+                                if !location_overlay.showinputoverlay{
+                                    ABPitchOverlay()
+                                }
+                                
+                                if location_overlay.showinputoverlay{
+                                    Circle()
+                                        .stroke(cur_pitch_outline, lineWidth: 4)
+                                        .fill(cur_pitch_fill)
+                                        .frame(width: geometry.size.width * 0.055, height: geometry.size.width * 0.055, alignment: .center)
+                                        .position(location)
+                                }
+                                
+                            }
+                            .phaseAnimator([ShakeAnimation.returnCenter, ShakeAnimation.leanLeft, ShakeAnimation.leanRight, ShakeAnimation.leanLeft, ShakeAnimation.returnCenter], trigger: location_overlay.shakecounter) { content, phase in
+                                
+                                content
+                                    .offset(x: phase.xoffset)
+                                    .rotationEffect(.degrees(phase.rotationDegrees))
+                                
+                                
+                            } animation: { phase in
+                                switch phase {
+                                case .returnCenter: .easeIn(duration: 0.05)
+                                case .leanLeft: .easeIn(duration: 0.05)
+                                case .leanRight: .easeIn(duration: 0.05)
+                                }
+                            }
                     }
-                    .phaseAnimator([ShakeAnimation.returnCenter, ShakeAnimation.leanLeft, ShakeAnimation.leanRight, ShakeAnimation.leanLeft, ShakeAnimation.returnCenter], trigger: location_overlay.shakecounter) { content, phase in
-                        
-                        content
-                            .offset(x: phase.xoffset)
-                            .rotationEffect(.degrees(phase.rotationDegrees))
-                        
-                        
-                    } animation: { phase in
-                        switch phase {
-                        case .returnCenter: .easeIn(duration: 0.05)
-                        case .leanLeft: .easeIn(duration: 0.05)
-                        case .leanRight: .easeIn(duration: 0.05)
-                        }
-                    }
-                
-                
-                //.clipped()
+                    
+                }
+                .frame(maxHeight: 480)
                 
                 VStack{
                     
@@ -268,7 +285,9 @@ struct MainDashboardView: View {
                         VStack{
                             
                             Button{
-                                show_navbar = false
+                                withAnimation{
+                                    location_overlay.showTabBar = false
+                                }
                                 input_nav_path.append(1)
                             } label: {
                                 HStack(spacing: 5){
@@ -285,13 +304,23 @@ struct MainDashboardView: View {
                                 .cornerRadius(15)
                             }
                             
-                            Spacer()
+                            //Spacer()
                             
                         }
                         .navigationDestination(for: Int.self) { selection in
                             //PitchTypeSelectView(path: $input_nav_path)
                             PitchTypeSelectView(path: $input_nav_path)
                                 .navigationBarBackButtonHidden(true).preferredColorScheme(.dark)
+                        }
+                        .onAppear{
+                            //print("Entered MainDashboardView.onAppear")
+                            add_prev_event_string()
+                            event.recordEvent = true
+                            
+                            //Keep startup location from appearing before input
+                            cur_pitch_fill = .clear
+                            cur_pitch_outline = .clear
+                            location = CGPoint(x: 0, y: 0)
                         }
                         
                         Spacer()
@@ -303,6 +332,7 @@ struct MainDashboardView: View {
                     .padding(.top, 10)
                     
                 }
+                //.border(Color.white, width: 2)
                 
                 Spacer()
                 
@@ -313,6 +343,46 @@ struct MainDashboardView: View {
             //NavBar
         }
             
+    }
+    @ViewBuilder
+    func ABPitchOverlay() -> some View {
+        
+        GeometryReader{ geometry in
+            ForEach(ptconfig.pitch_x_loc.indices, id: \.self){ index in
+                let xloc = ptconfig.pitch_x_loc[index]
+                let yloc = ptconfig.pitch_y_loc[index]
+                let point = CGPoint(x: xloc, y: yloc)
+                let pitch_color = ptconfig.ab_pitch_color[index]
+                Circle()
+                    .fill(pitch_color)
+                    .stroke(.white, lineWidth: 2)
+                    .frame(width: geometry.size.width * 0.055, height: geometry.size.width * 0.055, alignment: .center)
+                    .position(point)
+                    .overlay {
+                        Text("\(index + 1)")
+                            .foregroundColor(.white)
+                            .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                            .font(.system(size: 13))
+                            .position(point)
+                    }
+            }
+        }
+        
+    }
+    
+    func add_prev_event_string() {
+        if event.recordEvent{
+            let new_event = Event(pitcher_id: UUID()/*current_pitcher.idcode*/, pitch_result: event.pitch_result, pitch_type: event.pitch_type, result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, atbats: event.atbats, pitch_x_location: event.x_cor, pitch_y_location: event.y_cor, batter_stance: event.batter_stance, velocity: event.velocity, event_number: event.event_number)
+            
+            context.insert(new_event)
+            
+            event.event_number += 1
+            print_Event_String()
+        }
+    }
+    
+    func print_Event_String() {
+        print(/*current_pitcher.idcode,*/ event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats, event.batter_stance, event.velocity, event.x_cor, event.y_cor)
     }
     
     func resetNavbarState() {
