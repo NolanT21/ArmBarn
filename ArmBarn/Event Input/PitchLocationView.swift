@@ -2245,7 +2245,7 @@ struct PitchClockViolation: View {
                                 //Write Violation to Event
                                 //Add logic to pbp log
                                 ptconfig.non_pitch_event = false
-                                add_Ball()
+                                add_PCV_Ball()
                                 add_non_pitch_event()
                             }
                         } label: {
@@ -2265,7 +2265,7 @@ struct PitchClockViolation: View {
                                 //Write Violation to Event
                                 //Add logic to pbp log
                                 ptconfig.non_pitch_event = false
-                                add_Strike()
+                                add_PCV_Strike()
                                 add_non_pitch_event()
                             }
                         } label: {
@@ -2330,7 +2330,7 @@ struct PitchClockViolation: View {
         
     }
     
-    func add_Strike() {
+    func add_PCV_Strike() {
         event.pitch_result = "VZ"
         event.result_detail = "N"
         event.pitch_type = "NP"
@@ -2375,7 +2375,7 @@ struct PitchClockViolation: View {
         
     }
     
-    func add_Ball() {
+    func add_PCV_Ball() {
         
         event.pitch_result = "VA"
         event.result_detail = "N"
