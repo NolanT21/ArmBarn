@@ -35,7 +35,6 @@ import Observation
     
     var pitchers_appearance_list: [PitchersAppeared] = []
     
-
 }
 
 @Observable class LocationOverlay{
@@ -43,6 +42,7 @@ import Observation
     var shakecounter: Int = 0
     var showinputoverlay: Bool = false
     var showShakeAnimation: Bool = false
+    var showTabBar: Bool = true
 }
 
 struct PitchersAppeared {
@@ -85,6 +85,9 @@ struct PitchersAppeared {
 }
 
 @Observable class PitchTypeConfig{
+    var cur_x_location: CGFloat = 0
+    var cur_y_location: CGFloat = 0
+    
     var ptcolor: Color = .pink
     var ab_pitch_color: [Color] = []
     var pitch_x_loc: [CGFloat] = []
