@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D51E9E402CFE19D000173322 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D51E9E3F2CFE19D000173322 /* Assets.xcassets */; };
+		D535E6862DAFCFD400927E38 /* TabBarContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D535E6852DAFCFD400927E38 /* TabBarContentView.swift */; };
 		D54A48F92D64DF470007EDD5 /* GameDataGameLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54A48F82D64DF470007EDD5 /* GameDataGameLogView.swift */; };
 		D54D66E42D6006FE00832995 /* ArmBarnApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */; };
 		D54D66E52D6006FE00832995 /* Assets.xcassets in Sources */ = {isa = PBXBuildFile; fileRef = D51E9E3F2CFE19D000173322 /* Assets.xcassets */; };
@@ -50,6 +51,7 @@
 
 /* Begin PBXFileReference section */
 		D51E9E3F2CFE19D000173322 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D535E6852DAFCFD400927E38 /* TabBarContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarContentView.swift; sourceTree = "<group>"; };
 		D54A48F82D64DF470007EDD5 /* GameDataGameLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDataGameLogView.swift; sourceTree = "<group>"; };
 		D5542B9E2D6008BC00A8607E /* GameReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameReportView.swift; sourceTree = "<group>"; };
 		D5542BA02D6008DB00A8607E /* GameDataSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDataSummaryView.swift; sourceTree = "<group>"; };
@@ -103,9 +105,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D535E6882DAFD0C100927E38 /* Non-Input Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Non-Input Views";
+			sourceTree = "<group>";
+		};
 		D5726AD82DAD9EF9003EAFB8 /* New Components */ = {
 			isa = PBXGroup;
 			children = (
+				D535E6882DAFD0C100927E38 /* Non-Input Views */,
+				D535E6852DAFCFD400927E38 /* TabBarContentView.swift */,
 				D5726ADA2DAD9FB6003EAFB8 /* PitchTypeSelectView.swift */,
 				D5726ADC2DAD9FE7003EAFB8 /* HitResultView.swift */,
 				D5726ADD2DAD9FE7003EAFB8 /* LocationNavigationView.swift */,
@@ -314,6 +325,7 @@
 				D54D66E92D6006FE00832995 /* MainContainerView.swift in Sources */,
 				D57607E02D9AB1190058074D /* SelectPitcherView.swift in Sources */,
 				D57607E12D9AB1190058074D /* TipView.swift in Sources */,
+				D535E6862DAFCFD400927E38 /* TabBarContentView.swift in Sources */,
 				D57607E22D9AB1190058074D /* ScoreboardView.swift in Sources */,
 				D57607E32D9AB1190058074D /* SettingsView.swift in Sources */,
 				D57607E42D9AB1190058074D /* AddPitcherView.swift in Sources */,
