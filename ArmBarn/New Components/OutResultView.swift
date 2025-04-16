@@ -13,6 +13,7 @@ struct OutResultView: View {
 
     @Environment(Event_String.self) var event
     @Environment(Scoreboard.self) var scoreboard
+    @Environment(PitchTypeConfig.self) var ptconfig
     @Environment(LocationOverlay.self) var location_overlay
     @Environment(\.dismiss) private var dismiss
     
@@ -98,7 +99,11 @@ struct OutResultView: View {
             
             HStack(spacing: 12){
                 Button {
+                    event.result_detail = "F"
                     record_Out()
+                    withAnimation{
+                        location_overlay.showTabBar = true
+                    }
                     path.removeAll()
                 } label: {
                     Text("Flyout")
@@ -110,7 +115,11 @@ struct OutResultView: View {
                 }
                 
                 Button {
+                    event.result_detail = "G"
                     record_Out()
+                    withAnimation{
+                        location_overlay.showTabBar = true
+                    }
                     path.removeAll()
                 } label: {
                     Text("Groundout")
@@ -125,7 +134,11 @@ struct OutResultView: View {
             
             HStack(spacing: 12){
                 Button {
+                    event.result_detail = "L"
                     record_Out()
+                    withAnimation{
+                        location_overlay.showTabBar = true
+                    }
                     path.removeAll()
                 } label: {
                     Text("Lineout")
@@ -138,7 +151,11 @@ struct OutResultView: View {
                 
                 
                 Button {
+                    event.result_detail = "P"
                     record_Out()
+                    withAnimation{
+                        location_overlay.showTabBar = true
+                    }
                     path.removeAll()
                 } label: {
                     Text("PopUp")
@@ -164,7 +181,11 @@ struct OutResultView: View {
             
             HStack(spacing: 12){
                 Button {
+                    event.result_detail = "Y"
                     record_Out()
+                    withAnimation{
+                        location_overlay.showTabBar = true
+                    }
                     path.removeAll()
                 } label: {
                     Text("Sacrifice Bunt")
@@ -176,7 +197,11 @@ struct OutResultView: View {
                 }
                 
                 Button {
+                    event.result_detail = "O"
                     record_Out()
+                    withAnimation{
+                        location_overlay.showTabBar = true
+                    }
                     path.removeAll()
                 } label: {
                     Text("Other")
@@ -232,10 +257,10 @@ struct OutResultView: View {
         scoreboard.balls = 0
         scoreboard.strikes = 0
         
-//        ptconfig.pitch_x_loc.removeAll()
-//        ptconfig.pitch_y_loc.removeAll()
-//        ptconfig.ab_pitch_color.removeAll()
-//        ptconfig.pitch_cur_ab = 0
+        ptconfig.pitch_x_loc.removeAll()
+        ptconfig.pitch_y_loc.removeAll()
+        ptconfig.ab_pitch_color.removeAll()
+        ptconfig.pitch_cur_ab = 0
         
         scoreboard.b1light = false
         scoreboard.b2light = false

@@ -12,8 +12,9 @@ struct StrikeResultView: View {
     @Binding var path: [Int]
     
     @Environment(Event_String.self) var event
-    @Environment(LocationOverlay.self) var location_overlay
     @Environment(Scoreboard.self) var scoreboard
+    @Environment(PitchTypeConfig.self) var ptconfig
+    @Environment(LocationOverlay.self) var location_overlay
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -42,7 +43,12 @@ struct StrikeResultView: View {
                         
                         HStack(spacing: 12){
                             Button {
+                                event.pitch_result = "L"
+                                event.result_detail = "N"
                                 add_Strike()
+                                withAnimation{
+                                    location_overlay.showTabBar = true
+                                }
                                 path.removeAll()
                             } label: {
                                 Text("Called")
@@ -54,7 +60,12 @@ struct StrikeResultView: View {
                             }
                             
                             Button {
+                                event.pitch_result = "Z"
+                                event.result_detail = "N"
                                 add_Strike()
+                                withAnimation{
+                                    location_overlay.showTabBar = true
+                                }
                                 path.removeAll()
                             } label: {
                                 Text("Swinging")
@@ -69,7 +80,12 @@ struct StrikeResultView: View {
                         
                         HStack(spacing: 12){
                             Button {
+                                event.pitch_result = "TO"
+                                event.result_detail = "N"
                                 add_Strike()
+                                withAnimation{
+                                    location_overlay.showTabBar = true
+                                }
                                 path.removeAll()
                             } label: {
                                 Text("Foul Tip")
@@ -128,6 +144,12 @@ struct StrikeResultView: View {
                     scoreboard.strikes = 2
                 }
                 else{
+                    if event.pitch_result == "Z" || event.pitch_result == "TO"{
+                        event.result_detail = "K"
+                    }
+                    else if event.pitch_result == "L" {
+                        event.result_detail = "M"
+                    }
                     scoreboard.outs += 1
                     scoreboard.atbats += 1
                     reset_Count()
@@ -161,10 +183,10 @@ struct StrikeResultView: View {
         scoreboard.balls = 0
         scoreboard.strikes = 0
         
-//        ptconfig.pitch_x_loc.removeAll()
-//        ptconfig.pitch_y_loc.removeAll()
-//        ptconfig.ab_pitch_color.removeAll()
-//        ptconfig.pitch_cur_ab = 0
+        ptconfig.pitch_x_loc.removeAll()
+        ptconfig.pitch_y_loc.removeAll()
+        ptconfig.ab_pitch_color.removeAll()
+        ptconfig.pitch_cur_ab = 0
         
         scoreboard.b1light = false
         scoreboard.b2light = false

@@ -13,6 +13,7 @@ struct HitResultView: View {
 
     @Environment(Event_String.self) var event
     @Environment(Scoreboard.self) var scoreboard
+    @Environment(PitchTypeConfig.self) var ptconfig
     @Environment(LocationOverlay.self) var location_overlay
     @Environment(\.dismiss) private var dismiss
     
@@ -44,7 +45,11 @@ struct HitResultView: View {
                         
                         HStack(spacing: 12){
                             Button {
+                                event.result_detail = "S"
                                 record_Hit()
+                                withAnimation{
+                                    location_overlay.showTabBar = true
+                                }
                                 path.removeAll()
                             } label: {
                                 Text("Single")
@@ -56,7 +61,11 @@ struct HitResultView: View {
                             }
                             
                             Button {
+                                event.result_detail = "D"
                                 record_Hit()
+                                withAnimation{
+                                    location_overlay.showTabBar = true
+                                }
                                 path.removeAll()
                             } label: {
                                 Text("Double")
@@ -71,7 +80,11 @@ struct HitResultView: View {
                         
                         HStack(spacing: 12){
                             Button {
+                                event.result_detail = "T"
                                 record_Hit()
+                                withAnimation{
+                                    location_overlay.showTabBar = true
+                                }
                                 path.removeAll()
                             } label: {
                                 Text("Triple")
@@ -83,7 +96,11 @@ struct HitResultView: View {
                             .cornerRadius(8.0)
                             
                             Button {
+                                event.result_detail = "H"
                                 record_Hit()
+                                withAnimation{
+                                    location_overlay.showTabBar = true
+                                }
                                 path.removeAll()
                             } label: {
                                 Text("Homerun")
@@ -140,10 +157,10 @@ struct HitResultView: View {
         scoreboard.balls = 0
         scoreboard.strikes = 0
         
-//        ptconfig.pitch_x_loc.removeAll()
-//        ptconfig.pitch_y_loc.removeAll()
-//        ptconfig.ab_pitch_color.removeAll()
-//        ptconfig.pitch_cur_ab = 0
+        ptconfig.pitch_x_loc.removeAll()
+        ptconfig.pitch_y_loc.removeAll()
+        ptconfig.ab_pitch_color.removeAll()
+        ptconfig.pitch_cur_ab = 0
         
         scoreboard.b1light = false
         scoreboard.b2light = false
