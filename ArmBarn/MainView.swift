@@ -10,37 +10,22 @@ import SwiftData
 import SwiftUI
 import Observation
 
-
 struct MainView: View {
-    
-    @AppStorage("BullpenMode") var ASBullpenMode : Bool?
-    
-    @Environment(Event_String.self) var event
-    @Environment(BullpenConfig.self) var bullpen
-    @Environment(GameReport.self) var game_report
     
     var body: some View {
         
         ZStack{
-
             VStack{
-                //Move to when game charting is active
-//                ScoreboardView()
-//                ZStack{
-//                    PitchLocationView()
-//                        .preferredColorScheme(.dark)
-//                        .ignoresSafeArea()
-//                }
                 
-                MainDashboardView()
+                Spacer()
+                
+                TabBarContentView()
                     .preferredColorScheme(.dark)
-                    //.ignoresSafeArea()
                 
             }
-            .background(Color("ScoreboardGreen"))
-            
         }
     }
+    
 }
 
 #Preview {
