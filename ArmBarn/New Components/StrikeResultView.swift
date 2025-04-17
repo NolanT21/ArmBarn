@@ -46,10 +46,7 @@ struct StrikeResultView: View {
                                 event.pitch_result = "L"
                                 event.result_detail = "N"
                                 add_Strike()
-                                withAnimation{
-                                    location_overlay.showTabBar = true
-                                }
-                                path.removeAll()
+                                back_to_root()
                             } label: {
                                 Text("Called")
                                     .font(.system(size: 17, weight: .bold))
@@ -63,10 +60,7 @@ struct StrikeResultView: View {
                                 event.pitch_result = "Z"
                                 event.result_detail = "N"
                                 add_Strike()
-                                withAnimation{
-                                    location_overlay.showTabBar = true
-                                }
-                                path.removeAll()
+                                back_to_root()
                             } label: {
                                 Text("Swinging")
                                     .font(.system(size: 17, weight: .bold))
@@ -83,10 +77,7 @@ struct StrikeResultView: View {
                                 event.pitch_result = "TO"
                                 event.result_detail = "N"
                                 add_Strike()
-                                withAnimation{
-                                    location_overlay.showTabBar = true
-                                }
-                                path.removeAll()
+                                back_to_root()
                             } label: {
                                 Text("Foul Tip")
                                     .font(.system(size: 17, weight: .bold))
@@ -120,6 +111,14 @@ struct StrikeResultView: View {
             .background(.regularMaterial)
             .cornerRadius(15)
         }
+    }
+    
+    func back_to_root() {
+        withAnimation{
+            location_overlay.showTabBar = true
+        }
+        location_overlay.showCurPitchPulse = false
+        path.removeAll()
     }
     
     func add_Strike() {

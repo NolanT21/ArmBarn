@@ -101,10 +101,7 @@ struct OutResultView: View {
                 Button {
                     event.result_detail = "F"
                     record_Out()
-                    withAnimation{
-                        location_overlay.showTabBar = true
-                    }
-                    path.removeAll()
+                    back_to_root()
                 } label: {
                     Text("Flyout")
                         .font(.system(size: 17, weight: .bold))
@@ -117,10 +114,7 @@ struct OutResultView: View {
                 Button {
                     event.result_detail = "G"
                     record_Out()
-                    withAnimation{
-                        location_overlay.showTabBar = true
-                    }
-                    path.removeAll()
+                    back_to_root()
                 } label: {
                     Text("Groundout")
                         .font(.system(size: 17, weight: .bold))
@@ -136,10 +130,7 @@ struct OutResultView: View {
                 Button {
                     event.result_detail = "L"
                     record_Out()
-                    withAnimation{
-                        location_overlay.showTabBar = true
-                    }
-                    path.removeAll()
+                    back_to_root()
                 } label: {
                     Text("Lineout")
                         .font(.system(size: 17, weight: .bold))
@@ -153,10 +144,7 @@ struct OutResultView: View {
                 Button {
                     event.result_detail = "P"
                     record_Out()
-                    withAnimation{
-                        location_overlay.showTabBar = true
-                    }
-                    path.removeAll()
+                    back_to_root()
                 } label: {
                     Text("PopUp")
                         .font(.system(size: 17, weight: .bold))
@@ -183,10 +171,7 @@ struct OutResultView: View {
                 Button {
                     event.result_detail = "Y"
                     record_Out()
-                    withAnimation{
-                        location_overlay.showTabBar = true
-                    }
-                    path.removeAll()
+                    back_to_root()
                 } label: {
                     Text("Sacrifice Bunt")
                         .font(.system(size: 17, weight: .bold))
@@ -199,10 +184,7 @@ struct OutResultView: View {
                 Button {
                     event.result_detail = "O"
                     record_Out()
-                    withAnimation{
-                        location_overlay.showTabBar = true
-                    }
-                    path.removeAll()
+                    back_to_root()
                 } label: {
                     Text("Other")
                         .font(.system(size: 17, weight: .bold))
@@ -218,6 +200,14 @@ struct OutResultView: View {
             
         }
         .padding(.horizontal, 10)
+    }
+    
+    func back_to_root() {
+        withAnimation{
+            location_overlay.showTabBar = true
+        }
+        location_overlay.showCurPitchPulse = false
+        path.removeAll()
     }
     
     func record_Out() {

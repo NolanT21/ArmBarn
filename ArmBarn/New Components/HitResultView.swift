@@ -47,10 +47,7 @@ struct HitResultView: View {
                             Button {
                                 event.result_detail = "S"
                                 record_Hit()
-                                withAnimation{
-                                    location_overlay.showTabBar = true
-                                }
-                                path.removeAll()
+                                back_to_root()
                             } label: {
                                 Text("Single")
                                     .font(.system(size: 17, weight: .bold))
@@ -63,10 +60,7 @@ struct HitResultView: View {
                             Button {
                                 event.result_detail = "D"
                                 record_Hit()
-                                withAnimation{
-                                    location_overlay.showTabBar = true
-                                }
-                                path.removeAll()
+                                back_to_root()
                             } label: {
                                 Text("Double")
                                     .font(.system(size: 17, weight: .bold))
@@ -82,10 +76,7 @@ struct HitResultView: View {
                             Button {
                                 event.result_detail = "T"
                                 record_Hit()
-                                withAnimation{
-                                    location_overlay.showTabBar = true
-                                }
-                                path.removeAll()
+                                back_to_root()
                             } label: {
                                 Text("Triple")
                                     .font(.system(size: 17, weight: .bold))
@@ -98,10 +89,7 @@ struct HitResultView: View {
                             Button {
                                 event.result_detail = "H"
                                 record_Hit()
-                                withAnimation{
-                                    location_overlay.showTabBar = true
-                                }
-                                path.removeAll()
+                                back_to_root()
                             } label: {
                                 Text("Homerun")
                                     .font(.system(size: 17, weight: .bold))
@@ -124,6 +112,14 @@ struct HitResultView: View {
             .background(.regularMaterial)
             .cornerRadius(15)
         }
+    }
+    
+    func back_to_root() {
+        withAnimation{
+            location_overlay.showTabBar = true
+        }
+        location_overlay.showCurPitchPulse = false
+        path.removeAll()
     }
     
     func record_Hit() {
