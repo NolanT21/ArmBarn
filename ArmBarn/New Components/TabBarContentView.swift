@@ -43,6 +43,7 @@ struct TabBarContentView: View {
                     .toolbar(.hidden, for: .tabBar)
 
             }
+            //.tabViewStyle(.page) //for left n right animation
             
             if location_overlay.showTabBar {
                 TabBar(activeTab: $activeTab)
