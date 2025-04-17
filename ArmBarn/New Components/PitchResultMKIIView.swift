@@ -28,7 +28,9 @@ struct PitchResultMKIIView: View {
                     dismiss()
                     ptconfig.pitch_x_loc.removeLast()
                     ptconfig.pitch_y_loc.removeLast()
+                    ptconfig.ab_pitch_color.removeLast()
                     ptconfig.pitch_cur_ab -= 1
+                    location_overlay.showCurPitchPulse = false
                 } label: {
                     HStack(spacing: 5){
                         Image(systemName: "chevron.left")
@@ -101,10 +103,7 @@ struct PitchResultMKIIView: View {
             HStack(spacing: 12){
                 Button {
                     add_Ball()
-                    withAnimation{
-                        location_overlay.showTabBar = true
-                    }
-                    path.removeAll()
+                    back_to_root()
                 } label: {
                     Text("Ball")
                         .font(.system(size: 17, weight: .bold))
@@ -133,11 +132,8 @@ struct PitchResultMKIIView: View {
                 Button {
                     event.pitch_result = "T"
                     event.result_detail = "N"
-                    withAnimation{
-                        location_overlay.showTabBar = true
-                    }
                     add_Foul_Ball()
-                    path.removeAll()
+                    back_to_root()
                 } label: {
                     Text("Foul Ball")
                         .font(.system(size: 17, weight: .bold))
@@ -150,10 +146,7 @@ struct PitchResultMKIIView: View {
                 Button {
                     event.result_detail = "B"
                     record_HBP()
-                    withAnimation{
-                        location_overlay.showTabBar = true
-                    }
-                    path.removeAll()
+                    back_to_root()
                 } label: {
                     Text("Hit by Pitch")
                         .font(.system(size: 17, weight: .bold))
@@ -211,10 +204,7 @@ struct PitchResultMKIIView: View {
                 Button {
                     event.result_detail = "Y"
                     record_Out()
-                    withAnimation{
-                        location_overlay.showTabBar = true
-                    }
-                    path.removeAll()
+                    back_to_root()
                 } label: {
                     Text("Sacrifice Bunt")
                         .font(.system(size: 17, weight: .bold))
@@ -227,10 +217,7 @@ struct PitchResultMKIIView: View {
                 Button {
                     event.result_detail = "E"
                     record_Hit()
-                    withAnimation{
-                        location_overlay.showTabBar = true
-                    }
-                    path.removeAll()
+                    back_to_root()
                 } label: {
                     Text("Error")
                         .font(.system(size: 17, weight: .bold))
@@ -249,9 +236,15 @@ struct PitchResultMKIIView: View {
         
     }
     
+    func back_to_root() {
+        withAnimation{
+            location_overlay.showTabBar = true
+        }
+        location_overlay.showCurPitchPulse = false
+        path.removeAll()
+    }
     
     func add_Ball() {
-        
         event.pitch_result = "A"
         event.result_detail = "N"
         event.balls = scoreboard.balls
