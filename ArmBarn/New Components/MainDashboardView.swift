@@ -27,7 +27,10 @@ enum ShakeAnimation: CaseIterable {
         case .returnCenter: 0
         }
     }
-    
+}
+
+enum PulseAnimation: CaseIterable {
+    case start, middle, end
 }
 
 struct MainDashboardView: View {
@@ -55,17 +58,10 @@ struct MainDashboardView: View {
     @State var main_body_padding: CGFloat = 10
     @State var light_width : CGFloat = 1.5
     
-    @State private var show_navbar: Bool = true
-    
-    @State private var show_home: Bool = true
-    @State private var show_pitcher_select: Bool = false
-    @State private var show_game_report: Bool = false
-    @State private var show_saved_games: Bool = false
-    @State private var show_settings: Bool = false
-    
     @State var location: CGPoint = .zero
     @State var cur_pitch_fill: Color = .clear
     @State var cur_pitch_outline: Color = .clear
+    @State var cur_pitch_pulse: Bool = false
     
     @State var red_light_color: Color = .red
     @State var green_light_color: Color = Color("ScoreboardGreen")
@@ -198,7 +194,7 @@ struct MainDashboardView: View {
                                         .frame(width: 30, height: 30)
                                     
                                 }
-                                .background(Color.gray)
+                                .background(Color.gray.gradient)
                                 .foregroundColor(Color.white)
                                 .cornerRadius(8.0)
                                 .shadow(color: .black.opacity(0.5), radius: 3, x: 3, y: 3)
@@ -212,7 +208,7 @@ struct MainDashboardView: View {
                                         .bold()
                                     
                                 }
-                                .background(Color.gray)
+                                .background(Color.gray.gradient)
                                 .foregroundColor(Color.white)
                                 .cornerRadius(8.0)
                                 .shadow(color: .black.opacity(0.5), radius: 3, x: 3, y: 3)
@@ -299,10 +295,11 @@ struct MainDashboardView: View {
                                 }
                                 .frame(maxWidth: .infinity, maxHeight: 50)
                                 .foregroundStyle(.white)
-                                .background(Color("ScoreboardGreen"))
+                                .background(Color("ScoreboardGreen").gradient)
                                 .bold()
                                 .cornerRadius(15)
                             }
+                            
                             
                             //Spacer()
                             
@@ -353,6 +350,7 @@ struct MainDashboardView: View {
                 let yloc = ptconfig.pitch_y_loc[index]
                 let point = CGPoint(x: xloc, y: yloc)
                 let pitch_color = ptconfig.ab_pitch_color[index]
+                
                 Circle()
                     .fill(pitch_color)
                     .stroke(.white, lineWidth: 2)
@@ -364,6 +362,24 @@ struct MainDashboardView: View {
                             .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
                             .font(.system(size: 13))
                             .position(point)
+                        
+                        if index == ptconfig.pitch_x_loc.count - 1 && location_overlay.showCurPitchPulse {
+                            Circle()
+                                .fill(.clear)
+                                .stroke(.white.opacity(0.5), lineWidth: 10)
+                                .frame(width: geometry.size.width * 0.062, height: geometry.size.width * 0.062, alignment: .center)
+                                .position(point)
+                                .phaseAnimator(PulseAnimation.allCases) { content, phase in
+                                            content
+                                                .blur(radius: phase == .start ? 2 : 8)
+                                                //.scaleEffect(phase == .middle ? 3 : 1)
+                                        } animation: { phase in
+                                            switch phase {
+                                            case .start, .end, .middle: .easeInOut(duration: 0.62)
+                                            }
+                                        }
+                        }
+                        
                     }
             }
         }
@@ -383,14 +399,6 @@ struct MainDashboardView: View {
     
     func print_Event_String() {
         print(/*current_pitcher.idcode,*/ event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats, event.batter_stance, event.velocity, event.x_cor, event.y_cor)
-    }
-    
-    func resetNavbarState() {
-        show_home = false
-        show_pitcher_select = false
-        show_game_report = false
-        show_saved_games = false
-        show_settings = false
     }
     
 }
