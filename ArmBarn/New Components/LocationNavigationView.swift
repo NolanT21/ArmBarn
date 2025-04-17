@@ -73,6 +73,9 @@ struct LocationNavigationView: View {
                             }
                             location_overlay.showShakeAnimation = false
                             
+                            //current pitch flash here
+                            location_overlay.showCurPitchPulse = true
+                            
                             ptconfig.pitch_x_loc.append(ptconfig.cur_x_location)
                             event.x_cor = Double(ptconfig.cur_x_location)
                             ptconfig.pitch_y_loc.append(ptconfig.cur_y_location)
@@ -85,13 +88,14 @@ struct LocationNavigationView: View {
                         Text("Enter")
                             .font(.system(size: 17, weight: .bold))
                             .frame(maxWidth: 150, maxHeight: 45)
-                            .background(button_color)
-                            .foregroundColor(Color.white)
+                            .background(ptconfig.cur_x_location != 0 || ptconfig.cur_y_location != 0 ? button_color : Color.gray.opacity(0.5))
+                            .foregroundColor(ptconfig.cur_x_location != 0 || ptconfig.cur_y_location != 0 ? Color.white : Color.gray)
                         //Logic for validating Enter button
 //                            .background(scoreboard.baserunners < 1 ? Color.gray.opacity(0.5) : button_color)
 //                            .foregroundColor(scoreboard.baserunners < 1 ? Color.gray : Color.white)
                             .cornerRadius(8.0)
                     }
+                    .disabled(ptconfig.cur_x_location == 0 || ptconfig.cur_y_location == 0)
                     
                     Spacer()
                     
@@ -107,6 +111,10 @@ struct LocationNavigationView: View {
             
             Spacer()
             
+        }
+        .onAppear{
+            ptconfig.cur_x_location = 0
+            ptconfig.cur_y_location = 0
         }
         
         
