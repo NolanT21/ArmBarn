@@ -75,8 +75,8 @@ struct PitchersAppeared {
 
 @Observable class currentPitcher{
     var idcode = UUID()
-    var firstName: String = ""
-    var lastName: String = "Change Me"
+    var firstName: String = "No Pitcher Selected"
+    var lastName: String = ""
     var pitch1: String = "None"
     var pitch2: String = "None"
     var pitch3: String = "None"
