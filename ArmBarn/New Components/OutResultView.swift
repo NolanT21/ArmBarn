@@ -205,8 +205,8 @@ struct OutResultView: View {
     func back_to_root() {
         withAnimation{
             location_overlay.showTabBar = true
+            location_overlay.showCurPitchPulse = false
         }
-        location_overlay.showCurPitchPulse = false
         path.removeAll()
     }
     
