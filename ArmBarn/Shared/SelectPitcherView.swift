@@ -28,6 +28,7 @@ struct SelectPitcherView: View {
     
     @State private var showAddPitcher = false
     @State private var showEditPitcher = false
+    @State private var selected_pitcher_id = UUID()
     @State private var newAtBat = false
     
     private let editpitchertip = EditPitcherTip()
@@ -43,112 +44,191 @@ struct SelectPitcherView: View {
         guard !searchText.isEmpty else {return pitchers}
         return pitchers.filter {$0.lastName.localizedCaseInsensitiveContains(searchText)}
     }
-
+    
     var body: some View {
             
             ZStack{
-                NavigationStack{
-                    List {
-                        Section() {
+                
+                VStack(alignment: .leading, spacing: 5){
+                    
+//                    Text("Select Pitcher")
+//                        .font(.system(size: 33, weight: .bold))
+//                        .padding(.leading, 20)
+                    
+                    
+                    NavigationView{ //Will be depreciated, bug with displaying title and NavigationStack
+                        
+                        List{
+                            
                             TipView(editpitchertip)
-                        }
-                        
-                        ForEach(filteredPitchers, id:\.id) { p_er in
-                            Button(p_er.firstName + " " + p_er.lastName) {
-                                if p_er.id != current_pitcher.idcode {
-                                    store_pitcher_appearance()
-                                    clear_game_report()
-                                    current_pitcher.pitch_num = 0
-                                    current_pitcher.firstName = p_er.firstName
-                                    current_pitcher.lastName = p_er.lastName
-                                    current_pitcher.pitch1 = p_er.pitch1
-                                    current_pitcher.idcode = p_er.id
-                                    if current_pitcher.pitch1 != "None" {
-                                        current_pitcher.pitch_num += 1
-                                        current_pitcher.arsenal[0] = p_er.pitch1
-                                    }
-                                    current_pitcher.pitch2 = p_er.pitch2
+                            
+                            ForEach(filteredPitchers, id:\.id) { p_er in
+                                HStack{
                                     
-                                    if current_pitcher.pitch2 != "None" {
-                                        current_pitcher.pitch_num += 1
-                                        current_pitcher.arsenal[1] = p_er.pitch2
+                                    Button{
+                                        
+                                        
+                                        
+                                        if p_er.id != current_pitcher.idcode {
+                                            store_pitcher_appearance()
+                                            clear_game_report()
+                                            current_pitcher.pitch_num = 0
+                                            current_pitcher.firstName = p_er.firstName
+                                            current_pitcher.lastName = p_er.lastName
+                                            current_pitcher.pitch1 = p_er.pitch1
+                                            current_pitcher.idcode = p_er.id
+                                            selected_pitcher_id = p_er.id
+                                            if current_pitcher.pitch1 != "None" {
+                                                current_pitcher.pitch_num += 1
+                                                current_pitcher.arsenal[0] = p_er.pitch1
+                                            }
+                                            current_pitcher.pitch2 = p_er.pitch2
+                                            
+                                            if current_pitcher.pitch2 != "None" {
+                                                current_pitcher.pitch_num += 1
+                                                current_pitcher.arsenal[1] = p_er.pitch2
+                                            }
+                                            current_pitcher.pitch3 = p_er.pitch3
+                                            
+                                            if current_pitcher.pitch3 != "None" {
+                                                current_pitcher.pitch_num += 1
+                                                current_pitcher.arsenal[2] = p_er.pitch3
+                                            }
+                                            current_pitcher.pitch4 = p_er.pitch4
+                                            
+                                            if current_pitcher.pitch4 != "None" {
+                                                current_pitcher.pitch_num += 1
+                                                current_pitcher.arsenal[3] = p_er.pitch4
+                                            }
+                                            
+                                            fetch_pitches_and_abs(pitcher_id: current_pitcher.idcode)
+                                        }
+                                        //dismiss()
+                                    } label: {
+                                        HStack(spacing: 15){
+                                            
+                                            Circle()
+                                                .fill(Color.clear)
+                                                .stroke(selected_pitcher_id == p_er.id ? Color("ScoreboardGreen") : Color.white, lineWidth: 2)
+                                                .frame(width: 35, height: 35)
+                                                .overlay{
+                                                    HStack(spacing: 0){
+                                                        if p_er.throwingHand == "Left" {
+                                                            Image(systemName: "chevron.left")
+                                                                .bold()
+                                                                .font(.system(size: 7))
+                                                        }
+                                                        Text(p_er.firstName.prefix(1))
+                                                            .bold()
+                                                            .font(.system(size: 13))
+                                                        Text(p_er.lastName.prefix(1))
+                                                            .bold()
+                                                            .font(.system(size: 13))
+                                                        if p_er.throwingHand == "Right" {
+                                                            Image(systemName: "chevron.right")
+                                                                .bold()
+                                                                .font(.system(size: 7))
+                                                        }
+                                                        
+                                                    }
+                                                }
+                                            
+                                            VStack(alignment: .leading, spacing: 2){
+                                                Text(p_er.firstName + " " + p_er.lastName)
+                                                    .bold()
+                                                    .font(.system(size: 17))
+                                                HStack(spacing: 0){
+                                                    Text("Pitches: ")
+                                                    Text(p_er.pitch1)
+                                                    if p_er.pitch2 != "None" {
+                                                        Text(", " + p_er.pitch2)
+                                                    }
+                                                    if p_er.pitch3 != "None" {
+                                                        Text(", " + p_er.pitch3)
+                                                    }
+                                                    if p_er.pitch4 != "None" {
+                                                        Text(", " + p_er.pitch4)
+                                                    }
+                                                }
+                                                .font(.system(size: 11))
+                                                .foregroundStyle(.gray)
+                                            }
+                                            
+                                            Spacer()
+                                            
+//                                            if selected_pitcher_id == p_er.id {
+//                                                Image(systemName: "checkmark.circle")
+//                                                    .font(.system(size: 15))
+//                                                
+//                                            }
+                                            
+                                        }
+                                        .frame(height: 40)
                                     }
-                                    current_pitcher.pitch3 = p_er.pitch3
-                                    
-                                    if current_pitcher.pitch3 != "None" {
-                                        current_pitcher.pitch_num += 1
-                                        current_pitcher.arsenal[2] = p_er.pitch3
-                                    }
-                                    current_pitcher.pitch4 = p_er.pitch4
-                                    
-                                    if current_pitcher.pitch4 != "None" {
-                                        current_pitcher.pitch_num += 1
-                                        current_pitcher.arsenal[3] = p_er.pitch4
-                                    }
-                                    
-                                    fetch_pitches_and_abs(pitcher_id: current_pitcher.idcode)
                                 }
-                                dismiss()
-                            }
-                            .foregroundColor(text_color)
-                            .swipeActions(edge: .leading) {
-                                Button(action: {
-                                    showEditPitcher = true
-                                    edit_pitcher = p_er
-                                }, label: {
-                                    Text("Edit")
-                                })
-                            }
-                        }
-                        .onDelete(perform: removePitcher)
-                        
-                    }
-                    .sheet(item: $edit_pitcher) { edit in
-                        EditPitcherView(edit_pitcher: edit)
-                            .preferredColorScheme(.dark)
-                    }
-                    .font(.system(size: 17))
-                    .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search by Last Name")
-                   
-                    .toolbar{
-                        
-                        ToolbarItemGroup(placement: .topBarLeading) {
-                            
-                            Button(action: {
-                                dismiss()
-                            }, label: {
-                                Image(systemName: "xmark")
-                                    .imageScale(.medium)
-                                    .font(.system(size: 17))
-                                    .frame(width: sbl_width, height: sbl_height)
-                                    .foregroundColor(text_color)
-                                    .bold()
-                            })
-                        }
-                        
-                        ToolbarItemGroup(placement: .principal) {
-                            Text("Select Pitcher")
+//                                .overlay{
+//                                    if selected_pitcher_id == p_er.id {
+//                                        ZStack{
+//                                            Rectangle()
+//                                                .fill(.clear)
+//                                                .frame(maxWidth: .infinity, maxHeight: 100)
+//                                                .border(Color("ScoreboardGreen"), width: 2)
+//                                                .cornerRadius(24)
+//                                                
+//                                                
+//                                        }
+//                                    }
+//                                }
                                 .foregroundColor(text_color)
-                                .font(.system(size: 17))
-                        }
-                        
-                        ToolbarItemGroup(placement: .topBarTrailing) {
+                                .swipeActions(edge: .leading) {
+                                    Button {
+                                        showEditPitcher = true
+                                        edit_pitcher = p_er
+                                    } label: {
+                                        Text("Edit")
+                                    }
+                                    .tint(Color.orange)
+                                    
+                                }
+                            }
+                            .onDelete(perform: removePitcher)
+//                            .listRowSeparator(.hidden)
+//                            .listRowBackground(
+//                                Capsule().fill(Color.gray.opacity(0.2))
+//                                    .padding(.vertical, 2)
+//                                    .padding(.horizontal, 5)
+//                            )
                             
-                            Button(action: {
-                                showAddPitcher = true
-                            }, label: {
-                                Image(systemName: "plus")
-                                    .imageScale(.medium)
-                                    .font(.system(size: 17))
-                                    .foregroundColor(text_color)
-                                    .bold()
-                            })
-                            .popover(isPresented: $showAddPitcher) {
-                                AddPitcherView()
-                                    .preferredColorScheme(.dark)
+                        }
+                        .navigationBarTitleDisplayMode(.automatic)
+                        .navigationTitle("Select Pitcher")
+                        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode:.always), prompt: "Search by Last Name")
+                        .toolbar{
+                            
+                            ToolbarItemGroup(placement: .topBarTrailing) {
+                                
+                                Button(action: {
+                                    showAddPitcher = true
+                                }, label: {
+                                    Image(systemName: "plus")
+                                        .imageScale(.medium)
+                                        .font(.system(size: 19))
+                                        .foregroundColor(text_color)
+                                        .bold()
+                                })
+                                .popover(isPresented: $showAddPitcher) {
+                                    AddPitcherView()
+                                        .preferredColorScheme(.dark)
+                                }
                             }
                         }
+                        .sheet(item: $edit_pitcher) { edit in
+                            EditPitcherView(edit_pitcher: edit)
+                                .preferredColorScheme(.dark)
+                        }
+                        
                     }
+                    
                 }
             }
             .onAppear(){
