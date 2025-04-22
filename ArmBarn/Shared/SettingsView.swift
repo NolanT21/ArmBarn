@@ -63,7 +63,7 @@ struct SettingsView: View {
                     
                     let impact = UIImpactFeedbackGenerator(style: .medium)
                     
-                    NavigationView{
+                    NavigationStack{
                         List{
                             Section() {
                                 TipView(changeinputtip)
@@ -313,20 +313,6 @@ struct SettingsView: View {
                         }
                         .navigationBarTitleDisplayMode(.large)
                         .navigationTitle("Settings")
-                        .toolbar{
-                            ToolbarItem(placement: .navigationBarLeading){
-                                Button{
-                                    dismiss()
-                                } label: {
-                                    Image(systemName: "xmark")
-                                        .imageScale(.medium)
-                                        .font(.system(size: 17))
-                                        .frame(width: sbl_width, height: sbl_height)
-                                        .foregroundColor(text_color)
-                                        .bold()
-                                }
-                            }
-                        }
                     }
                     
                 }
