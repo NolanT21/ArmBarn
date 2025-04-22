@@ -38,22 +38,17 @@ struct MainDashboardView: View {
     @State private var input_nav_path = [Int]()
     
     @Environment(\.modelContext) private var context
+    @Environment(\.dismiss) var dismiss
     
-    @State var showSummary: Bool = true
-    @State var showGameLog: Bool = false
+    @State var show_undo_toast: Bool = false
     
-    @State var revealDropdown: Bool = false
-    
-    @State var side: CGFloat = 112
-    
-    var test_data_list: [[String]] = [["1", "B. Herrman", "5", "2-1", "Flyout, 1 out"], ["2", "B. Herrman", "7", "3-2", "Groundout, 2 outs"]]
-    
-    @State var test_pass: [String] = []
-    
+    @Environment(currentPitcher.self) var current_pitcher
     @Environment(Event_String.self) var event
     @Environment(Scoreboard.self) var scoreboard
     @Environment(PitchTypeConfig.self) var ptconfig
     @Environment(LocationOverlay.self) var location_overlay
+    
+    @Query(sort: \Event.event_number) var events: [Event]
     
     @State var main_body_padding: CGFloat = 10
     @State var light_width : CGFloat = 1.5
@@ -80,6 +75,8 @@ struct MainDashboardView: View {
     }
     
     var body: some View {
+        
+        let impact = UIImpactFeedbackGenerator(style: .medium)
         
         ZStack{
             
@@ -168,7 +165,8 @@ struct MainDashboardView: View {
                                     .frame(height: 35)
                                 
                                 VStack(alignment: .leading, spacing: 2){
-                                    Text("Brent Herrman")
+                                    let pitcher_name = current_pitcher.firstName + " " + current_pitcher.lastName
+                                    Text(pitcher_name.prefix(25))
                                         .font(.system(size: 17))
                                         .bold()
                                     HStack{
@@ -187,20 +185,24 @@ struct MainDashboardView: View {
                             
                             HStack(alignment: .bottom, spacing: 10){
                                 Button{
-                                    
+                                    new_game_func()
                                 } label: {
                                     Image(systemName: "flag.pattern.checkered")
                                         .font(.system(size: 18))
                                         .frame(width: 30, height: 30)
                                     
                                 }
-                                .background(Color.gray.gradient)
-                                .foregroundColor(Color.white)
+                                .background(events.count <= 0 ? Color.gray.opacity(0.5) : Color("ScoreboardGreen"))
+                                .foregroundColor(events.count <= 0 ? Color.gray : Color.white)
                                 .cornerRadius(8.0)
                                 .shadow(color: .black.opacity(0.5), radius: 3, x: 3, y: 3)
+                                .disabled(events.count <= 0)
                                 
                                 Button{
-                                    
+                                    withAnimation{
+                                        show_undo_toast = true
+                                        impact.impactOccurred()
+                                    }
                                 } label: {
                                     Image(systemName: "arrow.counterclockwise")
                                         .font(.system(size: 18))
@@ -208,10 +210,20 @@ struct MainDashboardView: View {
                                         .bold()
                                     
                                 }
-                                .background(Color.gray.gradient)
-                                .foregroundColor(Color.white)
+                                .background(events.count < 1 ? Color.gray.opacity(0.5) : Color("ScoreboardGreen"))
+                                .foregroundColor(events.count < 1 ? Color.gray : Color.white)
                                 .cornerRadius(8.0)
                                 .shadow(color: .black.opacity(0.5), radius: 3, x: 3, y: 3)
+                                .disabled(events.count < 1)
+                                .onChange(of: show_undo_toast) {
+                                    if show_undo_toast == true {
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                            withAnimation{
+                                                show_undo_toast.toggle()
+                                            }
+                                        }
+                                    }
+                                }
                                 
                             }
                             .padding(.trailing, 15)
@@ -228,52 +240,84 @@ struct MainDashboardView: View {
                     
                 }
                 
-                VStack{
+                ZStack{
+                    VStack{
 
-                    GeometryReader{ geometry in
+                        GeometryReader{ geometry in
+                            
+                            Image("Background2.0")
+                                .resizable()
+                                .frame(maxHeight: 480, alignment: .center)
+                                .aspectRatio(contentMode: .fit)
+                                .cornerRadius(15)
+                                .padding(.horizontal, main_body_padding)
+                                .gesture(tap)
+                                //.clipped()
+                                .overlay{
+                                    
+                                    //Hide overlay when inputting new pitch
+                                    if !location_overlay.showinputoverlay{
+                                        ABPitchOverlay()
+                                    }
+                                    
+                                    if location_overlay.showinputoverlay{
+                                        Circle()
+                                            .stroke(cur_pitch_outline, lineWidth: 4)
+                                            .fill(cur_pitch_fill)
+                                            .frame(width: geometry.size.width * 0.055, height: geometry.size.width * 0.055, alignment: .center)
+                                            .position(location)
+                                    }
+                                    
+                                }
+                                .phaseAnimator([ShakeAnimation.returnCenter, ShakeAnimation.leanLeft, ShakeAnimation.leanRight, ShakeAnimation.leanLeft, ShakeAnimation.returnCenter], trigger: location_overlay.shakecounter) { content, phase in
+                                    
+                                    content
+                                        .offset(x: phase.xoffset)
+                                        .rotationEffect(.degrees(phase.rotationDegrees))
+                                    
+                                    
+                                } animation: { phase in
+                                    switch phase {
+                                    case .returnCenter: .easeIn(duration: 0.05)
+                                    case .leanLeft: .easeIn(duration: 0.05)
+                                    case .leanRight: .easeIn(duration: 0.05)
+                                    }
+                                }
+                        }
                         
-                        Image("Background2.0")
-                            .resizable()
-                            .frame(maxHeight: 480, alignment: .center)
-                            .aspectRatio(contentMode: .fit)
-                            .cornerRadius(15)
-                            .padding(.horizontal, main_body_padding)
-                            .gesture(tap)
-                            //.clipped()
-                            .overlay{
-                                
-                                //Hide overlay when inputting new pitch
-                                if !location_overlay.showinputoverlay{
-                                    ABPitchOverlay()
-                                }
-                                
-                                if location_overlay.showinputoverlay{
-                                    Circle()
-                                        .stroke(cur_pitch_outline, lineWidth: 4)
-                                        .fill(cur_pitch_fill)
-                                        .frame(width: geometry.size.width * 0.055, height: geometry.size.width * 0.055, alignment: .center)
-                                        .position(location)
-                                }
-                                
-                            }
-                            .phaseAnimator([ShakeAnimation.returnCenter, ShakeAnimation.leanLeft, ShakeAnimation.leanRight, ShakeAnimation.leanLeft, ShakeAnimation.returnCenter], trigger: location_overlay.shakecounter) { content, phase in
-                                
-                                content
-                                    .offset(x: phase.xoffset)
-                                    .rotationEffect(.degrees(phase.rotationDegrees))
-                                
-                                
-                            } animation: { phase in
-                                switch phase {
-                                case .returnCenter: .easeIn(duration: 0.05)
-                                case .leanLeft: .easeIn(duration: 0.05)
-                                case .leanRight: .easeIn(duration: 0.05)
-                                }
-                            }
                     }
                     
+                    //Undo Toast
+                    VStack{
+                        if show_undo_toast == true{
+                        
+                            HStack{
+                                ZStack{
+                                    
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .foregroundColor(Color.black.opacity(0.4))
+                                        .frame(width: 185, height: 32)
+                                    
+                                    Text("Previous Event Removed")
+                                        .font(.system(size: 13) .weight(.medium))
+                                        //.bold()
+
+                                }
+                            }
+                            .background(.regularMaterial)
+                            .clipShape(Capsule())
+                            .transition(.move(edge: .top).combined(with: .opacity))
+                            .padding(.top, 10)
+                            
+                        }
+                        
+                        Spacer()
+                        
+                    }
+                                        
                 }
                 .frame(maxHeight: 480)
+                
                 
                 VStack{
                     
@@ -295,13 +339,10 @@ struct MainDashboardView: View {
                                 }
                                 .frame(maxWidth: .infinity, maxHeight: 50)
                                 .foregroundStyle(.white)
-                                .background(Color("ScoreboardGreen").gradient)
+                                .background(Color("ScoreboardGreen"))
                                 .bold()
                                 .cornerRadius(15)
                             }
-                            
-                            
-                            //Spacer()
                             
                         }
                         .navigationDestination(for: Int.self) { selection in
@@ -333,7 +374,6 @@ struct MainDashboardView: View {
                 
                 Spacer()
                 
-                
             }
             .background(Color.black)
             
@@ -351,6 +391,23 @@ struct MainDashboardView: View {
                 let point = CGPoint(x: xloc, y: yloc)
                 let pitch_color = ptconfig.ab_pitch_color[index]
                 
+                if index == ptconfig.pitch_x_loc.count - 1 && location_overlay.showCurPitchPulse {
+                    Circle()
+                        .fill(.clear)
+                        .stroke(.white.opacity(0.5), lineWidth: 10)
+                        .frame(width: geometry.size.width * 0.062, height: geometry.size.width * 0.062, alignment: .center)
+                        .position(point)
+                        .phaseAnimator(PulseAnimation.allCases) { content, phase in
+                                    content
+                                        .blur(radius: phase == .start ? 2 : 8)
+                                        //.scaleEffect(phase == .middle ? 3 : 1)
+                                } animation: { phase in
+                                    switch phase {
+                                    case .start, .end, .middle: .easeInOut(duration: 0.62)
+                                    }
+                                }
+                }
+                
                 Circle()
                     .fill(pitch_color)
                     .stroke(.white, lineWidth: 2)
@@ -362,24 +419,6 @@ struct MainDashboardView: View {
                             .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
                             .font(.system(size: 13))
                             .position(point)
-                        
-                        if index == ptconfig.pitch_x_loc.count - 1 && location_overlay.showCurPitchPulse {
-                            Circle()
-                                .fill(.clear)
-                                .stroke(.white.opacity(0.5), lineWidth: 10)
-                                .frame(width: geometry.size.width * 0.062, height: geometry.size.width * 0.062, alignment: .center)
-                                .position(point)
-                                .phaseAnimator(PulseAnimation.allCases) { content, phase in
-                                            content
-                                                .blur(radius: phase == .start ? 2 : 8)
-                                                //.scaleEffect(phase == .middle ? 3 : 1)
-                                        } animation: { phase in
-                                            switch phase {
-                                            case .start, .end, .middle: .easeInOut(duration: 0.62)
-                                            }
-                                        }
-                        }
-                        
                     }
             }
         }
@@ -399,6 +438,47 @@ struct MainDashboardView: View {
     
     func print_Event_String() {
         print(/*current_pitcher.idcode,*/ event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats, event.batter_stance, event.velocity, event.x_cor, event.y_cor)
+    }
+    
+    func new_game_func() {
+        
+        do {
+            try context.delete(model: Event.self)
+        } catch {
+            print("Failed to delete all events.")
+        }
+        
+        ptconfig.hidePitchOverlay = false
+        
+        scoreboard.pitchers_appearance_list.removeAll()
+        
+        scoreboard.balls = 0
+        scoreboard.strikes = 0
+        scoreboard.outs = 0
+        scoreboard.pitches = 0
+        scoreboard.atbats = 1
+        scoreboard.inning = 1
+        scoreboard.baserunners = 0
+        event.batter_stance = ""
+        event.event_number = 0
+        
+        ptconfig.pitch_x_loc.removeAll()
+        ptconfig.pitch_y_loc.removeAll()
+        ptconfig.ab_pitch_color.removeAll()
+        ptconfig.pitch_cur_ab = 0
+        
+        scoreboard.b1light = false
+        scoreboard.b2light = false
+        scoreboard.b3light = false
+        
+        scoreboard.s1light = false
+        scoreboard.s2light = false
+        
+        scoreboard.o1light = false
+        scoreboard.o2light = false
+        
+        //clear_game_report()
+        
     }
     
 }
