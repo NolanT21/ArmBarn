@@ -412,42 +412,56 @@ struct PitchLocationView: View {
                     ToolbarItemGroup(placement: .topBarLeading) {
                         
                         Button(action: {
+                            
+                            //Haptic ability
                             let impact = UIImpactFeedbackGenerator(style: .medium)
                             impact.impactOccurred()
+                            
+                            //If no popup view is showing
                             if scoreboard.enable_bottom_row == true {
+                                //Back button logic after pitch input
                                 if ptconfig.hidePitchOverlay == true {
                                     cur_pitch_color = .clear
                                     cur_pitch_outline = .clear
                                 }
+                                //If there has been an event entered
                                 else if events.count > 0 {
                                     
+                                    //Show undo toast
                                     showUndoToast = true
                                     
+                                    //If there are more than one event (Most cases)
                                     if events.count != 1 {
                                         load_previous_event()
                                         load_previous_ab_pitches()
                                         context.delete(events[events.count - 1])
                                     }
+                                    //If there is only one event
                                     else {
+                                        //If one pitch has been entered (Not a NPE)
                                         if scoreboard.pitches > 0 && event.result_detail != "R" && event.result_detail != "RE" && event.pitch_result != "IW" && event.pitch_result != "VZ" && event.pitch_result != "VA"{ //Non pitch event (pitch not thrown)
                                             scoreboard.pitches -= 1
                                         }
                                         
+                                        //Reset game and show NewAtBat popup
                                         newAtBat = true
                                         new_game_func()
                                         
+                                        //Delete current instance of Event data model
                                         do {
                                             try context.delete(model: Event.self)
                                         } catch {
                                             print("Did not clear event data")
                                         }
                                         
+                                        //Reset game information, triggers popup
                                         game_report.game_location = ASGameLocation ?? ""
                                         game_report.opponent_name = ASCurOpponentName ?? ""
                                         
                                     }
                                     
                                 }
+                                //Reset pitch overlay conditions
                                 ptconfig.hidePitchOverlay = false
                                 ptconfig.ptcolor = .clear
                             }
