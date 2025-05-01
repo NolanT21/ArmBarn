@@ -42,7 +42,7 @@ struct SelectPitcherView: View {
     
     var filteredPitchers: [Pitcher] {
         guard !searchText.isEmpty else {return pitchers}
-        return pitchers.filter {$0.lastName.localizedCaseInsensitiveContains(searchText)}
+        return pitchers.filter {$0.lastName.localizedCaseInsensitiveContains(searchText) || $0.firstName.localizedCaseInsensitiveContains(searchText)}
     }
     
     var body: some View {
@@ -50,11 +50,6 @@ struct SelectPitcherView: View {
             ZStack{
                 
                 VStack(alignment: .leading, spacing: 5){
-                    
-//                    Text("Select Pitcher")
-//                        .font(.system(size: 33, weight: .bold))
-//                        .padding(.leading, 20)
-                    
                     
                     NavigationView{ //Will be depreciated, bug with displaying title and NavigationStack
                         
@@ -67,35 +62,34 @@ struct SelectPitcherView: View {
                                     
                                     Button{
                                         
-                                        
-                                        
                                         if p_er.id != current_pitcher.idcode {
                                             store_pitcher_appearance()
                                             clear_game_report()
                                             current_pitcher.pitch_num = 0
                                             current_pitcher.firstName = p_er.firstName
                                             current_pitcher.lastName = p_er.lastName
-                                            current_pitcher.pitch1 = p_er.pitch1
                                             current_pitcher.idcode = p_er.id
                                             selected_pitcher_id = p_er.id
+                                            
+                                            current_pitcher.pitch1 = p_er.pitch1
                                             if current_pitcher.pitch1 != "None" {
                                                 current_pitcher.pitch_num += 1
                                                 current_pitcher.arsenal[0] = p_er.pitch1
                                             }
-                                            current_pitcher.pitch2 = p_er.pitch2
                                             
+                                            current_pitcher.pitch2 = p_er.pitch2
                                             if current_pitcher.pitch2 != "None" {
                                                 current_pitcher.pitch_num += 1
                                                 current_pitcher.arsenal[1] = p_er.pitch2
                                             }
-                                            current_pitcher.pitch3 = p_er.pitch3
                                             
+                                            current_pitcher.pitch3 = p_er.pitch3
                                             if current_pitcher.pitch3 != "None" {
                                                 current_pitcher.pitch_num += 1
                                                 current_pitcher.arsenal[2] = p_er.pitch3
                                             }
-                                            current_pitcher.pitch4 = p_er.pitch4
                                             
+                                            current_pitcher.pitch4 = p_er.pitch4
                                             if current_pitcher.pitch4 != "None" {
                                                 current_pitcher.pitch_num += 1
                                                 current_pitcher.arsenal[3] = p_er.pitch4
@@ -103,7 +97,6 @@ struct SelectPitcherView: View {
                                             
                                             fetch_pitches_and_abs(pitcher_id: current_pitcher.idcode)
                                         }
-                                        //dismiss()
                                     } label: {
                                         HStack(spacing: 15){
                                             
@@ -114,9 +107,10 @@ struct SelectPitcherView: View {
                                                 .overlay{
                                                     HStack(spacing: 0){
                                                         if p_er.throwingHand == "Left" {
-                                                            Image(systemName: "chevron.left")
+                                                            Image(systemName: "arrowtriangle.left.fill")
+                                                                .scaleEffect(x: 0.6)
                                                                 .bold()
-                                                                .font(.system(size: 7))
+                                                                .font(.system(size: 8))
                                                         }
                                                         Text(p_er.firstName.prefix(1))
                                                             .bold()
@@ -125,9 +119,10 @@ struct SelectPitcherView: View {
                                                             .bold()
                                                             .font(.system(size: 13))
                                                         if p_er.throwingHand == "Right" {
-                                                            Image(systemName: "chevron.right")
+                                                            Image(systemName: "arrowtriangle.right.fill")
+                                                                .scaleEffect(x: 0.6)
                                                                 .bold()
-                                                                .font(.system(size: 7))
+                                                                .font(.system(size: 8))
                                                         }
                                                         
                                                     }
@@ -156,29 +151,10 @@ struct SelectPitcherView: View {
                                             
                                             Spacer()
                                             
-//                                            if selected_pitcher_id == p_er.id {
-//                                                Image(systemName: "checkmark.circle")
-//                                                    .font(.system(size: 15))
-//                                                
-//                                            }
-                                            
                                         }
                                         .frame(height: 40)
                                     }
                                 }
-//                                .overlay{
-//                                    if selected_pitcher_id == p_er.id {
-//                                        ZStack{
-//                                            Rectangle()
-//                                                .fill(.clear)
-//                                                .frame(maxWidth: .infinity, maxHeight: 100)
-//                                                .border(Color("ScoreboardGreen"), width: 2)
-//                                                .cornerRadius(24)
-//                                                
-//                                                
-//                                        }
-//                                    }
-//                                }
                                 .foregroundColor(text_color)
                                 .swipeActions(edge: .leading) {
                                     Button {
@@ -192,17 +168,11 @@ struct SelectPitcherView: View {
                                 }
                             }
                             .onDelete(perform: removePitcher)
-//                            .listRowSeparator(.hidden)
-//                            .listRowBackground(
-//                                Capsule().fill(Color.gray.opacity(0.2))
-//                                    .padding(.vertical, 2)
-//                                    .padding(.horizontal, 5)
-//                            )
                             
                         }
                         .navigationBarTitleDisplayMode(.automatic)
                         .navigationTitle("Select Pitcher")
-                        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode:.always), prompt: "Search by Last Name")
+                        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode:.always), prompt: "Search Pitchers")
                         .toolbar{
                             
                             ToolbarItemGroup(placement: .topBarTrailing) {
@@ -235,6 +205,10 @@ struct SelectPitcherView: View {
                 if pitchers.count == 0 {
                     showAddPitcher = true
                 }
+                
+                //Set selected id to current pitcher id, allows for selection of same pitcher upon new game
+                selected_pitcher_id = current_pitcher.idcode
+                
                 UILabel.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = .white
                 //print("Select Pitchers View")
                 //print("Appearance List: ", scoreboard.pitchers_appearance_list)
