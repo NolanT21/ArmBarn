@@ -46,6 +46,10 @@
 		D57607EF2D9AB1E70058074D /* FileNamePopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57607E62D9AB1E70058074D /* FileNamePopUpView.swift */; };
 		D57607F02D9AB1E70058074D /* PopupAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57607E72D9AB1E70058074D /* PopupAlertView.swift */; };
 		D58E1BDF2D6394670007E4A2 /* SavedGameMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58E1BDE2D6394670007E4A2 /* SavedGameMainView.swift */; };
+		D593023A2DC0F9D400E285E0 /* VelocityNavPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59302392DC0F9D400E285E0 /* VelocityNavPlaceholder.swift */; };
+		D593023C2DC0F9FD00E285E0 /* TwoInputXPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D593023B2DC0F9FD00E285E0 /* TwoInputXPopUp.swift */; };
+		D593023E2DC1440500E285E0 /* GameInfoPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D593023D2DC1440500E285E0 /* GameInfoPopUp.swift */; };
+		D59302402DC2754A00E285E0 /* ZeroInputXPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D593023F2DC2754A00E285E0 /* ZeroInputXPopUp.swift */; };
 		D5DD11262AF52FE80064F1A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5DD11252AF52FE80064F1A5 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -87,6 +91,10 @@
 		D57607E92D9AB1E70058074D /* XInfoPopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XInfoPopUpView.swift; sourceTree = "<group>"; };
 		D57607EA2D9AB1E70058074D /* XPopupAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPopupAlertView.swift; sourceTree = "<group>"; };
 		D58E1BDE2D6394670007E4A2 /* SavedGameMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedGameMainView.swift; sourceTree = "<group>"; };
+		D59302392DC0F9D400E285E0 /* VelocityNavPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VelocityNavPlaceholder.swift; sourceTree = "<group>"; };
+		D593023B2DC0F9FD00E285E0 /* TwoInputXPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoInputXPopUp.swift; sourceTree = "<group>"; };
+		D593023D2DC1440500E285E0 /* GameInfoPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameInfoPopUp.swift; sourceTree = "<group>"; };
+		D593023F2DC2754A00E285E0 /* ZeroInputXPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZeroInputXPopUp.swift; sourceTree = "<group>"; };
 		D5C6DE202BD2C52D00C64555 /* MainContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainContainerView.swift; sourceTree = "<group>"; };
 		D5DD111B2AF52FE60064F1A5 /* ArmBarn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArmBarn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArmBarnApp.swift; sourceTree = "<group>"; };
@@ -124,6 +132,10 @@
 				D5726ADF2DAD9FE7003EAFB8 /* PitchResultMKIIView.swift */,
 				D5726AE12DAD9FE7003EAFB8 /* StrikeResultView.swift */,
 				D5726AD72DAD9EF9003EAFB8 /* MainDashboardView.swift */,
+				D593023D2DC1440500E285E0 /* GameInfoPopUp.swift */,
+				D59302392DC0F9D400E285E0 /* VelocityNavPlaceholder.swift */,
+				D593023B2DC0F9FD00E285E0 /* TwoInputXPopUp.swift */,
+				D593023F2DC2754A00E285E0 /* ZeroInputXPopUp.swift */,
 			);
 			path = "New Components";
 			sourceTree = "<group>";
@@ -321,6 +333,7 @@
 			files = (
 				D54D66E42D6006FE00832995 /* ArmBarnApp.swift in Sources */,
 				D54D66E52D6006FE00832995 /* Assets.xcassets in Sources */,
+				D59302402DC2754A00E285E0 /* ZeroInputXPopUp.swift in Sources */,
 				D54D66E82D6006FE00832995 /* MainView.swift in Sources */,
 				D54D66E92D6006FE00832995 /* MainContainerView.swift in Sources */,
 				D57607E02D9AB1190058074D /* SelectPitcherView.swift in Sources */,
@@ -330,6 +343,7 @@
 				D57607E32D9AB1190058074D /* SettingsView.swift in Sources */,
 				D57607E42D9AB1190058074D /* AddPitcherView.swift in Sources */,
 				D5726ADB2DAD9FB6003EAFB8 /* PitchTypeSelectView.swift in Sources */,
+				D593023A2DC0F9D400E285E0 /* VelocityNavPlaceholder.swift in Sources */,
 				D58E1BDF2D6394670007E4A2 /* SavedGameMainView.swift in Sources */,
 				D57607C12D9992790058074D /* global_variables.swift in Sources */,
 				D57607C22D9992790058074D /* report_variables.swift in Sources */,
@@ -339,9 +353,11 @@
 				D5726AE42DAD9FE7003EAFB8 /* LocationNavigationView.swift in Sources */,
 				D5726AE52DAD9FE7003EAFB8 /* OutResultView.swift in Sources */,
 				D5726AE62DAD9FE7003EAFB8 /* PitchResultMKIIView.swift in Sources */,
+				D593023C2DC0F9FD00E285E0 /* TwoInputXPopUp.swift in Sources */,
 				D5726AE72DAD9FE7003EAFB8 /* HitResultView.swift in Sources */,
 				D54D66F82D6006FE00832995 /* SavedGamesView.swift in Sources */,
 				D54A48F92D64DF470007EDD5 /* GameDataGameLogView.swift in Sources */,
+				D593023E2DC1440500E285E0 /* GameInfoPopUp.swift in Sources */,
 				D5726AD92DAD9EF9003EAFB8 /* MainDashboardView.swift in Sources */,
 				D57607C62D9993AB0058074D /* SavePopUpView.swift in Sources */,
 				D57607CD2D9994690058074D /* PitchLocationView.swift in Sources */,
