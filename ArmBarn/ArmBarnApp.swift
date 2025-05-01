@@ -32,7 +32,7 @@ struct ArmBarnApp: App {
     
     var body: some Scene {
         WindowGroup {
-            MainView().task{UserDefaults.standard.set(false, forKey: "BullpenMode")}
+            MainView()
                 .environment(Scoreboard())
                 .environment(LocationOverlay())
                 .environment(Event_String())
@@ -43,6 +43,6 @@ struct ArmBarnApp: App {
                 .environment(BullpenReport())
                 .environment(AtBatBreakdown())
         }
-        .modelContainer(for: [Event.self, Pitcher.self, SavedGames.self]) /*, BullpenEvent.self*/
+        .modelContainer(for: [Event.self, Pitcher.self, SavedGames.self])
     }
 }
