@@ -12,11 +12,12 @@ struct TabBarContentView: View {
     @Environment(Event_String.self) var event
     @Environment(LocationOverlay.self) var location_overlay
     
-    @State private var activeTab: TabItems = .home
+    @State var activeTab: TabItems = .home
     
     var body: some View {
         
         ZStack(alignment: .bottom) {
+            
             TabView(selection: $activeTab) {
                 
                 MainDashboardView()
