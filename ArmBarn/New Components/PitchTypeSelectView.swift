@@ -11,6 +11,7 @@ struct PitchTypeSelectView: View {
     
     @Binding var path: [Int]
     
+    @Environment(currentPitcher.self) var current_pitcher
     @Environment(Event_String.self) var event
     @Environment(Scoreboard.self) var scoreboard
     @Environment(PitchTypeConfig.self) var ptconfig
@@ -94,7 +95,6 @@ struct PitchTypeSelectView: View {
         .ignoresSafeArea()
         .background(.regularMaterial)
         .cornerRadius(15)
-        
     }
     
     @ViewBuilder
@@ -116,7 +116,7 @@ struct PitchTypeSelectView: View {
                             .frame(width: 18, height: 18)
                             .padding(.leading, 15)
                             
-                        Text("Fastball")
+                        Text(current_pitcher.pitch1)
                             .font(.system(size: 17, weight: .medium))
                             .foregroundStyle(Color.white)
                             .padding(.trailing, 15)
@@ -137,14 +137,14 @@ struct PitchTypeSelectView: View {
                 } label: {
                     HStack(spacing: 12){
                         Circle()
-                            .stroke(Color.white, lineWidth: 3)
-                            .fill(Color.orange)
+                            .stroke(current_pitcher.pitch2 == "None" ? Color.gray.opacity(0.2) : Color.white, lineWidth: 3)
+                            .fill(current_pitcher.pitch2 == "None" ? Color.gray : Color.orange)
                             .frame(width: 18, height: 18)
                             .padding(.leading, 15)
                             
-                        Text("Curveball")
+                        Text(current_pitcher.pitch2)
                             .font(.system(size: 17, weight: .medium))
-                            .foregroundStyle(Color.white)
+                            .foregroundStyle(current_pitcher.pitch2 == "None" ? Color.gray : Color.white)
                         
                         Spacer()
                     }
@@ -152,6 +152,7 @@ struct PitchTypeSelectView: View {
                     .background(.regularMaterial)
                     .cornerRadius(30)
                 }
+                .disabled(current_pitcher.pitch2 == "None")
             }
             
             HStack{
@@ -164,14 +165,14 @@ struct PitchTypeSelectView: View {
                 } label: {
                     HStack(spacing: 12){
                         Circle()
-                            .stroke(Color.white, lineWidth: 3)
-                            .fill(Color.red)
+                            .stroke(current_pitcher.pitch3 == "None" ? Color.gray.opacity(0.2) : Color.white, lineWidth: 3)
+                            .fill(current_pitcher.pitch3 == "None" ? Color.gray : Color.red)
                             .frame(width: 18, height: 18)
                             .padding(.leading, 15)
                             
-                        Text("Change-Up")
+                        Text(current_pitcher.pitch3)
                             .font(.system(size: 17, weight: .medium))
-                            .foregroundStyle(Color.white)
+                            .foregroundStyle(current_pitcher.pitch3 == "None" ? Color.gray : Color.white)
                         
                         Spacer()
                     }
@@ -179,6 +180,7 @@ struct PitchTypeSelectView: View {
                     .background(.regularMaterial)
                     .cornerRadius(30)
                 }
+                .disabled(current_pitcher.pitch3 == "None")
                 
                 NavigationLink {
                     LocationNavigationView(path: $path).navigationBarBackButtonHidden(true).task{
@@ -189,14 +191,14 @@ struct PitchTypeSelectView: View {
                 } label: {
                     HStack(spacing: 12){
                         Circle()
-                            .stroke(Color.white, lineWidth: 3)
-                            .fill(Color.green)
+                            .stroke(current_pitcher.pitch4 == "None" ? Color.gray.opacity(0.2) : Color.white, lineWidth: 3)
+                            .fill(current_pitcher.pitch4 == "None" ? Color.gray : Color.green)
                             .frame(width: 18, height: 18)
                             .padding(.leading, 15)
                             
-                        Text("Other")
+                        Text(current_pitcher.pitch4)
                             .font(.system(size: 17, weight: .medium))
-                            .foregroundStyle(Color.white)
+                            .foregroundStyle(current_pitcher.pitch4 == "None" ? Color.gray : Color.white)
                         
                         Spacer()
                     }
@@ -204,6 +206,7 @@ struct PitchTypeSelectView: View {
                     .background(.regularMaterial)
                     .cornerRadius(30)
                 }
+                .disabled(current_pitcher.pitch4 == "None")
             }
             
             Spacer()
