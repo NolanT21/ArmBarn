@@ -44,6 +44,8 @@ import Observation
     var showShakeAnimation: Bool = false
     var showCurPitchPulse: Bool = false
     var showTabBar: Bool = true
+    var showVeloInput: Bool = false
+    var game_info_entered: Bool = false
 }
 
 struct PitchersAppeared {
