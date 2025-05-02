@@ -23,10 +23,11 @@ struct MainView: View {
                     .preferredColorScheme(.dark)
                 
             }
+            
         }
         .edgesIgnoringSafeArea(.top)
     }
-    
+
 }
 
 #Preview {
