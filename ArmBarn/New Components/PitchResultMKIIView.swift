@@ -25,12 +25,12 @@ struct PitchResultMKIIView: View {
         VStack(spacing: 0){
             HStack{
                 Button {
-                    dismiss()
                     ptconfig.pitch_x_loc.removeLast()
                     ptconfig.pitch_y_loc.removeLast()
                     ptconfig.ab_pitch_color.removeLast()
                     ptconfig.pitch_cur_ab -= 1
                     location_overlay.showCurPitchPulse = false
+                    dismiss()
                 } label: {
                     HStack(spacing: 5){
                         Image(systemName: "chevron.left")
