@@ -20,104 +20,103 @@ struct LocationNavigationView: View {
     
     var body: some View {
         
-        VStack{
+        ZStack{
             
-            ZStack{
-            
-                VStack(alignment: .center, spacing: 5){
-                    
-                    HStack{
-                        Button {
-                            dismiss()
-                            withAnimation{
-                                location_overlay.showinputoverlay = false
+            VStack{
+                
+                ZStack{
+                
+                    VStack(alignment: .center, spacing: 5){
+                        
+                        HStack{
+                            Button {
+                                dismiss()
+                                withAnimation{
+                                    location_overlay.showinputoverlay = false
+                                    location_overlay.showShakeAnimation = false
+                                    ptconfig.ptcolor = .clear
+                                    //pop most current pitch if in the middle of input
+                                }
+                            } label: {
+                                Circle()
+                                    .fill(Color.gray.opacity(0.3))
+                                    //.background(.ultraThinMaterial)
+                                    .frame(width: 24, height: 24)
+                                    .overlay{
+                                        Image(systemName: "chevron.left")
+                                            .foregroundColor(.white)
+                                            .font(.system(size: 15).bold())
+                                            //.padding(5)
+                                    }
+                            }
+                            .padding(.top, 10)
+                            .padding(.horizontal, 10)
+                            
+                            Spacer()
+                            
+                        }
+                        
+                        Text("Tap in the area above to select the pitch location")
+                            .multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .frame(maxWidth: 350)
+                            .font(.system(size: 18, weight: .medium))
+                            .foregroundColor(.white)
+                            //.padding(.horizontal, 5)
+                            
+                        
+                        Spacer()
+                        
+                        NavigationLink{
+                            VelocityNavPlaceholder(path: $path).navigationBarBackButtonHidden(true).task{
+                                withAnimation{
+                                    location_overlay.showinputoverlay = false
+                                    location_overlay.showVeloInput = true
+                                }
                                 location_overlay.showShakeAnimation = false
-                                ptconfig.ptcolor = .clear
-                                //pop most current pitch if in the middle of input
+    
+                                //current pitch flash here
+                                location_overlay.showCurPitchPulse = true
+    
+                                ptconfig.pitch_x_loc.append(ptconfig.cur_x_location)
+                                event.x_cor = Double(ptconfig.cur_x_location)
+                                ptconfig.pitch_y_loc.append(ptconfig.cur_y_location)
+                                event.y_cor = Double(ptconfig.cur_y_location)
+                                ptconfig.ab_pitch_color.append(ptconfig.ptcolor)
+                                ptconfig.pitch_cur_ab += 1
+    
                             }
                         } label: {
-                            Circle()
-                                .fill(Color.gray.opacity(0.3))
-                                //.background(.ultraThinMaterial)
-                                .frame(width: 24, height: 24)
-                                .overlay{
-                                    Image(systemName: "chevron.left")
-                                        .foregroundColor(.white)
-                                        .font(.system(size: 15).bold())
-                                        //.padding(5)
-                                }
+                            Text("Enter")
+                                .font(.system(size: 17, weight: .bold))
+                                .frame(maxWidth: 150, maxHeight: 45)
+                                .background(ptconfig.cur_x_location != 0 || ptconfig.cur_y_location != 0 ? button_color : Color.gray.opacity(0.5))
+                                .foregroundColor(ptconfig.cur_x_location != 0 || ptconfig.cur_y_location != 0 ? Color.white : Color.gray)
+                                .cornerRadius(8.0)
                         }
-                        .padding(.top, 10)
-                        .padding(.horizontal, 10)
+                        .disabled(ptconfig.cur_x_location == 0 && ptconfig.cur_y_location == 0)
                         
                         Spacer()
                         
                     }
-                    
-                    Text("Tap in the area above to select the pitch location")
-                        .multilineTextAlignment(.center)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .frame(maxWidth: 350)
-                        .font(.system(size: 18, weight: .medium))
-                        .foregroundColor(.white)
-                        //.padding(.horizontal, 5)
-                        
-                    
-                    Spacer()
-                    
-                    NavigationLink{
-                        PitchResultMKIIView(path: $path).navigationBarBackButtonHidden(true).task{
-                            withAnimation{
-                                location_overlay.showinputoverlay = false
-                                
-                            }
-                            location_overlay.showShakeAnimation = false
-                            
-                            //current pitch flash here
-                            location_overlay.showCurPitchPulse = true
-                            
-                            ptconfig.pitch_x_loc.append(ptconfig.cur_x_location)
-                            event.x_cor = Double(ptconfig.cur_x_location)
-                            ptconfig.pitch_y_loc.append(ptconfig.cur_y_location)
-                            event.y_cor = Double(ptconfig.cur_y_location)
-                            ptconfig.ab_pitch_color.append(ptconfig.ptcolor)
-                            ptconfig.pitch_cur_ab += 1
-                            
-                        }
-                    } label: {
-                        Text("Enter")
-                            .font(.system(size: 17, weight: .bold))
-                            .frame(maxWidth: 150, maxHeight: 45)
-                            .background(ptconfig.cur_x_location != 0 || ptconfig.cur_y_location != 0 ? button_color : Color.gray.opacity(0.5))
-                            .foregroundColor(ptconfig.cur_x_location != 0 || ptconfig.cur_y_location != 0 ? Color.white : Color.gray)
-                        //Logic for validating Enter button
-//                            .background(scoreboard.baserunners < 1 ? Color.gray.opacity(0.5) : button_color)
-//                            .foregroundColor(scoreboard.baserunners < 1 ? Color.gray : Color.white)
-                            .cornerRadius(8.0)
-                    }
-                    .disabled(ptconfig.cur_x_location == 0 || ptconfig.cur_y_location == 0)
-                    
-                    Spacer()
-                    
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .foregroundStyle(.white)
+                .background(.regularMaterial)
+                .background(Color.black.opacity(0.85))
+                .cornerRadius(15)
+                //.padding(.horizontal, 15)
+                //.padding(.top, 15)
+                
+                Spacer()
+                
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .foregroundStyle(.white)
-            .background(.regularMaterial)
-            .background(Color.black.opacity(0.85))
-            .cornerRadius(15)
-            //.padding(.horizontal, 15)
-            //.padding(.top, 15)
-            
-            Spacer()
+            .onAppear{
+//                ptconfig.cur_x_location = 0
+//                ptconfig.cur_y_location = 0
+            }
             
         }
-        .onAppear{
-            ptconfig.cur_x_location = 0
-            ptconfig.cur_y_location = 0
-        }
-        
-        
         
     }
 }
