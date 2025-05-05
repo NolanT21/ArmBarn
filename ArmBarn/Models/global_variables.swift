@@ -42,6 +42,7 @@ import Observation
     var shakecounter: Int = 0
     var showinputoverlay: Bool = false
     var showShakeAnimation: Bool = false
+    var zero_location: Bool = false
     var showCurPitchPulse: Bool = false
     var showTabBar: Bool = true
     var showVeloInput: Bool = false
