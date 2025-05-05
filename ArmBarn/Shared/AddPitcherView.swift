@@ -35,38 +35,51 @@ struct AddPitcherView: View {
     @State var sbl_width: Double = 17.0
     @State var sbl_height: Double = 13.0
     
+    @State var button_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color("ScoreboardGreen"), Color("DarkScoreboardGreen")]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
     var body: some View {
         
         let impact = UIImpactFeedbackGenerator(style: .medium)
         
         ZStack{
             
-            VStack{
-                HStack{
+            VStack(alignment: .leading, spacing: 0){
+                VStack(alignment: .leading){
                     
                     Button(action: {
                         dismiss()
                     }, label: {
-                        Image(systemName: "xmark")
-                            .imageScale(.medium)
-                            .font(.system(size: 17))
-                            .frame(width: sbl_width, height: sbl_height)
-                            .foregroundColor(text_color)
-                            .bold()
+                        Circle()
+                            .fill(Color.gray.opacity(0.3))
+                            .frame(width: 25, height: 25)
+                            .overlay{
+                                Image(systemName: "xmark")
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 13))
+                                    .bold()
+                            }
+                            .padding(.leading, 10)
+                            .padding(.top, 10)
+//                        Image(systemName: "xmark")
+//                            .imageScale(.medium)
+//                            .font(.system(size: 17))
+//                            .frame(width: sbl_width, height: sbl_height)
+//                            .foregroundColor(text_color)
+//                            .bold()
+                            
                     })
                     
-                    Spacer()
-                    
                     Text("Add Pitcher")
-                        .font(.system(size: 17))
+                        .font(.largeTitle).bold()
                         .foregroundColor(text_color)
-                    
-                    Spacer()
-                    
-                    Text("")
+                        .padding(.leading, 20)
+                        .padding(.top, 10)
                     
                 }
-                .padding(15)
                 
                 Form{
                     Section(header: Text("Player Info")){
@@ -126,20 +139,20 @@ struct AddPitcherView: View {
                     }
                     .bold()
                     .foregroundStyle(.white)
-                    .listRowBackground(Color("ScoreboardGreen"))
+                    .listRowBackground(button_gradient)
                     .frame(maxWidth: .infinity)
                     .multilineTextAlignment(.center)
                     
                 }
+                .scrollContentBackground(.hidden)
 
             }
             
             if invalidPitcherName == true {
-                XPopupAlertView(isActive: $invalidPitcherName, show_close: false, title: "Error", message: "Another pitcher has the same first and last name. Do you want to continue?", leftButtonAction: {invalidPitcherName = false; save_pitcher(); dismiss()}, rightButtonAction: {invalidPitcherName = false}, XButtonAction: {invalidPitcherName = false})
+                TwoInputXPopUp(title: "Warning", description: "A saved pitcher has the same first and last name. Do you want to continue?", leftButtonText: "Yes", leftButtonAction: {save_pitcher(); dismiss()}, rightButtonText: "No", rightButtonAction: {}, close_action: {withAnimation{invalidPitcherName = false}} , flex_action: {})
             }
             
         }
-
     }
     
     func save_pitcher(){

@@ -102,7 +102,7 @@ struct SelectPitcherView: View {
                                             
                                             Circle()
                                                 .fill(Color.clear)
-                                                .stroke(selected_pitcher_id == p_er.id ? Color("ScoreboardGreen") : Color.white, lineWidth: 2)
+                                                .stroke(selected_pitcher_id == p_er.id ? Color("ScoreboardGreen") : Color.white, lineWidth: selected_pitcher_id == p_er.id ? 3 : 2)
                                                 .frame(width: 35, height: 35)
                                                 .overlay{
                                                     HStack(spacing: 0){
@@ -180,23 +180,35 @@ struct SelectPitcherView: View {
                                 Button(action: {
                                     showAddPitcher = true
                                 }, label: {
-                                    Image(systemName: "plus")
-                                        .imageScale(.medium)
-                                        .font(.system(size: 19))
-                                        .foregroundColor(text_color)
-                                        .bold()
+                                    Circle()
+                                        .fill(Color.gray.opacity(0.3))
+                                        .frame(width: 25, height: 25)
+                                        .overlay{
+                                            Image(systemName: "plus")
+                                                .foregroundColor(.white)
+                                                .font(.system(size: 13))
+                                                .bold()
+                                        }
+//                                    Image(systemName: "plus")
+//                                        .imageScale(.medium)
+//                                        .font(.system(size: 19))
+//                                        .foregroundColor(text_color)
+//                                        .bold()
                                 })
-                                .popover(isPresented: $showAddPitcher) {
-                                    AddPitcherView()
-                                        .preferredColorScheme(.dark)
-                                }
                             }
                         }
                         .sheet(item: $edit_pitcher) { edit in
                             EditPitcherView(edit_pitcher: edit)
                                 .preferredColorScheme(.dark)
+                                .background(Color.black.opacity(0.5))
+                                .ignoresSafeArea()
                         }
-                        
+                        .sheet(isPresented: $showAddPitcher) {
+                            AddPitcherView()
+                                .preferredColorScheme(.dark)
+                                .background(Color.black.opacity(0.5))
+                                .ignoresSafeArea()
+                        }
                     }
                     
                 }
@@ -359,11 +371,44 @@ struct EditPitcherView: View {
     @State private var selected_pitcher_hand = "Right"
     let pitcher_hand_list = ["Right", "Left"]
     
+    @State var button_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color("ScoreboardGreen"), Color("DarkScoreboardGreen")]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
     var body: some View {
         
         let impact = UIImpactFeedbackGenerator(style: .medium)
         
-        VStack{
+        VStack(alignment: .leading, spacing: 0){
+            
+            VStack(alignment: .leading){
+                
+                Button(action: {
+                    dismiss()
+                }, label: {
+                    Circle()
+                        .fill(Color.gray.opacity(0.3))
+                        .frame(width: 25, height: 25)
+                        .overlay{
+                            Image(systemName: "xmark")
+                                .foregroundColor(.white)
+                                .font(.system(size: 13))
+                                .bold()
+                        }
+                        .padding(.leading, 10)
+                        .padding(.top, 10)
+                })
+                
+                Text("Edit Pitcher")
+                    .font(.largeTitle).bold()
+                    .foregroundColor(.white)
+                    .padding(.leading, 20)
+                    .padding(.top, 10)
+                
+            }
+            
             Form{
                 Section(header: Text("Player Name")){
                     TextField("First Name", text: $edit_pitcher.firstName)
@@ -411,13 +456,12 @@ struct EditPitcherView: View {
                 }
                 .bold()
                 .foregroundStyle(.white)
-                .listRowBackground(Color("ScoreboardGreen"))
+                .listRowBackground(button_gradient)
                 .frame(maxWidth: .infinity)
                 .multilineTextAlignment(.center)
             }
-//            .foregroundColor(.black)
-//            .background(.green)
-//            .tint(.gray)
+            .scrollContentBackground(.hidden)
+            
         }
         //.frame(width: 400, height: 400)
     }
