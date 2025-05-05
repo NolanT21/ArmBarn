@@ -19,6 +19,18 @@ struct PitchResultMKIIView: View {
     
     @State private var selected_index: Int = 1
     
+    @State var button_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color("ScoreboardGreen"), Color("DarkScoreboardGreen")]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
+    @State var disabled_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color.gray.opacity(0.5)]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
     @State private var button_color: Color = Color("ScoreboardGreen")
     
     var body: some View {
@@ -30,6 +42,7 @@ struct PitchResultMKIIView: View {
                     ptconfig.ab_pitch_color.removeLast()
                     ptconfig.pitch_cur_ab -= 1
                     location_overlay.showCurPitchPulse = false
+                    location_overlay.zero_location = false
                     dismiss()
                 } label: {
                     HStack(spacing: 5){
@@ -83,16 +96,17 @@ struct PitchResultMKIIView: View {
                 .tabViewStyle(.page)
                 .indexViewStyle(.page(backgroundDisplayMode: .always))
                 
-                //.transition(.slide)
-                
-                //Spacer()
-                
             }
             
         }
         .ignoresSafeArea()
         .background(.regularMaterial)
         .cornerRadius(15)
+        .onAppear{
+            withAnimation{
+                location_overlay.showVeloInput = false
+            }
+        }
     }
     
     @ViewBuilder
@@ -108,7 +122,7 @@ struct PitchResultMKIIView: View {
                     Text("Ball")
                         .font(.system(size: 17, weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: 45)
-                        .background(button_color)
+                        .background(button_gradient)
                         .foregroundColor(Color.white)
                         .cornerRadius(8.0)
                 }
@@ -121,7 +135,7 @@ struct PitchResultMKIIView: View {
                     Text("Strike")
                         .font(.system(size: 17, weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: 45)
-                        .background(button_color)
+                        .background(button_gradient)
                         .foregroundColor(Color.white)
                         .cornerRadius(8.0)
                 }
@@ -139,7 +153,7 @@ struct PitchResultMKIIView: View {
                         .font(.system(size: 17, weight: .bold))
                 }
                 .frame(maxWidth: .infinity, maxHeight: 45)
-                .background(button_color)
+                .background(button_gradient)
                 .foregroundColor(Color.white)
                 .cornerRadius(8.0)
                 
@@ -152,7 +166,7 @@ struct PitchResultMKIIView: View {
                         .font(.system(size: 17, weight: .bold))
                 }
                 .frame(maxWidth: .infinity, maxHeight: 45)
-                .background(button_color)
+                .background(button_gradient)
                 .foregroundColor(Color.white)
                 .cornerRadius(8.0)
                 
@@ -180,7 +194,7 @@ struct PitchResultMKIIView: View {
                     Text("Hit")
                         .font(.system(size: 17, weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: 45)
-                        .background(button_color)
+                        .background(button_gradient)
                         .foregroundColor(Color.white)
                         .cornerRadius(8.0)
                 }
@@ -193,7 +207,7 @@ struct PitchResultMKIIView: View {
                     Text("Out")
                         .font(.system(size: 17, weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: 45)
-                        .background(button_color)
+                        .background(button_gradient)
                         .foregroundColor(Color.white)
                         .cornerRadius(8.0)
                 }
@@ -208,11 +222,11 @@ struct PitchResultMKIIView: View {
                 } label: {
                     Text("Sacrifice Bunt")
                         .font(.system(size: 17, weight: .bold))
+                        .frame(maxWidth: .infinity, maxHeight: 45)
+                        .background(button_gradient)
+                        .foregroundColor(Color.white)
+                        .cornerRadius(8.0)
                 }
-                .frame(maxWidth: .infinity, maxHeight: 45)
-                .background(button_color)
-                .foregroundColor(Color.white)
-                .cornerRadius(8.0)
                 
                 Button {
                     event.result_detail = "E"
@@ -221,12 +235,11 @@ struct PitchResultMKIIView: View {
                 } label: {
                     Text("Error")
                         .font(.system(size: 17, weight: .bold))
+                        .frame(maxWidth: .infinity, maxHeight: 45)
+                        .background(button_gradient)
+                        .foregroundColor(Color.white)
+                        .cornerRadius(8.0)
                 }
-                .frame(maxWidth: .infinity, maxHeight: 45)
-                .background(button_color)
-                .foregroundColor(Color.white)
-                .cornerRadius(8.0)
-                
             }
             
             Spacer()

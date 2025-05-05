@@ -22,6 +22,18 @@ struct TwoInputXPopUp: View {
     @State var close_action: () -> ()
     @State var flex_action: () -> ()
     
+    @State var button_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color("ScoreboardGreen"), Color("DarkScoreboardGreen")]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
+    @State var disabled_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color.gray.opacity(0.5)]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
     var body: some View {
         ZStack{
             Color.black.opacity(0.5)
@@ -52,7 +64,7 @@ struct TwoInputXPopUp: View {
                                     Text(leftButtonText)
                                         .font(.system(size: 17, weight: .bold))
                                         .frame(width: 110, height: 40)
-                                        .background(Color("ScoreboardGreen"))
+                                        .background(button_gradient)
                                         .foregroundColor(Color.white)
                                         .cornerRadius(8.0)
                                 }
@@ -64,7 +76,7 @@ struct TwoInputXPopUp: View {
                                     Text(rightButtonText)
                                         .font(.system(size: 17, weight: .bold))
                                         .frame(width: 110, height: 40)
-                                        .background(Color("ScoreboardGreen"))
+                                        .background(button_gradient)
                                         .foregroundColor(Color.white)
                                         .cornerRadius(8.0)
                                 }

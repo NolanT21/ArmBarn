@@ -17,6 +17,18 @@ struct HitResultView: View {
     @Environment(LocationOverlay.self) var location_overlay
     @Environment(\.dismiss) private var dismiss
     
+    @State var button_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color("ScoreboardGreen"), Color("DarkScoreboardGreen")]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
+    @State var disabled_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color.gray.opacity(0.5)]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
     @State private var button_color: Color = Color("ScoreboardGreen")
     
     var body: some View {
@@ -52,7 +64,7 @@ struct HitResultView: View {
                                 Text("Single")
                                     .font(.system(size: 17, weight: .bold))
                                     .frame(maxWidth: .infinity, maxHeight: 45)
-                                    .background(button_color)
+                                    .background(button_gradient)
                                     .foregroundColor(Color.white)
                                     .cornerRadius(8.0)
                             }
@@ -65,7 +77,7 @@ struct HitResultView: View {
                                 Text("Double")
                                     .font(.system(size: 17, weight: .bold))
                                     .frame(maxWidth: .infinity, maxHeight: 45)
-                                    .background(button_color)
+                                    .background(button_gradient)
                                     .foregroundColor(Color.white)
                                     .cornerRadius(8.0)
                             }
@@ -82,7 +94,7 @@ struct HitResultView: View {
                                     .font(.system(size: 17, weight: .bold))
                             }
                             .frame(maxWidth: .infinity, maxHeight: 45)
-                            .background(button_color)
+                            .background(button_gradient)
                             .foregroundColor(Color.white)
                             .cornerRadius(8.0)
                             
@@ -95,7 +107,7 @@ struct HitResultView: View {
                                     .font(.system(size: 17, weight: .bold))
                             }
                             .frame(maxWidth: .infinity, maxHeight: 45)
-                            .background(button_color)
+                            .background(button_gradient)
                             .foregroundColor(Color.white)
                             .cornerRadius(8.0)
                             

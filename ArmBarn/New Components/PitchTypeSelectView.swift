@@ -26,6 +26,18 @@ struct PitchTypeSelectView: View {
     @State var show_pitchtypes: Bool = true
     @State var selected_index: Int = 1
     
+    @State var button_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color("ScoreboardGreen"), Color("DarkScoreboardGreen")]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
+    @State var disabled_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color.gray.opacity(0.5)]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
     @State private var button_color: Color = Color("ScoreboardGreen")
     
     var body: some View {
@@ -232,7 +244,7 @@ struct PitchTypeSelectView: View {
                     Text("Violation - Ball")
                         .font(.system(size: 17, weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: 45)
-                        .background(button_color)
+                        .background(button_gradient)
                         .foregroundColor(Color.white)
                         .cornerRadius(8.0)
                 }
@@ -249,7 +261,7 @@ struct PitchTypeSelectView: View {
                     Text("Violation - Strike")
                         .font(.system(size: 17, weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: 45)
-                        .background(button_color)
+                        .background(button_gradient)
                         .foregroundColor(Color.white)
                         .cornerRadius(8.0)
                 }
@@ -271,7 +283,7 @@ struct PitchTypeSelectView: View {
                         .font(.system(size: 17, weight: .bold))
                 }
                 .frame(maxWidth: .infinity, maxHeight: 45)
-                .background(button_color)
+                .background(button_gradient)
                 .foregroundColor(Color.white)
                 .cornerRadius(8.0)
                 
@@ -286,7 +298,7 @@ struct PitchTypeSelectView: View {
                         .font(.system(size: 17, weight: .bold))
                 }
                 .frame(maxWidth: .infinity, maxHeight: 45)
-                .background(scoreboard.baserunners < 1 ? Color.gray.opacity(0.5) : button_color)
+                .background(scoreboard.baserunners < 1 ? disabled_gradient : button_gradient)
                 .foregroundColor(scoreboard.baserunners < 1 ? Color.gray : Color.white)
                 .cornerRadius(8.0)
                 .disabled(scoreboard.baserunners < 1)

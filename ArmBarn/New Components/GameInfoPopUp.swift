@@ -24,6 +24,18 @@ struct GameInfoPopUp: View {
     
     @State var close_action: () -> ()
     
+    @State var button_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color("ScoreboardGreen"), Color("DarkScoreboardGreen")]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
+    @State var disabled_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color.gray.opacity(0.5)]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
     var body: some View {
         ZStack{
             Color.black.opacity(0.5)
@@ -114,7 +126,7 @@ struct GameInfoPopUp: View {
                                 Text("Enter")
                                     .font(.system(size: 17, weight: .bold))
                                     .frame(width: 125, height: 40)
-                                    .background(!validTeamName || opponentname == ""  ? Color.gray.opacity(0.5) : Color("ScoreboardGreen"))
+                                    .background(!validTeamName || opponentname == ""  ? disabled_gradient : button_gradient)
                                     .foregroundColor(!validTeamName || opponentname == "" ? Color.gray.opacity(0.5) : Color.white)
                                     .cornerRadius(8.0)
                             }

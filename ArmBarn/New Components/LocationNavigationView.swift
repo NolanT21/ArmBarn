@@ -16,7 +16,21 @@ struct LocationNavigationView: View {
     @Environment(LocationOverlay.self) var location_overlay
     @Environment(\.dismiss) private var dismiss
     
+    @State private var locked_button_function: Bool = true
+    
     @State private var button_color: Color = Color("ScoreboardGreen")
+    
+    @State var button_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color("ScoreboardGreen"), Color("DarkScoreboardGreen")]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
+    @State var disabled_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color.gray.opacity(0.5)]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
     
     var body: some View {
         
@@ -35,6 +49,7 @@ struct LocationNavigationView: View {
                                     location_overlay.showinputoverlay = false
                                     location_overlay.showShakeAnimation = false
                                     ptconfig.ptcolor = .clear
+                                    //location_overlay.zero_location = true
                                     //pop most current pitch if in the middle of input
                                 }
                             } label: {
@@ -69,28 +84,32 @@ struct LocationNavigationView: View {
                         
                         NavigationLink{
                             VelocityNavPlaceholder(path: $path).navigationBarBackButtonHidden(true).task{
-                                withAnimation{
-                                    location_overlay.showinputoverlay = false
-                                    location_overlay.showVeloInput = true
+                                if locked_button_function == false {
+                                    withAnimation{
+                                        location_overlay.showinputoverlay = false
+                                        location_overlay.showVeloInput = true
+                                    }
+                                    location_overlay.showShakeAnimation = false
+                                    
+                                    //Set zero location to true, pitch has been enter, reset on back for next view
+                                    location_overlay.zero_location = true
+                                    
+                                    //current pitch flash here
+                                    location_overlay.showCurPitchPulse = true
+                                    
+                                    ptconfig.pitch_x_loc.append(ptconfig.cur_x_location)
+                                    event.x_cor = Double(ptconfig.cur_x_location)
+                                    ptconfig.pitch_y_loc.append(ptconfig.cur_y_location)
+                                    event.y_cor = Double(ptconfig.cur_y_location)
+                                    ptconfig.ab_pitch_color.append(ptconfig.ptcolor)
+                                    ptconfig.pitch_cur_ab += 1
                                 }
-                                location_overlay.showShakeAnimation = false
-    
-                                //current pitch flash here
-                                location_overlay.showCurPitchPulse = true
-    
-                                ptconfig.pitch_x_loc.append(ptconfig.cur_x_location)
-                                event.x_cor = Double(ptconfig.cur_x_location)
-                                ptconfig.pitch_y_loc.append(ptconfig.cur_y_location)
-                                event.y_cor = Double(ptconfig.cur_y_location)
-                                ptconfig.ab_pitch_color.append(ptconfig.ptcolor)
-                                ptconfig.pitch_cur_ab += 1
-    
                             }
                         } label: {
                             Text("Enter")
                                 .font(.system(size: 17, weight: .bold))
                                 .frame(maxWidth: 150, maxHeight: 45)
-                                .background(ptconfig.cur_x_location != 0 || ptconfig.cur_y_location != 0 ? button_color : Color.gray.opacity(0.5))
+                                .background(ptconfig.cur_x_location != 0 || ptconfig.cur_y_location != 0 ? button_gradient : disabled_gradient)
                                 .foregroundColor(ptconfig.cur_x_location != 0 || ptconfig.cur_y_location != 0 ? Color.white : Color.gray)
                                 .cornerRadius(8.0)
                         }
@@ -111,11 +130,10 @@ struct LocationNavigationView: View {
                 Spacer()
                 
             }
-            .onAppear{
-//                ptconfig.cur_x_location = 0
-//                ptconfig.cur_y_location = 0
-            }
             
+        }
+        .onAppear{
+            locked_button_function = false
         }
         
     }

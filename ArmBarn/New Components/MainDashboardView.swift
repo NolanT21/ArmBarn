@@ -43,6 +43,7 @@ struct MainDashboardView: View {
     @State var saving_animation: Bool = false
     @State var isRotating = 0.0
     @State var game_info_animation = 1.0
+    @State var highlight_game_info: Bool = false
     
     @State var is_locked: Bool = false
     @State var righty_hitter: Bool = false
@@ -72,6 +73,24 @@ struct MainDashboardView: View {
     @State var red_light_color: Color = .red
     @State var green_light_color: Color = Color("ScoreboardGreen")
     
+    @State var button_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color("ScoreboardGreen"), Color("DarkScoreboardGreen")]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
+    @State var alt_button_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color.orange, Color("DarkOrange")]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
+    @State var disabled_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color.gray.opacity(0.5)]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
     @State var showGameInfo: Bool = false
     @State var showResumeGame: Bool = false
     @State var showDifferentPreviousPitcher: Bool = false
@@ -90,8 +109,6 @@ struct MainDashboardView: View {
         return formatter
     }()
     
-    @State var green_gradient: LinearGradient = LinearGradient(gradient: Gradient(colors: [Color("ScoreboardGreen"), Color("ScoreboardGreen").opacity(0.6)]), startPoint: .leading, endPoint: .trailing)
-    
     var tap: some Gesture {
         SpatialTapGesture()
             .onEnded { click in
@@ -101,6 +118,9 @@ struct MainDashboardView: View {
                     location = click.location
                     cur_pitch_fill = ptconfig.ptcolor
                     cur_pitch_outline = .white
+                    
+                    location_overlay.zero_location = false
+                    
                 }
              }
     }
@@ -219,6 +239,7 @@ struct MainDashboardView: View {
                                     
                                     withAnimation{
                                         showEndGame = true
+                                        location_overlay.showTabBar = false
                                     }
                                     
                                 } label: {
@@ -227,7 +248,7 @@ struct MainDashboardView: View {
                                         .frame(width: 30, height: 30)
                                     
                                 }
-                                .background(events.count <= 0 ? Color.gray.opacity(0.5) : Color("ScoreboardGreen"))
+                                .background(events.count <= 0 ? disabled_gradient : button_gradient)
                                 .foregroundColor(events.count <= 0 ? Color.gray : Color.white)
                                 .cornerRadius(8.0)
                                 .shadow(color: .black.opacity(0.5), radius: 3, x: 3, y: 3)
@@ -284,7 +305,7 @@ struct MainDashboardView: View {
                                         .bold()
                                     
                                 }
-                                .background(events.count < 1 ? Color.gray.opacity(0.5) : Color("ScoreboardGreen"))
+                                .background(events.count < 1 ? disabled_gradient : button_gradient)
                                 .foregroundColor(events.count < 1 ? Color.gray : Color.white)
                                 .cornerRadius(8.0)
                                 .shadow(color: .black.opacity(0.5), radius: 3, x: 3, y: 3)
@@ -335,16 +356,19 @@ struct MainDashboardView: View {
                                     }
                                     
                                     if location_overlay.showinputoverlay{
-                                        Circle()
-                                            .stroke(cur_pitch_outline, lineWidth: 4)
-                                            .fill(cur_pitch_fill)
-                                            .frame(width: geometry.size.width * 0.055, height: geometry.size.width * 0.055, alignment: .center)
-                                            .position(location)
-                                            .onAppear{
-                                                if cur_pitch_fill != Color.clear{
-                                                    cur_pitch_fill = ptconfig.ptcolor
+                                        
+                                        if location_overlay.zero_location == false{
+                                            Circle()
+                                                .stroke(cur_pitch_outline, lineWidth: 4)
+                                                .fill(cur_pitch_fill)
+                                                .frame(width: geometry.size.width * 0.055, height: geometry.size.width * 0.055, alignment: .center)
+                                                .position(location)
+                                                .onAppear{
+                                                    if cur_pitch_fill != Color.clear{
+                                                        cur_pitch_fill = ptconfig.ptcolor
+                                                    }
                                                 }
-                                            }
+                                        }
                                     }
                                     
                                 }
@@ -444,7 +468,7 @@ struct MainDashboardView: View {
                                         }
                                         .frame(maxWidth: .infinity, maxHeight: 50)
                                         .foregroundStyle(current_pitcher.firstName == "No Pitcher Selected" || event.batter_stance == "" ? Color.gray : Color.white)
-                                        .background(current_pitcher.firstName == "No Pitcher Selected" || event.batter_stance == "" ? Color.gray.opacity(0.5) : Color("ScoreboardGreen"))
+                                        .background(current_pitcher.firstName == "No Pitcher Selected" || event.batter_stance == "" ? disabled_gradient : button_gradient)
                                         .bold()
                                         .cornerRadius(15)
                                     }
@@ -460,16 +484,25 @@ struct MainDashboardView: View {
                                     ZStack{
                                         //Fix glowing rectangle size and functionality
                                         if location_overlay.game_info_entered == false {
-                                            Rectangle()
-                                                .fill(.orange)
-                                                .frame(maxWidth: 135, maxHeight: 55)
-                                                .phaseAnimator([0, 1, 3]) { view, phase in
-                                                        view
-                                                    
-                                                        .blur(radius: phase == 1 ? 2 : 8)
-                                                    
+//                                            Rectangle()
+//                                                .fill(alt_button_gradient)
+//                                                .frame(maxWidth: 135, maxHeight: 55)
+//                                                .phaseAnimator([0, 1, 3]) { view, phase in
+//                                                        view
+//                                                    
+//                                                        .blur(radius: phase == 1 ? 2 : 8)
+//                                                    
+//                                                    }
+//                                                .cornerRadius(15)
+                                            RoundedRectangle(cornerRadius: 15)
+                                                .fill(AngularGradient(colors: [.orange, Color("DarkOrange"), Color("LightBeam"), .orange, Color("DarkOrange"), Color("LightBeam")], center: .center, angle: .degrees(highlight_game_info ? 360 : 0)))
+                                                .frame(width: 130, height: 54)
+                                                .blur(radius: 1)
+                                                .onAppear{
+                                                    withAnimation(Animation.linear(duration: 2).repeatForever(autoreverses: false)){
+                                                        highlight_game_info = true
                                                     }
-                                                .cornerRadius(15)
+                                                }
 
                                         }
                                         
@@ -489,8 +522,8 @@ struct MainDashboardView: View {
                                                     .foregroundStyle(.white)
                                             }
                                         }
-                                        .frame(maxWidth: location_overlay.game_info_entered ? 50 : 130, maxHeight: 50, alignment: .center)
-                                        .background(Color.orange)
+                                        .frame(maxWidth: location_overlay.game_info_entered ? 50 : 125, maxHeight: 50, alignment: .center)
+                                        .background(alt_button_gradient)
                                         .cornerRadius(15)
                                         .foregroundStyle(.white)
                                         
@@ -548,23 +581,28 @@ struct MainDashboardView: View {
             }
             
             if showAddGameInfo == true {
-                ZeroInputXPopUp(title: "No Game Information", description: "Enter game information before saving", close_action: {withAnimation{showAddGameInfo = false}})
+                ZeroInputXPopUp(title: "Attention", description: "The game information has not been recorded. Please enter this before saving the current game", close_action: {withAnimation{showAddGameInfo = false}; location_overlay.showTabBar = true})
+                    .transition(.opacity)
+            }
+            
+            if showDifferentPreviousPitcher == true {
+                ZeroInputXPopUp(title: "Attention", description: "A different pitcher was recorded for the previous event, they have been set to the current pitcher", close_action: {withAnimation{showDifferentPreviousPitcher = false; location_overlay.showTabBar = true}})
                     .transition(.opacity)
             }
             
             //Checking if there is data from previous game; event count and scoreboard is empty
             if showResumeGame == true{
-                TwoInputXPopUp(title: "Resume Game", description: "Looks like a game was being scored. \n Would you like to resume?", leftButtonText: "Yes",  leftButtonAction: {set_pitcher(); load_pitcher_appearance_list(); load_recent_event(); load_recent_ab_pitches();}, rightButtonText: "No", rightButtonAction: {new_game_func()}, close_action: {withAnimation{showResumeGame = false}}, flex_action: {new_game_func()})
+                TwoInputXPopUp(title: "Resume Game", description: "Looks like a previous game was being scored. Would you like to resume?", leftButtonText: "Yes",  leftButtonAction: {set_pitcher(); load_pitcher_appearance_list(); load_recent_event(); load_recent_ab_pitches();}, rightButtonText: "No", rightButtonAction: {new_game_func()}, close_action: {withAnimation{showResumeGame = false}}, flex_action: {new_game_func()})
                     .transition(.opacity)
             }
             
             if showEndGame == true {
-                TwoInputXPopUp(title: "Save Game", description: "Would you like to save this game before starting a new one?", leftButtonText: "Yes",  leftButtonAction: {withAnimation{show_save_toast = true}/*save_game_func(); new_game_func()*/}, rightButtonText: "No", rightButtonAction: {new_game_func()}, close_action: {withAnimation{showEndGame = false}}, flex_action: {})
+                TwoInputXPopUp(title: "Save Game", description: "Would you like to save this game before starting a new one?", leftButtonText: "Yes",  leftButtonAction: {save_logic_handling_func()}, rightButtonText: "No", rightButtonAction: {new_game_func(); withAnimation{location_overlay.showTabBar = true}}, close_action: {withAnimation{showEndGame = false}}, flex_action: {withAnimation{location_overlay.showTabBar = true}})
                     .transition(.opacity)
             }
             
             if showGameInfo == true {
-                GameInfoPopUp(close_action: { withAnimation{showGameInfo = false; location_overlay.showTabBar = true} })
+                GameInfoPopUp(close_action: { withAnimation{showGameInfo = false; location_overlay.showTabBar = true; highlight_game_info = false} })
                     .transition(.opacity)
             }
             
@@ -572,7 +610,7 @@ struct MainDashboardView: View {
         }
         .ignoresSafeArea(.keyboard)
         .onAppear{
-            if events.count > 0 && (scoreboard.balls == 0 && scoreboard.strikes == 0 && scoreboard.pitches == 0 && scoreboard.atbats == 1) {
+            if events.count >= 1 && (scoreboard.balls == 0 && scoreboard.strikes == 0 && scoreboard.pitches == 0 && scoreboard.atbats == 1 && current_pitcher.firstName == "No Pitcher Selected") {
                     showResumeGame = true
             }
         }
@@ -641,7 +679,7 @@ struct MainDashboardView: View {
                                 Text("Enter")
                                     .font(.system(size: 17, weight: .bold))
                                     .frame(width: 125, height: 40)
-                                    .background(!validVeloInput || (veloinput > 115 || veloinput < 30) ? Color.gray.opacity(0.5) : Color("ScoreboardGreen"))
+                                    .background(!validVeloInput || (veloinput > 115 || veloinput < 30) ? disabled_gradient : button_gradient)
                                     .foregroundColor(!validVeloInput || (veloinput > 115 || veloinput < 30) ? Color.gray.opacity(0.5) : Color.white)
                                     .cornerRadius(8.0)
                             }
@@ -946,6 +984,9 @@ struct MainDashboardView: View {
             event.event_number += 1
             print_Event_String()
             
+            ptconfig.cur_x_location = 0
+            ptconfig.cur_y_location = 0
+            
             if event.end_ab_rd.contains(event.result_detail){
                 is_locked = false
                 righty_hitter = false
@@ -958,6 +999,89 @@ struct MainDashboardView: View {
     
     func print_Event_String() {
         print(current_pitcher.idcode, event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats, event.batter_stance, event.velocity, event.x_cor, event.y_cor)
+    }
+    
+    func save_logic_handling_func() {
+        if location_overlay.game_info_entered == true {
+            withAnimation{
+                show_save_toast = true
+                location_overlay.showTabBar = true
+            }
+            save_game_func()
+            new_game_func()
+        }
+        else if location_overlay.game_info_entered == false {
+            //Show enter gameinfo popup (ZeroInput: Please enter the game information before saving.)
+            //Dismiss Save Game popup
+            withAnimation{
+                showEndGame = false
+                showAddGameInfo = true
+            }
+        }
+    }
+    
+    func save_game_func() {
+        
+        let date = game_report.start_date
+        let opponent_name = game_report.opponent_name
+        let location = game_report.game_location
+        var game_data_list: [SavedEvent] = []
+        for event in events {
+
+            let saved_event = SavedEvent(event_num: event.event_number, pitcher_id: event.pitcher_id, pitch_result: event.pitch_result, pitch_type: event.pitch_type, result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, battersfaced: event.atbats, pitch_x_location: event.pitch_x_location, pitch_y_location: event.pitch_y_location, batters_stance: event.batter_stance, velocity: event.velocity)
+                
+            game_data_list.append(saved_event)
+        }
+        //print(game_data_list)
+        
+        var saved_pitcher_list: [SavedPitcherInfo] = []
+        var pitcher_id_list: [UUID] = []
+        
+        //print("Appearance List: ", scoreboard.pitchers_appearance_list)
+        
+        //print("Saving Pitcher IDs")
+        //print("Adding Pitchers from Scoreboard List")
+        for pitcher in scoreboard.pitchers_appearance_list {
+            //print("Adding: ", pitcher.pitcher_id)
+            pitcher_id_list.append(pitcher.pitcher_id)
+        }
+        //print("Adding Current Pitcher if not already added")
+        if !pitcher_id_list.contains(current_pitcher.idcode) {
+            //print("Adding: ", current_pitcher.idcode)
+            pitcher_id_list.append(current_pitcher.idcode)
+        }
+        //print("Finished Storing Pitcher IDs")
+        
+        var first_name: String = ""
+        var last_name: String = ""
+        var pitch1: String = ""
+        var pitch2: String = ""
+        var pitch3: String = ""
+        var pitch4: String = ""
+        
+        //print("Generating Saved Pitcher Info")
+        //print("Pitcher ID List: ", pitcher_id_list)
+        for pitcher_id in pitcher_id_list {
+            for player in pitchers {
+                if pitcher_id == player.id {
+                    first_name = player.firstName
+                    last_name = player.lastName
+                    pitch1 = player.pitch1
+                    pitch2 = player.pitch2
+                    pitch3 = player.pitch3
+                    pitch4 = player.pitch4
+                    break
+                }
+            }
+            
+            saved_pitcher_list.append(SavedPitcherInfo(pitcher_id: pitcher_id, first_name: first_name, last_name: last_name, pitch1: pitch1, pitch2: pitch2, pitch3: pitch3, pitch4: pitch4))
+            
+        }
+        
+        let new_saved_game = SavedGames(opponent_name: opponent_name, date: date, location: location, game_data: game_data_list, pitcher_info: saved_pitcher_list)
+        
+        context.insert(new_saved_game)
+        
     }
     
     func reselect_current_pitcher(pitcher_id: UUID) {
@@ -997,19 +1121,24 @@ struct MainDashboardView: View {
     }
     
     func set_game_information(opponent: String, location: String, date: Date, batter_stance: String){
-        game_report.opponent_name = opponent
-        game_report.game_location = location
-        game_report.start_date = date
         
         if batter_stance == "L" {
             lefty_hitter = true
             event.batter_stance = "L"
-        } else if  batter_stance == "R"{
+        } else if batter_stance == "R"{
             righty_hitter = true
             event.batter_stance = "R"
         }
         
-        location_overlay.game_info_entered = true
+        if game_report.opponent_name != "" && game_report.game_location != ""{
+            game_report.opponent_name = opponent
+            game_report.game_location = location
+            game_report.start_date = date
+            
+            withAnimation{
+                location_overlay.game_info_entered = true
+            }
+        }
     }
     
     func load_previous_event() {

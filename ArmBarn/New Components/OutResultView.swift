@@ -19,6 +19,18 @@ struct OutResultView: View {
     
     @State private var selected_index: Int = 1
     
+    @State var button_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color("ScoreboardGreen"), Color("DarkScoreboardGreen")]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
+    @State var disabled_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color.gray.opacity(0.5)]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
     @State private var button_color: Color = Color("ScoreboardGreen")
     
     var body: some View {
@@ -106,7 +118,7 @@ struct OutResultView: View {
                     Text("Flyout")
                         .font(.system(size: 17, weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: 45)
-                        .background(button_color)
+                        .background(button_gradient)
                         .foregroundColor(Color.white)
                         .cornerRadius(8.0)
                 }
@@ -119,7 +131,7 @@ struct OutResultView: View {
                     Text("Groundout")
                         .font(.system(size: 17, weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: 45)
-                        .background(button_color)
+                        .background(button_gradient)
                         .foregroundColor(Color.white)
                         .cornerRadius(8.0)
                 }
@@ -135,7 +147,7 @@ struct OutResultView: View {
                     Text("Lineout")
                         .font(.system(size: 17, weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: 45)
-                        .background(button_color)
+                        .background(button_gradient)
                         .foregroundColor(Color.white)
                         .cornerRadius(8.0)
                 }
@@ -149,7 +161,7 @@ struct OutResultView: View {
                     Text("PopUp")
                         .font(.system(size: 17, weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: 45)
-                        .background(button_color)
+                        .background(button_gradient)
                         .foregroundColor(Color.white)
                         .cornerRadius(8.0)
                 }
@@ -176,7 +188,7 @@ struct OutResultView: View {
                     Text("Sacrifice Bunt")
                         .font(.system(size: 17, weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: 45)
-                        .background(button_color)
+                        .background(button_gradient)
                         .foregroundColor(Color.white)
                         .cornerRadius(8.0)
                 }
@@ -189,7 +201,7 @@ struct OutResultView: View {
                     Text("Other")
                         .font(.system(size: 17, weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: 45)
-                        .background(button_color)
+                        .background(button_gradient)
                         .foregroundColor(Color.white)
                         .cornerRadius(8.0)
                 }
