@@ -17,13 +17,27 @@ struct StrikeResultView: View {
     @Environment(LocationOverlay.self) var location_overlay
     @Environment(\.dismiss) private var dismiss
     
+    @State var button_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color("ScoreboardGreen"), Color("DarkScoreboardGreen")]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
+    @State var disabled_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color.gray.opacity(0.5)]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
     var body: some View {
         VStack{
             VStack{
                 VStack(spacing: 0){
                     HStack{
                         Button {
+                            ptconfig.pitch_cur_ab -= 1
                             dismiss()
+
                         } label: {
                             HStack(spacing: 5){
                                 Image(systemName: "chevron.left")
@@ -39,78 +53,167 @@ struct StrikeResultView: View {
                     .padding(10)
                     .padding(.top, 3)
                     
-                    VStack(alignment: .center) {
-                        
-                        HStack(spacing: 12){
-                            Button {
-                                event.pitch_result = "L"
-                                event.result_detail = "N"
-                                add_Strike()
-                                back_to_root()
-                            } label: {
-                                Text("Called")
-                                    .font(.system(size: 17, weight: .bold))
-                                    .frame(maxWidth: .infinity, maxHeight: 45)
-                                    .background(Color("ScoreboardGreen"))
-                                    .foregroundColor(Color.white)
-                                    .cornerRadius(8.0)
-                            }
-                            
-                            Button {
-                                event.pitch_result = "Z"
-                                event.result_detail = "N"
-                                add_Strike()
-                                back_to_root()
-                            } label: {
-                                Text("Swinging")
-                                    .font(.system(size: 17, weight: .bold))
-                                    .frame(maxWidth: .infinity, maxHeight: 45)
-                                    .background(Color("ScoreboardGreen"))
-                                    .foregroundColor(Color.white)
-                                    .cornerRadius(8.0)
-                            }
-                                            
-                        }
-                        
-                        HStack(spacing: 12){
-                            Button {
-                                event.pitch_result = "TO"
-                                event.result_detail = "N"
-                                add_Strike()
-                                back_to_root()
-                            } label: {
-                                Text("Foul Tip")
-                                    .font(.system(size: 17, weight: .bold))
-                            }
-                            .frame(maxWidth: .infinity, maxHeight: 45)
-                            .background(Color("ScoreboardGreen"))
-                            .foregroundColor(Color.white)
-                            .cornerRadius(8.0)
-                            
-                            Button {
-                                
-                            } label: {
-                                Text("")
-                                    .font(.system(size: 17, weight: .bold))
-                            }
-                            .frame(maxWidth: .infinity, maxHeight: 45)
-                            .background(Color.clear)
-                            .foregroundColor(Color.clear)
-                            .cornerRadius(8.0)
-                            
-                        }
-                        
-                        Spacer()
-                        
-                    }
-                    .padding(.horizontal, 10)
-                    
                 }
+                
+                if scoreboard.strikes < 2 {
+                    RegularStrikeResultView().task{print(event.strikes)}
+                } else if scoreboard.strikes == 2 {
+                    TwoStrikeResultView()
+                }
+                
             }
             .ignoresSafeArea()
             .background(.regularMaterial)
             .cornerRadius(15)
         }
+    }
+    
+    @ViewBuilder
+    func RegularStrikeResultView() -> some View {
+        
+        VStack(alignment: .center) {
+            
+            HStack(spacing: 12){
+                Button {
+                    event.pitch_result = "L"
+                    event.result_detail = "N"
+                    add_Strike()
+                    back_to_root()
+                } label: {
+                    Text("Called")
+                        .font(.system(size: 17, weight: .bold))
+                        .frame(maxWidth: .infinity, maxHeight: 45)
+                        .background(button_gradient)
+                        .foregroundColor(Color.white)
+                        .cornerRadius(8.0)
+                }
+                
+                Button {
+                    event.pitch_result = "Z"
+                    event.result_detail = "N"
+                    add_Strike()
+                    back_to_root()
+                } label: {
+                    Text("Swinging")
+                        .font(.system(size: 17, weight: .bold))
+                        .frame(maxWidth: .infinity, maxHeight: 45)
+                        .background(button_gradient)
+                        .foregroundColor(Color.white)
+                        .cornerRadius(8.0)
+                }
+                                
+            }
+            
+            HStack(spacing: 12){
+                Button {
+                    event.pitch_result = "TO"
+                    event.result_detail = "N"
+                    add_Strike()
+                    back_to_root()
+                } label: {
+                    Text("Foul Tip")
+                        .font(.system(size: 17, weight: .bold))
+                        .frame(maxWidth: .infinity, maxHeight: 45)
+                        .background(button_gradient)
+                        .foregroundColor(Color.white)
+                        .cornerRadius(8.0)
+                }
+                
+                Button {
+                    
+                } label: {
+                    Text("")
+                        .font(.system(size: 17, weight: .bold))
+                }
+                .frame(maxWidth: .infinity, maxHeight: 45)
+                .background(Color.clear)
+                .foregroundColor(Color.clear)
+                .cornerRadius(8.0)
+                
+            }
+            
+            Spacer()
+            
+        }
+        .padding(.horizontal, 10)
+        
+    }
+    
+    @ViewBuilder
+    func TwoStrikeResultView() -> some View {
+        
+        VStack(alignment: .center) {
+            
+            HStack(spacing: 12){
+                NavigationLink {
+                    StrikeoutResultView(path: $path).navigationBarBackButtonHidden(true).task{
+                        event.pitch_result = "L"
+                        event.result_detail = "N"
+                        //add_Strike()
+                        //back_to_root()
+                    }
+                } label: {
+                    Text("Called")
+                        .font(.system(size: 17, weight: .bold))
+                        .frame(maxWidth: .infinity, maxHeight: 45)
+                        .background(button_gradient)
+                        .foregroundColor(Color.white)
+                        .cornerRadius(8.0)
+                }
+                
+                NavigationLink {
+                    StrikeoutResultView(path: $path).navigationBarBackButtonHidden(true).task{
+                        event.pitch_result = "Z"
+                        event.result_detail = "N"
+                        //add_Strike()
+                        //back_to_root()
+                    }
+                } label: {
+                    Text("Swinging")
+                        .font(.system(size: 17, weight: .bold))
+                        .frame(maxWidth: .infinity, maxHeight: 45)
+                        .background(button_gradient)
+                        .foregroundColor(Color.white)
+                        .cornerRadius(8.0)
+                }
+                                
+            }
+            
+            HStack(spacing: 12){
+                NavigationLink {
+                    StrikeoutResultView(path: $path).navigationBarBackButtonHidden(true).task{
+                        event.pitch_result = "TO"
+                        event.result_detail = "N"
+                        add_Strike()
+                        //back_to_root()
+                    }
+                } label: {
+                    Text("Foul Tip")
+                        .font(.system(size: 17, weight: .bold))
+                        .frame(maxWidth: .infinity, maxHeight: 45)
+                        .background(button_gradient)
+                        .foregroundColor(Color.white)
+                        .cornerRadius(8.0)
+                }
+                
+                Button {
+                    
+                } label: {
+                    Text("")
+                        .font(.system(size: 17, weight: .bold))
+                }
+                .frame(maxWidth: .infinity, maxHeight: 45)
+                .background(Color.clear)
+                .foregroundColor(Color.clear)
+                .cornerRadius(8.0)
+                
+            }
+            
+            Spacer()
+            
+        }
+        .padding(.horizontal, 10)
+        
     }
     
     func back_to_root() {
