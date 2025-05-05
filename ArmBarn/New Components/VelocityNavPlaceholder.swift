@@ -30,14 +30,16 @@ struct VelocityNavPlaceholder: View {
         VStack{
             if location_overlay.showVeloInput == false {
                 PitchResultMKIIView(path: $path)
+                    
             }
         }
-        .onAppear {
-            //fieldIsFocused = true
-            withAnimation{
-                location_overlay.showVeloInput = true
-            }
-        }
+//        .onAppear {
+//            //fieldIsFocused = true
+//            withAnimation{
+//                location_overlay.showVeloInput = false
+//            }
+//        }
+        
     }
 }
 
