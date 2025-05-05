@@ -50,6 +50,7 @@
 		D593023C2DC0F9FD00E285E0 /* TwoInputXPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D593023B2DC0F9FD00E285E0 /* TwoInputXPopUp.swift */; };
 		D593023E2DC1440500E285E0 /* GameInfoPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D593023D2DC1440500E285E0 /* GameInfoPopUp.swift */; };
 		D59302402DC2754A00E285E0 /* ZeroInputXPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D593023F2DC2754A00E285E0 /* ZeroInputXPopUp.swift */; };
+		D59302542DC8FF0700E285E0 /* StrikeoutResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59302532DC8FF0700E285E0 /* StrikeoutResultView.swift */; };
 		D5DD11262AF52FE80064F1A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5DD11252AF52FE80064F1A5 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -95,6 +96,7 @@
 		D593023B2DC0F9FD00E285E0 /* TwoInputXPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoInputXPopUp.swift; sourceTree = "<group>"; };
 		D593023D2DC1440500E285E0 /* GameInfoPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameInfoPopUp.swift; sourceTree = "<group>"; };
 		D593023F2DC2754A00E285E0 /* ZeroInputXPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZeroInputXPopUp.swift; sourceTree = "<group>"; };
+		D59302532DC8FF0700E285E0 /* StrikeoutResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrikeoutResultView.swift; sourceTree = "<group>"; };
 		D5C6DE202BD2C52D00C64555 /* MainContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainContainerView.swift; sourceTree = "<group>"; };
 		D5DD111B2AF52FE60064F1A5 /* ArmBarn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArmBarn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArmBarnApp.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 				D59302392DC0F9D400E285E0 /* VelocityNavPlaceholder.swift */,
 				D593023B2DC0F9FD00E285E0 /* TwoInputXPopUp.swift */,
 				D593023F2DC2754A00E285E0 /* ZeroInputXPopUp.swift */,
+				D59302532DC8FF0700E285E0 /* StrikeoutResultView.swift */,
 			);
 			path = "New Components";
 			sourceTree = "<group>";
@@ -368,6 +371,7 @@
 				D57607EB2D9AB1E70058074D /* StrikeoutAlertView.swift in Sources */,
 				D57607EC2D9AB1E70058074D /* EditFileNamePopUpView.swift in Sources */,
 				D57607ED2D9AB1E70058074D /* XInfoPopUpView.swift in Sources */,
+				D59302542DC8FF0700E285E0 /* StrikeoutResultView.swift in Sources */,
 				D57607EE2D9AB1E70058074D /* XPopupAlertView.swift in Sources */,
 				D57607EF2D9AB1E70058074D /* FileNamePopUpView.swift in Sources */,
 				D57607F02D9AB1E70058074D /* PopupAlertView.swift in Sources */,
