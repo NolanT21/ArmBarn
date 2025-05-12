@@ -41,72 +41,84 @@ struct PitchTypeSelectView: View {
     @State private var button_color: Color = Color("ScoreboardGreen")
     
     var body: some View {
-        VStack(spacing: 0){
-            
-            //Top Navigation Bar
-            HStack{
-                Button {
-                    dismiss()
-                    event.recordEvent = false
-                    withAnimation{
-                        location_overlay.showTabBar = true
-                    }
-                } label: {
-                    HStack(spacing: 5){
-                        Image(systemName: "chevron.left")
-                        Text("Back")
-                    }
-                }
-                .font(.system(size: 13) .weight(.medium))
-                .foregroundColor(.white)
+        VStack{
+            VStack(spacing: 0){
                 
-                Spacer()
-                
-                Button{
-                    withAnimation{
-                        selected_index = 1
+                //Top Navigation Bar
+                HStack(alignment: .top){
+                    Button {
+                        dismiss()
+                        event.recordEvent = false
+                        scoreboard.disable_bottom_row = false
+                        withAnimation{
+                            location_overlay.showTabBar = true
+                        }
+                    } label: {
+                        HStack(spacing: 5){
+                            Image(systemName: "chevron.left")
+                            Text("Back")
+                        }
                     }
-                } label : {
-                    Text("Pitches")
-                        .font(.system(size: 13))
-                        .foregroundColor(selected_index == 1 ? Color.white : Color.gray)
-                        .bold(selected_index == 1)
-                }
-                
-                Divider()
-                    .frame(height: 20)
-                
-                Button{
-                    withAnimation{
-                        selected_index = 2
-                    }
-                } label: {
-                    Text("No Pitch")
-                        .font(.system(size: 13))
-                        .foregroundColor(selected_index == 2 ? Color.white : Color.gray)
-                        .bold(selected_index == 2)
-                }
-
-            }
-            .padding(10)
-            
-            HStack(alignment: .top){
-                TabView(selection: $selected_index){
-                    PitchTypeButtons()
-                        .tag(1)
+                    .font(.system(size: 13) .weight(.medium))
+                    .foregroundColor(.white)
                     
-                    NoPitchEvents()
-                        .tag(2)
-                        
-                }
-                .tabViewStyle(.page)
-                .indexViewStyle(.page(backgroundDisplayMode: .always))
-            }
+                    Spacer()
+                    
+                    Button{
+                        withAnimation{
+                            selected_index = 1
+                        }
+                    } label : {
+                        Text("Pitches")
+                            .font(.system(size: 13))
+                            .foregroundColor(selected_index == 1 ? Color.white : Color.gray)
+                            .bold(selected_index == 1)
+                    }
+                    
+                    Divider()
+                        .frame(height: 20)
+                    
+                    Button{
+                        withAnimation{
+                            selected_index = 2
+                        }
+                    } label: {
+                        Text("No Pitch")
+                            .font(.system(size: 13))
+                            .foregroundColor(selected_index == 2 ? Color.white : Color.gray)
+                            .bold(selected_index == 2)
+                    }
 
+                }
+                .padding(10)
+                
+                HStack(alignment: .top){
+                    TabView(selection: $selected_index){
+                        PitchTypeButtons()
+                            .tag(1)
+                        
+                        NoPitchEvents()
+                            .tag(2)
+                            
+                    }
+                    .tabViewStyle(.page)
+                    .indexViewStyle(.page(backgroundDisplayMode: .always))
+                }
+
+            }
+//            .frame(maxWidth: .infinity, maxHeight: 180, alignment: .top)
+            .ignoresSafeArea()
+            .background(.regularMaterial)
+            .cornerRadius(15)
+            .padding(.horizontal, 10)
+            .onAppear{
+                scoreboard.disable_bottom_row = true
+            }
+            
+            Spacer()
+            
         }
-        .ignoresSafeArea()
-        .background(.regularMaterial)
-        .cornerRadius(15)
+        
     }
     
     @ViewBuilder
@@ -233,12 +245,11 @@ struct PitchTypeSelectView: View {
         VStack(alignment: .center){
             HStack(spacing: 12){
                 Button {
-                    //ptconfig.non_pitch_event = false
                     add_PCV_Ball()
-                    //add_non_pitch_event()
                     withAnimation{
                         location_overlay.showTabBar = true
                     }
+                    scoreboard.disable_bottom_row = false
                     path.removeAll()
                 } label: {
                     Text("Violation - Ball")
@@ -250,12 +261,11 @@ struct PitchTypeSelectView: View {
                 }
                 
                 Button {
-                    //ptconfig.non_pitch_event = false
                     add_PCV_Strike()
-                    //add_non_pitch_event()
                     withAnimation{
                         location_overlay.showTabBar = true
                     }
+                    scoreboard.disable_bottom_row = false
                     path.removeAll()
                 } label: {
                     Text("Violation - Strike")
@@ -270,13 +280,11 @@ struct PitchTypeSelectView: View {
             
             HStack(spacing: 12){
                 Button {
-                    //ptconfig.non_pitch_event = false
-                    //ptconfig.npe_EOAB = true
                     add_Intentional_Walk()
-                    //add_non_pitch_event()
                     withAnimation{
                         location_overlay.showTabBar = true
                     }
+                    scoreboard.disable_bottom_row = false
                     path.removeAll()
                 } label: {
                     Text("Intentional Walk")
@@ -292,6 +300,7 @@ struct PitchTypeSelectView: View {
                     withAnimation{
                         location_overlay.showTabBar = true
                     }
+                    scoreboard.disable_bottom_row = false
                     path.removeAll()
                 } label: {
                     Text("Runner Out")
@@ -320,20 +329,6 @@ struct PitchTypeSelectView: View {
             location_overlay.showinputoverlay = true
         }
     }
-    
-//    func add_non_pitch_event() {
-//        
-//        let npe = Event(pitcher_id: current_pitcher.idcode, pitch_result: event.pitch_result, pitch_type: "NP", result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, atbats: event.atbats, pitch_x_location: 0, pitch_y_location: 0, batter_stance: event.batter_stance, velocity: 0, event_number: event.event_number)
-//        
-//        context.insert(npe)
-//        
-//        event.event_number += 1
-//        print_Event_String()
-//    }
-//
-//    func print_Event_String() {
-//        print(current_pitcher.idcode, event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats, event.batter_stance, event.velocity, 0, 0)
-//    }
     
     func add_Intentional_Walk() {
         
@@ -486,9 +481,6 @@ struct PitchTypeSelectView: View {
             scoreboard.o2light = false
             reset_Count()
         }
-        
-        //add_non_pitch_event() //<- Try using this first
-        //add_prev_event_string()
         
     }
     
