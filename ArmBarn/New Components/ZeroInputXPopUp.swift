@@ -35,8 +35,12 @@ struct ZeroInputXPopUp: View {
                                 .font(.system(size: 13, weight: .medium))
                                 .multilineTextAlignment(.center)
                             
+                            Spacer()
+                                .frame(maxHeight: 30)
+                            
                         }
                         .padding(.horizontal, 20)
+                        .frame(maxWidth: 275)
                         
                         Spacer()
                             .frame(maxHeight: 10)
