@@ -174,7 +174,7 @@ struct FileNamePopUpView: View {
             }
             .ignoresSafeArea()
             .onAppear{
-                scoreboard.enable_bottom_row = false
+                //scoreboard.enable_bottom_row = false
                 game_report.game_location = "Home"
                 ASGameLocation = "Home"
             }

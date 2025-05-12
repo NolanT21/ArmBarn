@@ -360,34 +360,34 @@ struct PitchLocationView: View {
                             
                             //HERE for welcome screen
                             if showFileNameInfo == true {
-                                FileNamePopUpView(action: {showFileNameInfo = false; newAtBat = true; scoreboard.enable_bottom_row = true})
+                                FileNamePopUpView(action: {showFileNameInfo = false; newAtBat = true; scoreboard.disable_bottom_row = true})
                             }
                             
 //                            if showEndGame == true{
-//                                PopupAlertView(isActive: $showEndGame, title: "End Game", message: "This game and its data will not be saved!", leftButtonAction: {new_game_func(); newAtBat = false; showFileNameInfo = true; showEndGame = false; scoreboard.enable_bottom_row = true}, rightButtonAction: {showEndGame = false; scoreboard.enable_bottom_row = true})
+//                                PopupAlertView(isActive: $showEndGame, title: "End Game", message: "This game and its data will not be saved!", leftButtonAction: {new_game_func(); newAtBat = false; showFileNameInfo = true; showEndGame = false; scoreboard.disable_bottom_row = true}, rightButtonAction: {showEndGame = false; scoreboard.disable_bottom_row = true})
 //                            }
                             
                             if showDifferentPreviousPitcher == true {
-                                XInfoPopUpView(isActive: $showDifferentPreviousPitcher, show_close: false, title: "Attention", message: current_pitcher.firstName + " " + current_pitcher.lastName + " was in the game for the previous event. They have been set to the current pitcher.", buttonAction: {scoreboard.enable_bottom_row = true; showDifferentPreviousPitcher = false}, XButtonAction: {scoreboard.enable_bottom_row = true; showDifferentPreviousPitcher = false})
+                                XInfoPopUpView(isActive: $showDifferentPreviousPitcher, show_close: false, title: "Attention", message: current_pitcher.firstName + " " + current_pitcher.lastName + " was in the game for the previous event. They have been set to the current pitcher.", buttonAction: {scoreboard.disable_bottom_row = true; showDifferentPreviousPitcher = false}, XButtonAction: {scoreboard.disable_bottom_row = true; showDifferentPreviousPitcher = false})
                             }
                             
                             if showEndGame == true && events.count > 0{
-                                XPopupAlertView(isActive: $showEndGame, show_close: false, title: "Save Game", message: "Do you want to save this game before starting a new one?", leftButtonAction: {scoreboard.enable_bottom_row = true; save_game_func(); showSaveGame = true;}, rightButtonAction: {showNoSave = true}, XButtonAction: {scoreboard.enable_bottom_row = true; showEndGame = false})
+                                XPopupAlertView(isActive: $showEndGame, show_close: false, title: "Save Game", message: "Do you want to save this game before starting a new one?", leftButtonAction: {scoreboard.disable_bottom_row = true; save_game_func(); showSaveGame = true;}, rightButtonAction: {showNoSave = true}, XButtonAction: {scoreboard.disable_bottom_row = true; showEndGame = false})
                             }
                             else if showEndGame == true && events.count == 0{
-                                XPopupAlertView(isActive: $showEndGame, show_close: false, title: "New Game", message: "Do you want to start a new game?", leftButtonAction: {scoreboard.enable_bottom_row = true; showEndGame = false; showFileNameInfo = true}, rightButtonAction: {showEndGame = false}, XButtonAction: {scoreboard.enable_bottom_row = true; showEndGame = false})
+                                XPopupAlertView(isActive: $showEndGame, show_close: false, title: "New Game", message: "Do you want to start a new game?", leftButtonAction: {scoreboard.disable_bottom_row = true; showEndGame = false; showFileNameInfo = true}, rightButtonAction: {showEndGame = false}, XButtonAction: {scoreboard.disable_bottom_row = true; showEndGame = false})
                             }
                             
                             if showNoSave == true {
-                                XPopupAlertView(isActive: $showNoSave, show_close: true, title: "Are you sure?", message: "This game and its data will not be saved!", leftButtonAction: {new_game_func(); newAtBat = false; showFileNameInfo = true; showNoSave = false; showEndGame = false; scoreboard.enable_bottom_row = true}, rightButtonAction: {showNoSave = false}, XButtonAction: {new_game_func(); showNoSave = false; scoreboard.enable_bottom_row = true})
+                                XPopupAlertView(isActive: $showNoSave, show_close: true, title: "Are you sure?", message: "This game and its data will not be saved!", leftButtonAction: {new_game_func(); newAtBat = false; showFileNameInfo = true; showNoSave = false; showEndGame = false; scoreboard.disable_bottom_row = true}, rightButtonAction: {showNoSave = false}, XButtonAction: {new_game_func(); showNoSave = false; scoreboard.disable_bottom_row = true})
                             }
                             
                             if showSaveGame == true {
-                                SavePopUpView(isActive: $showSaveGame, Action: {showSaveGame = false; scoreboard.enable_bottom_row = true; new_game_func(); showFileNameInfo = true; showEndGame = false})
+                                SavePopUpView(isActive: $showSaveGame, Action: {showSaveGame = false; scoreboard.disable_bottom_row = true; new_game_func(); showFileNameInfo = true; showEndGame = false})
                             }
                             
                             if showResumeGame == true {
-                                PopupAlertView(isActive: $showResumeGame, title: "Resume Game", message: "A previous game was being recorded. Do you want to continue?", leftButtonAction: {set_pitcher(); load_pitcher_appearance_list(); load_recent_event(); load_recent_ab_pitches(); load_game_location();  showResumeGame = false; scoreboard.enable_bottom_row = true;}, rightButtonAction: {new_game_func(); showFileNameInfo = true; showResumeGame = false; scoreboard.enable_bottom_row = true})
+                                PopupAlertView(isActive: $showResumeGame, title: "Resume Game", message: "A previous game was being recorded. Do you want to continue?", leftButtonAction: {set_pitcher(); load_pitcher_appearance_list(); load_recent_event(); load_recent_ab_pitches(); load_game_location();  showResumeGame = false; scoreboard.disable_bottom_row = true;}, rightButtonAction: {new_game_func(); showFileNameInfo = true; showResumeGame = false; scoreboard.disable_bottom_row = true})
                             }
                             
                         }
@@ -418,7 +418,7 @@ struct PitchLocationView: View {
                             impact.impactOccurred()
                             
                             //If no popup view is showing
-                            if scoreboard.enable_bottom_row == true {
+                            if scoreboard.disable_bottom_row == true {
                                 //Back button logic after pitch input
                                 if ptconfig.hidePitchOverlay == true {
                                     cur_pitch_color = .clear
@@ -506,7 +506,7 @@ struct PitchLocationView: View {
                                 let pitcher_lname = String(current_pitcher.lastName.prefix(10))
                                 
                                 Button(action: {
-                                    if scoreboard.enable_bottom_row == true {
+                                    if scoreboard.disable_bottom_row == true {
                                         showPitcherSelect = true
                                         if current_pitcher.lastName == "Change Me" {
                                             selectpitchertip.invalidate(reason: .actionPerformed)
@@ -541,7 +541,7 @@ struct PitchLocationView: View {
                         HStack(/*spacing: 5*/){
                             
                             Button(action: {
-                                if scoreboard.enable_bottom_row == true {
+                                if scoreboard.disable_bottom_row == true {
                                     showGameReport = true
                                 }
                             }) {
@@ -561,7 +561,7 @@ struct PitchLocationView: View {
                             }
                             
                             Button(action: {
-                                if scoreboard.enable_bottom_row == true {
+                                if scoreboard.disable_bottom_row == true {
                                     showEndGame = true
                                 }
                             }) {

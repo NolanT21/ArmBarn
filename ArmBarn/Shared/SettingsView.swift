@@ -345,7 +345,7 @@ struct SettingsView: View {
                 }
                 
                 if showFileNameInfo == true {
-                    EditFileNamePopUpSettingsView(close_action: {showFileNameInfo = false; scoreboard.enable_bottom_row = true})
+                    EditFileNamePopUpSettingsView(close_action: {showFileNameInfo = false; /*scoreboard.enable_bottom_row = true*/})
                 }
             }
 

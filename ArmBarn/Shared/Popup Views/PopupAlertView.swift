@@ -100,7 +100,7 @@ struct PopupAlertView: View {
             }
         }
         .onAppear{
-            scoreboard.enable_bottom_row = false
+            //scoreboard.enable_bottom_row = false
         }
         .padding(.top, 45)
         .ignoresSafeArea()

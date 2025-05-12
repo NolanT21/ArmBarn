@@ -31,7 +31,7 @@ import Observation
     var o2light: Bool = false
     
     var update_scoreboard: Bool = true
-    var enable_bottom_row: Bool = true
+    var disable_bottom_row: Bool = false
     
     var pitchers_appearance_list: [PitchersAppeared] = []
     
@@ -47,6 +47,9 @@ import Observation
     var showTabBar: Bool = true
     var showVeloInput: Bool = false
     var game_info_entered: Bool = false
+    
+    var save_haptic: Bool = false
+    
 }
 
 struct PitchersAppeared {
