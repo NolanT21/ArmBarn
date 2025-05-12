@@ -51,6 +51,7 @@
 		D593023E2DC1440500E285E0 /* GameInfoPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D593023D2DC1440500E285E0 /* GameInfoPopUp.swift */; };
 		D59302402DC2754A00E285E0 /* ZeroInputXPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D593023F2DC2754A00E285E0 /* ZeroInputXPopUp.swift */; };
 		D59302542DC8FF0700E285E0 /* StrikeoutResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59302532DC8FF0700E285E0 /* StrikeoutResultView.swift */; };
+		D593027C2DD2390900E285E0 /* TabBarMKIIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D593027B2DD2390900E285E0 /* TabBarMKIIView.swift */; };
 		D5DD11262AF52FE80064F1A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5DD11252AF52FE80064F1A5 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -97,6 +98,7 @@
 		D593023D2DC1440500E285E0 /* GameInfoPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameInfoPopUp.swift; sourceTree = "<group>"; };
 		D593023F2DC2754A00E285E0 /* ZeroInputXPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZeroInputXPopUp.swift; sourceTree = "<group>"; };
 		D59302532DC8FF0700E285E0 /* StrikeoutResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrikeoutResultView.swift; sourceTree = "<group>"; };
+		D593027B2DD2390900E285E0 /* TabBarMKIIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarMKIIView.swift; sourceTree = "<group>"; };
 		D5C6DE202BD2C52D00C64555 /* MainContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainContainerView.swift; sourceTree = "<group>"; };
 		D5DD111B2AF52FE60064F1A5 /* ArmBarn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArmBarn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArmBarnApp.swift; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 			children = (
 				D535E6882DAFD0C100927E38 /* Non-Input Views */,
 				D535E6852DAFCFD400927E38 /* TabBarContentView.swift */,
+				D593027B2DD2390900E285E0 /* TabBarMKIIView.swift */,
 				D5726ADA2DAD9FB6003EAFB8 /* PitchTypeSelectView.swift */,
 				D5726ADC2DAD9FE7003EAFB8 /* HitResultView.swift */,
 				D5726ADD2DAD9FE7003EAFB8 /* LocationNavigationView.swift */,
@@ -374,6 +377,7 @@
 				D59302542DC8FF0700E285E0 /* StrikeoutResultView.swift in Sources */,
 				D57607EE2D9AB1E70058074D /* XPopupAlertView.swift in Sources */,
 				D57607EF2D9AB1E70058074D /* FileNamePopUpView.swift in Sources */,
+				D593027C2DD2390900E285E0 /* TabBarMKIIView.swift in Sources */,
 				D57607F02D9AB1E70058074D /* PopupAlertView.swift in Sources */,
 				D57607D12D9994690058074D /* BatterPositionView.swift in Sources */,
 				D57607D22D9994690058074D /* OutDetailView.swift in Sources */,
@@ -518,6 +522,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -547,6 +552,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
