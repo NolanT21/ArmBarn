@@ -9,6 +9,8 @@ import SwiftUI
 
 struct TwoInputXPopUp: View {
     
+    @Environment(LocationOverlay.self) var location_overlay
+    
     @Environment(\.dismiss) var dismiss
     
     @State var title: String
@@ -68,6 +70,7 @@ struct TwoInputXPopUp: View {
                                         .foregroundColor(Color.white)
                                         .cornerRadius(8.0)
                                 }
+                                .sensoryFeedback(.success, trigger: location_overlay.save_haptic)
                                 
                                 Button {
                                     rightButtonAction()
@@ -85,6 +88,7 @@ struct TwoInputXPopUp: View {
                             
                         }
                         .padding(.horizontal, 20)
+                        .frame(maxWidth: 275)
                         
                         Spacer()
                             .frame(maxHeight: 10)
