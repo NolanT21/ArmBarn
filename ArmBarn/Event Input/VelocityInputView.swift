@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct VelocityInputView: View {
+struct VelocityInputNavView: View {
     
     @AppStorage("VelocityUnits") var ASVeloUnits : String?
     

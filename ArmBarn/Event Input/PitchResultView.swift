@@ -288,7 +288,7 @@ struct PitchResultView: View {
             }
             
             if showVeloInput == true && ASVeloInput == true{
-                VelocityInputView(isActive: $showVeloInput, close_action: {showVeloInput = false})
+                VelocityInputNavView(isActive: $showVeloInput, close_action: {showVeloInput = false})
                     .preferredColorScheme(.dark)
             }
 
