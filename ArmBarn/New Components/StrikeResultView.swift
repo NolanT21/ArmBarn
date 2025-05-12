@@ -31,11 +31,12 @@ struct StrikeResultView: View {
     
     var body: some View {
         VStack{
+            
             VStack{
                 VStack(spacing: 0){
                     HStack{
                         Button {
-                            ptconfig.pitch_cur_ab -= 1
+
                             dismiss()
 
                         } label: {
@@ -65,7 +66,12 @@ struct StrikeResultView: View {
             .ignoresSafeArea()
             .background(.regularMaterial)
             .cornerRadius(15)
+            .padding(.horizontal, 10)
+            
+            Spacer()
+            
         }
+        
     }
     
     @ViewBuilder
@@ -220,6 +226,7 @@ struct StrikeResultView: View {
         withAnimation{
             location_overlay.showTabBar = true
             location_overlay.showCurPitchPulse = false
+            scoreboard.disable_bottom_row = false
         }
         path.removeAll()
     }

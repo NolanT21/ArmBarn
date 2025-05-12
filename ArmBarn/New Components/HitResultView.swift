@@ -33,6 +33,7 @@ struct HitResultView: View {
     
     var body: some View {
         VStack{
+            
             VStack{
                 VStack(spacing: 0){
                     HStack{
@@ -123,13 +124,19 @@ struct HitResultView: View {
             .ignoresSafeArea()
             .background(.regularMaterial)
             .cornerRadius(15)
+            .padding(.horizontal, 10)
+            
+            Spacer()
+            
         }
+        
     }
     
     func back_to_root() {
         withAnimation{
             location_overlay.showTabBar = true
             location_overlay.showCurPitchPulse = false
+            scoreboard.disable_bottom_row = false
         }
         path.removeAll()
     }

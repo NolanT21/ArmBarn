@@ -34,78 +34,81 @@ struct PitchResultMKIIView: View {
     @State private var button_color: Color = Color("ScoreboardGreen")
     
     var body: some View {
-        VStack(spacing: 0){
-            HStack{
-                Button {
-                    ptconfig.pitch_x_loc.removeLast()
-                    ptconfig.pitch_y_loc.removeLast()
-                    ptconfig.ab_pitch_color.removeLast()
-                    ptconfig.pitch_cur_ab -= 1
-                    location_overlay.showCurPitchPulse = false
-                    location_overlay.zero_location = false
-                    dismiss()
-                } label: {
-                    HStack(spacing: 5){
-                        Image(systemName: "chevron.left")
-                        Text("Back")
+        VStack{
+            VStack(spacing: 0){
+                HStack{
+                    Button {
+                        ptconfig.pitch_x_loc.removeLast()
+                        ptconfig.pitch_y_loc.removeLast()
+                        ptconfig.ab_pitch_color.removeLast()
+                        ptconfig.pitch_cur_ab -= 1
+                        location_overlay.showCurPitchPulse = false
+                        location_overlay.zero_location = false
+                        dismiss()
+                    } label: {
+                        HStack(spacing: 5){
+                            Image(systemName: "chevron.left")
+                            Text("Back")
+                        }
                     }
-                }
-                .font(.system(size: 13) .weight(.medium))
-                .foregroundColor(.white)
-                
-                Spacer()
-                
-                Button{
-                    withAnimation{
-                        selected_index = 1
-                    }
-                } label : {
-                    Text("No Action")
-                        .font(.system(size: 13))
-                        .foregroundColor(selected_index == 1 ? Color.white : Color.gray)
-                        .bold(selected_index == 1)
-                }
-                
-                Divider()
-                    .frame(height: 20)
-                
-                Button{
-                    withAnimation{
-                        selected_index = 2
-                    }
-                } label: {
-                    Text("BIP")
-                        .font(.system(size: 13))
-                        .foregroundColor(selected_index == 2 ? Color.white : Color.gray)
-                        .bold(selected_index == 2)
-                }
-
-            }
-            .padding(10)
-            
-            HStack(alignment: .top){
-                TabView(selection: $selected_index){
-                    //PitchTypeButtons()
-                    NoActionButtons()
-                        .tag(1)
+                    .font(.system(size: 13) .weight(.medium))
+                    .foregroundColor(.white)
                     
-                    BallInPlayButtons()
-                        .tag(2)
-                        
+                    Spacer()
+                    
+                    Button{
+                        withAnimation{
+                            selected_index = 1
+                        }
+                    } label : {
+                        Text("No Action")
+                            .font(.system(size: 13))
+                            .foregroundColor(selected_index == 1 ? Color.white : Color.gray)
+                            .bold(selected_index == 1)
+                    }
+                    
+                    Divider()
+                        .frame(height: 20)
+                    
+                    Button{
+                        withAnimation{
+                            selected_index = 2
+                        }
+                    } label: {
+                        Text("BIP")
+                            .font(.system(size: 13))
+                            .foregroundColor(selected_index == 2 ? Color.white : Color.gray)
+                            .bold(selected_index == 2)
+                    }
+                    
                 }
-                .tabViewStyle(.page)
-                .indexViewStyle(.page(backgroundDisplayMode: .always))
+                .padding(10)
+                
+                HStack(alignment: .top){
+                    TabView(selection: $selected_index){
+                        //PitchTypeButtons()
+                        NoActionButtons()
+                            .tag(1)
+                        
+                        BallInPlayButtons()
+                            .tag(2)
+                        
+                    }
+                    .tabViewStyle(.page)
+                    .indexViewStyle(.page(backgroundDisplayMode: .always))
+                    
+                }
+                
+                
                 
             }
+            .ignoresSafeArea()
+            .background(.regularMaterial)
+            .cornerRadius(15)
+            .padding(.horizontal, 10)
             
-        }
-        .ignoresSafeArea()
-        .background(.regularMaterial)
-        .cornerRadius(15)
-        .onAppear{
-            withAnimation{
-                location_overlay.showVeloInput = false
-            }
+            Spacer()
+            
         }
     }
     
@@ -253,6 +256,7 @@ struct PitchResultMKIIView: View {
         withAnimation{
             location_overlay.showTabBar = true
             location_overlay.showCurPitchPulse = false
+            scoreboard.disable_bottom_row = false
         }
         path.removeAll()
     }

@@ -34,74 +34,80 @@ struct OutResultView: View {
     @State private var button_color: Color = Color("ScoreboardGreen")
     
     var body: some View {
-        
         VStack{
-            VStack(spacing: 0){
-                HStack{
-                    Button {
-                        dismiss()
-                    } label: {
-                        HStack(spacing: 5){
-                            Image(systemName: "chevron.left")
-                            Text("Back")
+            
+            VStack{
+                VStack(spacing: 0){
+                    HStack{
+                        Button {
+                            dismiss()
+                        } label: {
+                            HStack(spacing: 5){
+                                Image(systemName: "chevron.left")
+                                Text("Back")
+                            }
                         }
-                    }
-                    .font(.system(size: 13) .weight(.medium))
-                    .foregroundColor(.white)
-                    
-                    Spacer()
-                    
-                    Button{
-                        withAnimation{
-                            selected_index = 1
-                        }
-                    } label : {
-                        Text("Page 1")
-                            .font(.system(size: 13))
-                            .foregroundColor(selected_index == 1 ? Color.white : Color.gray)
-                            .bold(selected_index == 1)
-                    }
-                    
-                    Divider()
-                        .frame(height: 20)
-                    
-                    Button{
-                        withAnimation{
-                            selected_index = 2
-                        }
-                    } label: {
-                        Text("Page 2")
-                            .font(.system(size: 13))
-                            .foregroundColor(selected_index == 2 ? Color.white : Color.gray)
-                            .bold(selected_index == 2)
-                    }
-                    
-                }
-                .padding(10)
-                
-                HStack(alignment: .top){
-                    TabView(selection: $selected_index){
-                        OutDetail1()
-                            .tag(1)
+                        .font(.system(size: 13) .weight(.medium))
+                        .foregroundColor(.white)
                         
-                        OutDetail2()
-                            .tag(2)
-                            
+                        Spacer()
+                        
+                        Button{
+                            withAnimation{
+                                selected_index = 1
+                            }
+                        } label : {
+                            Text("Page 1")
+                                .font(.system(size: 13))
+                                .foregroundColor(selected_index == 1 ? Color.white : Color.gray)
+                                .bold(selected_index == 1)
+                        }
+                        
+                        Divider()
+                            .frame(height: 20)
+                        
+                        Button{
+                            withAnimation{
+                                selected_index = 2
+                            }
+                        } label: {
+                            Text("Page 2")
+                                .font(.system(size: 13))
+                                .foregroundColor(selected_index == 2 ? Color.white : Color.gray)
+                                .bold(selected_index == 2)
+                        }
+                        
                     }
-                    .tabViewStyle(.page)
-                    .indexViewStyle(.page(backgroundDisplayMode: .always))
+                    .padding(10)
                     
-                    //.transition(.slide)
-                    
-                    //Spacer()
+                    HStack(alignment: .top){
+                        TabView(selection: $selected_index){
+                            OutDetail1()
+                                .tag(1)
+                            
+                            OutDetail2()
+                                .tag(2)
+                                
+                        }
+                        .tabViewStyle(.page)
+                        .indexViewStyle(.page(backgroundDisplayMode: .always))
+                        
+                        //.transition(.slide)
+                        
+                        //Spacer()
+                        
+                    }
                     
                 }
-                
             }
+            .ignoresSafeArea()
+            .background(.regularMaterial)
+            .cornerRadius(15)
+            .padding(.horizontal, 10)
+            
+            Spacer()
+            
         }
-        .ignoresSafeArea()
-        .background(.regularMaterial)
-        .cornerRadius(15)
         
     }
     
@@ -218,6 +224,7 @@ struct OutResultView: View {
         withAnimation{
             location_overlay.showTabBar = true
             location_overlay.showCurPitchPulse = false
+            scoreboard.disable_bottom_row = false
         }
         path.removeAll()
     }

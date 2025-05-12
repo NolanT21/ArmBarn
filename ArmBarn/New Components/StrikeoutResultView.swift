@@ -30,11 +30,12 @@ struct StrikeoutResultView: View {
     )
     
     var body: some View {
+        
         VStack{
             VStack(alignment: .center, spacing: 5){
                 HStack{
                     Button {
-                        location_overlay.showVeloInput = false
+//                        location_overlay.showVeloInput = false
                         dismiss()
                     } label: {
                         Circle()
@@ -99,6 +100,7 @@ struct StrikeoutResultView: View {
             .background(.regularMaterial)
             .background(Color.black.opacity(0.85))
             .cornerRadius(15)
+            .padding(.horizontal, 10)
             
             Spacer()
             
@@ -109,6 +111,7 @@ struct StrikeoutResultView: View {
         withAnimation{
             location_overlay.showTabBar = true
             location_overlay.showCurPitchPulse = false
+            scoreboard.disable_bottom_row = false
         }
         path.removeAll()
     }
