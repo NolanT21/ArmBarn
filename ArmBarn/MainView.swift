@@ -12,22 +12,47 @@ import Observation
 
 struct MainView: View {
     
+    @State private var router = Router()
+    @Environment(Event_String.self) var event
+    
     var body: some View {
          
-        ZStack{
-            VStack{
-                
-                Spacer()
-                
-                TabBarContentView()
-                    .preferredColorScheme(.dark)
-                
+        //Tab View
+        TabView(selection: $router.selectedTab){
+            ForEach(TabViewEnum.allCases){ tab in
+                let tabItem = tab.tabItem
+                Tab(
+                    tabItem.name,
+                    systemImage: tabItem.systemName,
+                    value: tab) {
+                        tab
+                    }
             }
-            
         }
+        .environment(router)
+        .preferredColorScheme(.dark)
         .edgesIgnoringSafeArea(.top)
+        .accentColor(Color("ScoreboardGreen"))
+        
+//        ZStack{
+//            VStack{
+//                
+//                Spacer()
+//                
+//                TabBarContentView()
+//                    .preferredColorScheme(.dark)
+//                
+//            }
+//            
+//        }
+//        .edgesIgnoringSafeArea(.top)
     }
 
+}
+
+@Observable
+class Router {
+    var selectedTab: TabViewEnum = .home
 }
 
 #Preview {
