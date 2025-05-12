@@ -53,7 +53,7 @@ struct GameInfoPopUp: View {
                         VStack(spacing: 20){
                             Text("Game Information")
                                 .font(.system(size: 17, weight: .semibold))
-                                                        
+                                        
                             TextField("Enter Opponent Name", text: $opponentname)
                                 .padding(.vertical, 5)
                                 .padding(.leading, 10)
@@ -73,43 +73,49 @@ struct GameInfoPopUp: View {
                                 .onAppear {
                                     fieldIsFocused = true
                                 }
-                            
-                            Picker("", selection: $selected_location) {
-                                ForEach(game_location, id: \.self) {
-                                    Text($0)
-                                        .font(.system(size: 13, weight: .semibold))
-                                }
-                            }
-                            .pickerStyle(.segmented)
-                            .preferredColorScheme(/*@START_MENU_TOKEN@*/.dark/*@END_MENU_TOKEN@*/)
-                            .padding(.horizontal, 20)
-                            .onChange(of: selected_location){
-                                //impact.impactOccurred()
-                                //game_report.game_location = selected_location
-                                //ASGameLocation = selected_location
-                            }
-                            
-                            VStack{
                                 
-                                Text("Start Time")
-                                    .font(.system(size: 15, weight: .semibold))
-                                    .foregroundStyle(Color.white)
-                                HStack{
-                                    Spacer()
+                                VStack{
                                     
-                                    DatePicker("", selection: $start_date)
-                                        .labelsHidden()
-                                        .transformEffect(.init(scaleX: 0.9, y: 0.9))
-                                        .accentColor(Color("ScoreboardGreen"))
-                                        .padding(.horizontal, 20)
-                                        .padding(.top, -5)
-                                        .padding(.leading, 25)
-                                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
+                                    Text("Start Time")
+                                        .font(.system(size: 15, weight: .medium))
+                                        .foregroundStyle(Color.white)
+                                    
+                                    HStack(spacing: 5){
+                                        Spacer()
+                                        
+                                        DatePicker("", selection: $start_date, displayedComponents: [.date, .hourAndMinute])
+                                            .labelsHidden()
+                                            .transformEffect(.init(scaleX: 0.9, y: 0.9))
+                                            .accentColor(Color("ScoreboardGreen"))
+//                                            .padding(.horizontal, 20)
+                                            .padding(.top, -5)
+                                            .padding(.leading, 20)
+                                            .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
 
-                                    
-                                    Spacer()
+                           
+                                        Spacer()
+                                    }
                                 }
-                            }
+                                
+                                Picker("", selection: $selected_location) {
+                                    ForEach(game_location, id: \.self) {
+                                        Text($0)
+                                            .font(.system(size: 15, weight: .semibold))
+                                            .foregroundStyle(Color.white)
+                                    }
+                                }
+                                .pickerStyle(.segmented)
+                                //.pickerStyle(.inline)
+                                .preferredColorScheme(/*@START_MENU_TOKEN@*/.dark/*@END_MENU_TOKEN@*/)
+                                .padding(.horizontal, 20)
+                                //.padding(.top, -32)
+                                //.frame(width: 200)
+                                //.clipped()
+                                .onChange(of: selected_location){
+                                    //impact.impactOccurred()
+                                    //game_report.game_location = selected_location
+                                    //ASGameLocation = selected_location
+                                }
                             
                             Button {
                                 //Logic for storing game information
