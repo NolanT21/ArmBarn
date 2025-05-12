@@ -87,7 +87,7 @@ struct LocationNavigationView: View {
                                 if locked_button_function == false {
                                     withAnimation{
                                         location_overlay.showinputoverlay = false
-                                        location_overlay.showVeloInput = true
+                                        //location_overlay.showVeloInput = true
                                     }
                                     location_overlay.showShakeAnimation = false
                                     
@@ -119,17 +119,17 @@ struct LocationNavigationView: View {
                         
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                .frame(maxWidth: .infinity, maxHeight: 180)
                 .foregroundStyle(.white)
                 .background(.regularMaterial)
                 .background(Color.black.opacity(0.85))
                 .cornerRadius(15)
                 //.padding(.horizontal, 15)
-                //.padding(.top, 15)
                 
                 Spacer()
                 
             }
+            .padding(.horizontal, 10)
             
         }
         .onAppear{
