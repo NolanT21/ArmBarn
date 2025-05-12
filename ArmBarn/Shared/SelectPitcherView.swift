@@ -40,10 +40,18 @@ struct SelectPitcherView: View {
     
     @State var font_size: CGFloat = 20.0
     
+    @State var pitcher_select_haptic: Bool = false
+    
     var filteredPitchers: [Pitcher] {
         guard !searchText.isEmpty else {return pitchers}
         return pitchers.filter {$0.lastName.localizedCaseInsensitiveContains(searchText) || $0.firstName.localizedCaseInsensitiveContains(searchText)}
     }
+    
+    @State var button_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color("ScoreboardGreen"), Color("DarkScoreboardGreen")]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
     
     var body: some View {
             
@@ -61,6 +69,8 @@ struct SelectPitcherView: View {
                                 HStack{
                                     
                                     Button{
+                                        
+                                        pitcher_select_haptic.toggle()
                                         
                                         if p_er.id != current_pitcher.idcode {
                                             store_pitcher_appearance()
@@ -155,6 +165,7 @@ struct SelectPitcherView: View {
                                         .frame(height: 40)
                                     }
                                 }
+                                .sensoryFeedback(.selection, trigger: pitcher_select_haptic)
                                 .foregroundColor(text_color)
                                 .swipeActions(edge: .leading) {
                                     Button {
@@ -180,20 +191,11 @@ struct SelectPitcherView: View {
                                 Button(action: {
                                     showAddPitcher = true
                                 }, label: {
-                                    Circle()
-                                        .fill(Color.gray.opacity(0.3))
-                                        .frame(width: 25, height: 25)
-                                        .overlay{
-                                            Image(systemName: "plus")
-                                                .foregroundColor(.white)
-                                                .font(.system(size: 13))
-                                                .bold()
-                                        }
-//                                    Image(systemName: "plus")
-//                                        .imageScale(.medium)
-//                                        .font(.system(size: 19))
-//                                        .foregroundColor(text_color)
-//                                        .bold()
+                                    
+                                    Image(systemName: "person.crop.circle.badge.plus")
+                                        .foregroundStyle(Color("ScoreboardGreen"), .white)
+                                        .font(.system(size: 21))
+                                                
                                 })
                             }
                         }
