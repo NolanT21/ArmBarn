@@ -37,6 +37,7 @@ enum DefaultAnimationStages: CaseIterable {
 struct MainDashboardView: View {
     
     @State private var input_nav_path = [Int]()
+    @Environment(Router.self) var router
     
     @State var show_undo_toast: Bool = false
     @State var show_save_toast: Bool = false
@@ -70,8 +71,8 @@ struct MainDashboardView: View {
     @State var cur_pitch_outline: Color = .clear
     @State var cur_pitch_pulse: Bool = false
     
-    @State var red_light_color: Color = .red
-    @State var green_light_color: Color = Color("ScoreboardGreen")
+    @State var red_light_color: Color = Color("EngineOrange")
+    @State var green_light_color: Color = Color("Lapis")
     
     @State var button_gradient: LinearGradient = LinearGradient(
         gradient: Gradient(colors: [Color("ScoreboardGreen"), Color("DarkScoreboardGreen")]),
@@ -80,7 +81,13 @@ struct MainDashboardView: View {
     )
     
     @State var alt_button_gradient: LinearGradient = LinearGradient(
-        gradient: Gradient(colors: [Color.orange, Color("DarkOrange")]),
+        gradient: Gradient(colors: [Color("EngineOrange"), Color("DarkEngineOrange")]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
+    @State var pitcher_select_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color("Lapis"), Color("DarkLapis")]),
         startPoint: .leading,
         endPoint: .trailing
     )
@@ -101,6 +108,11 @@ struct MainDashboardView: View {
     @FocusState private var fieldIsFocused: Bool
     @State var veloinput: Double = 0.0
     @State var validVeloInput: Bool = false
+    
+    @State var popup_haptic: Bool = false
+    @State var undo_haptic: Bool = false
+    @State var lock_haptic: Bool = false
+    @State var unlock_haptic: Bool = false
     
     let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -248,24 +260,33 @@ struct MainDashboardView: View {
                                         .frame(width: 30, height: 30)
                                     
                                 }
-                                .background(events.count <= 0 ? disabled_gradient : button_gradient)
-                                .foregroundColor(events.count <= 0 ? Color.gray : Color.white)
+                                .background(events.count <= 0 || scoreboard.disable_bottom_row ? disabled_gradient : button_gradient)
+                                .foregroundColor(events.count <= 0 || scoreboard.disable_bottom_row ? Color.gray : Color.white)
                                 .cornerRadius(8.0)
-                                .shadow(color: .black.opacity(0.5), radius: 3, x: 3, y: 3)
-                                .disabled(events.count <= 0)
+                                //.shadow(color: .black.opacity(0.5), radius: 3, x: 3, y: 3)
+                                .disabled(events.count <= 0 || scoreboard.disable_bottom_row)
                                 
                                 Button{
                                     withAnimation{
                                         show_undo_toast = true
+                                        undo_haptic.toggle()
                                         //impact.impactOccurred()
                                         
                                         //More than one event entered
                                         if events.count > 1 {
-                                            load_previous_event()
-                                            load_previous_ab_pitches()
-                                            context.delete(events[events.count - 1])
-                                            //Keep batter stance input locked on undo; not the reason user is removing event, able to change anytime
-                                            is_locked = true
+                                            
+                                            if check_prev_pitcher() == true {
+                                                withAnimation{
+                                                    showDifferentPreviousPitcher = true
+                                                    location_overlay.showTabBar = false
+                                                    is_locked = true
+                                                }
+                                            } else {
+                                                load_previous_event()
+                                                load_previous_ab_pitches()
+                                                //Keep batter stance input locked on undo; not the reason user is removing event, able to change anytime
+                                                is_locked = true
+                                            }
                                             
                                         }
                                         //Only one event entered
@@ -305,11 +326,11 @@ struct MainDashboardView: View {
                                         .bold()
                                     
                                 }
-                                .background(events.count < 1 ? disabled_gradient : button_gradient)
-                                .foregroundColor(events.count < 1 ? Color.gray : Color.white)
+                                .background(events.count < 1 || scoreboard.disable_bottom_row ? disabled_gradient : button_gradient)
+                                .foregroundColor(events.count < 1 || scoreboard.disable_bottom_row ? Color.gray : Color.white)
                                 .cornerRadius(8.0)
-                                .shadow(color: .black.opacity(0.5), radius: 3, x: 3, y: 3)
-                                .disabled(events.count < 1)
+                                //.shadow(color: .black.opacity(0.5), radius: 3, x: 3, y: 3)
+                                .disabled(events.count <= 0 || scoreboard.disable_bottom_row)
                                 .onChange(of: show_undo_toast) {
                                     if show_undo_toast == true {
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
@@ -319,6 +340,7 @@ struct MainDashboardView: View {
                                         }
                                     }
                                 }
+                                .sensoryFeedback(.success, trigger: undo_haptic)
                                 
                             }
                             .padding(.trailing, 15)
@@ -336,8 +358,10 @@ struct MainDashboardView: View {
                 }
                 
                 ZStack{
-                    VStack{
-
+                    
+                    //Strikezone Background
+                    VStack(spacing: 0){
+                            
                         GeometryReader{ geometry in
                             
                             Image("Background2.0")
@@ -347,7 +371,6 @@ struct MainDashboardView: View {
                                 .cornerRadius(15)
                                 .padding(.horizontal, main_body_padding)
                                 .gesture(tap)
-                                //.clipped()
                                 .overlay{
                                     
                                     //Hide overlay when inputting new pitch
@@ -361,7 +384,7 @@ struct MainDashboardView: View {
                                             Circle()
                                                 .stroke(cur_pitch_outline, lineWidth: 4)
                                                 .fill(cur_pitch_fill)
-                                                .frame(width: geometry.size.width * 0.055, height: geometry.size.width * 0.055, alignment: .center)
+                                                .frame(width: geometry.size.width * 0.055, height: geometry.size.height * 0.055, alignment: .center)
                                                 .position(location)
                                                 .onAppear{
                                                     if cur_pitch_fill != Color.clear{
@@ -387,7 +410,7 @@ struct MainDashboardView: View {
                                     }
                                 }
                         }
-                        
+                            
                     }
                     
                     SaveToast()
@@ -422,30 +445,50 @@ struct MainDashboardView: View {
                                         
                 }
                 .frame(maxHeight: 480)
+                //.border(Color.gray, width: 3)
                 
+                Spacer()
+                
+            }
+            //.background(Color.black)
+            .ignoresSafeArea(.keyboard)
+            
+            GeometryReader{ geometry in
+            
                 VStack(spacing: 5){
                     
+                    Spacer()
+                        .frame(height: geometry.size.height * 0.738)
+                        .transition(.opacity)
+                    
                     NavigationStack(path: $input_nav_path){
+                        
                         VStack(spacing: 10){
                             
-                            HStack{
+                            HStack(alignment: .top){
                                 
                                 if current_pitcher.firstName == "No Pitcher Selected"{
                                     Button{
-
+                                        router.selectedTab = .pitcher_select
+                                        print(router.selectedTab)
                                     } label: {
                                         HStack(spacing: 5){
+                                            
+                                            Spacer()
+                                            
+                                            Image(systemName: "person.crop.circle")
+                                                .font(.system(size: 19, weight: .medium))
+                                                //.padding(.trailing, 10)
+                                            
                                             Text("Select Pitcher")
                                                 .font(.system(size: 17, weight: .medium))
-                                                .padding(.leading, 10)
+                                                //.padding(.leading, 10)
                                             Spacer()
-                                            Image(systemName: "chevron.right")
-                                                .font(.system(size: 17, weight: .medium))
-                                                .padding(.trailing, 10)
+                                            
                                         }
                                         .frame(maxWidth: .infinity, maxHeight: 50)
                                         .foregroundStyle(Color.white)
-                                        .background(Color.red)
+                                        .background(pitcher_select_gradient)
                                         .bold()
                                         .cornerRadius(15)
                                     }
@@ -482,37 +525,27 @@ struct MainDashboardView: View {
                                     }
                                 } label: {
                                     ZStack{
-                                        //Fix glowing rectangle size and functionality
+                                        //Pulsing Rectangle if Game Information is not entered
                                         if location_overlay.game_info_entered == false {
-//                                            Rectangle()
-//                                                .fill(alt_button_gradient)
-//                                                .frame(maxWidth: 135, maxHeight: 55)
-//                                                .phaseAnimator([0, 1, 3]) { view, phase in
-//                                                        view
-//                                                    
-//                                                        .blur(radius: phase == 1 ? 2 : 8)
-//                                                    
-//                                                    }
-//                                                .cornerRadius(15)
                                             RoundedRectangle(cornerRadius: 15)
-                                                .fill(AngularGradient(colors: [.orange, Color("DarkOrange"), Color("LightBeam"), .orange, Color("DarkOrange"), Color("LightBeam")], center: .center, angle: .degrees(highlight_game_info ? 360 : 0)))
-                                                .frame(width: 130, height: 54)
-                                                .blur(radius: 1)
-                                                .onAppear{
-                                                    withAnimation(Animation.linear(duration: 2).repeatForever(autoreverses: false)){
+                                                .frame(width: 125, height: 50)
+                                                .foregroundStyle(alt_button_gradient)
+                                                .opacity(highlight_game_info ? 0 : 1)
+                                                .scaleEffect(highlight_game_info ? 1.17 : 1)
+                                                .blur(radius: highlight_game_info ? 1.5 : 0)
+                                                .onAppear {
+                                                    withAnimation(.linear(duration: 2.2).repeatForever(autoreverses: false)) {
                                                         highlight_game_info = true
                                                     }
                                                 }
+                                                .ignoresSafeArea(.all)
 
                                         }
                                         
                                         HStack(alignment: .center, spacing: 5){
                                             
-                                            //Spacer()
-                                            
                                             Image(systemName: "square.and.pencil")
                                                 .font(.system(size: 19, weight: .semibold))
-                                            //.padding(.leading, 10)
                                                 .padding(.bottom, 3)
                                                 .foregroundStyle(.white)
                                             
@@ -528,24 +561,23 @@ struct MainDashboardView: View {
                                         .foregroundStyle(.white)
                                         
                                     }
-                                    
-    
                                 }
 
                             }
-                            
                             //Batter Stance Input View
                             BatterStanceInput()
                             
+                            Spacer()
+                            
                         }
+                        .padding(.horizontal, main_body_padding)
+                        .padding(.top, 10)
                         .font(.system(size: 17) .weight(.semibold))
                         .navigationDestination(for: Int.self) { selection in
-                            //PitchTypeSelectView(path: $input_nav_path)
                             PitchTypeSelectView(path: $input_nav_path)
                                 .navigationBarBackButtonHidden(true).preferredColorScheme(.dark)
                         }
                         .onAppear{
-                            //print("Entered MainDashboardView.onAppear")
                             add_prev_event_string()
                             event.recordEvent = true
                             
@@ -555,38 +587,20 @@ struct MainDashboardView: View {
                             location = CGPoint(x: 0, y: 0)
                         }
                         
-                        Spacer()
-                        
                     }
-                    .frame(maxWidth: .infinity, maxHeight: 180)
-                    .padding(.horizontal, main_body_padding)
-                    //.padding(.top, 10)
-                    
+                    .frame(maxWidth: .infinity, maxHeight: 190)
                 }
                 
-                Spacer()
-                
-            }
-            .background(Color.black)
-            .ignoresSafeArea(.keyboard)
-            
-            
-            //Call PopUp Views
-            if location_overlay.showVeloInput == true{
-                veloPopupView()
-                    .transition(.opacity)
-                    .onAppear {
-                        fieldIsFocused = true
-                    }
             }
             
             if showAddGameInfo == true {
                 ZeroInputXPopUp(title: "Attention", description: "The game information has not been recorded. Please enter this before saving the current game", close_action: {withAnimation{showAddGameInfo = false}; location_overlay.showTabBar = true})
                     .transition(.opacity)
+                    .sensoryFeedback(.warning, trigger: popup_haptic)
             }
             
             if showDifferentPreviousPitcher == true {
-                ZeroInputXPopUp(title: "Attention", description: "A different pitcher was recorded for the previous event, they have been set to the current pitcher", close_action: {withAnimation{showDifferentPreviousPitcher = false; location_overlay.showTabBar = true}})
+                TwoInputXPopUp(title: "Attention", description: "A different pitcher was recorded for the previous event. Do you want to continue?", leftButtonText: "Yes",  leftButtonAction: {load_previous_event(); load_previous_ab_pitches(); withAnimation{show_undo_toast = true}}, rightButtonText: "No", rightButtonAction: {}, close_action: {withAnimation{showDifferentPreviousPitcher = false; location_overlay.showTabBar = true}}, flex_action: {})
                     .transition(.opacity)
             }
             
@@ -608,11 +622,13 @@ struct MainDashboardView: View {
             
 
         }
-        .ignoresSafeArea(.keyboard)
+        .ignoresSafeArea(location_overlay.showVeloInput ? [] : .keyboard)
         .onAppear{
             if events.count >= 1 && (scoreboard.balls == 0 && scoreboard.strikes == 0 && scoreboard.pitches == 0 && scoreboard.atbats == 1 && current_pitcher.firstName == "No Pitcher Selected") {
                     showResumeGame = true
             }
+            scoreboard.disable_bottom_row = false
+            event.recordEvent = false
         }
             
     }
@@ -669,7 +685,7 @@ struct MainDashboardView: View {
                             Button {
                                 withAnimation{
                                     
-                                    location_overlay.showVeloInput = false
+                                    //location_overlay.showVeloInput = false
                                     
                                 }
                                 fieldIsFocused = false
@@ -688,6 +704,7 @@ struct MainDashboardView: View {
                                 validate_velocity_input()
                             }
                         }
+                        .frame(maxWidth: 275)
                         
                         Spacer()
                             .frame(maxHeight: 10)
@@ -700,6 +717,7 @@ struct MainDashboardView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .shadow(radius: 20)
                 .padding(45)
+
                 
                 Spacer()
                 
@@ -765,7 +783,7 @@ struct MainDashboardView: View {
                 Text("Batter Stance")
                     .font(.system(size: 13, weight: .medium))
                     .padding(.top, 3)
-                    .padding(.leading, 3)
+                    .padding(.leading, 10)
                 
                 Spacer()
                 
@@ -773,7 +791,7 @@ struct MainDashboardView: View {
             
             HStack{
                 
-//                Spacer()
+                Spacer()
                 
                 Button{
                     is_locked = true
@@ -851,10 +869,10 @@ struct MainDashboardView: View {
                 Spacer()
                 
             }
-            .padding(.trailing, 25) //Leave Space for Lock
-            .padding(.horizontal, 10)
+            .padding(.trailing, 50) //Leave Space for Lock
+            //.padding(.horizontal, 10)
         }
-        .padding(.horizontal, 10)
+        //.padding(.horizontal, 10)
         //.padding(.trailing, 28)
         .frame(maxWidth: .infinity, maxHeight: 75)
         .foregroundStyle(.white)
@@ -871,9 +889,12 @@ struct MainDashboardView: View {
             }
 //            VStack{
                 
-                HStack(alignment: .top){
+                HStack(alignment: .center){
                     
                     Spacer()
+                    
+                    Divider()
+                        .padding(.leading, -5)
                     
                     Button{
                         if righty_hitter == true || lefty_hitter == true{
@@ -943,6 +964,9 @@ struct MainDashboardView: View {
                                         .imageScale(.large)
                                         .bold()
                                         .onAppear{
+                                            
+                                            location_overlay.save_haptic.toggle()
+                                            
                                             //impact.impactOccurred()
                                             DispatchQueue.main.asyncAfter(deadline: .now() + 1){
                                                 saving_animation = false
@@ -1007,8 +1031,10 @@ struct MainDashboardView: View {
                 show_save_toast = true
                 location_overlay.showTabBar = true
             }
+            
             save_game_func()
             new_game_func()
+            
         }
         else if location_overlay.game_info_entered == false {
             //Show enter gameinfo popup (ZeroInput: Please enter the game information before saving.)
@@ -1141,7 +1167,7 @@ struct MainDashboardView: View {
         }
     }
     
-    func load_previous_event() {
+    func check_prev_pitcher() -> Bool {
         
         let previous_event = events[events.count - 1]
         
@@ -1151,29 +1177,38 @@ struct MainDashboardView: View {
                 if pitcher.id == previous_event.pitcher_id {
                     print("Different pitcher was in game for previous event")
                     //Set current pitcher characteristics
-                    current_pitcher.firstName = pitcher.firstName
-                    current_pitcher.lastName = pitcher.lastName
-                    current_pitcher.pitch1 = pitcher.pitch1
-                    current_pitcher.pitch2 = pitcher.pitch2
-                    current_pitcher.pitch3 = pitcher.pitch3
-                    current_pitcher.pitch4 = pitcher.pitch4
-                    current_pitcher.idcode = pitcher.id
+//                    current_pitcher.firstName = pitcher.firstName
+//                    current_pitcher.lastName = pitcher.lastName
+//                    current_pitcher.pitch1 = pitcher.pitch1
+//                    current_pitcher.pitch2 = pitcher.pitch2
+//                    current_pitcher.pitch3 = pitcher.pitch3
+//                    current_pitcher.pitch4 = pitcher.pitch4
+//                    current_pitcher.idcode = pitcher.id
                     
                     //Set scoreboard values for previous pitcher
-                    for p_er in pitcher_appearance_list {
-                        if p_er.pitcher_id == pitcher.id {
-                            scoreboard.pitches = p_er.pitches
-                            scoreboard.atbats = p_er.batters_faced
-                        }
-                    }
+//                    for p_er in pitcher_appearance_list {
+//                        if p_er.pitcher_id == pitcher.id {
+//                            scoreboard.pitches = p_er.pitches
+//                            scoreboard.atbats = p_er.batters_faced
+//                        }
+//                    }
                    
                     showDifferentPreviousPitcher = true
+                    show_undo_toast = false
                     
                     break
 
                 }
             }
         }
+
+        return showDifferentPreviousPitcher
+        
+    }
+    
+    func load_previous_event() {
+        
+        let previous_event = events[events.count - 1]
         
         scoreboard.balls = previous_event.balls
         scoreboard.strikes = previous_event.strikes
@@ -1258,6 +1293,9 @@ struct MainDashboardView: View {
             }
         }
         //print(scoreboard.baserunners)
+        
+        context.delete(events[events.count - 1])
+        
     }
     
     func load_previous_ab_pitches() {
@@ -1492,6 +1530,8 @@ struct MainDashboardView: View {
             scoreboard.strikes = 0
             lefty_hitter = false
             righty_hitter = false
+            is_locked = false
+            event.batter_stance = ""
         }
         else if end_ab_out.contains(recent_event.result_detail) {
             scoreboard.balls = 0
@@ -1503,6 +1543,8 @@ struct MainDashboardView: View {
             }
             lefty_hitter = false
             righty_hitter = false
+            is_locked = false
+            event.batter_stance = ""
         }
         else if recent_event.pitch_result == "A" || recent_event.pitch_result == "VA"{
             scoreboard.balls += 1
