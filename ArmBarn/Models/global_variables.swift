@@ -47,9 +47,6 @@ import Observation
     var showTabBar: Bool = true
     var showVeloInput: Bool = false
     var game_info_entered: Bool = false
-    
-    var save_haptic: Bool = false
-    
 }
 
 struct PitchersAppeared {
