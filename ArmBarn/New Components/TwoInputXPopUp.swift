@@ -70,7 +70,6 @@ struct TwoInputXPopUp: View {
                                         .foregroundColor(Color.white)
                                         .cornerRadius(8.0)
                                 }
-                                .sensoryFeedback(.success, trigger: location_overlay.save_haptic)
                                 
                                 Button {
                                     rightButtonAction()
