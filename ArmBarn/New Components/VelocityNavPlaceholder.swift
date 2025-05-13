@@ -163,6 +163,7 @@ struct VelocityNavPlaceholder: View {
             Spacer()
             
         }
+        .clipShape(RoundedRectangle(cornerRadius: 15))
     }
     
     //Function for validating velocity input
