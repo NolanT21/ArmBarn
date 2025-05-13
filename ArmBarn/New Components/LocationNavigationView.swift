@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreHaptics
 
 struct LocationNavigationView: View {
     
@@ -31,6 +32,8 @@ struct LocationNavigationView: View {
         startPoint: .leading,
         endPoint: .trailing
     )
+    
+    @State private var engine: CHHapticEngine?
     
     var body: some View {
         
@@ -134,9 +137,43 @@ struct LocationNavigationView: View {
         }
         .onAppear{
             locked_button_function = false
+            prepareHaptics()
+            shakeX3Haptic()
+        }
+    }
+    
+    func shakeX3Haptic() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        var hap_events = [CHHapticEvent]()
+        
+        for i in stride(from: 0, to: 0.99, by: 0.33) {
+            let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 1)
+            let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 1)
+            let haptic = CHHapticEvent(eventType: .hapticTransient, parameters: [intensity, sharpness], relativeTime: (i/3) + 0.3)
+            hap_events.append(haptic)
+        }
+        
+        do {
+            let pattern = try CHHapticPattern(events: hap_events, parameters: [])
+            let player = try engine?.makePlayer(with: pattern)
+            try player?.start(atTime: 0)
+        } catch {
+            print("Failed to play pattern: \(error.localizedDescription).")
         }
         
     }
+    
+    func prepareHaptics() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+
+        do {
+            engine = try CHHapticEngine()
+            try engine?.start()
+        } catch {
+            print("There was an error creating the engine: \(error.localizedDescription)")
+        }
+    }
+    
 }
 
 //#Preview {

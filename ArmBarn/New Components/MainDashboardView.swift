@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import Foundation
+import CoreHaptics
 
 enum ShakeAnimation: CaseIterable {
     case leanLeft, leanRight, returnCenter
@@ -120,6 +121,8 @@ struct MainDashboardView: View {
         formatter.zeroSymbol = ""
         return formatter
     }()
+    
+    @State private var engine: CHHapticEngine?
     
     var tap: some Gesture {
         SpatialTapGesture()
@@ -401,7 +404,6 @@ struct MainDashboardView: View {
                                         .offset(x: phase.xoffset)
                                         .rotationEffect(.degrees(phase.rotationDegrees))
                                     
-                                    
                                 } animation: { phase in
                                     switch phase {
                                     case .returnCenter: .easeIn(duration: 0.05)
@@ -413,7 +415,7 @@ struct MainDashboardView: View {
                             
                     }
                     
-                    SaveToast()
+                    SaveToast().onAppear{prepareHaptics()}
                     
                     //Undo Toast
                     VStack{
@@ -477,7 +479,8 @@ struct MainDashboardView: View {
                                             Spacer()
                                             
                                             Image(systemName: "person.crop.circle")
-                                                .font(.system(size: 19, weight: .medium))
+                                                .font(.system(size: 17, weight: .medium))
+                                                .imageScale(.large)
                                                 //.padding(.trailing, 10)
                                             
                                             Text("Select Pitcher")
@@ -489,7 +492,6 @@ struct MainDashboardView: View {
                                         .frame(maxWidth: .infinity, maxHeight: 50)
                                         .foregroundStyle(Color.white)
                                         .background(pitcher_select_gradient)
-                                        .bold()
                                         .cornerRadius(15)
                                     }
                                 }
@@ -565,7 +567,7 @@ struct MainDashboardView: View {
 
                             }
                             //Batter Stance Input View
-                            BatterStanceInput()
+                            BatterStanceInput().onAppear{prepareHaptics()}
                             
                             Spacer()
                             
@@ -585,6 +587,10 @@ struct MainDashboardView: View {
                             cur_pitch_fill = .clear
                             cur_pitch_outline = .clear
                             location = CGPoint(x: 0, y: 0)
+                            
+                            prepareHaptics()
+                            mutedSuccessHaptic()
+                            
                         }
                         
                     }
@@ -594,30 +600,49 @@ struct MainDashboardView: View {
             }
             
             if showAddGameInfo == true {
-                ZeroInputXPopUp(title: "Attention", description: "The game information has not been recorded. Please enter this before saving the current game", close_action: {withAnimation{showAddGameInfo = false}; location_overlay.showTabBar = true})
+                ZeroInputXPopUp(title: "Attention", description: "The game info has not been recorded. Please enter this information before saving the current game", close_action: {withAnimation{showAddGameInfo = false}; location_overlay.showTabBar = true})
                     .transition(.opacity)
-                    .sensoryFeedback(.warning, trigger: popup_haptic)
+                    .onAppear{
+                        prepareHaptics()
+                        warningHaptic()
+                    }
             }
             
             if showDifferentPreviousPitcher == true {
                 TwoInputXPopUp(title: "Attention", description: "A different pitcher was recorded for the previous event. Do you want to continue?", leftButtonText: "Yes",  leftButtonAction: {load_previous_event(); load_previous_ab_pitches(); withAnimation{show_undo_toast = true}}, rightButtonText: "No", rightButtonAction: {}, close_action: {withAnimation{showDifferentPreviousPitcher = false; location_overlay.showTabBar = true}}, flex_action: {})
                     .transition(.opacity)
+                    .onAppear{
+                        prepareHaptics()
+                        warningHaptic()
+                    }
             }
             
             //Checking if there is data from previous game; event count and scoreboard is empty
             if showResumeGame == true{
-                TwoInputXPopUp(title: "Resume Game", description: "Looks like a previous game was being scored. Would you like to resume?", leftButtonText: "Yes",  leftButtonAction: {set_pitcher(); load_pitcher_appearance_list(); load_recent_event(); load_recent_ab_pitches();}, rightButtonText: "No", rightButtonAction: {new_game_func()}, close_action: {withAnimation{showResumeGame = false}}, flex_action: {new_game_func()})
+                TwoInputXPopUp(title: "Resume Game", description: "Looks like a previous game was being scored. Would you like to resume?", leftButtonText: "Yes",  leftButtonAction: {set_pitcher(); load_pitcher_appearance_list(); load_recent_event(); load_recent_ab_pitches(); successHaptic()}, rightButtonText: "No", rightButtonAction: {new_game_func(); resetHaptic()}, close_action: {withAnimation{showResumeGame = false}}, flex_action: {new_game_func()})
                     .transition(.opacity)
+                    .onAppear{
+                        prepareHaptics()
+                        warningHaptic()
+                    }
             }
             
             if showEndGame == true {
-                TwoInputXPopUp(title: "Save Game", description: "Would you like to save this game before starting a new one?", leftButtonText: "Yes",  leftButtonAction: {save_logic_handling_func()}, rightButtonText: "No", rightButtonAction: {new_game_func(); withAnimation{location_overlay.showTabBar = true}}, close_action: {withAnimation{showEndGame = false}}, flex_action: {withAnimation{location_overlay.showTabBar = true}})
+                TwoInputXPopUp(title: "Save Game", description: "Would you like to save this game before starting a new one?", leftButtonText: "Yes",  leftButtonAction: {save_logic_handling_func()}, rightButtonText: "No", rightButtonAction: {new_game_func(); resetHaptic(); withAnimation{location_overlay.showTabBar = true}}, close_action: {withAnimation{showEndGame = false}}, flex_action: {withAnimation{location_overlay.showTabBar = true}})
                     .transition(.opacity)
+                    .onAppear{
+                        prepareHaptics()
+                        warningHaptic()
+                    }
             }
             
             if showGameInfo == true {
                 GameInfoPopUp(close_action: { withAnimation{showGameInfo = false; location_overlay.showTabBar = true; highlight_game_info = false} })
                     .transition(.opacity)
+                    .onAppear{
+                        prepareHaptics()
+                        warningHaptic()
+                    }
             }
             
 
@@ -794,6 +819,7 @@ struct MainDashboardView: View {
                 Spacer()
                 
                 Button{
+                    lockHaptic()
                     is_locked = true
                     righty_hitter = true
                     lefty_hitter = false
@@ -835,6 +861,7 @@ struct MainDashboardView: View {
                 Spacer()
                 
                 Button{
+                    lockHaptic()
                     is_locked = true
                     lefty_hitter = true
                     righty_hitter = false
@@ -899,7 +926,14 @@ struct MainDashboardView: View {
                     Button{
                         if righty_hitter == true || lefty_hitter == true{
                             is_locked.toggle()
+                            if is_locked == false{
+                                unlockHaptic()
+                            }
+                            else if is_locked == true{
+                                lockHaptic()
+                            }
                         }
+                        
                     } label: {
                         Image(systemName: is_locked ? "lock.fill" : "lock.open.fill")
                             .font(.system(size: 22) .weight(.semibold))
@@ -911,11 +945,6 @@ struct MainDashboardView: View {
                 }
                 .padding(.trailing, 5)
                 .padding(10)
-                
-//                Spacer()
-//                
-//            }
-            
         }
     }
     
@@ -964,10 +993,9 @@ struct MainDashboardView: View {
                                         .imageScale(.large)
                                         .bold()
                                         .onAppear{
+                
+                                            successHaptic()
                                             
-                                            location_overlay.save_haptic.toggle()
-                                            
-                                            //impact.impactOccurred()
                                             DispatchQueue.main.asyncAfter(deadline: .now() + 1){
                                                 saving_animation = false
                                                 isRotating = 0
@@ -985,7 +1013,7 @@ struct MainDashboardView: View {
                 .padding(.top, 10)
                 .onAppear{
                     if show_save_toast == true {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                             withAnimation{
                                 show_save_toast.toggle()
                             }
@@ -1650,8 +1678,6 @@ struct MainDashboardView: View {
             }
         }
         //print(scoreboard.pitchers_appearance_list)
-        
-        
     }
     
     func load_recent_ab_pitches() {
@@ -1689,7 +1715,166 @@ struct MainDashboardView: View {
                 }
             }
         }
+        
     }
+    
+    func successHaptic() {
+        // Make sure that the device supports haptics
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        var hap_events = [CHHapticEvent]()
+
+        let start_intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 1)
+        let start_sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 1)
+        let start = CHHapticEvent(eventType: .hapticTransient, parameters: [start_intensity, start_sharpness], relativeTime: 0)
+        hap_events.append(start)
+        
+        let end_intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 2)
+        let end_sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 2)
+        let end = CHHapticEvent(eventType: .hapticTransient, parameters: [end_intensity, end_sharpness], relativeTime: 0.2)
+        hap_events.append(end)
+
+        do {
+            let pattern = try CHHapticPattern(events: hap_events, parameters: [])
+            let player = try engine?.makePlayer(with: pattern)
+            try player?.start(atTime: 0)
+        } catch {
+            print("Failed to play pattern: \(error.localizedDescription).")
+        }
+    }
+    
+    func mutedSuccessHaptic() {
+        // make sure that the device supports haptics
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        var hap_events = [CHHapticEvent]()
+
+        // create one intense, sharp tap
+        let start_intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 0.5)
+        let start_sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.5)
+        let start = CHHapticEvent(eventType: .hapticTransient, parameters: [start_intensity, start_sharpness], relativeTime: 0)
+        hap_events.append(start)
+        
+        let end_intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 1)
+        let end_sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 1)
+        let end = CHHapticEvent(eventType: .hapticTransient, parameters: [end_intensity, end_sharpness], relativeTime: 0.2)
+        hap_events.append(end)
+
+        // convert those events into a pattern and play it immediately
+        do {
+            let pattern = try CHHapticPattern(events: hap_events, parameters: [])
+            let player = try engine?.makePlayer(with: pattern)
+            try player?.start(atTime: 0)
+        } catch {
+            print("Failed to play pattern: \(error.localizedDescription).")
+        }
+    }
+    
+    func warningHaptic() {
+        // make sure that the device supports haptics
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        var hap_events = [CHHapticEvent]()
+
+        // create one intense, sharp tap
+        let start_intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 2)
+        let start_sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 2)
+        let start = CHHapticEvent(eventType: .hapticTransient, parameters: [start_intensity, start_sharpness], relativeTime: 0)
+        hap_events.append(start)
+        
+        let end_intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 1)
+        let end_sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 1)
+        let end = CHHapticEvent(eventType: .hapticTransient, parameters: [end_intensity, end_sharpness], relativeTime: 0.2)
+        hap_events.append(end)
+
+        // convert those events into a pattern and play it immediately
+        do {
+            let pattern = try CHHapticPattern(events: hap_events, parameters: [])
+            let player = try engine?.makePlayer(with: pattern)
+            try player?.start(atTime: 0)
+        } catch {
+            print("Failed to play pattern: \(error.localizedDescription).")
+        }
+    }
+    
+    func resetHaptic() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        var hap_events = [CHHapticEvent]()
+        
+        for i in stride(from: 0, to: 1, by: 0.5) {
+            let intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 0.5)
+            let sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.5)
+            let haptic = CHHapticEvent(eventType: .hapticTransient, parameters: [intensity, sharpness], relativeTime: i/3)
+            hap_events.append(haptic)
+        }
+        
+        do {
+            let pattern = try CHHapticPattern(events: hap_events, parameters: [])
+            let player = try engine?.makePlayer(with: pattern)
+            try player?.start(atTime: 0)
+        } catch {
+            print("Failed to play pattern: \(error.localizedDescription).")
+        }
+    }
+    
+    func unlockHaptic() {
+        // make sure that the device supports haptics
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        var hap_events = [CHHapticEvent]()
+        
+        let start_intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 0.3)
+        let start_sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.3)
+        let start = CHHapticEvent(eventType: .hapticTransient, parameters: [start_intensity, start_sharpness], relativeTime: 0)
+        hap_events.append(start)
+        
+        let end_intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 0.75)
+        let end_sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.75)
+        let end = CHHapticEvent(eventType: .hapticTransient, parameters: [end_intensity, end_sharpness], relativeTime: 0.15)
+        hap_events.append(end)
+
+        // convert those events into a pattern and play it immediately
+        do {
+            let pattern = try CHHapticPattern(events: hap_events, parameters: [])
+            let player = try engine?.makePlayer(with: pattern)
+            try player?.start(atTime: 0)
+        } catch {
+            print("Failed to play pattern: \(error.localizedDescription).")
+        }
+    }
+    
+    func lockHaptic() {
+        // make sure that the device supports haptics
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        var hap_events = [CHHapticEvent]()
+        
+        let start_intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 0.75)
+        let start_sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.75)
+        let start = CHHapticEvent(eventType: .hapticTransient, parameters: [start_intensity, start_sharpness], relativeTime: 0)
+        hap_events.append(start)
+        
+        let end_intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 0.3)
+        let end_sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 0.3)
+        let end = CHHapticEvent(eventType: .hapticTransient, parameters: [end_intensity, end_sharpness], relativeTime: 0.15)
+        hap_events.append(end)
+
+        // convert those events into a pattern and play it immediately
+        do {
+            let pattern = try CHHapticPattern(events: hap_events, parameters: [])
+            let player = try engine?.makePlayer(with: pattern)
+            try player?.start(atTime: 0)
+        } catch {
+            print("Failed to play pattern: \(error.localizedDescription).")
+        }
+    }
+    
+    func prepareHaptics() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+
+        do {
+            engine = try CHHapticEngine()
+            try engine?.start()
+        } catch {
+            print("There was an error creating the engine: \(error.localizedDescription)")
+        }
+    }
+    
 }
 
 
