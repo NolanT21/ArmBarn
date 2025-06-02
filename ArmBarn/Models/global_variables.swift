@@ -49,7 +49,7 @@ import Observation
     var game_info_entered: Bool = false
 }
 
-struct PitchersAppeared {
+struct PitchersAppeared: Hashable {
     var pitcher_id: UUID
     var pitches: Int
     var batters_faced: Int

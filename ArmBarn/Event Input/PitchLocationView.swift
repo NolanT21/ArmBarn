@@ -869,6 +869,8 @@ struct PitchLocationView: View {
                     else if pitch_type == "P4" {
                         pitch_type = pitcher.pitch4
                     }
+                    
+                    break
                 }
             }
             
