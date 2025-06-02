@@ -40,6 +40,10 @@ struct MainDashboardView: View {
     @State private var input_nav_path = [Int]()
     @Environment(Router.self) var router
     
+    @AppStorage("CurrentOpponentName") var ASCurOpponentName : String?
+    @AppStorage("CurrentGameLocation") var ASGameLocation : String?
+    @AppStorage("CurrentGameStartTime") var ASStartTime : Date?
+    
     @State var show_undo_toast: Bool = false
     @State var show_save_toast: Bool = false
     @State var saving_animation: Bool = false
@@ -72,8 +76,8 @@ struct MainDashboardView: View {
     @State var cur_pitch_outline: Color = .clear
     @State var cur_pitch_pulse: Bool = false
     
-    @State var red_light_color: Color = Color("EngineOrange")
-    @State var green_light_color: Color = Color("Lapis")
+    @State var red_light_color: Color = Color.red
+    @State var green_light_color: Color = Color("ScoreboardGreen")
     
     @State var button_gradient: LinearGradient = LinearGradient(
         gradient: Gradient(colors: [Color("ScoreboardGreen"), Color("DarkScoreboardGreen")]),
@@ -654,6 +658,7 @@ struct MainDashboardView: View {
             }
             scoreboard.disable_bottom_row = false
             event.recordEvent = false
+            print("Record Event: ", event.recordEvent)
         }
             
     }
@@ -1029,7 +1034,7 @@ struct MainDashboardView: View {
     }
     
     func add_prev_event_string() {
-        if event.recordEvent{
+        if event.recordEvent == true{
             let new_event = Event(pitcher_id: current_pitcher.idcode, pitch_result: event.pitch_result, pitch_type: event.pitch_type, result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, atbats: event.atbats, pitch_x_location: event.x_cor, pitch_y_location: event.y_cor, batter_stance: event.batter_stance, velocity: event.velocity, event_number: event.event_number)
             
             context.insert(new_event)
@@ -1050,7 +1055,7 @@ struct MainDashboardView: View {
     }
     
     func print_Event_String() {
-        print(current_pitcher.idcode, event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats, event.batter_stance, event.velocity, event.x_cor, event.y_cor)
+        print("New Event: ", current_pitcher.idcode, event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats, event.batter_stance, event.velocity, event.x_cor, event.y_cor)
     }
     
     func save_logic_handling_func() {
@@ -1439,11 +1444,9 @@ struct MainDashboardView: View {
         withAnimation{
             location_overlay.game_info_entered = false
         }
-        game_report.opponent_name = ""
-        game_report.game_location = "Home"
-        game_report.start_date = Date()
-        
-        //clear_game_report()
+        ASCurOpponentName = "Opponent Name"
+        ASGameLocation = "Home"
+        ASStartTime = Date()
         
     }
     
@@ -1526,6 +1529,13 @@ struct MainDashboardView: View {
     }
     
     func load_recent_event() {
+        
+        //Logic for keeping game info stored across launches
+        //print(ASCurOpponentName != "" && ASCurOpponentName != "Opponent Name", "Opponent Name: " + (ASCurOpponentName ?? "No Name Store"))
+        if ASCurOpponentName != "" && ASCurOpponentName != "Opponent Name" {
+            location_overlay.game_info_entered = true
+        }
+        
         let recent_event = events[events.count - 1]
         let end_ab_br = ["S", "D", "T", "H", "E", "B", "C", "W"]
         let end_ab_out = ["F", "G", "L", "P", "Y", "K", "M", "R", "RE"]

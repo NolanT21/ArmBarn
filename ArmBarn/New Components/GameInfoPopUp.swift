@@ -9,6 +9,10 @@ import SwiftUI
 
 struct GameInfoPopUp: View {
     
+    @AppStorage("CurrentOpponentName") var ASCurOpponentName : String?
+    @AppStorage("CurrentGameLocation") var ASGameLocation : String?
+    @AppStorage("CurrentGameStartTime") var ASStartTime : Date?
+    
     @Environment(GameReport.self) var game_report
     @Environment(LocationOverlay.self) var location_overlay
     
@@ -118,11 +122,11 @@ struct GameInfoPopUp: View {
                                 }
                             
                             Button {
-                                //Logic for storing game information
-                                game_report.opponent_name = opponentname
-                                game_report.game_location = selected_location
-                                game_report.start_date = start_date
                                 
+                                ASCurOpponentName = opponentname
+                                ASGameLocation = selected_location
+                                ASStartTime = start_date
+
                                 fieldIsFocused = false
                                 withAnimation{
                                     close_action()
@@ -189,9 +193,9 @@ struct GameInfoPopUp: View {
         }
         .onAppear{
             if location_overlay.game_info_entered == true {
-                opponentname = game_report.opponent_name
-                selected_location = game_report.game_location
-                start_date = game_report.start_date
+                opponentname = ASCurOpponentName ?? "Opponent Name"
+                selected_location = ASGameLocation ?? "Home"
+                start_date = ASStartTime ?? Date()
             }
         }
     }
