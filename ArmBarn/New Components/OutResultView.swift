@@ -164,7 +164,7 @@ struct OutResultView: View {
                     record_Out()
                     back_to_root()
                 } label: {
-                    Text("PopUp")
+                    Text("Popout")
                         .font(.system(size: 17, weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: 45)
                         .background(button_gradient)
