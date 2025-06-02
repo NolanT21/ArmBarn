@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+struct TabItem {
+    let name: String
+    let systemName: String
+}
+
 enum TabViewEnum: Identifiable, CaseIterable, View {
     
     case home, pitcher_select, game_stats, saved_games, settings
@@ -35,18 +40,13 @@ enum TabViewEnum: Identifiable, CaseIterable, View {
             case .pitcher_select:
                 SelectPitcherView()
             case .game_stats:
-                GameReportView()
+                LiveStatsContainer()
             case .saved_games:
                 SavedGamesView()
             case .settings:
                 SettingsView()
         }
     }
-}
-
-struct TabItem {
-    let name: String
-    let systemName: String
 }
 
 //#Preview {

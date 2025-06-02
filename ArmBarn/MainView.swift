@@ -32,7 +32,7 @@ struct MainView: View {
         .environment(router)
         .preferredColorScheme(.dark)
         .edgesIgnoringSafeArea(.top)
-        .accentColor(Color("ScoreboardGreen"))
+        .accentColor(Color.white)
         
 //        ZStack{
 //            VStack{
