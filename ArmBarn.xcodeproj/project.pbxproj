@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D509EDE52DDF9C3400B57047 /* LiveStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D509EDE42DDF9C3400B57047 /* LiveStatsView.swift */; };
 		D51E9E402CFE19D000173322 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D51E9E3F2CFE19D000173322 /* Assets.xcassets */; };
 		D535E6862DAFCFD400927E38 /* TabBarContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D535E6852DAFCFD400927E38 /* TabBarContentView.swift */; };
 		D54A48F92D64DF470007EDD5 /* GameDataGameLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D54A48F82D64DF470007EDD5 /* GameDataGameLogView.swift */; };
@@ -45,6 +46,8 @@
 		D57607EE2D9AB1E70058074D /* XPopupAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57607EA2D9AB1E70058074D /* XPopupAlertView.swift */; };
 		D57607EF2D9AB1E70058074D /* FileNamePopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57607E62D9AB1E70058074D /* FileNamePopUpView.swift */; };
 		D57607F02D9AB1E70058074D /* PopupAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D57607E72D9AB1E70058074D /* PopupAlertView.swift */; };
+		D5886DFC2DE4A938001BF869 /* LiveGameLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5886DFB2DE4A938001BF869 /* LiveGameLogView.swift */; };
+		D5886DFE2DE4ACF8001BF869 /* LiveStatsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5886DFD2DE4ACF8001BF869 /* LiveStatsContainer.swift */; };
 		D58E1BDF2D6394670007E4A2 /* SavedGameMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D58E1BDE2D6394670007E4A2 /* SavedGameMainView.swift */; };
 		D593023A2DC0F9D400E285E0 /* VelocityNavPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59302392DC0F9D400E285E0 /* VelocityNavPlaceholder.swift */; };
 		D593023C2DC0F9FD00E285E0 /* TwoInputXPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D593023B2DC0F9FD00E285E0 /* TwoInputXPopUp.swift */; };
@@ -56,6 +59,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D509EDE42DDF9C3400B57047 /* LiveStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStatsView.swift; sourceTree = "<group>"; };
 		D51E9E3F2CFE19D000173322 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D535E6852DAFCFD400927E38 /* TabBarContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarContentView.swift; sourceTree = "<group>"; };
 		D54A48F82D64DF470007EDD5 /* GameDataGameLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDataGameLogView.swift; sourceTree = "<group>"; };
@@ -92,6 +96,8 @@
 		D57607E82D9AB1E70058074D /* StrikeoutAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrikeoutAlertView.swift; sourceTree = "<group>"; };
 		D57607E92D9AB1E70058074D /* XInfoPopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XInfoPopUpView.swift; sourceTree = "<group>"; };
 		D57607EA2D9AB1E70058074D /* XPopupAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPopupAlertView.swift; sourceTree = "<group>"; };
+		D5886DFB2DE4A938001BF869 /* LiveGameLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveGameLogView.swift; sourceTree = "<group>"; };
+		D5886DFD2DE4ACF8001BF869 /* LiveStatsContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStatsContainer.swift; sourceTree = "<group>"; };
 		D58E1BDE2D6394670007E4A2 /* SavedGameMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedGameMainView.swift; sourceTree = "<group>"; };
 		D59302392DC0F9D400E285E0 /* VelocityNavPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VelocityNavPlaceholder.swift; sourceTree = "<group>"; };
 		D593023B2DC0F9FD00E285E0 /* TwoInputXPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoInputXPopUp.swift; sourceTree = "<group>"; };
@@ -117,17 +123,9 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		D535E6882DAFD0C100927E38 /* Non-Input Views */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "Non-Input Views";
-			sourceTree = "<group>";
-		};
 		D5726AD82DAD9EF9003EAFB8 /* New Components */ = {
 			isa = PBXGroup;
 			children = (
-				D535E6882DAFD0C100927E38 /* Non-Input Views */,
 				D535E6852DAFCFD400927E38 /* TabBarContentView.swift */,
 				D593027B2DD2390900E285E0 /* TabBarMKIIView.swift */,
 				D5726ADA2DAD9FB6003EAFB8 /* PitchTypeSelectView.swift */,
@@ -142,6 +140,9 @@
 				D593023B2DC0F9FD00E285E0 /* TwoInputXPopUp.swift */,
 				D593023F2DC2754A00E285E0 /* ZeroInputXPopUp.swift */,
 				D59302532DC8FF0700E285E0 /* StrikeoutResultView.swift */,
+				D509EDE42DDF9C3400B57047 /* LiveStatsView.swift */,
+				D5886DFD2DE4ACF8001BF869 /* LiveStatsContainer.swift */,
+				D5886DFB2DE4A938001BF869 /* LiveGameLogView.swift */,
 			);
 			path = "New Components";
 			sourceTree = "<group>";
@@ -344,6 +345,7 @@
 				D54D66E92D6006FE00832995 /* MainContainerView.swift in Sources */,
 				D57607E02D9AB1190058074D /* SelectPitcherView.swift in Sources */,
 				D57607E12D9AB1190058074D /* TipView.swift in Sources */,
+				D5886DFE2DE4ACF8001BF869 /* LiveStatsContainer.swift in Sources */,
 				D535E6862DAFCFD400927E38 /* TabBarContentView.swift in Sources */,
 				D57607E22D9AB1190058074D /* ScoreboardView.swift in Sources */,
 				D57607E32D9AB1190058074D /* SettingsView.swift in Sources */,
@@ -363,6 +365,7 @@
 				D5726AE72DAD9FE7003EAFB8 /* HitResultView.swift in Sources */,
 				D54D66F82D6006FE00832995 /* SavedGamesView.swift in Sources */,
 				D54A48F92D64DF470007EDD5 /* GameDataGameLogView.swift in Sources */,
+				D5886DFC2DE4A938001BF869 /* LiveGameLogView.swift in Sources */,
 				D593023E2DC1440500E285E0 /* GameInfoPopUp.swift in Sources */,
 				D5726AD92DAD9EF9003EAFB8 /* MainDashboardView.swift in Sources */,
 				D57607C62D9993AB0058074D /* SavePopUpView.swift in Sources */,
@@ -381,6 +384,7 @@
 				D57607F02D9AB1E70058074D /* PopupAlertView.swift in Sources */,
 				D57607D12D9994690058074D /* BatterPositionView.swift in Sources */,
 				D57607D22D9994690058074D /* OutDetailView.swift in Sources */,
+				D509EDE52DDF9C3400B57047 /* LiveStatsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
