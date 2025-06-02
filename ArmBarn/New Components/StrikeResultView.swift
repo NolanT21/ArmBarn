@@ -154,7 +154,7 @@ struct StrikeResultView: View {
                 NavigationLink {
                     StrikeoutResultView(path: $path).navigationBarBackButtonHidden(true).task{
                         event.pitch_result = "L"
-                        event.result_detail = "N"
+                        event.result_detail = "K"
                         //add_Strike()
                         //back_to_root()
                     }
@@ -170,7 +170,7 @@ struct StrikeResultView: View {
                 NavigationLink {
                     StrikeoutResultView(path: $path).navigationBarBackButtonHidden(true).task{
                         event.pitch_result = "Z"
-                        event.result_detail = "N"
+                        event.result_detail = "K"
                         //add_Strike()
                         //back_to_root()
                     }
@@ -189,8 +189,8 @@ struct StrikeResultView: View {
                 NavigationLink {
                     StrikeoutResultView(path: $path).navigationBarBackButtonHidden(true).task{
                         event.pitch_result = "TO"
-                        event.result_detail = "N"
-                        add_Strike()
+                        event.result_detail = "K"
+                        //add_Strike()
                         //back_to_root()
                     }
                 } label: {
