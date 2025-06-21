@@ -18,6 +18,10 @@
 		D54D66F82D6006FE00832995 /* SavedGamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5743E1F2D56C28200B773A5 /* SavedGamesView.swift */; };
 		D5542B9F2D6008BC00A8607E /* GameReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5542B9E2D6008BC00A8607E /* GameReportView.swift */; };
 		D5542BA12D6008DB00A8607E /* GameDataSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5542BA02D6008DB00A8607E /* GameDataSummaryView.swift */; };
+		D56764AA2DF8FF87002B3712 /* SavedGameContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56764A92DF8FF87002B3712 /* SavedGameContainer.swift */; };
+		D56764AC2DF9D7AE002B3712 /* SGStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56764AB2DF9D7AE002B3712 /* SGStatsView.swift */; };
+		D56764AE2DF9D7C8002B3712 /* SGPitchFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56764AD2DF9D7C8002B3712 /* SGPitchFilterView.swift */; };
+		D56764B02DF9D7DF002B3712 /* SGGameLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D56764AF2DF9D7DF002B3712 /* SGGameLogView.swift */; };
 		D5726AD92DAD9EF9003EAFB8 /* MainDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5726AD72DAD9EF9003EAFB8 /* MainDashboardView.swift */; };
 		D5726ADB2DAD9FB6003EAFB8 /* PitchTypeSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5726ADA2DAD9FB6003EAFB8 /* PitchTypeSelectView.swift */; };
 		D5726AE32DAD9FE7003EAFB8 /* StrikeResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5726AE12DAD9FE7003EAFB8 /* StrikeResultView.swift */; };
@@ -65,6 +69,10 @@
 		D54A48F82D64DF470007EDD5 /* GameDataGameLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDataGameLogView.swift; sourceTree = "<group>"; };
 		D5542B9E2D6008BC00A8607E /* GameReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameReportView.swift; sourceTree = "<group>"; };
 		D5542BA02D6008DB00A8607E /* GameDataSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDataSummaryView.swift; sourceTree = "<group>"; };
+		D56764A92DF8FF87002B3712 /* SavedGameContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedGameContainer.swift; sourceTree = "<group>"; };
+		D56764AB2DF9D7AE002B3712 /* SGStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SGStatsView.swift; sourceTree = "<group>"; };
+		D56764AD2DF9D7C8002B3712 /* SGPitchFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SGPitchFilterView.swift; sourceTree = "<group>"; };
+		D56764AF2DF9D7DF002B3712 /* SGGameLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SGGameLogView.swift; sourceTree = "<group>"; };
 		D5726AD72DAD9EF9003EAFB8 /* MainDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainDashboardView.swift; sourceTree = "<group>"; };
 		D5726ADA2DAD9FB6003EAFB8 /* PitchTypeSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchTypeSelectView.swift; sourceTree = "<group>"; };
 		D5726ADC2DAD9FE7003EAFB8 /* HitResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HitResultView.swift; sourceTree = "<group>"; };
@@ -143,6 +151,10 @@
 				D509EDE42DDF9C3400B57047 /* LiveStatsView.swift */,
 				D5886DFD2DE4ACF8001BF869 /* LiveStatsContainer.swift */,
 				D5886DFB2DE4A938001BF869 /* LiveGameLogView.swift */,
+				D56764A92DF8FF87002B3712 /* SavedGameContainer.swift */,
+				D56764AB2DF9D7AE002B3712 /* SGStatsView.swift */,
+				D56764AD2DF9D7C8002B3712 /* SGPitchFilterView.swift */,
+				D56764AF2DF9D7DF002B3712 /* SGGameLogView.swift */,
 			);
 			path = "New Components";
 			sourceTree = "<group>";
@@ -341,6 +353,7 @@
 				D54D66E42D6006FE00832995 /* ArmBarnApp.swift in Sources */,
 				D54D66E52D6006FE00832995 /* Assets.xcassets in Sources */,
 				D59302402DC2754A00E285E0 /* ZeroInputXPopUp.swift in Sources */,
+				D56764AA2DF8FF87002B3712 /* SavedGameContainer.swift in Sources */,
 				D54D66E82D6006FE00832995 /* MainView.swift in Sources */,
 				D54D66E92D6006FE00832995 /* MainContainerView.swift in Sources */,
 				D57607E02D9AB1190058074D /* SelectPitcherView.swift in Sources */,
@@ -364,6 +377,8 @@
 				D593023C2DC0F9FD00E285E0 /* TwoInputXPopUp.swift in Sources */,
 				D5726AE72DAD9FE7003EAFB8 /* HitResultView.swift in Sources */,
 				D54D66F82D6006FE00832995 /* SavedGamesView.swift in Sources */,
+				D56764AE2DF9D7C8002B3712 /* SGPitchFilterView.swift in Sources */,
+				D56764B02DF9D7DF002B3712 /* SGGameLogView.swift in Sources */,
 				D54A48F92D64DF470007EDD5 /* GameDataGameLogView.swift in Sources */,
 				D5886DFC2DE4A938001BF869 /* LiveGameLogView.swift in Sources */,
 				D593023E2DC1440500E285E0 /* GameInfoPopUp.swift in Sources */,
@@ -383,6 +398,7 @@
 				D593027C2DD2390900E285E0 /* TabBarMKIIView.swift in Sources */,
 				D57607F02D9AB1E70058074D /* PopupAlertView.swift in Sources */,
 				D57607D12D9994690058074D /* BatterPositionView.swift in Sources */,
+				D56764AC2DF9D7AE002B3712 /* SGStatsView.swift in Sources */,
 				D57607D22D9994690058074D /* OutDetailView.swift in Sources */,
 				D509EDE52DDF9C3400B57047 /* LiveStatsView.swift in Sources */,
 			);
