@@ -38,16 +38,16 @@ struct SavedGamesView: View {
     //                            let pitcher_info = games.pitcher_info
                                 NavigationLink{
                                     //GameDataSummaryView(game_data: games)
-                                    SavedGameMainView(game_data: games)
+                                    SavedGameContainer(game_data: games).navigationBarBackButtonHidden(true).preferredColorScheme(.dark)
                                 } label : {
                                     VStack(alignment: .leading){
                                         HStack(spacing: 2){
                                             if games.location == "Away" {
                                                 Text("@")
-                                                    .font(.system(size: 17, weight: .bold))
+                                                    .font(.system(size: 17, weight: .semibold))
                                             }
                                             Text(games.opponent_name)
-                                                .font(.system(size: 17, weight: .bold))
+                                                .font(.system(size: 17, weight: .semibold))
                                         }
                                         
                                         let date = games.date.formatted(date: .abbreviated, time: .omitted)
@@ -76,20 +76,6 @@ struct SavedGamesView: View {
                     }
                     .navigationTitle(Text("Saved Games"))
                     .navigationBarTitleDisplayMode(.large)
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            Button {
-                                dismiss()
-                            } label: {
-                                Image(systemName: "xmark")
-                                    .imageScale(.medium)
-                                    .font(.system(size: 17))
-                                    .frame(width: sbl_width, height: sbl_height)
-                                    .foregroundColor(text_color)
-                                    .bold()
-                            }
-                        }
-                    }
                 }
             }
             
