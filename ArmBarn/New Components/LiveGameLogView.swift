@@ -67,16 +67,7 @@ struct LiveGameLogView: View {
                                     Text("MPH")
                                     Text("Result")
                                     Text("Count")
-                                    
-                                    
-//                                    VStack{
-//                                        Text("Sticky Header Row")
-//                                    }
-//                                    .gridCellColumns(6)
-//                                    .gridCellAnchor(.center)
-//                                    .offset(y: gr.frame(in: .global).origin.y < 0 // Is it going up?
-//                                                    ? abs(gr.frame(in: .global).origin.y) // Push it down!
-//                                                    : -gr.frame(in: .global).origin.y) // Push it up!
+
                                 }
                                 .font(.system(size: 11, weight: .medium))
                                 .foregroundStyle(Color.gray)
@@ -127,7 +118,7 @@ struct LiveGameLogView: View {
                         }
                         
                         //Displays Batter Number header
-                        if index == 0 || end_ab_rd.contains(game_log_data[index - 1].result_detail){
+                        if (index == 0 || end_ab_rd.contains(game_log_data[index - 1].result_detail)) && datarow.result_detail != "RE"{
                             GridRow{
                                 VStack{
                                     HStack{
@@ -464,6 +455,9 @@ struct LiveGameLogView: View {
             else if event.result_detail == "R" || event.result_detail == "RE" { //Baserunner out
                 result = "Baserunner Out"
                 result_color = Color.yellow
+                if event.result_detail == "RE" && event.balls == 0 && event.strikes == 0{
+                    inn_batters_faced -= 1
+                }
             }
             
             if end_ab_rd.contains(event.result_detail) {
