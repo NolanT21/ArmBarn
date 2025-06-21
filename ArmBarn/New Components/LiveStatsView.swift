@@ -14,6 +14,11 @@ struct VeloComponentData: Hashable{
     var y_offset: CGFloat
 }
 
+struct VeloLayoutData: Hashable{
+    var velo_category: Int
+    var count: Int
+}
+
 struct PlayerStatLineData: Hashable{
     var first_char: String = ""
     var last_name: String = ""
@@ -78,9 +83,10 @@ struct LiveStatsView: View {
     
     //Variables for player detal velocity component
     @State private var pdv_component_data: [VeloComponentData] = []
+    @State private var pdv_velo_layout: [VeloLayoutData] = []
     @State private var pdv_min_velo: Double = 0.0
     @State private var pdv_max_velo: Double = 0.0
-    @State private var pdv_end_index: Int = 0
+    @State private var pdv_start_index: Int = 0
     @State private var pdv_pitch1: String = ""
     @State private var pdv_pitch1_max: Double = 0.0
     @State private var pdv_pitch2: String = ""
@@ -374,22 +380,22 @@ struct LiveStatsView: View {
                             .foregroundStyle(Color.gray)
                         }
                         
-                        Text("\(pdv_end_index - 20)")
+                        Text("\(pdv_start_index + 5)")
                             .position(x: (width * (1/5)), y: 110)
                             .font(.system(size: 11))
                             .foregroundStyle(Color.gray)
                         
-                        Text("\(pdv_end_index - 15)")
+                        Text("\(pdv_start_index + 10)")
                             .position(x: (width * (2/5)), y: 110)
                             .font(.system(size: 11))
                             .foregroundStyle(Color.gray)
                         
-                        Text("\(pdv_end_index - 10)")
+                        Text("\(pdv_start_index + 15)")
                             .position(x: (width * (3/5)), y: 110)
                             .font(.system(size: 11))
                             .foregroundStyle(Color.gray)
                         
-                        Text("\(pdv_end_index - 5)mph")
+                        Text("\(pdv_start_index + 20)mph")
                             .position(x: (width * (4/5)) + 10, y: 110)
                             .font(.system(size: 11))
                             .foregroundStyle(Color.gray)
@@ -490,11 +496,10 @@ struct LiveStatsView: View {
                     ForEach(Array(pdv_component_data.enumerated()), id: \.offset) { index, pitch in
                         
                         Circle()
-                            .frame(width: 22, height: 22)
+                            .frame(width: 15, height: 15)
                             .foregroundStyle(pitch.color)
                             .shadow(radius: 2)
-                            .position(x: (pitch.velo - CGFloat(pdv_end_index - 25)) * (width / 25.3), y: 50 + pitch.y_offset)
-                            //.position(x: (pitch.velo - CGFloat(pdv_start_index)) * (width / 25.3), y: 50 + pitch.y_offset)
+                            .position(x: (pitch.velo - CGFloat(pdv_start_index)) * (width / 25.3), y: pitch.y_offset)
                         
                     }
 
@@ -550,7 +555,8 @@ struct LiveStatsView: View {
                 }
             }
         }
-        .padding(20)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 10)
         .frame(maxWidth: .infinity)
         .background(.regularMaterial)
         .cornerRadius(20)
@@ -688,39 +694,134 @@ struct LiveStatsView: View {
         }
         
         //Velo Component x-axis label logic
-        pdv_end_index = (10 * Int((pdv_max_velo / 10.0).rounded(.down))) + 10
+        pdv_start_index = (10 * Int((pdv_max_velo / 10.0).rounded(.down))) + 10
         
         //Sort Velo Component List by Velo
         var sorted_velo_list = pdv_component_data
         sorted_velo_list.sort { $0.velo < $1.velo }
+        pdv_component_data.sort { $0.velo < $1.velo }
         print("Sorted Velo List: ", sorted_velo_list)
         
         //Calculating y_offset for Velo Component
-        var y_offset: CGFloat = 0
-        var offset_flip: CGFloat = 1
-        var index_velo = 0.0
-
-        for (index, pitch) in sorted_velo_list.enumerated() {
-            if index > 0 && sorted_velo_list[index].velo - index_velo <= 2{ //If previous velocity was too close
-                y_offset = abs(y_offset) + 13 * offset_flip
-                if y_offset > 1{
-                    offset_flip = -1
-                }
-                else if y_offset < -1{
-                    offset_flip = 1
-                }
-            }
-            else { // Previous velocity is now far enough away, reset variables
-                y_offset = 0
-                offset_flip = 1
-                index_velo = pitch.velo
-                //print("Index Velo:", index_velo)
+        let min_velo_round_down = Int(pdv_min_velo.rounded(.down))
+        let max_velo_round_down = Int(pdv_max_velo.rounded(.down))
+        
+        print("Max: \(min_velo_round_down), Min: \(max_velo_round_down)")
+        
+        var velo_cat = min_velo_round_down
+        var velo_cat_num: Int = 0
+        for pitch in sorted_velo_list {
+            
+            print(Int(pitch.velo.rounded(.down)))
+            if Int(pitch.velo.rounded(.down)) != velo_cat {
+                
+                pdv_velo_layout.append(VeloLayoutData(velo_category: velo_cat, count: velo_cat_num))
+                //Reset variables
+                velo_cat_num = 0
+                velo_cat = Int(pitch.velo.rounded(.down))
+                
             }
             
-            //Save y_offset to current iteration
-            pdv_component_data[index].y_offset = y_offset
+            if Int(pitch.velo.rounded(.down)) == velo_cat {
+                velo_cat_num += 1
+            }
             
         }
+        
+        //Append last iteration of data if not already
+        if velo_cat_num > 0 {
+            pdv_velo_layout.append(VeloLayoutData(velo_category: velo_cat, count: velo_cat_num))
+        }
+        
+        print("Velo Layout Data: \(pdv_velo_layout)")
+        //print(sorted_velos.count)
+        
+        pdv_start_index = Int(pdv_max_velo) - 20
+        print("Low Velo Value: ", pdv_start_index)
+        
+        var cur_velo_cat_count: Int = 0
+        var velo_cat_count: Int = 0
+        var velo_category: Int = 0
+        var velo_index: Int = 0
+        var start_of_velo_cat = true
+        if !pdv_velo_layout.isEmpty {
+            velo_cat_count = pdv_velo_layout[velo_index].count
+            velo_category = pdv_velo_layout[velo_index].velo_category
+        }
+        
+        var offset: CGFloat = 0
+        for (index, pitch) in sorted_velo_list.enumerated(){
+            
+            //Current pitch is not in current velo category
+            if pitch.velo.rounded(.down) != Double(velo_category){
+                velo_index += 1
+                velo_cat_count = pdv_velo_layout[velo_index].count
+                velo_category = pdv_velo_layout[velo_index].velo_category
+                cur_velo_cat_count = 0
+                start_of_velo_cat = true
+            }
+            
+            print(velo_cat_count == pdv_velo_layout[velo_index].count, velo_category)
+            //
+            if start_of_velo_cat == true {
+                if velo_cat_count <= 5 {
+                    offset = CGFloat(50 - (velo_cat_count * 5) + 5)
+
+                }
+                else {
+                    cur_velo_cat_count = velo_cat_count - 5
+                    velo_cat_count = 5
+                    offset = CGFloat(50 - (velo_cat_count * 5) + 5)
+                }
+                
+                start_of_velo_cat = false
+                
+                print("New Offset: \(offset)")
+            }
+            else {
+                offset += 10
+                print("Offset: \(offset)")
+                if offset == 70 {
+                    start_of_velo_cat = true
+                    velo_cat_count = cur_velo_cat_count + 1
+                }
+            }
+            
+            velo_cat_count -= 1
+            
+            pdv_component_data[index].y_offset = offset
+            
+        }
+        
+        print(pdv_component_data)
+        
+        
+        
+        //var y_offset: CGFloat = 0
+//        var offset_flip: CGFloat = 1
+//        var index_velo = 0.0
+//
+//        for (index, pitch) in sorted_velo_list.enumerated() {
+//            if index > 0 && sorted_velo_list[index].velo - index_velo <= 2{ //If previous velocity was too close
+//                y_offset = abs(y_offset) + 13 * offset_flip
+//                if y_offset > 1{
+//                    offset_flip = -1
+//                }
+//                else if y_offset < -1{
+//                    offset_flip = 1
+//                }
+//            }
+//            else { // Previous velocity is now far enough away, reset variables
+//                y_offset = 0
+//                offset_flip = 1
+//                index_velo = pitch.velo
+//                //print("Index Velo:", index_velo)
+//            }
+//            
+//            //Save y_offset to current iteration
+//            pdv_component_data[index].y_offset = y_offset
+//            
+//        }
 
     }
     
@@ -810,9 +911,10 @@ struct LiveStatsView: View {
         pd_whiff_per = 0.0
         
         pdv_component_data.removeAll()
+        pdv_velo_layout.removeAll()
         pdv_min_velo = 0.0
         pdv_max_velo = 0.0
-        pdv_end_index = 0
+        pdv_start_index = 0
         pdv_pitch1 = ""
         pdv_pitch1_max = 0.0
         pdv_pitch2 = ""
