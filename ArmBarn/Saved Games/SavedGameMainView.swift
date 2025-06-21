@@ -77,8 +77,7 @@ struct SavedGameMainView: View {
                     let time = game_data.date.formatted(date: .omitted, time: .shortened)
                     
                     VStack(alignment: .trailing){
-                        Text(date) +
-                        Text(" ") +
+                        Text(date)
                         Text(time)
                     }
                     .font(.system(size: caption_size))
