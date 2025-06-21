@@ -10,6 +10,11 @@ import SwiftData
 
 struct AddPitcherView: View {
     
+    enum NameFieldFocusable: Hashable {
+      case firstname
+      case lastname
+    }
+    
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) var dismiss
     @Environment(currentPitcher.self) var current_pitcher
@@ -20,6 +25,8 @@ struct AddPitcherView: View {
     
     @State private var selected_pitcher_hand = "Right"
     let pitcher_hand_list = ["Right", "Left"]
+    
+    @FocusState private var fieldIsFocused: NameFieldFocusable?
     
     @State private var invalidPitcherName: Bool = false
     
@@ -84,10 +91,14 @@ struct AddPitcherView: View {
                 Form{
                     Section(header: Text("Player Info")){
                         TextField("First Name", text: $firstName)
+                            .focused($fieldIsFocused, equals: .firstname)
+                            .tint(Color("ScoreboardGreen"))
                         
                         TextField("Last Name", text: $lastName)
+                            .focused($fieldIsFocused, equals: .lastname)
+                            .tint(Color("ScoreboardGreen"))
 
-                        Picker("Velocity Units", selection: $selected_pitcher_hand) {
+                        Picker("Pitcher Hand", selection: $selected_pitcher_hand) {
                             ForEach(pitcher_hand_list, id: \.self) {
                                 Text($0)
                                     .bold()
@@ -96,6 +107,7 @@ struct AddPitcherView: View {
                         .pickerStyle(.segmented)
                         .onChange(of: selected_pitcher_hand){
                             impact.impactOccurred()
+                            fieldIsFocused = nil
                             //ASVeloUnits = selected_velo_units
                             //print(selected_velo_units)
                         }
@@ -108,20 +120,32 @@ struct AddPitcherView: View {
                                 Text($0)
                             }
                         }
+                        .onChange(of: pitch1){
+                            fieldIsFocused = nil
+                        }
                         Picker("Pitch 2", selection: $pitch2){
                             ForEach(pitch_types, id: \.self){
                                 Text($0)
                             }
+                        }
+                        .onChange(of: pitch2){
+                            fieldIsFocused = nil
                         }
                         Picker("Pitch 3", selection: $pitch3){
                             ForEach(pitch_types, id: \.self){
                                 Text($0)
                             }
                         }
+                        .onChange(of: pitch3){
+                            fieldIsFocused = nil
+                        }
                         Picker("Pitch 4", selection: $pitch4){
                             ForEach(pitch_types, id: \.self){
                                 Text($0)
                             }
+                        }
+                        .onChange(of: pitch4){
+                            fieldIsFocused = nil
                         }
                     }
                     Button("Save") {
@@ -136,6 +160,8 @@ struct AddPitcherView: View {
                             dismiss()
                         }
                         
+                        fieldIsFocused = nil
+                        
                     }
                     .bold()
                     .foregroundStyle(.white)
@@ -143,6 +169,9 @@ struct AddPitcherView: View {
                     .frame(maxWidth: .infinity)
                     .multilineTextAlignment(.center)
                     
+                }
+                .onAppear{
+                    fieldIsFocused = .firstname
                 }
                 .scrollContentBackground(.hidden)
 

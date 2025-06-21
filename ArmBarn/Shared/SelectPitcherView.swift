@@ -368,6 +368,8 @@ struct EditPitcherView: View {
     @Environment(\.dismiss) var dismiss
     @Bindable var edit_pitcher: Pitcher
     
+    @FocusState private var fieldIsFocused: Bool
+    
     let pitch_types = ["None", "Fastball", "Curveball", "Slider", "Change-Up", "Splitter", "Cutter", "Sinker", "Other"]
     
     @State private var selected_pitcher_hand = "Right"
@@ -414,8 +416,12 @@ struct EditPitcherView: View {
             Form{
                 Section(header: Text("Player Name")){
                     TextField("First Name", text: $edit_pitcher.firstName)
+                        .focused($fieldIsFocused)
+                        .tint(Color("ScoreboardGreen"))
                     
                     TextField("Last Name", text: $edit_pitcher.lastName)
+                        .focused($fieldIsFocused)
+                        .tint(Color("ScoreboardGreen"))
                     
                     Picker("Velocity Units", selection: $edit_pitcher.throwingHand) {
                         ForEach(pitcher_hand_list, id: \.self) {
@@ -426,6 +432,7 @@ struct EditPitcherView: View {
                     .pickerStyle(.segmented)
                     .onChange(of: edit_pitcher.throwingHand){
                         impact.impactOccurred()
+                        fieldIsFocused = false
                         //ASVeloUnits = selected_velo_units
                         //print(selected_velo_units)
                     }
@@ -437,20 +444,32 @@ struct EditPitcherView: View {
                             Text($0)
                         }
                     }
+                    .onChange(of: edit_pitcher.pitch1){
+                        fieldIsFocused = false
+                    }
                     Picker("Pitch 2", selection: $edit_pitcher.pitch2){
                         ForEach(pitch_types, id: \.self){
                             Text($0)
                         }
+                    }
+                    .onChange(of: edit_pitcher.pitch1){
+                        fieldIsFocused = false
                     }
                     Picker("Pitch 3", selection: $edit_pitcher.pitch3){
                         ForEach(pitch_types, id: \.self){
                             Text($0)
                         }
                     }
+                    .onChange(of: edit_pitcher.pitch1){
+                        fieldIsFocused = false
+                    }
                     Picker("Pitch 4", selection: $edit_pitcher.pitch4){
                         ForEach(pitch_types, id: \.self){
                             Text($0)
                         }
+                    }
+                    .onChange(of: edit_pitcher.pitch1){
+                        fieldIsFocused = false
                     }
                 }
                 Button("Save") {
