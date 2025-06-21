@@ -62,12 +62,8 @@ struct GameInfoPopUp: View {
                                 .padding(.vertical, 5)
                                 .padding(.leading, 10)
                                 .focused($fieldIsFocused)
-                                .submitLabel(.done)
-                                //.onSubmit {
-                                    //event.velocity = veloinput
-                                    //close()
-                                    //close_action()
-                                //}
+                                //.submitLabel(.done)
+                                .tint(Color("ScoreboardGreen"))
                                 .font(.system(size: 17, weight: .medium))
                                 .background(Color.gray.opacity(0.2))
                                 .background(.regularMaterial)
@@ -75,7 +71,9 @@ struct GameInfoPopUp: View {
                                 .multilineTextAlignment(.leading)
                                 .padding(.horizontal, 20)
                                 .onAppear {
-                                    fieldIsFocused = true
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                        fieldIsFocused = true
+                                    }
                                 }
                                 
                                 VStack{
@@ -95,6 +93,9 @@ struct GameInfoPopUp: View {
                                             .padding(.top, -5)
                                             .padding(.leading, 20)
                                             .frame(minWidth: 0, maxWidth: .infinity, alignment: .center)
+                                            .onChange(of: start_date) {
+                                                fieldIsFocused = false
+                                            }
 
                            
                                         Spacer()
@@ -116,9 +117,7 @@ struct GameInfoPopUp: View {
                                 //.frame(width: 200)
                                 //.clipped()
                                 .onChange(of: selected_location){
-                                    //impact.impactOccurred()
-                                    //game_report.game_location = selected_location
-                                    //ASGameLocation = selected_location
+                                    fieldIsFocused = false
                                 }
                             
                             Button {
@@ -136,14 +135,14 @@ struct GameInfoPopUp: View {
                                 Text("Enter")
                                     .font(.system(size: 17, weight: .bold))
                                     .frame(width: 125, height: 40)
-                                    .background(!validTeamName || opponentname == ""  ? disabled_gradient : button_gradient)
-                                    .foregroundColor(!validTeamName || opponentname == "" ? Color.gray.opacity(0.5) : Color.white)
+                                    .background(/*!validTeamName || */opponentname == ""  ? disabled_gradient : button_gradient)
+                                    .foregroundColor(/*!validTeamName || */opponentname == "" ? Color.gray.opacity(0.5) : Color.white)
                                     .cornerRadius(8.0)
                             }
-                            .disabled(!validTeamName || opponentname == "")
-                            .onChange(of: opponentname){ _, _ in
-                                validate_opponent_name()
-                            }
+                            .disabled(/*!validTeamName || */opponentname == "")
+                            //.onChange(of: opponentname){ _, _ in
+                                //validate_opponent_name()
+                            //}
                         }
                         .overlay{
                             VStack{
