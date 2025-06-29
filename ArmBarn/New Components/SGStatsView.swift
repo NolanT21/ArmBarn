@@ -9,7 +9,8 @@ import SwiftUI
 
 struct pitcher_game_info: Hashable {
     
-    var name: String
+    var first_name: String
+    var last_name: String
     var innings_pitched: Double
     var batters_faced: Int
     var hits: Int
@@ -34,6 +35,21 @@ struct top_velocity_data: Hashable  {
     
     var name: String
     var velocity: Double
+    
+}
+
+struct pitch_type_data: Hashable  {
+    
+    var pitch_type: String
+    var count: Int
+    var max_velo: Double
+    var swings: Int
+    var whiff: Int
+    var whiff_percentage: Double
+    var hits: Int
+    var fouls: Int
+    var balls_in_play: Int
+    var color: Color
     
 }
 
@@ -82,6 +98,16 @@ struct SGStatsView: View {
     @State private var pd_first_pitch_strikes: Int = 0
     @State private var pd_swing_per: Double = 0.0
     @State private var pd_whiff_per: Double = 0.0
+    
+    @State private var pd_pitch1_stats: pitch_type_data = pitch_type_data(pitch_type: "", count: 0, max_velo: 0.0, swings: 0, whiff: 0, whiff_percentage: 0.0, hits: 0, fouls: 0, balls_in_play: 0, color: Color.blue)
+    @State private var pd_pitch2_stats: pitch_type_data = pitch_type_data(pitch_type: "", count: 0, max_velo: 0.0, swings: 0, whiff: 0, whiff_percentage: 0.0, hits: 0, fouls: 0, balls_in_play: 0, color: Color.green)
+    @State private var pd_pitch3_stats: pitch_type_data = pitch_type_data(pitch_type: "", count: 0, max_velo: 0.0, swings: 0, whiff: 0, whiff_percentage: 0.0, hits: 0, fouls: 0, balls_in_play: 0, color: Color.orange)
+    @State private var pd_pitch4_stats: pitch_type_data = pitch_type_data(pitch_type: "", count: 0, max_velo: 0.0, swings: 0, whiff: 0, whiff_percentage: 0.0, hits: 0, fouls: 0, balls_in_play: 0, color: Color.gray)
+//    @State private var pd_all_pitches_stats : pitch_type_data = pitch_type_data(pitch_type: "", count: 0, max_velo: 0.0, swings: 0, whiff: 0, whiff_percentage: 0.0, hits: 0, fouls: 0, balls_in_play: 0, color: Color.clear)
+    
+    @State private var pd_pitch_type_stats: [pitch_type_data] = []
+    
+    @State private var pd_pitch_type_colors: [Color] = [Color.blue, Color.green, Color.orange, Color.gray]
     
     //Variavles for player detail velocity component
     @State private var pdv_min_velo: Double = 0.0
@@ -278,6 +304,60 @@ struct SGStatsView: View {
                 .background(.regularMaterial)
                 .cornerRadius(20)
                 
+                //Player Detail
+                playerDetail()
+                
+                //Individual stat lines
+                VStack{
+                    
+                    Grid{
+                        ForEach(Array(pitcher_stats_list.enumerated()), id: \.offset){ index, statline in
+                            if index == 0 {
+                                GridRow{
+                                    Text("Pitcher")
+                                    Text("IP")
+                                    Text("BF")
+                                    Text("H")
+                                    Text("XBH")
+                                    Text("HR")
+                                    Text("SO")
+                                    Text("BB")
+                                    Text("HBP")
+                                    Text("PC-ST")
+                                }
+                                .font(.system(size: 11))
+                                .foregroundStyle(Color.gray)
+                                .padding(.bottom, -5)
+                                
+                                Divider()
+                            }
+                                
+                            GridRow{
+                                Text(statline.first_name.prefix(1) + ". " + statline.last_name)
+                                    .gridCellAnchor(.leading)
+                                Text("\(statline.innings_pitched, specifier: "%.1f")")
+                                Text("\(statline.batters_faced)")
+                                Text("\(statline.hits)")
+                                Text("\(statline.xbhs)")
+                                Text("\(statline.home_runs)")
+                                Text("\(statline.strikeouts)")
+                                Text("\(statline.walks)")
+                                Text("\(statline.hbps)")
+                                Text("\(statline.pitch_count)-\(statline.strike_count)")
+                            }
+                            .font(.system(size: 11, weight: .medium))
+                            .foregroundStyle(Color.white)
+                            .frame(height: 15)
+
+                        }
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
+                .frame(maxWidth: .infinity)
+                .background(.regularMaterial)
+                .cornerRadius(20)
+                
                 //Velocity & Swing and Misses Row
                 HStack(alignment: .top) {
                     VStack { //Top 5 Pitch Velos
@@ -372,60 +452,6 @@ struct SGStatsView: View {
                 }
                 .padding(.top, 0.5)
                 
-                //Player Detail
-                playerDetail()
-                
-                //Individual stat lines
-                VStack{
-                    
-                    Grid{
-                        ForEach(Array(pitcher_stats_list.enumerated()), id: \.offset){ index, statline in
-                            if index == 0 {
-                                GridRow{
-                                    Text("Pitcher")
-                                    Text("IP")
-                                    Text("BF")
-                                    Text("H")
-                                    Text("XBH")
-                                    Text("HR")
-                                    Text("SO")
-                                    Text("BB")
-                                    Text("HBP")
-                                    Text("PC-ST")
-                                }
-                                .font(.system(size: 11))
-                                .foregroundStyle(Color.gray)
-                                .padding(.bottom, -5)
-                                
-                                Divider()
-                            }
-                                
-                            GridRow{
-                                Text(statline.name)
-                                    .gridCellAnchor(.leading)
-                                Text("\(statline.innings_pitched, specifier: "%.1f")")
-                                Text("\(statline.batters_faced)")
-                                Text("\(statline.hits)")
-                                Text("\(statline.xbhs)")
-                                Text("\(statline.home_runs)")
-                                Text("\(statline.strikeouts)")
-                                Text("\(statline.walks)")
-                                Text("\(statline.hbps)")
-                                Text("\(statline.pitch_count)-\(statline.strike_count)")
-                            }
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundStyle(Color.white)
-                            .frame(height: 15)
-
-                        }
-                    }
-                }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 10)
-                .frame(maxWidth: .infinity)
-                .background(.regularMaterial)
-                .cornerRadius(20)
-                
             }
             .padding(.horizontal, 10)
             
@@ -439,9 +465,20 @@ struct SGStatsView: View {
             pdv_pitch3 = game_data.pitcher_info[0].pitch3
             pdv_pitch4 = game_data.pitcher_info[0].pitch4
             
+            //Reset player detail pitch type structs
+            reset_player_detail_pitch_type_data()
+            
+            pd_pitch1_stats.pitch_type = pdv_pitch1
+            pd_pitch2_stats.pitch_type = pdv_pitch2
+            pd_pitch3_stats.pitch_type = pdv_pitch3
+            pd_pitch4_stats.pitch_type = pdv_pitch4
+            
+            pdv_component_data.removeAll()
+            pd_pitch_type_stats.removeAll()
             pitcher_stats_list.removeAll()
             swings_and_misses_list.removeAll()
             velocity_list.removeAll()
+            
             
             generate_saved_games_stats()
             generate_player_detail_stats()
@@ -459,15 +496,19 @@ struct SGStatsView: View {
                 Menu{
                     ForEach(Array(game_data.pitcher_info.enumerated()), id: \.offset) { index, pitcher_info in
                         Button(action: {
+                            
                             selected_pitcher_id = pitcher_info.pitcher_id
                             selected_pitcher_name = pitcher_info.first_name + " " + pitcher_info.last_name
                             
-                            pdv_pitch1 = pitcher_info.pitch1
-                            pdv_pitch2 = pitcher_info.pitch2
-                            pdv_pitch3 = pitcher_info.pitch3
-                            pdv_pitch4 = pitcher_info.pitch4
+                            reset_player_detail_pitch_type_data()
+                            
+                            pd_pitch1_stats.pitch_type = pitcher_info.pitch1
+                            pd_pitch2_stats.pitch_type = pitcher_info.pitch2
+                            pd_pitch3_stats.pitch_type = pitcher_info.pitch3
+                            pd_pitch4_stats.pitch_type = pitcher_info.pitch4
                             
                             generate_player_detail_stats()
+                            
                         }) {
                             Text(pitcher_info.first_name + " " + pitcher_info.last_name)
                         }
@@ -646,24 +687,67 @@ struct SGStatsView: View {
             //Pitch Type Detail w/ Legend for velo component
             HStack{
                 Grid() {
-                    GridRow {
-                        Text("Pitch Type")
-                        Text("#")
-                        Text("Max")
-                        Text("Swings")
-                        Text("Whiffs")
-                        Text("%")
-                        Text("H")
-                        Text("Foul")
-                        Text("BIP")
+                    ForEach(Array(pd_pitch_type_stats.enumerated()), id: \.offset) { index, pitch_type in
+                        if index == 0 {
+                            
+                            GridRow {
+                                Text("Pitch Type")
+                                    .gridCellAnchor(.leading)
+                                Text("#")
+                                Text("Max")
+                                Text("Swings")
+                                Text("Whiffs")
+                                //Text("%")
+                                Text("H")
+                                Text("Foul")
+                                Text("BIP")
+                            }
+                            .foregroundStyle(.gray)
+                            .font(.system(size: 13, weight: .regular))
+                            .padding(.bottom, -3)
+                            
+                            Divider()
+                            
+                        }
+                        
+                        if pitch_type.color == .clear {
+                            Divider()
+                                //.padding(.top, -3)
+                        }
+                        
+                        if pitch_type.count != 0 {
+                            GridRow {
+                                HStack{
+                                    if pitch_type.color != .clear {
+                                        Circle()
+                                            .frame(width: 12, height: 12)
+                                            .foregroundColor(pitch_type.color)
+                                    }
+                
+                                    Text(pitch_type.pitch_type)
+                                }
+                                .gridCellAnchor(.leading)
+                                .frame(height: 3)
+                                
+                                Text("\(pitch_type.count)")
+                                Text("\(pitch_type.max_velo, specifier: "%.1f")")
+                                Text("\(pitch_type.swings)")
+                                Text("\(pitch_type.whiff)")
+                                //Text("\(pitch_type.whiff_percentage, specifier: "%.1f")")
+                                Text("\(pitch_type.hits)")
+                                Text("\(pitch_type.fouls)")
+                                Text("\(pitch_type.balls_in_play)")
+                            }
+                            .font(.system(size: 13, weight: .regular))
+                            .foregroundStyle(pitch_type.color != .clear ? Color.white : Color.gray)
+                            .padding(.top, pitch_type.color != .clear ? 0 : -3)
+                        }
+                        
                     }
-                    .foregroundStyle(.gray)
-                    .font(.system(size: 13, weight: .regular))
-                    
-                    Divider()
                     
                 }
-                .padding(.horizontal, 10)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 5)
                 
             }
             .padding(.bottom, 10)
@@ -722,92 +806,6 @@ struct SGStatsView: View {
                             .font(.system(size: 11))
                             .foregroundStyle(Color.gray)
                         
-                        HStack{
-                            
-                            Spacer()
-                            
-                            VStack(spacing: 2){
-                                HStack{
-                                    Circle()
-                                        .frame(width: 12, height: 12)
-                                        .foregroundStyle(Color.blue)
-                                    
-                                    Text(pdv_pitch1)
-                                        .font(.system(size: 13, weight: .medium))
-                                        .foregroundColor(Color.white)
-                                }
-                                Text("Max: \(pdv_pitch1_max, specifier: "%.1f")")
-                                    .font(.system(size: 12))
-                                    .foregroundColor(Color.gray)
-                            }
-                            
-                            
-                            if pdv_pitch2 != "None" && pdv_pitch2_max > 0{
-                                
-                                Spacer()
-                                
-                                VStack(spacing: 2){
-                                    HStack{
-                                        Circle()
-                                            .frame(width: 12, height: 12)
-                                            .foregroundStyle(Color.green)
-                                        
-                                        Text(pdv_pitch2)
-                                            .font(.system(size: 13, weight: .medium))
-                                            .foregroundColor(Color.white)
-                                    }
-                                    Text("Max: \(pdv_pitch2_max, specifier: "%.1f")")
-                                        .font(.system(size: 12))
-                                        .foregroundColor(Color.gray)
-                                }
-                            }
-                            
-                            if pdv_pitch3 != "None" && pdv_pitch3_max > 0{
-                                
-                                Spacer()
-                                
-                                VStack(spacing: 2){
-                                    HStack{
-                                        Circle()
-                                            .frame(width: 12, height: 12)
-                                            .foregroundStyle(Color.orange)
-                                        
-                                        Text(pdv_pitch3)
-                                            .font(.system(size: 13, weight: .medium))
-                                            .foregroundColor(Color.white)
-                                    }
-                                    Text("Max: \(pdv_pitch3_max, specifier: "%.1f")")
-                                        .font(.system(size: 12))
-                                        .foregroundColor(Color.gray)
-                                }
-                            }
-                            
-                            if pdv_pitch4 != "None" && pdv_pitch4_max > 0{
-                                
-                                Spacer()
-                                
-                                VStack(spacing: 2){
-                                    HStack{
-                                        Circle()
-                                            .frame(width: 12, height: 12)
-                                            .foregroundStyle(Color.gray)
-                                        
-                                        Text(pdv_pitch4)
-                                            .font(.system(size: 13, weight: .medium))
-                                            .foregroundColor(Color.white)
-                                    }
-                                    Text("Max: \(pdv_pitch4_max, specifier: "%.1f")")
-                                        .font(.system(size: 12))
-                                        .foregroundColor(Color.gray)
-                                }
-                            }
-                            
-                            Spacer()
-                            
-                        }
-                        .position(x: width/2, y: 145)
-                        .frame(maxWidth: 400)
-                        
                     }
                     
                 }
@@ -829,7 +827,65 @@ struct SGStatsView: View {
                 
             }
         }
-        .frame(height: 150)
+        .frame(height: 120)
+    }
+    
+    func generate_pitch_detail_key(pitch_type: String, pitch_result: String, result_detail: String, velocity: Double, data_set: pitch_type_data) -> pitch_type_data {
+        
+        //Logic for calculating
+        var pitch_data_set: pitch_type_data = data_set
+        var max_velo = 0.0
+        var swings = 0
+        var whiffs = 0
+        var hits = 0
+        var fouls = 0
+        var bips = 0
+        
+        if pitch_result == "H" && (result_detail != "E" && result_detail != "B") { //Hit
+
+            hits += 1
+            swings += 1
+            bips += 1
+        }
+        
+        if pitch_result == "O" { //Out
+            
+            bips += 1
+            
+            if result_detail != "Y" {
+                
+                swings += 1
+                
+            }
+        
+        }
+        
+        if pitch_result == "Z" { //Strike
+            
+            whiffs += 1
+            
+        }
+        
+        if pitch_result == "T" || pitch_result == "TO"{ //Foul Ball
+            
+            swings += 1
+            fouls += 1
+            
+        }
+        
+        if pitch_data_set.max_velo < velocity {
+            pitch_data_set.max_velo = velocity
+        }
+        
+        pitch_data_set.count += 1
+        pitch_data_set.swings += swings
+        pitch_data_set.whiff += whiffs
+        pitch_data_set.hits += hits
+        pitch_data_set.fouls += fouls
+        pitch_data_set.balls_in_play += bips
+        
+        return pitch_data_set
+        
     }
     
     func generate_player_detail_stats() {
@@ -868,6 +924,20 @@ struct SGStatsView: View {
                     
                     pitch_count += 1
                     generate_velo_component_datapoint(velo: event.velocity, pitch_type: event.pitch_type)
+                    
+                    if event.pitch_type == "P1" {
+                        pd_pitch1_stats = generate_pitch_detail_key(pitch_type: event.pitch_type, pitch_result: event.pitch_result, result_detail: event.result_detail, velocity: event.velocity, data_set: pd_pitch1_stats)
+                    }
+                    else if event.pitch_type == "P2" {
+                        pd_pitch2_stats = generate_pitch_detail_key(pitch_type: event.pitch_type, pitch_result: event.pitch_result, result_detail: event.result_detail, velocity: event.velocity, data_set: pd_pitch2_stats)
+                    }
+                    else if event.pitch_type == "P3" {
+                        pd_pitch3_stats = generate_pitch_detail_key(pitch_type: event.pitch_type, pitch_result: event.pitch_result, result_detail: event.result_detail, velocity: event.velocity, data_set: pd_pitch3_stats)
+                    }
+                    else if event.pitch_type == "P4" {
+                        pd_pitch4_stats = generate_pitch_detail_key(pitch_type: event.pitch_type, pitch_result: event.pitch_result, result_detail: event.result_detail, velocity: event.velocity, data_set: pd_pitch4_stats)
+                    }
+                    
                     
                     if event.pitch_result != "A" && event.result_detail != "B"{ //Ball was not recorded (Strike or BIP)
                         
@@ -975,6 +1045,30 @@ struct SGStatsView: View {
         pd_fps_per = Double(first_pitch_strikes) / Double(first_pitches) //First Pitch Strike Percentage
         pd_swing_per = Double(swings) / Double(pitch_count) //Swing Percentage
         pd_whiff_per = Double(whiffs) / Double(swings) //Whiff Percentage
+        
+        //Total row for pitch_type_detail
+        let total_count = pd_pitch1_stats.count + pd_pitch2_stats.count + pd_pitch3_stats.count + pd_pitch4_stats.count
+        let total_swings = pd_pitch1_stats.swings + pd_pitch2_stats.swings + pd_pitch3_stats.swings + pd_pitch4_stats.swings
+        let total_whiffs = pd_pitch1_stats.whiff + pd_pitch2_stats.whiff + pd_pitch3_stats.whiff + pd_pitch4_stats.whiff
+        let total_hits = pd_pitch1_stats.hits + pd_pitch2_stats.hits + pd_pitch3_stats.hits + pd_pitch4_stats.hits
+        let total_fouls = pd_pitch1_stats.fouls + pd_pitch2_stats.fouls + pd_pitch3_stats.fouls + pd_pitch4_stats.fouls
+        let total_balls_in_play = pd_pitch1_stats.balls_in_play + pd_pitch2_stats.balls_in_play + pd_pitch3_stats.balls_in_play + pd_pitch4_stats.balls_in_play
+        
+        let total_max_velo_list = [pd_pitch1_stats.max_velo, pd_pitch2_stats.max_velo, pd_pitch3_stats.max_velo, pd_pitch4_stats.max_velo]
+        var max_velo: Double = pd_pitch1_stats.max_velo
+        for velo in total_max_velo_list {
+            if velo > max_velo {
+                max_velo = velo
+            }
+        }
+        
+        let pd_all_pitches_stats: pitch_type_data = pitch_type_data(pitch_type: "Totals", count: total_count, max_velo: max_velo, swings: total_swings, whiff: total_whiffs, whiff_percentage: 0.0, hits: total_hits, fouls: total_fouls, balls_in_play: total_balls_in_play, color: Color.clear)
+        
+        pd_pitch_type_stats.append(pd_pitch1_stats)
+        pd_pitch_type_stats.append(pd_pitch2_stats)
+        pd_pitch_type_stats.append(pd_pitch3_stats)
+        pd_pitch_type_stats.append(pd_pitch4_stats)
+        pd_pitch_type_stats.append(pd_all_pitches_stats)
         
         //Sort Velo Component List by Velo
         var sorted_velo_list = pdv_component_data
@@ -1146,7 +1240,9 @@ struct SGStatsView: View {
         //Switch on change, reset stats and push datapoint to list
         let pitcher_data = game_data.pitcher_info[0]
         var cur_pitcher_id = pitcher_data.pitcher_id
-        var cp_name: String = pitcher_data.first_name + " " + pitcher_data.last_name
+        //var cp_name: String = pitcher_data.first_name + " " + pitcher_data.last_name
+        var cp_first_name: String = pitcher_data.first_name
+        var cp_last_name: String = pitcher_data.last_name
         var cp_innings_pitched: Double = 0.0
         var cp_outs: Int = 0
         var cp_batters_faced: Int = 0
@@ -1172,9 +1268,9 @@ struct SGStatsView: View {
             if event.pitcher_id != cur_pitcher_id {
                 
                 //Store cur pitcher info to struct
-                pitcher_stats_list.append(pitcher_game_info(name: cp_name, innings_pitched: cp_innings_pitched + Double(cp_outs / 10), batters_faced: cp_batters_faced, hits: cp_hits, xbhs: cp_xbhs, home_runs: cp_homeruns, strikeouts: cp_strikeouts, walks: cp_walks, hbps: cp_hbps, pitch_count: cp_pitch_count, strike_count: cp_strike_count))
+                pitcher_stats_list.append(pitcher_game_info(first_name: cp_first_name, last_name: cp_last_name, innings_pitched: cp_innings_pitched + Double(cp_outs / 10), batters_faced: cp_batters_faced, hits: cp_hits, xbhs: cp_xbhs, home_runs: cp_homeruns, strikeouts: cp_strikeouts, walks: cp_walks, hbps: cp_hbps, pitch_count: cp_pitch_count, strike_count: cp_strike_count))
                 
-                swings_and_misses_list.append(swings_and_misses_data(name: cp_name, swings_and_misses: cp_swings_and_misses))
+                swings_and_misses_list.append(swings_and_misses_data(name: cp_first_name + " " + cp_last_name, swings_and_misses: cp_swings_and_misses))
                 
                 print("Swings and Misses List: \(swings_and_misses_list)")
                 
@@ -1184,7 +1280,8 @@ struct SGStatsView: View {
                         
                         cur_pitcher_id = event.pitcher_id
                         
-                        cp_name = pitcher.first_name + " " + pitcher.last_name
+                        cp_first_name = pitcher.first_name
+                        cp_last_name = pitcher.last_name
                         cp_innings_pitched = 0
                         cp_outs = 0
                         cp_batters_faced = 0
@@ -1358,7 +1455,7 @@ struct SGStatsView: View {
             }
             
             //Logic for recording top 5 velos of game
-            velocity_list.append(top_velocity_data(name: cp_name, velocity: event.velocity))
+            velocity_list.append(top_velocity_data(name: cp_first_name + " " + cp_last_name, velocity: event.velocity))
 
         }
         //End of Event Loop
@@ -1378,13 +1475,52 @@ struct SGStatsView: View {
         
         staff_game_score = game_score
         
-        pitcher_stats_list.append(pitcher_game_info(name: cp_name, innings_pitched: cp_innings_pitched + Double(cp_outs / 10), batters_faced: cp_batters_faced, hits: cp_hits, xbhs: cp_xbhs, home_runs: cp_homeruns, strikeouts: cp_strikeouts, walks: cp_walks, hbps: cp_hbps, pitch_count: cp_pitch_count, strike_count: cp_strike_count))
+        pitcher_stats_list.append(pitcher_game_info(first_name: cp_first_name, last_name: cp_last_name, innings_pitched: cp_innings_pitched + Double(cp_outs / 10), batters_faced: cp_batters_faced, hits: cp_hits, xbhs: cp_xbhs, home_runs: cp_homeruns, strikeouts: cp_strikeouts, walks: cp_walks, hbps: cp_hbps, pitch_count: cp_pitch_count, strike_count: cp_strike_count))
         
-        swings_and_misses_list.append(swings_and_misses_data(name: cp_name, swings_and_misses: cp_swings_and_misses))
+        swings_and_misses_list.append(swings_and_misses_data(name: cp_first_name + " " + cp_last_name, swings_and_misses: cp_swings_and_misses))
         
         velocity_list.sort{ $0.velocity > $1.velocity }
         
         selected_pitcher_name = starting_pitcher
+        
+    }
+    
+    func reset_player_detail_pitch_type_data(){
+        
+        pdv_component_data.removeAll()
+        pd_pitch_type_stats.removeAll()
+        
+        pd_pitch1_stats.pitch_type = ""
+        pd_pitch1_stats.count = 0
+        pd_pitch1_stats.swings = 0
+        pd_pitch1_stats.whiff = 0
+        pd_pitch1_stats.hits = 0
+        pd_pitch1_stats.fouls = 0
+        pd_pitch1_stats.balls_in_play = 0
+        
+        pd_pitch2_stats.pitch_type = ""
+        pd_pitch2_stats.count = 0
+        pd_pitch2_stats.swings = 0
+        pd_pitch2_stats.whiff = 0
+        pd_pitch2_stats.hits = 0
+        pd_pitch2_stats.fouls = 0
+        pd_pitch2_stats.balls_in_play = 0
+        
+        pd_pitch3_stats.pitch_type = ""
+        pd_pitch3_stats.count = 0
+        pd_pitch3_stats.swings = 0
+        pd_pitch3_stats.whiff = 0
+        pd_pitch3_stats.hits = 0
+        pd_pitch3_stats.fouls = 0
+        pd_pitch3_stats.balls_in_play = 0
+        
+        pd_pitch4_stats.pitch_type = ""
+        pd_pitch4_stats.count = 0
+        pd_pitch4_stats.swings = 0
+        pd_pitch4_stats.whiff = 0
+        pd_pitch4_stats.hits = 0
+        pd_pitch4_stats.fouls = 0
+        pd_pitch4_stats.balls_in_play = 0
         
     }
     
