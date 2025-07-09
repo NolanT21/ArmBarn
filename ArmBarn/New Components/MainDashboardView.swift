@@ -46,6 +46,7 @@ struct MainDashboardView: View {
     
     @State var show_undo_toast: Bool = false
     @State var show_save_toast: Bool = false
+    @State private var showNoReEntry = false
     @State var saving_animation: Bool = false
     @State var isRotating = 0.0
     @State var game_info_animation = 1.0
@@ -501,10 +502,19 @@ struct MainDashboardView: View {
                                 }
                                 else {
                                     Button{
-                                        withAnimation{
-                                            location_overlay.showTabBar = false
+                                        if !scoreboard.pitchers_appearance_list.contains(where: {$0.pitcher_id == current_pitcher.idcode}) || current_pitcher.idcode == scoreboard.pitchers_appearance_list.last?.pitcher_id {
+                                            withAnimation{
+                                                location_overlay.showTabBar = false
+                                            }
+                                            input_nav_path.append(1)
                                         }
-                                        input_nav_path.append(1)
+                                        else{
+                                            showNoReEntry = true
+                                        }
+                                        
+                                        print("Pitcher Appearance List: ", scoreboard.pitchers_appearance_list)
+                                        print("Current Pitcher ID: ", current_pitcher.idcode)
+                                        
                                     } label: {
                                         HStack(spacing: 5){
                                             Text("Enter Pitch")
@@ -594,12 +604,18 @@ struct MainDashboardView: View {
                             
                             prepareHaptics()
                             mutedSuccessHaptic()
-                            
+
                         }
                         
                     }
                     .frame(maxWidth: .infinity, maxHeight: 190)
                 }
+                
+            }
+            
+            if showNoReEntry == true {
+                
+                ZeroInputXPopUp(title: "Pitcher Re-Entry", description: "It appears this pitcher was previously in the current game. Please select a different pitcher.", close_action: {showNoReEntry = false})
                 
             }
             
@@ -1081,9 +1097,9 @@ struct MainDashboardView: View {
     
     func save_game_func() {
         
-        let date = game_report.start_date
-        let opponent_name = game_report.opponent_name
-        let location = game_report.game_location
+        let date = ASStartTime ?? Date()
+        let opponent_name = ASCurOpponentName ?? "Opponent Name"
+        let location = ASGameLocation ?? "Home"
         var game_data_list: [SavedEvent] = []
         for event in events {
 
