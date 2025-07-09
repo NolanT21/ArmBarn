@@ -72,7 +72,8 @@ struct SGStatsView: View {
     
     @State private var staff_strike_percentage: Double = 0.0
     @State private var staff_fps_percentage: Double = 0.0
-    @State private var staff_game_score: Double = 0.0
+    @State private var staff_game_score_number: Double = 0.0
+    @State private var staff_game_score_chart_value: Double = 0.0
     
     //Player Detail Variables
     @State private var selected_pitcher_id: UUID = UUID()
@@ -267,42 +268,63 @@ struct SGStatsView: View {
                 
                 //Game Score
                 VStack{
-                    
-                    HStack{
-                        
-                        Text("Staff Game Score")
-                            .font(.system(size: section_label_size, weight: .regular))
-                            .foregroundStyle(section_label_color)
-                        
-                        Spacer()
-                        
-                    }
-                    
                     VStack{
                         
                         HStack{
                             
-                            Text("\(staff_game_score, specifier: "%0.f")")
-                                .font(.system(size: 36, weight: .semibold))
+                            Text("Staff Game Score")
+                                .font(.system(size: section_label_size, weight: .regular))
+                                .foregroundStyle(section_label_color)
                             
                             Spacer()
                             
                         }
-                        .padding(.top, 2)
                         
-                        Gauge(value: Double(staff_game_score) * 0.01) {}
-                            .gaugeStyle(.accessoryLinear)
-                            .tint(game_score_gradient)
-                            .padding(.top, -20)
+                        VStack{
+                            
+                            HStack{
+                                
+                                Text("\(staff_game_score_number, specifier: "%0.f")")
+                                    .font(.system(size: 36, weight: .semibold))
+                                
+                                Spacer()
+                                
+                            }
+                            .padding(.top, 2)
+                            
+                            Gauge(value: Double(staff_game_score_chart_value) * 0.01) {}
+                                .gaugeStyle(.accessoryLinear)
+                                .tint(game_score_gradient)
+                                .padding(.top, -20)
                             //.padding(.bottom, 5)
+                            
+                        }
                         
                     }
+                    .padding(.top, 10)
+                    .padding(.horizontal, 15)
+                    .background(.regularMaterial)
+                    .cornerRadius(20)
+                    
+                    HStack{
+                        
+                        Text("*")
+                            .baselineOffset(3.0)
+                            .foregroundStyle(.gray)
+                            .font(.system(size: 10))
+                        
+                        + Text("Calculated using Tango's formula excluding runs, every baserunner has value added based on a run expectancy matrix")
+                            .foregroundStyle(.gray)
+                            .font(.system(size: 10))
+                        
+                        Spacer()
+                        
+                    }
+                    .padding(.top, view_padding * -0.8)
+                    .padding(.horizontal, 15)
+                    .padding(.bottom, 3)
                     
                 }
-                .padding(.top, 10)
-                .padding(.horizontal, 15)
-                .background(.regularMaterial)
-                .cornerRadius(20)
                 
                 //Player Detail
                 playerDetail()
@@ -1074,19 +1096,19 @@ struct SGStatsView: View {
         var sorted_velo_list = pdv_component_data
         sorted_velo_list.sort { $0.velo < $1.velo }
         pdv_component_data.sort { $0.velo < $1.velo }
-        print("Sorted Velo List: ", sorted_velo_list)
+        //print("Sorted Velo List: ", sorted_velo_list)
         
         //Calculating y_offset for Velo Component
         let min_velo_round_down = Int(pdv_min_velo.rounded(.down))
         let max_velo_round_down = Int(pdv_max_velo.rounded(.down))
         
-        print("Max: \(min_velo_round_down), Min: \(max_velo_round_down)")
+        //print("Max: \(min_velo_round_down), Min: \(max_velo_round_down)")
         
         var velo_cat = min_velo_round_down
         var velo_cat_num: Int = 0
         for pitch in sorted_velo_list {
             
-            print(Int(pitch.velo.rounded(.down)))
+            //print(Int(pitch.velo.rounded(.down)))
             if Int(pitch.velo.rounded(.down)) != velo_cat {
                 
                 pdv_velo_layout.append(VeloLayoutData(velo_category: velo_cat, count: velo_cat_num))
@@ -1107,11 +1129,11 @@ struct SGStatsView: View {
             pdv_velo_layout.append(VeloLayoutData(velo_category: velo_cat, count: velo_cat_num))
         }
         
-        print("Velo Layout Data: \(pdv_velo_layout)")
+        //print("Velo Layout Data: \(pdv_velo_layout)")
         //print(sorted_velos.count)
         
         pdv_start_index = Int(pdv_max_velo) - 20
-        print("Low Velo Value: ", pdv_start_index)
+        //print("Low Velo Value: ", pdv_start_index)
         
         var cur_velo_cat_count: Int = 0
         var velo_cat_count: Int = 0
@@ -1135,8 +1157,8 @@ struct SGStatsView: View {
                 start_of_velo_cat = true
             }
             
-            print(velo_cat_count == pdv_velo_layout[velo_index].count, velo_category)
-            //
+            //print(velo_cat_count == pdv_velo_layout[velo_index].count, velo_category)
+            
             if start_of_velo_cat == true {
                 if velo_cat_count <= 5 {
                     offset = CGFloat(50 - (velo_cat_count * 5) + 5)
@@ -1150,11 +1172,11 @@ struct SGStatsView: View {
                 
                 start_of_velo_cat = false
                 
-                print("New Offset: \(offset)")
+                //print("New Offset: \(offset)")
             }
             else {
                 offset += 10
-                print("Offset: \(offset)")
+                //print("Offset: \(offset)")
                 if offset == 70 {
                     start_of_velo_cat = true
                     velo_cat_count = cur_velo_cat_count + 1
@@ -1244,7 +1266,7 @@ struct SGStatsView: View {
         var cp_first_name: String = pitcher_data.first_name
         var cp_last_name: String = pitcher_data.last_name
         var cp_innings_pitched: Double = 0.0
-        var cp_outs: Int = 0
+        var cp_outs: Double = 0.0
         var cp_batters_faced: Int = 0
         var cp_hits: Int = 0
         var cp_xbhs: Int = 0
@@ -1265,14 +1287,13 @@ struct SGStatsView: View {
             //if id does not equal event id
             //reset player variables
             //switch id to current id
+
             if event.pitcher_id != cur_pitcher_id {
                 
                 //Store cur pitcher info to struct
-                pitcher_stats_list.append(pitcher_game_info(first_name: cp_first_name, last_name: cp_last_name, innings_pitched: cp_innings_pitched + Double(cp_outs / 10), batters_faced: cp_batters_faced, hits: cp_hits, xbhs: cp_xbhs, home_runs: cp_homeruns, strikeouts: cp_strikeouts, walks: cp_walks, hbps: cp_hbps, pitch_count: cp_pitch_count, strike_count: cp_strike_count))
+                pitcher_stats_list.append(pitcher_game_info(first_name: cp_first_name, last_name: cp_last_name, innings_pitched: Double(cp_innings_pitched) + Double(cp_outs / 10), batters_faced: cp_batters_faced, hits: cp_hits, xbhs: cp_xbhs, home_runs: cp_homeruns, strikeouts: cp_strikeouts, walks: cp_walks, hbps: cp_hbps, pitch_count: cp_pitch_count, strike_count: cp_strike_count))
                 
                 swings_and_misses_list.append(swings_and_misses_data(name: cp_first_name + " " + cp_last_name, swings_and_misses: cp_swings_and_misses))
-                
-                print("Swings and Misses List: \(swings_and_misses_list)")
                 
                 for pitcher in game_data.pitcher_info {
                     
@@ -1282,7 +1303,7 @@ struct SGStatsView: View {
                         
                         cp_first_name = pitcher.first_name
                         cp_last_name = pitcher.last_name
-                        cp_innings_pitched = 0
+                        cp_innings_pitched = 0.0
                         cp_outs = 0
                         cp_batters_faced = 0
                         cp_hits = 0
@@ -1296,7 +1317,7 @@ struct SGStatsView: View {
                         
                         cp_swings_and_misses = 0
                         
-                        break
+                        //break
                         
                     }
                     
@@ -1393,14 +1414,13 @@ struct SGStatsView: View {
                     cp_hbps += 1
                     
                 }
-                
-            }
-            
-            else if event.pitch_result == "W" {
-                
-                game_score -= 2
-                total_walks += 1
-                cp_walks += 1
+                else if event.result_detail == "W" {
+                    
+                    game_score -= 2
+                    total_walks += 1
+                    cp_walks += 1
+                    
+                }
                 
             }
             else if event.pitch_result == "VZ" {
@@ -1425,7 +1445,7 @@ struct SGStatsView: View {
                 }
                 
             }
-            else if event.pitch_result == "R" || event.pitch_result == "RE" {
+            else if event.result_detail == "R" || event.result_detail == "RE" {
                 
                 game_score += 2
                 total_outs += 1
@@ -1460,7 +1480,7 @@ struct SGStatsView: View {
         }
         //End of Event Loop
         
-        staff_innings_pitched = total_innings_pitched + Double(total_outs / 10)
+        staff_innings_pitched = Double(total_innings_pitched) + Double(total_outs / 10)
         staff_batters_faced = total_batters_faced
         staff_hits = total_hits
         staff_xbhs = total_xbhs
@@ -1473,7 +1493,14 @@ struct SGStatsView: View {
 
         staff_fps_percentage = Double(total_fps) / Double(total_first_pitches)
         
-        staff_game_score = game_score
+        staff_game_score_number = game_score
+        staff_game_score_chart_value = game_score
+        if staff_game_score_chart_value > 100 {
+            staff_game_score_chart_value = 100
+        }
+        else if staff_game_score_chart_value < 0 {
+            staff_game_score_chart_value = 0
+        }
         
         pitcher_stats_list.append(pitcher_game_info(first_name: cp_first_name, last_name: cp_last_name, innings_pitched: cp_innings_pitched + Double(cp_outs / 10), batters_faced: cp_batters_faced, hits: cp_hits, xbhs: cp_xbhs, home_runs: cp_homeruns, strikeouts: cp_strikeouts, walks: cp_walks, hbps: cp_hbps, pitch_count: cp_pitch_count, strike_count: cp_strike_count))
         
