@@ -87,7 +87,6 @@ struct VelocityNavPlaceholder: View {
                                     fieldIsFocused = false
                                 }
                                 event.velocity = veloinput
-                                veloinput = 0
                             }
                         } label: {
                             Text("Enter")
@@ -153,6 +152,9 @@ struct VelocityNavPlaceholder: View {
             }
             .padding(.horizontal, 10)
             .onAppear{
+                
+                veloinput = 0.0
+                
                 withAnimation{
                     location_overlay.showVeloInput = true
                     fieldIsFocused = true
