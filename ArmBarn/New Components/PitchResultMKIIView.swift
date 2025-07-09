@@ -98,9 +98,7 @@ struct PitchResultMKIIView: View {
                     .indexViewStyle(.page(backgroundDisplayMode: .always))
                     
                 }
-                
-                
-                
+
             }
             .ignoresSafeArea()
             .background(.regularMaterial)
