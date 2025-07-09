@@ -17,6 +17,9 @@ struct SavedGameContainer: View {
     @State var game_data: SavedGames
     
     @State var selected_index: Int = 1
+    @State private var selected_rectangle_position: CGFloat = 0.16
+    
+    @State var selected_tab_rectangle_pos: [CGFloat] = [0.16, 0.5, 0.84]
     
     var body: some View {
         
@@ -28,11 +31,18 @@ struct SavedGameContainer: View {
                 Button {
                     dismiss()
                 } label: {
-                    Image(systemName: "chevron.left")
-                        .imageScale(.medium)
-                        .font(.system(size: 17))
-                        .foregroundColor(.white)
-                        .bold()
+                    Circle()
+                        .fill(Color.gray.opacity(0.3))
+                        .frame(width: 24, height: 24)
+                        .overlay{
+                            
+                            Image(systemName: "chevron.left")
+                                .imageScale(.medium)
+                                .font(.system(size: 15))
+                                .foregroundColor(.white)
+                                .bold()
+                            
+                        }
                 }
                 .padding(10)
                 
@@ -116,7 +126,7 @@ struct SavedGameContainer: View {
                         .fill(Color.white)
                         .frame(width: 85, height: 2)
                         .cornerRadius(30)
-                        .position(x: screenSize.width * 0.333 * CGFloat(selected_index) - 63)
+                        .position(x: screenSize.width * selected_tab_rectangle_pos[selected_index - 1]) /* * CGFloat(selected_index) - 63*/
                         .animation(.default, value: selected_index)
                 }
             
@@ -140,12 +150,6 @@ struct SavedGameContainer: View {
 
         }
         .background(Color.black)
-        .onAppear{
-            //side = screenSize.width / 4.1
-            
-            //print("Number of Events: \(game_data.game_data.count)")
-            //print("Saved Pitcher List: (\(game_data.pitcher_info.count))", game_data.pitcher_info)
-        }
     }
     
     
