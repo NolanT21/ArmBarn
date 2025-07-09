@@ -80,8 +80,10 @@ struct SavedGamesView: View {
             }
             
             if showEditGameInfo == true {
-                EditFileNamePopUpView(gameInfo: edit_info!, close_action: {showEditGameInfo = false})
+                
+                EditGameInfoPopUp(gameInfo: edit_info!, close_action: {withAnimation{showEditGameInfo = false}})
                     .preferredColorScheme(.dark)
+                
             }
             
         }
