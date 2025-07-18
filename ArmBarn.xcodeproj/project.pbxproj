@@ -61,6 +61,10 @@
 		D593027C2DD2390900E285E0 /* TabBarMKIIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D593027B2DD2390900E285E0 /* TabBarMKIIView.swift */; };
 		D5A11C122E14BB5700949DDA /* SGPitchFilterLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A11C112E14BB5700949DDA /* SGPitchFilterLog.swift */; };
 		D5DC58E12E1D6B3D00B475EB /* EditGameInfoPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DC58E02E1D6B3D00B475EB /* EditGameInfoPopUp.swift */; };
+		D5DC58E42E2526CF00B475EB /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = D5DC58E32E2526CF00B475EB /* Supabase */; };
+		D5DC58E62E2526FC00B475EB /* Supabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DC58E52E2526FC00B475EB /* Supabase.swift */; };
+		D5DC58EA2E254DD200B475EB /* CreateAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DC58E92E254DD200B475EB /* CreateAccountView.swift */; };
+		D5DC58EC2E26CC2000B475EB /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DC58EB2E26CC2000B475EB /* SignInView.swift */; };
 		D5DD11262AF52FE80064F1A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D5DD11252AF52FE80064F1A5 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -118,6 +122,9 @@
 		D5A11C112E14BB5700949DDA /* SGPitchFilterLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SGPitchFilterLog.swift; sourceTree = "<group>"; };
 		D5C6DE202BD2C52D00C64555 /* MainContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainContainerView.swift; sourceTree = "<group>"; };
 		D5DC58E02E1D6B3D00B475EB /* EditGameInfoPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditGameInfoPopUp.swift; sourceTree = "<group>"; };
+		D5DC58E52E2526FC00B475EB /* Supabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Supabase.swift; sourceTree = "<group>"; };
+		D5DC58E92E254DD200B475EB /* CreateAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccountView.swift; sourceTree = "<group>"; };
+		D5DC58EB2E26CC2000B475EB /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		D5DD111B2AF52FE60064F1A5 /* ArmBarn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ArmBarn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArmBarnApp.swift; sourceTree = "<group>"; };
 		D5DD11202AF52FE70064F1A5 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -129,6 +136,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D5DC58E42E2526CF00B475EB /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,6 +169,8 @@
 				D56764AD2DF9D7C8002B3712 /* SGPitchFilterView.swift */,
 				D56764AF2DF9D7DF002B3712 /* SGGameLogView.swift */,
 				D5A11C112E14BB5700949DDA /* SGPitchFilterLog.swift */,
+				D5DC58E92E254DD200B475EB /* CreateAccountView.swift */,
+				D5DC58EB2E26CC2000B475EB /* SignInView.swift */,
 			);
 			path = "New Components";
 			sourceTree = "<group>";
@@ -264,6 +274,7 @@
 			children = (
 				D51E9E3F2CFE19D000173322 /* Assets.xcassets */,
 				D5DD111E2AF52FE70064F1A5 /* ArmBarnApp.swift */,
+				D5DC58E52E2526FC00B475EB /* Supabase.swift */,
 				D5DD11202AF52FE70064F1A5 /* MainView.swift */,
 				D5C6DE202BD2C52D00C64555 /* MainContainerView.swift */,
 				D5726AD82DAD9EF9003EAFB8 /* New Components */,
@@ -330,6 +341,9 @@
 				Base,
 			);
 			mainGroup = D5DD11122AF52FE60064F1A5;
+			packageReferences = (
+				D5DC58E22E2526CF00B475EB /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			productRefGroup = D5DD111C2AF52FE60064F1A5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -369,6 +383,7 @@
 				D57607E22D9AB1190058074D /* ScoreboardView.swift in Sources */,
 				D57607E32D9AB1190058074D /* SettingsView.swift in Sources */,
 				D57607E42D9AB1190058074D /* AddPitcherView.swift in Sources */,
+				D5DC58E62E2526FC00B475EB /* Supabase.swift in Sources */,
 				D5726ADB2DAD9FB6003EAFB8 /* PitchTypeSelectView.swift in Sources */,
 				D593023A2DC0F9D400E285E0 /* VelocityNavPlaceholder.swift in Sources */,
 				D5DC58E12E1D6B3D00B475EB /* EditGameInfoPopUp.swift in Sources */,
@@ -377,6 +392,7 @@
 				D57607C22D9992790058074D /* report_variables.swift in Sources */,
 				D5542B9F2D6008BC00A8607E /* GameReportView.swift in Sources */,
 				D5542BA12D6008DB00A8607E /* GameDataSummaryView.swift in Sources */,
+				D5DC58EC2E26CC2000B475EB /* SignInView.swift in Sources */,
 				D5726AE32DAD9FE7003EAFB8 /* StrikeResultView.swift in Sources */,
 				D5726AE42DAD9FE7003EAFB8 /* LocationNavigationView.swift in Sources */,
 				D5726AE52DAD9FE7003EAFB8 /* OutResultView.swift in Sources */,
@@ -399,6 +415,7 @@
 				D57607D02D9994690058074D /* PitchResultView.swift in Sources */,
 				D57607EB2D9AB1E70058074D /* StrikeoutAlertView.swift in Sources */,
 				D57607EC2D9AB1E70058074D /* EditFileNamePopUpView.swift in Sources */,
+				D5DC58EA2E254DD200B475EB /* CreateAccountView.swift in Sources */,
 				D57607ED2D9AB1E70058074D /* XInfoPopUpView.swift in Sources */,
 				D59302542DC8FF0700E285E0 /* StrikeoutResultView.swift in Sources */,
 				D57607EE2D9AB1E70058074D /* XPopupAlertView.swift in Sources */,
@@ -616,6 +633,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D5DC58E22E2526CF00B475EB /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase-community/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D5DC58E32E2526CF00B475EB /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D5DC58E22E2526CF00B475EB /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D5DD11132AF52FE60064F1A5 /* Project object */;
 }
