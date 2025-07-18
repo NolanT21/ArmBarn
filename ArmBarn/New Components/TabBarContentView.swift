@@ -39,7 +39,7 @@ struct TabBarContentView: View {
                     .tag(TabItems.saved_games)
                     .toolbar(.hidden, for: .tabBar)
                 
-                SettingsView()
+                SignInView()
                     .tag(TabItems.settings)
                     .toolbar(.hidden, for: .tabBar)
 
