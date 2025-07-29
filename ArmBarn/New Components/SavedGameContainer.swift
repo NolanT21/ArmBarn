@@ -56,14 +56,12 @@ struct SavedGameContainer: View {
                         
                         if game_data.location == "Away" {
                             Text("@")
-                                .font(.system(size: 30))
-                                .bold()
+                                .font(.system(size: 30, weight: .bold))
                                 .foregroundStyle(.white)
                         }
                         
                         Text(game_data.opponent_name)
-                            .font(.system(size: 30))
-                            .bold()
+                            .font(.system(size: 30, weight: .bold))
                             .foregroundStyle(.white)
                     }
                     
@@ -79,10 +77,10 @@ struct SavedGameContainer: View {
                     }
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(Color.gray)
+                    
                 }
                 .padding(.top, 10)
-                .padding(.horizontal, 10)
-                
+                .padding(.horizontal, 20)
             }
             
             HStack{
@@ -151,7 +149,6 @@ struct SavedGameContainer: View {
         }
         .background(Color.black)
     }
-    
     
 }
 
