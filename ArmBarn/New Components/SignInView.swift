@@ -9,6 +9,10 @@ import SwiftUI
 
 struct SignInView: View {
     
+    @StateObject private var supabaseVM = SupabaseViewModel()
+    
+    @Environment(\.dismiss) var dismiss
+    
     @State private var email: String = ""
     @State private var password: String = ""
     
@@ -71,7 +75,6 @@ struct SignInView: View {
                     
                     NavigationLink{
                         //Link to Reset Password Screen
-                        //CreateAccountView().navigationBarBackButtonHidden(true).task{}
                         
                     } label: {
                         Text("Forgot Password?")
@@ -84,6 +87,10 @@ struct SignInView: View {
                 Button{
                     
                     loginButtonPressed()
+                    
+                    Task{
+                        await supabaseVM.isAuthenticated()
+                    }
                     
                 } label: {
                     ZStack{
@@ -132,6 +139,32 @@ struct SignInView: View {
                 
             }
             .padding(.horizontal, 10)
+            .toolbar{
+                ToolbarItem(placement: .navigationBarLeading){
+                    
+                    Button{
+                        
+                        dismiss()
+                        
+                    } label: {
+                        
+                        Circle()
+                            .fill(Color.gray.opacity(0.3))
+                            .frame(width: 24, height: 24)
+                            .overlay{
+                                
+                                Image(systemName: "xmark")
+                                    .imageScale(.medium)
+                                    .font(.system(size: 15))
+                                    .foregroundColor(.white)
+                                    .bold()
+                                
+                            }
+                        
+                    }
+                    
+                }
+            }
         }
     }
     
@@ -146,6 +179,8 @@ struct SignInView: View {
                 )
                 
                 result = .success(())
+                
+                //Call isAuthenticated Logic
                 
             } catch {
                 
