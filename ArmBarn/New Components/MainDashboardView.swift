@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 import Foundation
 import CoreHaptics
+import Supabase
 
 enum ShakeAnimation: CaseIterable {
     case leanLeft, leanRight, returnCenter
@@ -34,7 +35,6 @@ enum DefaultAnimationStages: CaseIterable {
     case start, middle, end
 }
 
-
 struct MainDashboardView: View {
     
     @State private var input_nav_path = [Int]()
@@ -43,6 +43,9 @@ struct MainDashboardView: View {
     @AppStorage("CurrentOpponentName") var ASCurOpponentName : String?
     @AppStorage("CurrentGameLocation") var ASGameLocation : String?
     @AppStorage("CurrentGameStartTime") var ASStartTime : Date?
+    @AppStorage("SignInAuthorization") var ASSignedIn : Bool?
+    
+    @StateObject private var supabaseVM = SupabaseViewModel()
     
     @State var show_undo_toast: Bool = false
     @State var show_save_toast: Bool = false
@@ -149,319 +152,342 @@ struct MainDashboardView: View {
         
         let impact = UIImpactFeedbackGenerator(style: .medium)
         
-        ZStack{
-            
-            VStack(spacing: 10){
+        GeometryReader{ geometry in
+        
+            ZStack{
                 
-                //"Scoreboard"
-                ZStack{
-                    VStack(spacing: 10){
-                        
-                        //Top Row
-                        HStack{
+                VStack(spacing: 10){
+                    
+                    //"Scoreboard"
+                    ZStack{
+                        VStack(spacing: 10){
                             
+                            //Top Row
                             HStack{
-                                Text("BALLS")
-                                    .font(.system(size: 15))
-                                    .bold()
-                                HStack(spacing: 5){
-                                    Circle()
-                                        .stroke(scoreboard.b1light ? green_light_color : Color.white, lineWidth: light_width)
-                                        .fill(scoreboard.b1light ? green_light_color : Color.clear)
-                                        .frame(width: 15, height: 15)
-                                    Circle()
-                                        .stroke(scoreboard.b2light ? green_light_color : Color.white, lineWidth: light_width)
-                                        .fill(scoreboard.b2light ? green_light_color : Color.clear)
-                                        .frame(width: 15, height: 15)
-                                    Circle()
-                                        .stroke(scoreboard.b3light ? green_light_color : Color.white, lineWidth: light_width)
-                                        .fill(scoreboard.b3light ? green_light_color : Color.clear)
-                                        .frame(width: 15, height: 15)
-                                }
-                            }
-                            
-                            Spacer()
-                            
-                            HStack{
-                                Text("STRIKES")
-                                    .font(.system(size: 15))
-                                    .bold()
-                                HStack(spacing: 5){
-                                    Circle()
-                                        .stroke(scoreboard.s1light ? red_light_color : Color.white, lineWidth: light_width)
-                                        .fill(scoreboard.s1light ? red_light_color : Color.clear)
-                                        .frame(width: 15, height: 15)
-                                    Circle()
-                                        .stroke(scoreboard.s2light ? red_light_color : Color.white, lineWidth: light_width)
-                                        .fill(scoreboard.s2light ? red_light_color : Color.clear)
-                                        .frame(width: 15, height: 15)
-                                }
-                            }
-                            
-                            Spacer()
-                            
-                            HStack{
-                                Text("OUTS")
-                                    .font(.system(size: 15))
-                                    .bold()
-                                HStack(spacing: 5){
-                                    Circle()
-                                        .stroke(scoreboard.o1light ? red_light_color : Color.white, lineWidth: light_width)
-                                        .fill(scoreboard.o1light ? red_light_color : Color.clear)
-                                        .frame(width: 15, height: 15)
-                                    Circle()
-                                        .stroke(scoreboard.o2light ? red_light_color : Color.white, lineWidth: light_width)
-                                        .fill(scoreboard.o2light ? red_light_color : Color.clear)
-                                        .fill(.clear)
-                                        .frame(width: 15, height: 15)
-                                }
-                            }
-                            
-                        }
-                        .padding(.horizontal, 15)
-                        .frame(maxWidth: 400)
-                        
-                        //Bottom Row
-                        HStack{
-                            
-                            HStack{
-                                VStack(alignment: .center, spacing: 2){
-                                    Text("INN")
-                                    Text("\(scoreboard.inning)")
-                                }
-                                .font(.system(size: 15))
-                                .bold()
                                 
-                                Divider()
-                                    .frame(height: 35)
-                                
-                                VStack(alignment: .leading, spacing: 2){
-                                    let pitcher_name = current_pitcher.firstName + " " + current_pitcher.lastName
-                                    Text(pitcher_name.prefix(25))
-                                        .font(.system(size: 17))
+                                HStack{
+                                    Text("BALLS")
+                                        .font(.system(size: 15))
                                         .bold()
-                                    HStack{
-                                        Text("Pitches: \(scoreboard.pitches)")
-                                        Text("Batters Faced: \(scoreboard.atbats)")
+                                    HStack(spacing: 5){
+                                        Circle()
+                                            .stroke(scoreboard.b1light ? green_light_color : Color.white, lineWidth: light_width)
+                                            .fill(scoreboard.b1light ? green_light_color : Color.clear)
+                                            .frame(width: 15, height: 15)
+                                        Circle()
+                                            .stroke(scoreboard.b2light ? green_light_color : Color.white, lineWidth: light_width)
+                                            .fill(scoreboard.b2light ? green_light_color : Color.clear)
+                                            .frame(width: 15, height: 15)
+                                        Circle()
+                                            .stroke(scoreboard.b3light ? green_light_color : Color.white, lineWidth: light_width)
+                                            .fill(scoreboard.b3light ? green_light_color : Color.clear)
+                                            .frame(width: 15, height: 15)
                                     }
-                                    .font(.system(size: 11))
-                                    .foregroundStyle(.gray)
                                 }
                                 
+                                Spacer()
+                                
+                                HStack{
+                                    Text("STRIKES")
+                                        .font(.system(size: 15))
+                                        .bold()
+                                    HStack(spacing: 5){
+                                        Circle()
+                                            .stroke(scoreboard.s1light ? red_light_color : Color.white, lineWidth: light_width)
+                                            .fill(scoreboard.s1light ? red_light_color : Color.clear)
+                                            .frame(width: 15, height: 15)
+                                        Circle()
+                                            .stroke(scoreboard.s2light ? red_light_color : Color.white, lineWidth: light_width)
+                                            .fill(scoreboard.s2light ? red_light_color : Color.clear)
+                                            .frame(width: 15, height: 15)
+                                    }
+                                }
+                                
+                                Spacer()
+                                
+                                HStack{
+                                    Text("OUTS")
+                                        .font(.system(size: 15))
+                                        .bold()
+                                    HStack(spacing: 5){
+                                        Circle()
+                                            .stroke(scoreboard.o1light ? red_light_color : Color.white, lineWidth: light_width)
+                                            .fill(scoreboard.o1light ? red_light_color : Color.clear)
+                                            .frame(width: 15, height: 15)
+                                        Circle()
+                                            .stroke(scoreboard.o2light ? red_light_color : Color.white, lineWidth: light_width)
+                                            .fill(scoreboard.o2light ? red_light_color : Color.clear)
+                                            .fill(.clear)
+                                            .frame(width: 15, height: 15)
+                                    }
+                                }
                                 
                             }
-                            .padding(.leading, 20)
+                            .padding(.horizontal, 15)
+                            .frame(maxWidth: 400)
                             
-                            Spacer()
-                            
-                            HStack(alignment: .bottom, spacing: 10){
-                                Button{
+                            //Bottom Row
+                            HStack{
+                                
+                                HStack{
+                                    VStack(alignment: .center, spacing: 2){
+                                        Text("INN")
+                                        Text("\(scoreboard.inning)")
+                                    }
+                                    .font(.system(size: 15))
+                                    .bold()
                                     
-                                    withAnimation{
-                                        showEndGame = true
-                                        location_overlay.showTabBar = false
+                                    Divider()
+                                        .frame(height: 35)
+                                    
+                                    VStack(alignment: .leading, spacing: 2){
+                                        let pitcher_name = current_pitcher.firstName + " " + current_pitcher.lastName
+                                        Text(pitcher_name.prefix(25))
+                                            .font(.system(size: 17))
+                                            .bold()
+                                        HStack{
+                                            Text("Pitches: \(scoreboard.pitches)")
+                                            Text("Batters Faced: \(scoreboard.atbats)")
+                                        }
+                                        .font(.system(size: 11))
+                                        .foregroundStyle(.gray)
                                     }
                                     
-                                } label: {
-                                    Image(systemName: "flag.pattern.checkered")
-                                        .font(.system(size: 18))
-                                        .frame(width: 30, height: 30)
                                     
                                 }
-                                .background(events.count <= 0 || scoreboard.disable_bottom_row ? disabled_gradient : button_gradient)
-                                .foregroundColor(events.count <= 0 || scoreboard.disable_bottom_row ? Color.gray : Color.white)
-                                .cornerRadius(8.0)
-                                //.shadow(color: .black.opacity(0.5), radius: 3, x: 3, y: 3)
-                                .disabled(events.count <= 0 || scoreboard.disable_bottom_row)
+                                .padding(.leading, 20)
                                 
-                                Button{
-                                    withAnimation{
-                                        show_undo_toast = true
-                                        undo_haptic.toggle()
-                                        //impact.impactOccurred()
+                                Spacer()
+                                
+                                HStack(alignment: .bottom, spacing: 10){
+                                    
+//                                    Button{
+//                                        
+//                                        Task{
+//                                            do {
+//                                                try await supabaseVM.fetchGames()
+//                                            }
+//                                            catch{
+//                                                print("Failed")
+//                                            }
+//                                            
+//                                        }
+//                                        
+//                                    } label: {
+//                                        
+//                                        Image(systemName: "questionmark.circle")
+//                                            .font(.system(size: 18))
+//                                            .frame(width: 30, height: 30)
+//                                        
+//                                    }
+                                    
+                                    Button{
                                         
-                                        //More than one event entered
-                                        if events.count > 1 {
+                                        withAnimation{
+                                            showEndGame = true
+                                            location_overlay.showTabBar = false
+                                        }
+                                        
+                                    } label: {
+                                        Image(systemName: "flag.pattern.checkered")
+                                            .font(.system(size: 18))
+                                            .frame(width: 30, height: 30)
+                                        
+                                    }
+                                    .background(events.count <= 0 || scoreboard.disable_bottom_row ? disabled_gradient : button_gradient)
+                                    .foregroundColor(events.count <= 0 || scoreboard.disable_bottom_row ? Color.gray : Color.white)
+                                    .cornerRadius(8.0)
+                                    //.shadow(color: .black.opacity(0.5), radius: 3, x: 3, y: 3)
+                                    .disabled(events.count <= 0 || scoreboard.disable_bottom_row)
+                                    
+                                    Button{
+                                        withAnimation{
+                                            show_undo_toast = true
+                                            undo_haptic.toggle()
+                                            //impact.impactOccurred()
                                             
-                                            if check_prev_pitcher() == true {
-                                                withAnimation{
-                                                    showDifferentPreviousPitcher = true
-                                                    location_overlay.showTabBar = false
+                                            //More than one event entered
+                                            if events.count > 1 {
+                                                
+                                                if check_prev_pitcher() == true {
+                                                    withAnimation{
+                                                        showDifferentPreviousPitcher = true
+                                                        location_overlay.showTabBar = false
+                                                        is_locked = true
+                                                    }
+                                                } else {
+                                                    load_previous_event()
+                                                    load_previous_ab_pitches()
+                                                    //Keep batter stance input locked on undo; not the reason user is removing event, able to change anytime
                                                     is_locked = true
                                                 }
-                                            } else {
-                                                load_previous_event()
-                                                load_previous_ab_pitches()
+                                                
+                                            }
+                                            //Only one event entered
+                                            else if events.count == 1 {
+                                                if scoreboard.pitches > 0 && event.result_detail != "R" && event.result_detail != "RE" && event.pitch_result != "IW" && event.pitch_result != "VZ" && event.pitch_result != "VA"{ //Non pitch event (pitch not thrown)
+                                                    scoreboard.pitches -= 1
+                                                }
+                                                
+                                                //Store variables temporarily before calling new_game_func(); function wipes out all in-game variables
+                                                //Store current pitcher id
+                                                let current_pitcher_id = current_pitcher.idcode
+                                                
+                                                //Store game information and batter stance
+                                                let opponent = game_report.opponent_name
+                                                let location = game_report.game_location
+                                                let date = game_report.start_date
+                                                
+                                                let batter_stance = event.batter_stance
+                                                
+                                                //Reset game variables
+                                                new_game_func()
+                                                
+                                                //Call functions to reselect current pitcher and re-enter game_information
+                                                reselect_current_pitcher(pitcher_id: current_pitcher_id)
+                                                
+                                                set_game_information(opponent: opponent, location: location, date: date, batter_stance: batter_stance)
+                                                
                                                 //Keep batter stance input locked on undo; not the reason user is removing event, able to change anytime
                                                 is_locked = true
+                                                
                                             }
-                                            
                                         }
-                                        //Only one event entered
-                                        else if events.count == 1 {
-                                            if scoreboard.pitches > 0 && event.result_detail != "R" && event.result_detail != "RE" && event.pitch_result != "IW" && event.pitch_result != "VZ" && event.pitch_result != "VA"{ //Non pitch event (pitch not thrown)
-                                                scoreboard.pitches -= 1
+                                    } label: {
+                                        Image(systemName: "arrow.counterclockwise")
+                                            .font(.system(size: 18))
+                                            .frame(width: 30, height: 30)
+                                            .bold()
+                                        
+                                    }
+                                    .background(events.count < 1 || scoreboard.disable_bottom_row ? disabled_gradient : button_gradient)
+                                    .foregroundColor(events.count < 1 || scoreboard.disable_bottom_row ? Color.gray : Color.white)
+                                    .cornerRadius(8.0)
+                                    //.shadow(color: .black.opacity(0.5), radius: 3, x: 3, y: 3)
+                                    .disabled(events.count <= 0 || scoreboard.disable_bottom_row)
+                                    .onChange(of: show_undo_toast) {
+                                        if show_undo_toast == true {
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                                withAnimation{
+                                                    show_undo_toast.toggle()
+                                                }
                                             }
-                                            
-                                            //Store variables temporarily before calling new_game_func(); function wipes out all in-game variables
-                                            //Store current pitcher id
-                                            let current_pitcher_id = current_pitcher.idcode
-                                            
-                                            //Store game information and batter stance
-                                            let opponent = game_report.opponent_name
-                                            let location = game_report.game_location
-                                            let date = game_report.start_date
-
-                                            let batter_stance = event.batter_stance
-                                            
-                                            //Reset game variables
-                                            new_game_func()
-                                            
-                                            //Call functions to reselect current pitcher and re-enter game_information
-                                            reselect_current_pitcher(pitcher_id: current_pitcher_id)
-                                            
-                                            set_game_information(opponent: opponent, location: location, date: date, batter_stance: batter_stance)
-                                            
-                                            //Keep batter stance input locked on undo; not the reason user is removing event, able to change anytime
-                                            is_locked = true
-                                            
                                         }
                                     }
-                                } label: {
-                                    Image(systemName: "arrow.counterclockwise")
-                                        .font(.system(size: 18))
-                                        .frame(width: 30, height: 30)
-                                        .bold()
+                                    .sensoryFeedback(.success, trigger: undo_haptic)
                                     
                                 }
-                                .background(events.count < 1 || scoreboard.disable_bottom_row ? disabled_gradient : button_gradient)
-                                .foregroundColor(events.count < 1 || scoreboard.disable_bottom_row ? Color.gray : Color.white)
-                                .cornerRadius(8.0)
-                                //.shadow(color: .black.opacity(0.5), radius: 3, x: 3, y: 3)
-                                .disabled(events.count <= 0 || scoreboard.disable_bottom_row)
-                                .onChange(of: show_undo_toast) {
-                                    if show_undo_toast == true {
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                                            withAnimation{
-                                                show_undo_toast.toggle()
+                                .padding(.trailing, 15)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: 90)
+                        .background(.regularMaterial)
+                        .cornerRadius(15)
+                        .padding(.horizontal, main_body_padding)
+                        
+                        Rectangle()
+                            .fill(location_overlay.showinputoverlay ? Color.black.opacity(0.8): Color.clear)
+                            .frame(maxWidth: .infinity, maxHeight: 90)
+                        
+                    }
+                    
+                    ZStack{
+                        
+                        //Strikezone Background
+                        VStack(spacing: 0){
+                            
+                            GeometryReader{ sz_geometry in
+                                
+                                Image("Background2.0")
+                                    .resizable()
+                                    .frame(maxHeight: 480, alignment: .center)
+                                    .aspectRatio(contentMode: .fit)
+                                    .cornerRadius(15)
+                                    .padding(.horizontal, main_body_padding)
+                                    .gesture(tap)
+                                    .overlay{
+                                        
+                                        //Hide overlay when inputting new pitch
+                                        if !location_overlay.showinputoverlay{
+                                            ABPitchOverlay()
+                                        }
+                                        
+                                        if location_overlay.showinputoverlay{
+                                            
+                                            if location_overlay.zero_location == false{
+                                                Circle()
+                                                    .stroke(cur_pitch_outline, lineWidth: 4)
+                                                    .fill(cur_pitch_fill)
+                                                    .frame(width: sz_geometry.size.width * 0.055, height: sz_geometry.size.height * 0.055, alignment: .center)
+                                                    .position(location)
+                                                    .onAppear{
+                                                        if cur_pitch_fill != Color.clear{
+                                                            cur_pitch_fill = ptconfig.ptcolor
+                                                        }
+                                                    }
                                             }
                                         }
+                                        
+                                    }
+                                    .phaseAnimator([ShakeAnimation.returnCenter, ShakeAnimation.leanLeft, ShakeAnimation.leanRight, ShakeAnimation.leanLeft, ShakeAnimation.returnCenter], trigger: location_overlay.shakecounter) { content, phase in
+                                        
+                                        content
+                                            .offset(x: phase.xoffset)
+                                            .rotationEffect(.degrees(phase.rotationDegrees))
+                                        
+                                    } animation: { phase in
+                                        switch phase {
+                                        case .returnCenter: .easeIn(duration: 0.05)
+                                        case .leanLeft: .easeIn(duration: 0.05)
+                                        case .leanRight: .easeIn(duration: 0.05)
+                                        }
+                                    }
+                            }
+                            
+                        }
+                        
+                        SaveToast().onAppear{prepareHaptics()}
+                        
+                        //Undo Toast
+                        VStack{
+                            if show_undo_toast == true{
+                                
+                                HStack{
+                                    ZStack{
+                                        
+                                        RoundedRectangle(cornerRadius: 20)
+                                            .foregroundColor(Color.black.opacity(0.4))
+                                            .frame(width: 185, height: 32)
+                                        
+                                        Text("Previous Event Removed")
+                                            .font(.system(size: 13) .weight(.medium))
+                                        //.bold()
+                                        
                                     }
                                 }
-                                .sensoryFeedback(.success, trigger: undo_haptic)
+                                .background(.regularMaterial)
+                                .clipShape(Capsule())
+                                .transition(.move(edge: .top).combined(with: .opacity))
+                                .padding(.top, 10)
                                 
                             }
-                            .padding(.trailing, 15)
+                            
+                            Spacer()
+                            
                         }
+                        
                     }
-                    .frame(maxWidth: .infinity, maxHeight: 90)
-                    .background(.regularMaterial)
-                    .cornerRadius(15)
-                    .padding(.horizontal, main_body_padding)
+                    .frame(maxHeight: 480)
+                    //.border(Color.gray, width: 3)
                     
-                    Rectangle()
-                        .fill(location_overlay.showinputoverlay ? Color.black.opacity(0.8): Color.clear)
-                        .frame(maxWidth: .infinity, maxHeight: 90)
+                    Spacer()
                     
                 }
+                //.background(Color.black)
+                .ignoresSafeArea(.keyboard)
                 
-                ZStack{
-                    
-                    //Strikezone Background
-                    VStack(spacing: 0){
-                            
-                        GeometryReader{ geometry in
-                            
-                            Image("Background2.0")
-                                .resizable()
-                                .frame(maxHeight: 480, alignment: .center)
-                                .aspectRatio(contentMode: .fit)
-                                .cornerRadius(15)
-                                .padding(.horizontal, main_body_padding)
-                                .gesture(tap)
-                                .overlay{
-                                    
-                                    //Hide overlay when inputting new pitch
-                                    if !location_overlay.showinputoverlay{
-                                        ABPitchOverlay()
-                                    }
-                                    
-                                    if location_overlay.showinputoverlay{
-                                        
-                                        if location_overlay.zero_location == false{
-                                            Circle()
-                                                .stroke(cur_pitch_outline, lineWidth: 4)
-                                                .fill(cur_pitch_fill)
-                                                .frame(width: geometry.size.width * 0.055, height: geometry.size.height * 0.055, alignment: .center)
-                                                .position(location)
-                                                .onAppear{
-                                                    if cur_pitch_fill != Color.clear{
-                                                        cur_pitch_fill = ptconfig.ptcolor
-                                                    }
-                                                }
-                                        }
-                                    }
-                                    
-                                }
-                                .phaseAnimator([ShakeAnimation.returnCenter, ShakeAnimation.leanLeft, ShakeAnimation.leanRight, ShakeAnimation.leanLeft, ShakeAnimation.returnCenter], trigger: location_overlay.shakecounter) { content, phase in
-                                    
-                                    content
-                                        .offset(x: phase.xoffset)
-                                        .rotationEffect(.degrees(phase.rotationDegrees))
-                                    
-                                } animation: { phase in
-                                    switch phase {
-                                    case .returnCenter: .easeIn(duration: 0.05)
-                                    case .leanLeft: .easeIn(duration: 0.05)
-                                    case .leanRight: .easeIn(duration: 0.05)
-                                    }
-                                }
-                        }
-                            
-                    }
-                    
-                    SaveToast().onAppear{prepareHaptics()}
-                    
-                    //Undo Toast
-                    VStack{
-                        if show_undo_toast == true{
-                        
-                            HStack{
-                                ZStack{
-                                    
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .foregroundColor(Color.black.opacity(0.4))
-                                        .frame(width: 185, height: 32)
-                                    
-                                    Text("Previous Event Removed")
-                                        .font(.system(size: 13) .weight(.medium))
-                                        //.bold()
-
-                                }
-                            }
-                            .background(.regularMaterial)
-                            .clipShape(Capsule())
-                            .transition(.move(edge: .top).combined(with: .opacity))
-                            .padding(.top, 10)
-                            
-                        }
-                        
-                        Spacer()
-                        
-                    }
-                                        
-                }
-                .frame(maxHeight: 480)
-                //.border(Color.gray, width: 3)
+                //GeometryReader{ geometry in
                 
-                Spacer()
-                
-            }
-            //.background(Color.black)
-            .ignoresSafeArea(.keyboard)
-            
-            GeometryReader{ geometry in
-            
                 VStack(spacing: 5){
                     
                     Spacer()
@@ -486,11 +512,11 @@ struct MainDashboardView: View {
                                             Image(systemName: "person.crop.circle")
                                                 .font(.system(size: 17, weight: .medium))
                                                 .imageScale(.large)
-                                                //.padding(.trailing, 10)
+                                            //.padding(.trailing, 10)
                                             
                                             Text("Select Pitcher")
                                                 .font(.system(size: 17, weight: .medium))
-                                                //.padding(.leading, 10)
+                                            //.padding(.leading, 10)
                                             Spacer()
                                             
                                         }
@@ -555,7 +581,7 @@ struct MainDashboardView: View {
                                                     }
                                                 }
                                                 .ignoresSafeArea(.all)
-
+                                            
                                         }
                                         
                                         HStack(alignment: .center, spacing: 5){
@@ -578,7 +604,7 @@ struct MainDashboardView: View {
                                         
                                     }
                                 }
-
+                                
                             }
                             //Batter Stance Input View
                             BatterStanceInput().onAppear{prepareHaptics()}
@@ -604,77 +630,79 @@ struct MainDashboardView: View {
                             
                             prepareHaptics()
                             mutedSuccessHaptic()
-
+                            
                         }
                         
                     }
                     .frame(maxWidth: .infinity, maxHeight: 190)
                 }
                 
-            }
-            
-            if showNoReEntry == true {
+                //}
                 
-                ZeroInputXPopUp(title: "Pitcher Re-Entry", description: "It appears this pitcher was previously in the current game. Please select a different pitcher.", close_action: {showNoReEntry = false})
+                if showNoReEntry == true {
+                    
+                    ZeroInputXPopUp(title: "Pitcher Re-Entry", description: "It appears this pitcher was previously in the current game. Please select a different pitcher.", close_action: {showNoReEntry = false})
+                    
+                }
+                
+                if showAddGameInfo == true {
+                    ZeroInputXPopUp(title: "Attention", description: "The game info has not been recorded. Please enter this information before saving the current game", close_action: {withAnimation{showAddGameInfo = false}; location_overlay.showTabBar = true})
+                        .transition(.opacity)
+                        .onAppear{
+                            prepareHaptics()
+                            warningHaptic()
+                        }
+                }
+                
+                if showDifferentPreviousPitcher == true {
+                    TwoInputXPopUp(title: "Attention", description: "A different pitcher was recorded for the previous event. Do you want to continue?", leftButtonText: "Yes",  leftButtonAction: {load_previous_event(); load_previous_ab_pitches(); withAnimation{show_undo_toast = true}}, rightButtonText: "No", rightButtonAction: {}, close_action: {withAnimation{showDifferentPreviousPitcher = false; location_overlay.showTabBar = true}}, flex_action: {})
+                        .transition(.opacity)
+                        .onAppear{
+                            prepareHaptics()
+                            warningHaptic()
+                        }
+                }
+                
+                //Checking if there is data from previous game; event count and scoreboard is empty
+                if showResumeGame == true{
+                    TwoInputXPopUp(title: "Resume Game", description: "Looks like a previous game was being scored. Would you like to resume?", leftButtonText: "Yes",  leftButtonAction: {set_pitcher(); load_pitcher_appearance_list(); load_recent_event(); load_recent_ab_pitches(); successHaptic()}, rightButtonText: "No", rightButtonAction: {new_game_func(); resetHaptic()}, close_action: {withAnimation{showResumeGame = false}}, flex_action: {new_game_func()})
+                        .transition(.opacity)
+                        .onAppear{
+                            prepareHaptics()
+                            warningHaptic()
+                        }
+                }
+                
+                if showEndGame == true {
+                    TwoInputXPopUp(title: "Save Game", description: "Would you like to save this game before starting a new one?", leftButtonText: "Yes",  leftButtonAction: {save_logic_handling_func(screenWidth: geometry.size.width, screenHeight: geometry.size.height)}, rightButtonText: "No", rightButtonAction: {new_game_func(); resetHaptic(); withAnimation{location_overlay.showTabBar = true}}, close_action: {withAnimation{showEndGame = false}}, flex_action: {withAnimation{location_overlay.showTabBar = true}})
+                        .transition(.opacity)
+                        .onAppear{
+                            prepareHaptics()
+                            warningHaptic()
+                        }
+                }
+                
+                if showGameInfo == true {
+                    GameInfoPopUp(close_action: { withAnimation{showGameInfo = false; location_overlay.showTabBar = true; highlight_game_info = false} })
+                        .transition(.opacity)
+                        .onAppear{
+                            prepareHaptics()
+                            warningHaptic()
+                        }
+                }
+                
                 
             }
-            
-            if showAddGameInfo == true {
-                ZeroInputXPopUp(title: "Attention", description: "The game info has not been recorded. Please enter this information before saving the current game", close_action: {withAnimation{showAddGameInfo = false}; location_overlay.showTabBar = true})
-                    .transition(.opacity)
-                    .onAppear{
-                        prepareHaptics()
-                        warningHaptic()
-                    }
-            }
-            
-            if showDifferentPreviousPitcher == true {
-                TwoInputXPopUp(title: "Attention", description: "A different pitcher was recorded for the previous event. Do you want to continue?", leftButtonText: "Yes",  leftButtonAction: {load_previous_event(); load_previous_ab_pitches(); withAnimation{show_undo_toast = true}}, rightButtonText: "No", rightButtonAction: {}, close_action: {withAnimation{showDifferentPreviousPitcher = false; location_overlay.showTabBar = true}}, flex_action: {})
-                    .transition(.opacity)
-                    .onAppear{
-                        prepareHaptics()
-                        warningHaptic()
-                    }
-            }
-            
-            //Checking if there is data from previous game; event count and scoreboard is empty
-            if showResumeGame == true{
-                TwoInputXPopUp(title: "Resume Game", description: "Looks like a previous game was being scored. Would you like to resume?", leftButtonText: "Yes",  leftButtonAction: {set_pitcher(); load_pitcher_appearance_list(); load_recent_event(); load_recent_ab_pitches(); successHaptic()}, rightButtonText: "No", rightButtonAction: {new_game_func(); resetHaptic()}, close_action: {withAnimation{showResumeGame = false}}, flex_action: {new_game_func()})
-                    .transition(.opacity)
-                    .onAppear{
-                        prepareHaptics()
-                        warningHaptic()
-                    }
-            }
-            
-            if showEndGame == true {
-                TwoInputXPopUp(title: "Save Game", description: "Would you like to save this game before starting a new one?", leftButtonText: "Yes",  leftButtonAction: {save_logic_handling_func()}, rightButtonText: "No", rightButtonAction: {new_game_func(); resetHaptic(); withAnimation{location_overlay.showTabBar = true}}, close_action: {withAnimation{showEndGame = false}}, flex_action: {withAnimation{location_overlay.showTabBar = true}})
-                    .transition(.opacity)
-                    .onAppear{
-                        prepareHaptics()
-                        warningHaptic()
-                    }
-            }
-            
-            if showGameInfo == true {
-                GameInfoPopUp(close_action: { withAnimation{showGameInfo = false; location_overlay.showTabBar = true; highlight_game_info = false} })
-                    .transition(.opacity)
-                    .onAppear{
-                        prepareHaptics()
-                        warningHaptic()
-                    }
-            }
-            
-
-        }
-        .ignoresSafeArea(location_overlay.showVeloInput ? [] : .keyboard)
-        .onAppear{
-            if events.count >= 1 && (scoreboard.balls == 0 && scoreboard.strikes == 0 && scoreboard.pitches == 0 && scoreboard.atbats == 1 && current_pitcher.firstName == "No Pitcher Selected") {
+            .ignoresSafeArea(location_overlay.showVeloInput ? [] : .keyboard)
+            .onAppear{
+                if events.count >= 1 && (scoreboard.balls == 0 && scoreboard.strikes == 0 && scoreboard.pitches == 0 && scoreboard.atbats == 1 && current_pitcher.firstName == "No Pitcher Selected") {
                     showResumeGame = true
+                }
+                scoreboard.disable_bottom_row = false
+                event.recordEvent = false
+                print("Record Event: ", event.recordEvent)
             }
-            scoreboard.disable_bottom_row = false
-            event.recordEvent = false
-            print("Record Event: ", event.recordEvent)
+        
         }
             
     }
@@ -1074,14 +1102,14 @@ struct MainDashboardView: View {
         print("New Event: ", current_pitcher.idcode, event.pitch_result, event.pitch_type, event.result_detail, event.balls, event.strikes, event.outs, event.inning, event.atbats, event.batter_stance, event.velocity, event.x_cor, event.y_cor)
     }
     
-    func save_logic_handling_func() {
+    func save_logic_handling_func(screenWidth: CGFloat, screenHeight: CGFloat) {
         if location_overlay.game_info_entered == true {
             withAnimation{
                 show_save_toast = true
                 location_overlay.showTabBar = true
             }
             
-            save_game_func()
+            save_game_func(screenWidth: screenWidth, screenHeight: screenHeight)
             new_game_func()
             
         }
@@ -1095,37 +1123,35 @@ struct MainDashboardView: View {
         }
     }
     
-    func save_game_func() {
+    func save_game_func(screenWidth: CGFloat, screenHeight: CGFloat) {
         
         let date = ASStartTime ?? Date()
         let opponent_name = ASCurOpponentName ?? "Opponent Name"
         let location = ASGameLocation ?? "Home"
         var game_data_list: [SavedEvent] = []
+        
+        let saved_game_id = UUID()
+        
         for event in events {
 
             let saved_event = SavedEvent(event_num: event.event_number, pitcher_id: event.pitcher_id, pitch_result: event.pitch_result, pitch_type: event.pitch_type, result_detail: event.result_detail, balls: event.balls, strikes: event.strikes, outs: event.outs, inning: event.inning, battersfaced: event.atbats, pitch_x_location: event.pitch_x_location, pitch_y_location: event.pitch_y_location, batters_stance: event.batter_stance, velocity: event.velocity)
                 
+            //Adds saved event data to game data list
             game_data_list.append(saved_event)
         }
-        //print(game_data_list)
         
         var saved_pitcher_list: [SavedPitcherInfo] = []
         var pitcher_id_list: [UUID] = []
         
-        //print("Appearance List: ", scoreboard.pitchers_appearance_list)
-        
-        //print("Saving Pitcher IDs")
-        //print("Adding Pitchers from Scoreboard List")
+        //Adds all pitcher ids that appeared to pitcher_id list
         for pitcher in scoreboard.pitchers_appearance_list {
-            //print("Adding: ", pitcher.pitcher_id)
             pitcher_id_list.append(pitcher.pitcher_id)
         }
-        //print("Adding Current Pitcher if not already added")
+        
+        //Adds current pitcher if not in list (limit by pitches thrown?)
         if !pitcher_id_list.contains(current_pitcher.idcode) {
-            //print("Adding: ", current_pitcher.idcode)
             pitcher_id_list.append(current_pitcher.idcode)
         }
-        //print("Finished Storing Pitcher IDs")
         
         var first_name: String = ""
         var last_name: String = ""
@@ -1134,8 +1160,7 @@ struct MainDashboardView: View {
         var pitch3: String = ""
         var pitch4: String = ""
         
-        //print("Generating Saved Pitcher Info")
-        //print("Pitcher ID List: ", pitcher_id_list)
+        //Temporary stores pitcher info
         for pitcher_id in pitcher_id_list {
             for player in pitchers {
                 if pitcher_id == player.id {
@@ -1149,14 +1174,26 @@ struct MainDashboardView: View {
                 }
             }
             
+            //Adds pitcher and their info to saved pitcher list
             saved_pitcher_list.append(SavedPitcherInfo(pitcher_id: pitcher_id, first_name: first_name, last_name: last_name, pitch1: pitch1, pitch2: pitch2, pitch3: pitch3, pitch4: pitch4))
             
         }
         
-        let new_saved_game = SavedGames(opponent_name: opponent_name, date: date, location: location, game_data: game_data_list, pitcher_info: saved_pitcher_list)
+        let new_saved_game = SavedGames(game_id: saved_game_id, opponent_name: opponent_name, date: date, location: location, game_data: game_data_list, pitcher_info: saved_pitcher_list)
         
+        //Saves SavedGame data object
         context.insert(new_saved_game)
         
+        Task{
+            do {
+                try await supabaseVM.insertGame(game_id: saved_game_id, opponent: opponent_name, location: location, startTime: date, event_list: game_data_list, pitcher_list: saved_pitcher_list, screenWidth: screenWidth, screenHeight: screenHeight)
+            } catch {
+                print("Game not added to database")
+            }
+            
+        }
+        
+                
     }
     
     func reselect_current_pitcher(pitcher_id: UUID) {
