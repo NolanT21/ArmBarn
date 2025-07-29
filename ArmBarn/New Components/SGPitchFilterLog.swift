@@ -31,10 +31,11 @@ struct FilteredGameLogData: Hashable {
 struct SGPitchFilterLog: View {
     
     @State var filtered_list: [SavedEvent]
+    @State var pitchers: [SavedPitcherInfo]
     @State var pitch_type_list: [String]
     @State var close_action: () -> ()
     
-    @Query(sort: \Pitcher.lastName) var pitchers: [Pitcher]
+    //@Query(sort: \Pitcher.lastName) var pitchers: [Pitcher]
     
     @State private var game_log_data: [FilteredGameLogData] = []
     
@@ -255,9 +256,9 @@ struct SGPitchFilterLog: View {
             if active_pitched_id != pitch.pitcher_id {
                 active_pitched_id = pitch.pitcher_id
                 for pitcher in pitchers {
-                    if pitcher.id == active_pitched_id {
-                        pitcher_first_name = pitcher.firstName
-                        pitcher_last_name = pitcher.lastName
+                    if pitcher.pitcher_id == active_pitched_id {
+                        pitcher_first_name = pitcher.first_name
+                        pitcher_last_name = pitcher.last_name
                         pitch1 = pitcher.pitch1
                         pitch2 = pitcher.pitch2
                         pitch3 = pitcher.pitch3

@@ -10,7 +10,7 @@ import SwiftData
 
 struct SGGameLogView: View {
     
-    @Query(sort: \Pitcher.lastName) var pitchers: [Pitcher]
+    //@Query(sort: \Pitcher.lastName) var pitchers: [Pitcher]
     
     @State var game_data: SavedGames
     
@@ -240,6 +240,7 @@ struct SGGameLogView: View {
     
     func generate_saved_game_log(){
         var saved_game_data = game_data.game_data
+        var pitcher_list = game_data.pitcher_info
         saved_game_data.sort{$0.event_num < $1.event_num}
         
         var active_pitched_id: UUID = UUID()
@@ -268,9 +269,9 @@ struct SGGameLogView: View {
         for (index, event) in saved_game_data.enumerated() {
             if active_pitched_id != event.pitcher_id {
                 active_pitched_id = event.pitcher_id
-                for pitcher in pitchers {
-                    if pitcher.id == active_pitched_id {
-                        pitcher_name = pitcher.firstName + " " + pitcher.lastName
+                for pitcher in pitcher_list {
+                    if pitcher.pitcher_id == active_pitched_id {
+                        pitcher_name = pitcher.first_name + " " + pitcher.last_name
                         pitch1 = pitcher.pitch1
                         pitch2 = pitcher.pitch2
                         pitch3 = pitcher.pitch3

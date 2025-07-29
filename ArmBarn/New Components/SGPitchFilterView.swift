@@ -617,11 +617,11 @@ struct SGPitchFilterView: View {
             
             if showFilteredGameLog == true {
                 
-                SGPitchFilterLog(filtered_list: filtered_game_log, pitch_type_list: pitch_type_list, close_action: {withAnimation(.easeOut(duration: 0.2)){showFilteredGameLog = false}})
+                SGPitchFilterLog(filtered_list: filtered_game_log, pitchers: game_data.pitcher_info, pitch_type_list: pitch_type_list, close_action: {withAnimation(.easeOut(duration: 0.2)){showFilteredGameLog = false}})
                 
             }
             
-        } //Here?
+        }
         
     }
     
@@ -693,6 +693,7 @@ struct SGPitchFilterView: View {
     func query_events() {
         
         var saved_game = game_data.game_data
+        var pitchers = game_data.pitcher_info
         saved_game.sort{$0.event_num < $1.event_num}
         
         var temp_pitch_type_list: [String] = []
