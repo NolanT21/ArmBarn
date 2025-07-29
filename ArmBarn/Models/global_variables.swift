@@ -201,13 +201,15 @@ struct SavedPitcherInfo: Codable, Hashable{
 }
 
 @Model class SavedGames{
+    var game_id: UUID
     var opponent_name: String
     var date: Date
     var location: String
     var game_data: [SavedEvent]
     var pitcher_info: [SavedPitcherInfo]
     
-    init(opponent_name: String, date: Date, location: String, game_data: [SavedEvent], pitcher_info: [SavedPitcherInfo]) {
+    init(game_id: UUID, opponent_name: String, date: Date, location: String, game_data: [SavedEvent], pitcher_info: [SavedPitcherInfo]) {
+        self.game_id = game_id
         self.opponent_name = opponent_name
         self.date = date
         self.location = location
