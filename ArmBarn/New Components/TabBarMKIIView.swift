@@ -44,7 +44,7 @@ enum TabViewEnum: Identifiable, CaseIterable, View {
             case .saved_games:
                 SavedGamesView()
             case .settings:
-                SignInView()
+                AccountView()
         }
     }
 }

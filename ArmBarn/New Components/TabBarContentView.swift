@@ -12,6 +12,8 @@ struct TabBarContentView: View {
     @Environment(Event_String.self) var event
     @Environment(LocationOverlay.self) var location_overlay
     
+    @StateObject private var supabaseVM = SupabaseViewModel()
+    
     @State var activeTab: TabItems = .home
     
     var body: some View {
@@ -39,7 +41,7 @@ struct TabBarContentView: View {
                     .tag(TabItems.saved_games)
                     .toolbar(.hidden, for: .tabBar)
                 
-                SignInView()
+                AccountView()
                     .tag(TabItems.settings)
                     .toolbar(.hidden, for: .tabBar)
 
