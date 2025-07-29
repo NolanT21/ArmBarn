@@ -410,9 +410,16 @@ struct SGStatsView: View {
                                         Text(data_row.name)
                                             .gridCellAnchor(.leading)
                                             .font(.system(size: 13, weight: .semibold))
-                                        Text("\(data_row.velocity, specifier: "%0.f")")
-                                            .gridCellAnchor(.trailing)
-                                            .font(.system(size: 13, weight: .semibold))
+                                        HStack{
+                                            
+                                            Spacer()
+                                            
+                                            Text("\(data_row.velocity, specifier: "%.1f")")
+                                                
+                                                .font(.system(size: 13, weight: .semibold))
+                                        }
+                                        .gridCellAnchor(.trailing)
+                                        .frame(width: 50)
                                     }
                                     .padding(.bottom, 0.1)
                                     
@@ -851,6 +858,8 @@ struct SGStatsView: View {
         }
         .frame(height: 120)
     }
+    
+    //MARK: Pitch Max Velo Written
     
     func generate_pitch_detail_key(pitch_type: String, pitch_result: String, result_detail: String, velocity: Double, data_set: pitch_type_data) -> pitch_type_data {
         
@@ -1515,10 +1524,18 @@ struct SGStatsView: View {
     func reset_player_detail_pitch_type_data(){
         
         pdv_component_data.removeAll()
+        pdv_pitch1_max = 0.0
+        pdv_pitch2_max = 0.0
+        pdv_pitch3_max = 0.0
+        pdv_pitch4_max = 0.0
+        pdv_max_velo = 0.0
+        pdv_min_velo = 0.0
+        
         pd_pitch_type_stats.removeAll()
         
         pd_pitch1_stats.pitch_type = ""
         pd_pitch1_stats.count = 0
+        pd_pitch1_stats.max_velo = 0.0
         pd_pitch1_stats.swings = 0
         pd_pitch1_stats.whiff = 0
         pd_pitch1_stats.hits = 0
@@ -1527,6 +1544,7 @@ struct SGStatsView: View {
         
         pd_pitch2_stats.pitch_type = ""
         pd_pitch2_stats.count = 0
+        pd_pitch2_stats.max_velo = 0.0
         pd_pitch2_stats.swings = 0
         pd_pitch2_stats.whiff = 0
         pd_pitch2_stats.hits = 0
@@ -1535,6 +1553,7 @@ struct SGStatsView: View {
         
         pd_pitch3_stats.pitch_type = ""
         pd_pitch3_stats.count = 0
+        pd_pitch3_stats.max_velo = 0.0
         pd_pitch3_stats.swings = 0
         pd_pitch3_stats.whiff = 0
         pd_pitch3_stats.hits = 0
@@ -1543,6 +1562,7 @@ struct SGStatsView: View {
         
         pd_pitch4_stats.pitch_type = ""
         pd_pitch4_stats.count = 0
+        pd_pitch4_stats.max_velo = 0.0
         pd_pitch4_stats.swings = 0
         pd_pitch4_stats.whiff = 0
         pd_pitch4_stats.hits = 0
