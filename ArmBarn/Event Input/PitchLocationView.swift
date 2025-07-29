@@ -1558,7 +1558,7 @@ struct PitchLocationView: View {
             //print("Added: ", first_name, last_name, pitcher_id)
         }
         
-        let new_saved_game = SavedGames(opponent_name: opponent_name, date: date, location: location, game_data: game_data_list, pitcher_info: saved_pitcher_list)
+        let new_saved_game = SavedGames(game_id: UUID(), opponent_name: opponent_name, date: date, location: location, game_data: game_data_list, pitcher_info: saved_pitcher_list) //Legacy code, added game_id parameter with random UUID, updated SavedGames struct
         
         context.insert(new_saved_game)
         
