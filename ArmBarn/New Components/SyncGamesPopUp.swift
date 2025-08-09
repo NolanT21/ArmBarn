@@ -21,6 +21,7 @@ struct SyncGamesPopUp: View {
                 
                 HStack{
                     Text("Syncing Games")
+                        .font(.system(size: 17, weight: .semibold))
                 }
                 
                 VStack{
