@@ -26,25 +26,18 @@ struct CreateAccountView: View {
     
     @State var isLoading: Bool = false
     
+    @State var acc_created_successful: Bool = false
+    @State var acc_created_failed: Bool = false
+    
+    @State var button_gradient: LinearGradient = LinearGradient(
+        gradient: Gradient(colors: [Color("ScoreboardGreen"), Color("DarkScoreboardGreen")]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
+    
     var body: some View {
         VStack{
             NavigationStack{
-                
-                HStack{
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .imageScale(.medium)
-                            .font(.system(size: 17))
-                            .foregroundColor(Color.white)
-                            .bold()
-                    }
-                    .padding(10)
-                    
-                    Spacer()
-                    
-                }
                 
                 List{
                 
@@ -187,7 +180,7 @@ struct CreateAccountView: View {
                             ZStack{
                                 
                                 RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                    .fill(Color("ScoreboardGreen"))
+                                    .fill(button_gradient)
                                 
                                 Text("Sign Up")
                                     .font(.system(size: 17, weight: .semibold))
@@ -200,24 +193,53 @@ struct CreateAccountView: View {
                     
                     .listRowSeparator(.hidden)
                     
-                    if let result {
-                        Section {
-                            switch result {
-                            case .success:
-                                Text("Account created successfully!")
-                            case .failure(let error):
-                                Text(error.localizedDescription).foregroundStyle(.red)
+                    HStack{
+                        
+                        Spacer()
+                        
+                        if let result {
+                            Section {
+                                switch result {
+                                case .success:
+                                    Text("Account created successfully!")
+                                        .onAppear{
+                                            
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                                dismiss()
+                                            }
+                                            
+                                        }
+                                case .failure(let error):
+                                    Text(error.localizedDescription).foregroundStyle(.red)
+                                }
                             }
                         }
+                        
+                        Spacer()
+                        
                     }
+                    .listRowSeparator(.hidden)
 
                 }
                 .preferredColorScheme(.dark)
                 .navigationBarTitleDisplayMode(.automatic)
                 .navigationTitle("Create Account")
+                .toolbar{
+                    ToolbarItemGroup(placement: .topBarLeading) {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "chevron.left")
+                                .imageScale(.medium)
+                                .font(.system(size: 17))
+                                .foregroundColor(Color.white)
+                                .bold()
+                        }
+                    }
+                }
                 .tint(Color("ScoreboardGreen"))
                 .listStyle(.plain)
-                .padding(.top, 50)
+                .padding(.top, 20)
                 .onOpenURL(perform: { url in
                     Task{
                         do {
