@@ -37,6 +37,9 @@ struct InningSummaryData: Hashable {
 
 struct LiveGameLogView: View {
     
+    @AppStorage("SelectedVelocityUnits") var ASVelocityUnits : String?
+    @State var velo_units: String = "mph"
+    
     @Query(sort: \Event.event_number) var events: [Event]
     @Query(sort: \Pitcher.lastName) var pitchers: [Pitcher]
     
@@ -64,7 +67,7 @@ struct LiveGameLogView: View {
                                     
                                     Text("Pitch Type")
                                         .gridCellColumns(2)
-                                    Text("MPH")
+                                    Text(velo_units)
                                     Text("Result")
                                     Text("Count")
 
@@ -241,6 +244,11 @@ struct LiveGameLogView: View {
             .onAppear{
                 game_log_data.removeAll()
                 generate_game_log_data()
+                
+                if ASVelocityUnits != nil {
+                    velo_units = ASVelocityUnits ?? "MPH"
+                }
+                
             }
         }
     }
