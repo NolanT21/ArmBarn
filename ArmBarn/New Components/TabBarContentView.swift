@@ -42,7 +42,7 @@ struct TabBarContentView: View {
                     .toolbar(.hidden, for: .tabBar)
                 
                 AccountView()
-                    .tag(TabItems.settings)
+                    .tag(TabItems.profile)
                     .toolbar(.hidden, for: .tabBar)
 
             }
@@ -152,7 +152,7 @@ enum TabItems: String, CaseIterable {
     case pitcher_select = "Pitchers"
     case game_report = "Game Report"
     case saved_games = "Saved Games"
-    case settings = "Settings"
+    case profile = "Account"
     
     var symbolImage: String {
         switch self {
@@ -160,7 +160,7 @@ enum TabItems: String, CaseIterable {
         case .pitcher_select: return "person.fill"
         case .game_report: return "chart.bar.xaxis"
         case .saved_games: return "clock.arrow.trianglehead.counterclockwise.rotate.90"
-        case .settings: return "gearshape.fill"
+        case .profile: return "person.crop.circle.fill"
         }
     }
     

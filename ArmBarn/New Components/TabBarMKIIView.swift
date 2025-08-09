@@ -14,7 +14,7 @@ struct TabItem {
 
 enum TabViewEnum: Identifiable, CaseIterable, View {
     
-    case home, pitcher_select, game_stats, saved_games, settings
+    case home, pitcher_select, game_stats, saved_games, profile
     var id: Self { self }
     
     var tabItem: TabItem {
@@ -27,8 +27,8 @@ enum TabViewEnum: Identifiable, CaseIterable, View {
                 .init(name: "Game Stats", systemName: "chart.bar.xaxis")
             case .saved_games:
                 .init(name: "Saved Games", systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90")
-            case .settings:
-                .init(name: "Settings", systemName: "gearshape")
+            case .profile:
+                .init(name: "Account", systemName: "person.crop.circle.fill")
         }
     }
     
@@ -43,7 +43,7 @@ enum TabViewEnum: Identifiable, CaseIterable, View {
                 LiveStatsContainer()
             case .saved_games:
                 SavedGamesView()
-            case .settings:
+            case .profile:
                 AccountView()
         }
     }
