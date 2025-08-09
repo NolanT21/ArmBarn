@@ -43,7 +43,7 @@ struct MainDashboardView: View {
     @AppStorage("CurrentOpponentName") var ASCurOpponentName : String?
     @AppStorage("CurrentGameLocation") var ASGameLocation : String?
     @AppStorage("CurrentGameStartTime") var ASStartTime : Date?
-    @AppStorage("SignInAuthorization") var ASSignedIn : Bool?
+//    @AppStorage("SignInAuthorization") var ASSignedIn : Bool?
     
     @StateObject private var supabaseVM = SupabaseViewModel()
     
@@ -261,25 +261,30 @@ struct MainDashboardView: View {
                                 
                                 HStack(alignment: .bottom, spacing: 10){
                                     
-//                                    Button{
-//                                        
-//                                        Task{
-//                                            do {
-//                                                try await supabaseVM.fetchGames()
-//                                            }
-//                                            catch{
-//                                                print("Failed")
-//                                            }
-//                                            
-//                                        }
-//                                        
-//                                    } label: {
-//                                        
-//                                        Image(systemName: "questionmark.circle")
-//                                            .font(.system(size: 18))
-//                                            .frame(width: 30, height: 30)
-//                                        
-//                                    }
+                                    Button{
+                                        
+                                        router.selectedTab = .profile
+                                        
+                                    } label: {
+                                        
+                                        if supabaseVM.isAuthenticated == true{
+                                            Image(systemName: "person.crop.circle.badge.checkmark")
+                                                .foregroundStyle(Color("ScoreboardGreen"), .white)
+                                                .font(.system(size: 18))
+                                                .frame(width: 30, height: 30)
+                                                .padding(.leading, 1)
+                                        } else {
+                                            Image(systemName: "person.crop.circle.badge.xmark")
+                                                .foregroundStyle(.red, .white)
+                                                .font(.system(size: 18))
+                                                .frame(width: 30, height: 30)
+                                                .padding(.leading, 1)
+                                        }
+                                        
+                                    }
+                                    .background(pitcher_select_gradient)
+                                    .foregroundStyle(.white)
+                                    .cornerRadius(8)
                                     
                                     Button{
                                         
@@ -509,8 +514,8 @@ struct MainDashboardView: View {
                                             
                                             Spacer()
                                             
-                                            Image(systemName: "person.crop.circle")
-                                                .font(.system(size: 17, weight: .medium))
+                                            Image(systemName: "person.fill")
+                                                .font(.system(size: 15, weight: .medium))
                                                 .imageScale(.large)
                                             //.padding(.trailing, 10)
                                             
@@ -1074,6 +1079,9 @@ struct MainDashboardView: View {
             
             Spacer()
             
+        }
+        .task{
+            await supabaseVM.isAuthenticated()
         }
     }
     
