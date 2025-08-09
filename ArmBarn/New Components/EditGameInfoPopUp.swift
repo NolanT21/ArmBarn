@@ -13,6 +13,8 @@ struct EditGameInfoPopUp: View {
 //    @AppStorage("CurrentGameLocation") var ASGameLocation : String?
 //    @AppStorage("CurrentGameStartTime") var ASStartTime : Date?
     
+    @StateObject private var supabaseVM = SupabaseViewModel()
+    
     @Bindable var gameInfo: SavedGames
     
     @Environment(GameReport.self) var game_report
@@ -129,6 +131,17 @@ struct EditGameInfoPopUp: View {
                                     close_action()
                                     location_overlay.game_info_entered = true
                                 }
+                                
+                                if supabaseVM.isAuthenticated == true {
+                                    
+                                    print("Entered update game info section")
+                                    
+                                    Task{
+                                        try await supabaseVM.update_game_info(game_id: gameInfo.game_id, opponent: gameInfo.opponent_name, location: gameInfo.location, startTime: gameInfo.date)
+                                    }
+//                                    
+                                }
+                                
                             } label: {
                                 Text("Enter")
                                     .font(.system(size: 17, weight: .bold))
@@ -190,7 +203,11 @@ struct EditGameInfoPopUp: View {
             selected_location = gameInfo.location
             start_date = gameInfo.date
         }
+        .task{
+            await supabaseVM.isAuthenticated()
+        }
     }
+    
 }
 
 //#Preview {
