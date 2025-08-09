@@ -180,7 +180,17 @@ struct SelectPitcherView: View {
                                 }
                                 .sensoryFeedback(.selection, trigger: pitcher_select_haptic)
                                 .foregroundColor(text_color)
-                                .swipeActions(edge: .leading) {
+                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                    
+                                    Button(role: .destructive) {
+                                        //store.delete(message)
+                                        context.delete(p_er)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                    .tint(Color.red)
+                                    
+                                    
                                     Button {
                                         showEditPitcher = true
                                         edit_pitcher = p_er
@@ -191,7 +201,7 @@ struct SelectPitcherView: View {
                                     
                                 }
                             }
-                            .onDelete(perform: removePitcher)
+                            //.onDelete(perform: removePitcher)
                             
                         }
                         .navigationBarTitleDisplayMode(.automatic)
@@ -205,7 +215,7 @@ struct SelectPitcherView: View {
                                     showAddPitcher = true
                                 }, label: {
                                     
-                                    Image(systemName: "person.crop.circle.badge.plus")
+                                    Image(systemName: "person.fill.badge.plus")
                                         .foregroundStyle(Color("ScoreboardGreen"), .white)
                                         .font(.system(size: 21))
                                                 
@@ -215,13 +225,13 @@ struct SelectPitcherView: View {
                         .sheet(item: $edit_pitcher) { edit in
                             EditPitcherView(edit_pitcher: edit)
                                 .preferredColorScheme(.dark)
-                                .background(Color.black.opacity(0.5))
+//                                .background(Color.black.opacity(0.5))
                                 .ignoresSafeArea()
                         }
                         .sheet(isPresented: $showAddPitcher) {
                             AddPitcherView()
                                 .preferredColorScheme(.dark)
-                                .background(Color.black.opacity(0.5))
+//                                .background(Color.black.opacity(0.5))
                                 .ignoresSafeArea()
                         }
                     }
