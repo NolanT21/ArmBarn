@@ -10,7 +10,8 @@ import SwiftData
 
 struct SGGameLogView: View {
     
-    //@Query(sort: \Pitcher.lastName) var pitchers: [Pitcher]
+    @AppStorage("SelectedVelocityUnits") var ASVelocityUnits : String?
+    @State var velo_units: String = "mph"
     
     @State var game_data: SavedGames
     
@@ -36,7 +37,7 @@ struct SGGameLogView: View {
                                     
                                     Text("Pitch Type")
                                         .gridCellColumns(2)
-                                    Text("MPH")
+                                    Text(velo_units)
                                     Text("Result")
                                     Text("Count")
 
@@ -207,6 +208,11 @@ struct SGGameLogView: View {
             game_log_data.removeAll()
             
             generate_saved_game_log()
+            
+            if ASVelocityUnits != nil {
+                velo_units = ASVelocityUnits ?? "MPH"
+            }
+            
         }
     }
     

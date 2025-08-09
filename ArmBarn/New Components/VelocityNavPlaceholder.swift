@@ -9,6 +9,8 @@ import SwiftUI
 
 struct VelocityNavPlaceholder: View {
     
+    @AppStorage("SelectedVelocityUnits") var ASVelocityUnits : String?
+    
     @Binding var path: [Int]
     
     @Environment(Event_String.self) var event
@@ -21,6 +23,7 @@ struct VelocityNavPlaceholder: View {
     @FocusState private var fieldIsFocused: Bool
     @State var veloinput: Double = 0.0
     @State var validVeloInput: Bool = false
+    @State var velo_units: String = "mph"
     
     let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -58,7 +61,7 @@ struct VelocityNavPlaceholder: View {
 
                     HStack(spacing: 10){
                         
-                        TextField("mph   ", value: $veloinput, formatter: formatter)
+                        TextField(velo_units, value: $veloinput, formatter: formatter)
                             .padding(.vertical, 5)
                             .focused($fieldIsFocused)
                             .font(.system(size: 24, weight: .medium))
@@ -92,11 +95,11 @@ struct VelocityNavPlaceholder: View {
                             Text("Enter")
                                 .font(.system(size: 17, weight: .bold))
                                 .frame(width: 125, height: 40)
-                                .background(!validVeloInput || (veloinput > 115 || veloinput < 30) ? disabled_gradient : button_gradient)
-                                .foregroundColor(!validVeloInput || (veloinput > 115 || veloinput < 30) ? Color.gray.opacity(0.5) : Color.white)
+                                .background(!validVeloInput || (veloinput > 180 || veloinput < 30) ? disabled_gradient : button_gradient)
+                                .foregroundColor(!validVeloInput || (veloinput > 180 || veloinput < 30) ? Color.gray.opacity(0.5) : Color.white)
                                 .cornerRadius(8.0)
                         }
-                        .disabled(!validVeloInput || (veloinput > 115 || veloinput < 30))
+                        .disabled(!validVeloInput || (veloinput > 180 || veloinput < 30))
                         .onChange(of: veloinput){ _, _ in
                             validate_velocity_input()
                         }
@@ -160,6 +163,11 @@ struct VelocityNavPlaceholder: View {
                     fieldIsFocused = true
                 }
                 //veloinput = event.velocity
+                
+                if ASVelocityUnits != nil {
+                    velo_units = ASVelocityUnits?.lowercased() ?? "mph"
+                }
+                
             }
             
             Spacer()

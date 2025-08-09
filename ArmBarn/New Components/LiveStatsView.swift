@@ -46,6 +46,9 @@ struct PitcherAppeared: Hashable{
 
 struct LiveStatsView: View {
     
+    @AppStorage("SelectedVelocityUnits") var ASVelocityUnits : String?
+    @State var velo_units: String = "mph"
+    
     @Query(sort: \Event.event_number) var events: [Event]
     @Query(sort: \Pitcher.lastName) var pitchers: [Pitcher]
     @Environment(currentPitcher.self) var current_pitcher
@@ -132,6 +135,10 @@ struct LiveStatsView: View {
                 
                 generate_pitcher_appearance_list()
                 generate_staff_stat_lines()
+                
+                if ASVelocityUnits != nil {
+                    velo_units = ASVelocityUnits?.lowercased() ?? "mph"
+                }
                 
             }
             
@@ -395,7 +402,7 @@ struct LiveStatsView: View {
                             .font(.system(size: 11))
                             .foregroundStyle(Color.gray)
                         
-                        Text("\(pdv_start_index + 20)mph")
+                        Text("\(pdv_start_index + 20)" + velo_units)
                             .position(x: (width * (4/5)) + 10, y: 110)
                             .font(.system(size: 11))
                             .foregroundStyle(Color.gray)
@@ -507,6 +514,7 @@ struct LiveStatsView: View {
                 
             }
         }
+        
     }
     
     @ViewBuilder

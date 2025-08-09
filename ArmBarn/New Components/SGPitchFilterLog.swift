@@ -30,6 +30,9 @@ struct FilteredGameLogData: Hashable {
 
 struct SGPitchFilterLog: View {
     
+    @AppStorage("SelectedVelocityUnits") var ASVelocityUnits : String?
+    @State var velo_units: String = "mph"
+    
     @State var filtered_list: [SavedEvent]
     @State var pitchers: [SavedPitcherInfo]
     @State var pitch_type_list: [String]
@@ -94,7 +97,7 @@ struct SGPitchFilterLog: View {
                                         .font(.system(size: 13, weight: .medium))
                                     
                                     VStack(alignment: .leading){
-                                        Text("\(pitch.velo)" + " mph" + " " + pitch.pitch_type)
+                                        Text("\(pitch.velo)" + velo_units + " " + pitch.pitch_type)
                                             .font(.system(size: 12, weight: .semibold))
                                         Text(pitch.result)
                                             .font(.system(size: 11, weight: .regular))
@@ -197,6 +200,10 @@ struct SGPitchFilterLog: View {
         .onAppear{
             
             generate_filtered_gamelog()
+            
+            if ASVelocityUnits != nil {
+                velo_units = ASVelocityUnits?.lowercased() ?? "mph"
+            }
             
         }
     }

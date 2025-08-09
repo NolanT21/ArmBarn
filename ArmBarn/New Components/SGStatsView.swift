@@ -55,6 +55,9 @@ struct pitch_type_data: Hashable  {
 
 struct SGStatsView: View {
     
+    @AppStorage("SelectedVelocityUnits") var ASVelocityUnits : String?
+    @State var velo_units: String = "mph"
+    
     @State var game_data: SavedGames
     
     @State private var section_label_size: CGFloat = 11
@@ -395,7 +398,7 @@ struct SGStatsView: View {
                                                 .gridCellAnchor(.leading)
                                                 .font(.system(size: 11, weight: .regular))
                                                 .foregroundStyle(Color.gray)
-                                            Text("MPH")
+                                            Text(velo_units.uppercased())
                                                 .gridCellAnchor(.trailing)
                                                 .font(.system(size: 11, weight: .regular))
                                                 .foregroundStyle(Color.gray)
@@ -508,9 +511,12 @@ struct SGStatsView: View {
             swings_and_misses_list.removeAll()
             velocity_list.removeAll()
             
-            
             generate_saved_games_stats()
             generate_player_detail_stats()
+            
+            if ASVelocityUnits != nil {
+                velo_units = ASVelocityUnits?.lowercased() ?? "mph"
+            }
             
         }
         
@@ -830,7 +836,7 @@ struct SGStatsView: View {
                             .font(.system(size: 11))
                             .foregroundStyle(Color.gray)
                         
-                        Text("\(pdv_start_index + 20)mph")
+                        Text("\(pdv_start_index + 20)" + velo_units)
                             .position(x: (width * (4/5)) + 10, y: 110)
                             .font(.system(size: 11))
                             .foregroundStyle(Color.gray)
