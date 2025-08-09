@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import CoreHaptics
 
 struct SavedGamesView: View {
     
@@ -21,6 +22,11 @@ struct SavedGamesView: View {
     
     @State private var edit_info: SavedGames?
     @State var showEditGameInfo: Bool = false
+    @State var confirmGameDelete: Bool = false
+    
+    @State var game_to_delete: SavedGames? = nil
+    
+
     
     @State private var text_color = Color.white
     
@@ -30,6 +36,8 @@ struct SavedGamesView: View {
     @State var show_sync_animation: Bool = false
     @State var sync_animation: Bool = false
     @State var isRotating = 0.0
+    
+    @State private var engine: CHHapticEngine?
     
     var body: some View {
         
@@ -65,20 +73,49 @@ struct SavedGamesView: View {
                                                 .foregroundStyle(Color.gray)
                                         }
                                     }
-                                    .swipeActions(edge: .leading) {
+                                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                        
+                                        Button {
+                                            
+                                            //Logic for calling confirm delete game
+                                            withAnimation{
+                                                confirmGameDelete = true
+                                            }
+                                            
+                                            //    self.itemToDelete = item
+                                            
+                                            self.game_to_delete = games
+                                            
+                                            //Logic needs moved to Confirm PopUp
+                                            context.delete(games)
+                                            
+                                            //Logic for deleteing game from server
+                                            if supabaseVM.isAuthenticated == true{
+                                                Task{
+                                                    try await supabaseVM.delete_game(game_id: games.game_id)
+                                                }
+                                            }
+                                            
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
+                                        .tint(Color.red)
+                                        
                                         Button(action: {
                                             showEditGameInfo = true
                                             edit_info = games
+                                            
                                         }, label: {
                                             Text("Edit")
                                         })
+                                        .tint(Color.orange)
                                     }
                                     
                                     Spacer()
                                     
                                 }
                             }
-                            .onDelete(perform: removeSavedGame)
+                            //.onDelete(perform: removeSavedGame)
                             
                         }
                         .navigationTitle(Text("Saved Games"))
@@ -101,10 +138,11 @@ struct SavedGamesView: View {
                                        Image(systemName: "arrow.trianglehead.2.clockwise")
                                         .imageScale(.medium)
                                         .font(.system(size: 15))
-                                        .foregroundColor(.white)
+                                        .foregroundColor(supabaseVM.isAuthenticated ? Color.white : Color.gray)
                                         .bold()
                                     
                                 }
+                                .disabled(!supabaseVM.isAuthenticated)
                             }
                             
                         }
@@ -118,9 +156,18 @@ struct SavedGamesView: View {
                     
                 }
                 
+                if confirmGameDelete == true {
+                    
+                    TwoInputXPopUp(title: "Delete Game", description: "Do you want to delete this game? This game and its data will be permanently deleted", leftButtonText: "Yes", leftButtonAction: {withAnimation{confirmGameDelete = false}}, rightButtonText: "No", rightButtonAction: {withAnimation{confirmGameDelete = false}}, close_action: {withAnimation{confirmGameDelete = false}}, flex_action: {})
+                    
+                }
+                
                 SyncGamesPopUp()
                 
             }
+        }
+        .task{
+            await supabaseVM.isAuthenticated()
         }
     }
     
@@ -153,6 +200,8 @@ struct SavedGamesView: View {
                                         }
                                         DispatchQueue.main.asyncAfter(deadline: .now() + 1){
                                             sync_animation = true
+                                            prepareHaptics()
+                                            successHaptic()
                                         }
                                     }
                             }
@@ -185,18 +234,21 @@ struct SavedGamesView: View {
                 }
                 .transition(.opacity)
                 .padding(.top, 10)
-//                .onAppear{
-//                    if show_sync_animation == true {
-//                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//                            withAnimation{
-//                                show_sync_animation.toggle()
-//                            }
-//                        }
-//                    }
-//                }
             }
                 
         }
+    }
+    
+    func delete_game() {
+        
+//        context.delete(games)
+        
+        //Logic for deleteing game from server
+//        if supabaseVM.isAuthenticated == true{
+//            Task{
+//                try await supabaseVM.delete_game(game_id: games.game_id)
+//            }
+//        }
         
     }
     
@@ -280,6 +332,41 @@ struct SavedGamesView: View {
     func removeSavedGame(at indexSet: IndexSet) {
         for index in indexSet {
             context.delete(saved_games[index])
+        }
+    }
+    
+    func successHaptic() {
+        // Make sure that the device supports haptics
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+        var hap_events = [CHHapticEvent]()
+
+        let start_intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 1)
+        let start_sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 1)
+        let start = CHHapticEvent(eventType: .hapticTransient, parameters: [start_intensity, start_sharpness], relativeTime: 0)
+        hap_events.append(start)
+        
+        let end_intensity = CHHapticEventParameter(parameterID: .hapticIntensity, value: 2)
+        let end_sharpness = CHHapticEventParameter(parameterID: .hapticSharpness, value: 2)
+        let end = CHHapticEvent(eventType: .hapticTransient, parameters: [end_intensity, end_sharpness], relativeTime: 0.2)
+        hap_events.append(end)
+
+        do {
+            let pattern = try CHHapticPattern(events: hap_events, parameters: [])
+            let player = try engine?.makePlayer(with: pattern)
+            try player?.start(atTime: 0)
+        } catch {
+            print("Failed to play pattern: \(error.localizedDescription).")
+        }
+    }
+    
+    func prepareHaptics() {
+        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
+
+        do {
+            engine = try CHHapticEngine()
+            try engine?.start()
+        } catch {
+            print("There was an error creating the engine: \(error.localizedDescription)")
         }
     }
     
