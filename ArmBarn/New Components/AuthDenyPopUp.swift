@@ -52,7 +52,7 @@ struct AuthDenyPopUp: View {
                 
             }
             .fixedSize(horizontal: false, vertical: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
-            .padding()
+            .padding(25)
             .background(Color.black.opacity(0.2))
             .background(.thinMaterial)
             .clipShape(RoundedRectangle(cornerRadius: 10))
