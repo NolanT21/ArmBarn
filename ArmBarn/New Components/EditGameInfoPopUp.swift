@@ -136,8 +136,17 @@ struct EditGameInfoPopUp: View {
                                     
                                     print("Entered update game info section")
                                     
+                                    // Create a DateFormatter for ISO 8601 format
+                                    let isoDateFormatter = ISO8601DateFormatter()
+                                    isoDateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+                                    isoDateFormatter.timeZone = TimeZone(abbreviation: "UTC")
+                                    
+                                    // Convert Date to ISO 8601 string
+                                    let startDate = gameInfo.date
+                                    let timestampString = isoDateFormatter.string(from: startDate)
+                                    
                                     Task{
-                                        try await supabaseVM.update_game_info(game_id: gameInfo.game_id, opponent: gameInfo.opponent_name, location: gameInfo.location, startTime: gameInfo.date)
+                                        try await supabaseVM.update_game_info(game_id: gameInfo.game_id, opponent: gameInfo.opponent_name, location: gameInfo.location, startTime: timestampString)
                                     }
 //                                    
                                 }
