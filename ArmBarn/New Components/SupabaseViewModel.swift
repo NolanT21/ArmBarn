@@ -61,7 +61,7 @@ final class SupabaseViewModel: ObservableObject {
             
         }
         
-        print(games)
+        //print(games)
 
     }
     
@@ -78,13 +78,13 @@ final class SupabaseViewModel: ObservableObject {
 
     }
     
-    func update_game_info(game_id: UUID, opponent: String, location: String, startTime: Date) async throws {
+    func update_game_info(game_id: UUID, opponent: String, location: String, startTime: String) async throws {
             
         do {
             
             try await supabase
                 .from("games")
-                .update(["opponent": opponent, "location": location/*, "start_time": "Test"*/]) //Error with trying to change dates
+                .update(["opponent": opponent, "location": location, "start_time": startTime]) //Error with trying to change dates
                 .eq("game_id", value: game_id)
                 .execute()
             
