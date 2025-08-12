@@ -16,7 +16,6 @@
 		D54D66E82D6006FE00832995 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DD11202AF52FE70064F1A5 /* MainView.swift */; };
 		D54D66E92D6006FE00832995 /* MainContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5C6DE202BD2C52D00C64555 /* MainContainerView.swift */; };
 		D54D66F82D6006FE00832995 /* SavedGamesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5743E1F2D56C28200B773A5 /* SavedGamesView.swift */; };
-		D55275202E38F2CA00913087 /* SyncGamesPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D552751F2E38F2CA00913087 /* SyncGamesPopUp.swift */; };
 		D55275222E3E3AD600913087 /* AuthConfirmPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55275212E3E3AD600913087 /* AuthConfirmPopUp.swift */; };
 		D55275242E3E3AE800913087 /* AuthDenyPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D55275232E3E3AE800913087 /* AuthDenyPopUp.swift */; };
 		D5542B9F2D6008BC00A8607E /* GameReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5542B9E2D6008BC00A8607E /* GameReportView.swift */; };
@@ -78,7 +77,6 @@
 		D51E9E3F2CFE19D000173322 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D535E6852DAFCFD400927E38 /* TabBarContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarContentView.swift; sourceTree = "<group>"; };
 		D54A48F82D64DF470007EDD5 /* GameDataGameLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDataGameLogView.swift; sourceTree = "<group>"; };
-		D552751F2E38F2CA00913087 /* SyncGamesPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncGamesPopUp.swift; sourceTree = "<group>"; };
 		D55275212E3E3AD600913087 /* AuthConfirmPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthConfirmPopUp.swift; sourceTree = "<group>"; };
 		D55275232E3E3AE800913087 /* AuthDenyPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthDenyPopUp.swift; sourceTree = "<group>"; };
 		D5542B9E2D6008BC00A8607E /* GameReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameReportView.swift; sourceTree = "<group>"; };
@@ -180,7 +178,6 @@
 				D56764AD2DF9D7C8002B3712 /* SGPitchFilterView.swift */,
 				D56764AF2DF9D7DF002B3712 /* SGGameLogView.swift */,
 				D5A11C112E14BB5700949DDA /* SGPitchFilterLog.swift */,
-				D552751F2E38F2CA00913087 /* SyncGamesPopUp.swift */,
 				D5DC58E92E254DD200B475EB /* CreateAccountView.swift */,
 				D5FC0FB22E330FCB0071D4C7 /* AccountView.swift */,
 				D5DC58EB2E26CC2000B475EB /* SignInView.swift */,
@@ -407,7 +404,6 @@
 				D5DC58E12E1D6B3D00B475EB /* EditGameInfoPopUp.swift in Sources */,
 				D58E1BDF2D6394670007E4A2 /* SavedGameMainView.swift in Sources */,
 				D57607C12D9992790058074D /* global_variables.swift in Sources */,
-				D55275202E38F2CA00913087 /* SyncGamesPopUp.swift in Sources */,
 				D57607C22D9992790058074D /* report_variables.swift in Sources */,
 				D5542B9F2D6008BC00A8607E /* GameReportView.swift in Sources */,
 				D5542BA12D6008DB00A8607E /* GameDataSummaryView.swift in Sources */,
