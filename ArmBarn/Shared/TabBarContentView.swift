@@ -33,7 +33,7 @@ struct TabBarContentView: View {
                     .tag(TabItems.pitcher_select)
                     .toolbar(.hidden, for: .tabBar)
                 
-                GameReportView()
+                LiveStatsView()
                     .tag(TabItems.game_report)
                     .toolbar(.hidden, for: .tabBar)
                 

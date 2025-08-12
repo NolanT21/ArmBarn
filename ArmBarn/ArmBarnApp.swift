@@ -35,13 +35,10 @@ struct ArmBarnApp: App {
             MainView()
                 .environment(Scoreboard())
                 .environment(LocationOverlay())
+                .environment(GameInfo())
                 .environment(Event_String())
                 .environment(currentPitcher())
                 .environment(PitchTypeConfig())
-                .environment(GameReport())
-                .environment(BullpenConfig())
-                .environment(BullpenReport())
-                .environment(AtBatBreakdown())
         }
         .modelContainer(for: [Event.self, Pitcher.self, SavedGames.self])
     }

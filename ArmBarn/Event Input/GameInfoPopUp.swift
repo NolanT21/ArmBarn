@@ -13,7 +13,6 @@ struct GameInfoPopUp: View {
     @AppStorage("CurrentGameLocation") var ASGameLocation : String?
     @AppStorage("CurrentGameStartTime") var ASStartTime : Date?
     
-    @Environment(GameReport.self) var game_report
     @Environment(LocationOverlay.self) var location_overlay
     
     @State private var validTeamName: Bool = false

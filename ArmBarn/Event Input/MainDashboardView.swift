@@ -59,12 +59,12 @@ struct MainDashboardView: View {
     @State var righty_hitter: Bool = false
     @State var lefty_hitter: Bool = false
     
-    @Environment(GameReport.self) var game_report
     @Environment(currentPitcher.self) var current_pitcher
     @Environment(Event_String.self) var event
     @Environment(Scoreboard.self) var scoreboard
     @Environment(PitchTypeConfig.self) var ptconfig
     @Environment(LocationOverlay.self) var location_overlay
+    @Environment(GameInfo.self) var game_info
     
     @Query(sort: \Event.event_number) var events: [Event]
     @Query(sort: \Pitcher.lastName) var pitchers: [Pitcher]
@@ -339,9 +339,9 @@ struct MainDashboardView: View {
                                                 let current_pitcher_id = current_pitcher.idcode
                                                 
                                                 //Store game information and batter stance
-                                                let opponent = game_report.opponent_name
-                                                let location = game_report.game_location
-                                                let date = game_report.start_date
+                                                let opponent = game_info.opponent_name
+                                                let location = game_info.game_location
+                                                let date = game_info.start_date
                                                 
                                                 let batter_stance = event.batter_stance
                                                 
@@ -1250,10 +1250,10 @@ struct MainDashboardView: View {
             event.batter_stance = "R"
         }
         
-        if game_report.opponent_name != "" && game_report.game_location != ""{
-            game_report.opponent_name = opponent
-            game_report.game_location = location
-            game_report.start_date = date
+        if game_info.opponent_name != "" && game_info.game_location != ""{
+            game_info.opponent_name = opponent
+            game_info.game_location = location
+            game_info.start_date = date
             
             withAnimation{
                 location_overlay.game_info_entered = true

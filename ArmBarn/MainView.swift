@@ -58,9 +58,8 @@ class Router {
 #Preview {
     MainView()
         .environment(Scoreboard())
+        .environment(GameInfo())
         .environment(Event_String())
         .environment(currentPitcher())
         .environment(PitchTypeConfig())
-        .environment(GameReport())
-        .environment(BullpenConfig())
 }

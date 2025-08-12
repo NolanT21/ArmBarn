@@ -17,7 +17,6 @@ struct EditGameInfoPopUp: View {
     
     @Bindable var gameInfo: SavedGames
     
-    @Environment(GameReport.self) var game_report
     @Environment(LocationOverlay.self) var location_overlay
     
     @State private var validTeamName: Bool = false

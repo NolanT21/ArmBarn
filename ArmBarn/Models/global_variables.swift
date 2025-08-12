@@ -49,6 +49,13 @@ import Observation
     var game_info_entered: Bool = false
 }
 
+@Observable class GameInfo{
+    var game_location: String = ""
+    var opponent_name: String = ""
+    var start_date: Date = Date()
+}
+
+
 struct PitchersAppeared: Hashable {
     var pitcher_id: UUID
     var pitches: Int

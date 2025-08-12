@@ -12,7 +12,6 @@ import TipKit
 struct SelectPitcherView: View {
     
     @Environment(currentPitcher.self) var current_pitcher
-    @Environment(GameReport.self) var game_report
     @Environment(Scoreboard.self) var scoreboard
     @Environment(Event_String.self) var event
     @Environment(\.dismiss) var dismiss
@@ -23,6 +22,7 @@ struct SelectPitcherView: View {
     @Query(sort: \Event.event_number) var events: [Event]
     
     @State private var edit_pitcher: Pitcher?
+    private let editpitchertip = EditPitcherTip()
     
     @State private var searchText = ""
     
@@ -30,8 +30,6 @@ struct SelectPitcherView: View {
     @State private var showEditPitcher = false
     @State private var selected_pitcher_id = UUID()
     @State private var newAtBat = false
-    
-    private let editpitchertip = EditPitcherTip()
     
     @State private var text_color = Color.white
     
